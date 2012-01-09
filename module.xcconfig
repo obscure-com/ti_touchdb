@@ -11,7 +11,7 @@
 // How to add a Framework (example)
 //
 // OTHER_LDFLAGS=$(inherited) -framework Foo
-OTHER_LDFLAGS=$(inherited) -F$(HOME)/Library/Frameworks -framework TouchDB -framework TouchDBListener
+// OTHER_LDFLAGS=$(inherited) -F$(HOME)/Library/Frameworks -framework TouchDB -framework TouchDBListener
 //
 // Adding a framework for a specific version(s) of iPhone:
 //

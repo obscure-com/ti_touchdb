@@ -1,151 +1,43 @@
-Appcelerator Titanium iPhone Module Project
+Titanium TouchDB Module for iOS
 ===========================================
 
-This is a skeleton Titanium Mobile iPhone module project.  Modules can be 
-used to extend the functionality of Titanium by providing additional native
-code that is compiled into your application at build time and can expose certain
-APIs into JavaScript. 
+by Paul Mietz Egli (paul@obscure.com)
 
-MODULE NAMING
---------------
+The ti_touchdb module wraps the [TouchDB for iOS](https://github.com/couchbaselabs/TouchDB-iOS)
+framework developed by Jens Alfke at Couchbase so it can be called from an app
+written with the [Appcelerator Titanium](http://www.appcelerator.com/) cross-platform
+mobile development environment.
 
-Choose a unique module id for your module.  This ID usually follows a namespace
-convention using DNS notation.  For example, com.appcelerator.module.test.  This
-ID can only be used once by all public modules in Titanium.
+Note that this module can only be used on iOS devices.  When an Android version of
+TouchDB becomes available, I plan to wrap that code as well.
 
+## How to use the module ##
 
-COMPONENTS
------------
+As TouchDB is still pre-alpha, I haven't provided a module binary yet.  If you are
+really intrepid, you can clone this repo and try building it yourself.  You will need
+to clone the TouchDB-iOS repo into the same directory as ti_touchdb as the module 
+references files in TouchDB-iOS by relative path.
 
-Components that are exposed by your module must follow a special naming convention.
-A component (widget, proxy, etc) must be named with the pattern:
+Once you have a binary, declare the module in your tiapp.xml file:
 
-	Ti<ModuleName><ComponentName>Proxy
+    <module version="0.1">com.obscure.ti_touchdb</module>
 
-For example, if you component was called Foo, your proxy would be named:
+Now you can import the module and start up the TouchDB HTTP listener on your port
+of choice:
 
-	TiMyfirstFooProxy
-	
-For view proxies or widgets, you must create both a view proxy and a view implementation. 
-If you widget was named proxy, you would create the following files:
+    var ti_touchdb = require('com.obscure.ti_touchdb');
+    ti_touchdb.startListenerOnPort(5985, function() {
+      Ti.API.info("started listener!");
+    });
+    
 
-	TiMyfirstFooProxy.h
-	TiMyfirstFooProxy.m
-	TiMyfirstFoo.h
-	TiMyfirstFoo.m
-	
-The view implementation is named the same except it does contain the suffix `Proxy`.  
+Once a listener is started, you use Ti.Network.HttpClient to talk to the database
+using the standard CouchDB HTTP protocol.
 
-View implementations extend the Titanium base class `TiUIView`.  View Proxies extend the
-Titanium base class `TiUIViewProxy` or `TiUIWidgetProxy`.  
+## License ##
+ 
+ * Module wrapper code is under the Apache License 2.0.
+ * Appcelerator Titanium is under the Apache License 2.0.
+ * TouchDB is under the Apache License 2.0.
 
-For proxies that are simply native objects that can be returned to JavaScript, you can 
-simply extend `TiProxy` and no view implementation is required.
-
-
-GET STARTED
-------------
-
-1. Edit manifest with the appropriate details about your module.
-2. Edit LICENSE to add your license details.
-3. Place any assets (such as PNG files) that are required in the assets folder.
-4. Edit the titanium.xcconfig and make sure you're building for the right Titanium version.
-5. Code and build.
-
-BUILD TIME COMPILER CONFIG
---------------------------
-
-You can edit the file `module.xcconfig` to include any build time settings that should be
-set during application compilation that your module requires.  This file will automatically get `#include` in the main application project.  
-
-For more information about this file, please see the Apple documentation at:
-
-<http://developer.apple.com/mac/library/documentation/DeveloperTools/Conceptual/XcodeBuildSystem/400-Build_Configurations/build_configs.html>
-
-
-DOCUMENTATION FOR YOUR MODULE
------------------------------
-
-You should provide at least minimal documentation for your module in `documentation` folder using the Markdown syntax.
-
-For more information on the Markdown syntax, refer to this documentation at:
-
-<http://daringfireball.net/projects/markdown/>
-
-
-TEST HARNESS EXAMPLE FOR YOUR MODULE
-------------------------------------
-
-The `example` directory contains a skeleton application test harness that can be 
-used for testing and providing an example of usage to the users of your module.
-
-
-INSTALL YOUR MODULE
---------------------
-
-1. Run `build.py` which creates your distribution
-2. cd to `/Library/Application Support/Titanium`
-3. copy this zip file into the folder of your Titanium SDK
-
-REGISTER YOUR MODULE
----------------------
-
-Register your module with your application by editing `tiapp.xml` and adding your module.
-Example:
-
-<modules>
-	<module version="0.1">com.obscure.ti_touchdb</module>
-</modules>
-
-When you run your project, the compiler will know automatically compile in your module
-dependencies and copy appropriate image assets into the application.
-
-USING YOUR MODULE IN CODE
--------------------------
-
-To use your module in code, you will need to require it. 
-
-For example,
-
-	var my_module = require('com.obscure.ti_touchdb');
-	my_module.foo();
-
-WRITING PURE JS NATIVE MODULES
-------------------------------
-
-You can write a pure JavaScript "natively compiled" module.  This is nice if you
-want to distribute a JS module pre-compiled.
-
-To create a module, create a file named com.obscure.ti_touchdb.js under the assets folder.
-This file must be in the Common JS format.  For example:
-
-	exports.echo = function(s)
-	{
-		return s;
-	};
-	
-Any functions and properties that are exported will be made available as part of your
-module.  All other code inside your JS will be private to your module.
-
-For pure JS module, you don't need to modify any of the Objective-C module code. You
-can leave it as-is and build.
-
-TESTING YOUR MODULE
--------------------
-
-Run the `titanium.py` script to test your module or test from within XCode.
-To test with the script, execute:
-
-	titanium run --dir=YOURMODULEDIR
-	
-
-This will execute the app.js in the example folder as a Titanium application.
-
-
-DISTRIBUTING YOUR MODULE
--------------------------
-
-Currently, you will need to manually distribution your module distribution zip file directly. However, in the near future, we will make module distribution and sharing built-in to Titanium Developer and in the Titanium Marketplace!
-
-
-Cheers!
+Each of these components may contain code released under other licenses.

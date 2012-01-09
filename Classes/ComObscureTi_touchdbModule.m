@@ -14,8 +14,10 @@
 #import "TiHost.h"
 #import "TiUtils.h"
 
-#import <TouchDB/TDServer.h>
-#import <TouchDBListener/TDListener.h>
+//#import <TouchDB/TDServer.h>
+//#import <TouchDBListener/TDListener.h>
+#import "TDServer.h"
+#import "TDListener.h"
 
 @implementation ComObscureTi_touchdbModule
 
@@ -35,7 +37,6 @@ TDListener * touchListener;
 #pragma mark Lifecycle
 
 - (void)startTouchDBServer {
-    // fire up TDServer
     NSArray * paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
     NSString * path = [paths objectAtIndex:0];
 #if !TARGET_OS_IPHONE
@@ -52,20 +53,11 @@ TDListener * touchListener;
     NSAssert(!error, @"Error creating TouchDB server: %@", error);    
 }
 
-- (void)startTouchDBListener {
-    NSAssert(touchServer, @"TouchDB not present!");
-    touchListener = [[TDListener alloc] initWithTDServer:touchServer port:5985]; // TODO randomize!
-    [touchListener start];
-    
-    NSString * status = [NSString stringWithContentsOfURL:[NSURL URLWithString:@"http://localhost:5985/"] encoding:NSUTF8StringEncoding error:nil];
-    NSLog(@"Started TouchDB: %@", status);
-}
-
 -(void)startup {
 	[super startup];
 
 	[self startTouchDBServer];
-    [self startTouchDBListener];
+//    [self startTouchDBListener];
 //    [TDView setCompiler:self];
     
 	NSLog(@"[INFO] %@ loaded",self);
@@ -116,6 +108,28 @@ TDListener * touchListener;
 }
 
 #pragma Public APIs
+
+- (void)startListenerOnPort:(id)args {
+    NSAssert(touchServer, @"TouchDB not present!");
+    
+    NSNumber * port;
+    KrollCallback * cb;
+    
+    ENSURE_ARG_AT_INDEX(port, args, 0, NSNumber);
+    ENSURE_ARG_OR_NIL_AT_INDEX(cb, args, 1, KrollCallback);
+    
+    // destroy any existing listener
+    [touchListener stop];
+    RELEASE_TO_NIL(touchListener);
+    
+    touchListener = [[TDListener alloc] initWithTDServer:touchServer port:[port intValue]];
+    [touchListener start];
+    
+    NSLog(@"Started TouchDB listener on port %@", port);
+    
+    [cb call:nil thisObject:nil];
+}
+
 
 
 @end

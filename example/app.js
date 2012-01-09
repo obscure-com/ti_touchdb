@@ -10,6 +10,10 @@ window.open();
 var ti_touchdb = require('com.obscure.ti_touchdb');
 Ti.API.info("module is => " + ti_touchdb);
 
+ti_touchdb.startListenerOnPort(5985, function() {
+  Ti.API.info("started listener!");
+})
+
 /*
 Ti.API.info("module exampleProp is => " + ti_touchdb.exampleProp);
 ti_touchdb.exampleProp = "This is a test value";
