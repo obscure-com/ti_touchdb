@@ -1,0 +1,20 @@
+[
+  { "_id": "1407035533", "title": "Strata", "author": "Terry Pratchett", "copyright": [1981] },
+  { "_id": "006102063X", "title": "Moving Pictures", "author": "Terry Pratchett", "copyright": [1990] },
+  { "_id": "1604500700", "title": "Psmith in the City", "author": "P. G. Wodehouse", "copyright": [1910, 9, 23] },
+  { "_id": "0393339807", "title": "The Inimitable Jeeves", "author": "P. G. Wodehouse", "copyright": [1923, 5, 17] },
+  { "_id": "1409095630", "title": "Down Under", "author": "Bill Bryson", "copyright": [2000] },
+  { "_id": "038567452X", "title": "Notes from a Big Country", "author": "Bill Bryson", "copyright": [1998] },
+  { "_id": "0552999954", "title": "High Society", "author": "Ben Elton", "copyright": [2002] },
+  { "_id": "0552773557", "title": "Stark", "author": "Ben Elton", "copyright": [1989] },
+  { "_id": "0199291152", "title": "The Selfish Gene", "author": "Richard Dawkins", "copyright": [1976] },
+  { "_id": "0387727736", "title": "Machine Translation", "author": "Yorick Wilks", "copyright": [2009] },
+  {
+    "_id": "_design/books",
+    "views": {
+      "by_author": {
+        "map": "function(doc) {\n  if (doc.author) {\n    emit([doc.author, doc.title || ''], null);\n  }\n}"
+      }
+    } 
+  }
+]
