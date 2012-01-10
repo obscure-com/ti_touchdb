@@ -14,10 +14,8 @@
 #import "TiHost.h"
 #import "TiUtils.h"
 
-//#import <TouchDB/TDServer.h>
-//#import <TouchDBListener/TDListener.h>
-#import "TDServer.h"
-#import "TDListener.h"
+#import <TouchDB/TDServer.h>
+#import <TouchDBListener/TDListener.h>
 
 @implementation ComObscureTi_touchdbModule
 

@@ -26,109 +26,6 @@
 		24DD6CFA1134B3F500162E58 /* ComObscureTi_touchdbModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 24DD6CF81134B3F500162E58 /* ComObscureTi_touchdbModule.m */; };
 		AA747D9F0F9514B9006C5449 /* ComObscureTi_touchdb_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* ComObscureTi_touchdb_Prefix.pch */; };
 		AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
-		DA0464E514BB5D9C00757E86 /* TDBase64.h in Headers */ = {isa = PBXBuildFile; fileRef = DA0464B414BB5D9C00757E86 /* TDBase64.h */; };
-		DA0464E614BB5D9C00757E86 /* TDBase64.m in Sources */ = {isa = PBXBuildFile; fileRef = DA0464B514BB5D9C00757E86 /* TDBase64.m */; };
-		DA0464E714BB5D9C00757E86 /* TDChangeTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = DA0464B614BB5D9C00757E86 /* TDChangeTracker.h */; };
-		DA0464E814BB5D9C00757E86 /* TDChangeTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = DA0464B714BB5D9C00757E86 /* TDChangeTracker.m */; };
-		DA0464E914BB5D9C00757E86 /* TDConnectionChangeTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = DA0464B814BB5D9C00757E86 /* TDConnectionChangeTracker.h */; };
-		DA0464EA14BB5D9C00757E86 /* TDConnectionChangeTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = DA0464B914BB5D9C00757E86 /* TDConnectionChangeTracker.m */; };
-		DA0464EB14BB5D9C00757E86 /* TDRemoteRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = DA0464BA14BB5D9C00757E86 /* TDRemoteRequest.h */; };
-		DA0464EC14BB5D9C00757E86 /* TDRemoteRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = DA0464BB14BB5D9C00757E86 /* TDRemoteRequest.m */; };
-		DA0464ED14BB5D9C00757E86 /* TDSocketChangeTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = DA0464BC14BB5D9C00757E86 /* TDSocketChangeTracker.h */; };
-		DA0464EE14BB5D9C00757E86 /* TDSocketChangeTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = DA0464BD14BB5D9C00757E86 /* TDSocketChangeTracker.m */; };
-		DA0464EF14BB5D9C00757E86 /* TDBatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = DA0464BE14BB5D9C00757E86 /* TDBatcher.h */; };
-		DA0464F014BB5D9C00757E86 /* TDBatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = DA0464BF14BB5D9C00757E86 /* TDBatcher.m */; };
-		DA0464F114BB5D9C00757E86 /* TDBlobStore.h in Headers */ = {isa = PBXBuildFile; fileRef = DA0464C014BB5D9C00757E86 /* TDBlobStore.h */; };
-		DA0464F214BB5D9C00757E86 /* TDBlobStore.m in Sources */ = {isa = PBXBuildFile; fileRef = DA0464C114BB5D9C00757E86 /* TDBlobStore.m */; };
-		DA0464F314BB5D9C00757E86 /* TDBody.h in Headers */ = {isa = PBXBuildFile; fileRef = DA0464C214BB5D9C00757E86 /* TDBody.h */; };
-		DA0464F414BB5D9C00757E86 /* TDBody.m in Sources */ = {isa = PBXBuildFile; fileRef = DA0464C314BB5D9C00757E86 /* TDBody.m */; };
-		DA0464F514BB5D9C00757E86 /* TDCollateJSON.h in Headers */ = {isa = PBXBuildFile; fileRef = DA0464C414BB5D9C00757E86 /* TDCollateJSON.h */; };
-		DA0464F614BB5D9C00757E86 /* TDCollateJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = DA0464C514BB5D9C00757E86 /* TDCollateJSON.m */; };
-		DA0464F714BB5D9C00757E86 /* TDDatabase+Attachments.m in Sources */ = {isa = PBXBuildFile; fileRef = DA0464C614BB5D9C00757E86 /* TDDatabase+Attachments.m */; };
-		DA0464F814BB5D9C00757E86 /* TDDatabase+Insertion.m in Sources */ = {isa = PBXBuildFile; fileRef = DA0464C714BB5D9C00757E86 /* TDDatabase+Insertion.m */; };
-		DA0464F914BB5D9C00757E86 /* TDDatabase+Replication.m in Sources */ = {isa = PBXBuildFile; fileRef = DA0464C814BB5D9C00757E86 /* TDDatabase+Replication.m */; };
-		DA0464FA14BB5D9C00757E86 /* TDDatabase.h in Headers */ = {isa = PBXBuildFile; fileRef = DA0464C914BB5D9C00757E86 /* TDDatabase.h */; };
-		DA0464FB14BB5D9C00757E86 /* TDDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = DA0464CA14BB5D9C00757E86 /* TDDatabase.m */; };
-		DA0464FD14BB5D9C00757E86 /* TDInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = DA0464CC14BB5D9C00757E86 /* TDInternal.h */; };
-		DA0464FE14BB5D9C00757E86 /* TDPuller.h in Headers */ = {isa = PBXBuildFile; fileRef = DA0464CD14BB5D9C00757E86 /* TDPuller.h */; };
-		DA0464FF14BB5D9C00757E86 /* TDPuller.m in Sources */ = {isa = PBXBuildFile; fileRef = DA0464CE14BB5D9C00757E86 /* TDPuller.m */; };
-		DA04650114BB5D9C00757E86 /* TDPusher.h in Headers */ = {isa = PBXBuildFile; fileRef = DA0464D014BB5D9C00757E86 /* TDPusher.h */; };
-		DA04650214BB5D9C00757E86 /* TDPusher.m in Sources */ = {isa = PBXBuildFile; fileRef = DA0464D114BB5D9C00757E86 /* TDPusher.m */; };
-		DA04650314BB5D9C00757E86 /* TDReplicator.h in Headers */ = {isa = PBXBuildFile; fileRef = DA0464D214BB5D9C00757E86 /* TDReplicator.h */; };
-		DA04650414BB5D9C00757E86 /* TDReplicator.m in Sources */ = {isa = PBXBuildFile; fileRef = DA0464D314BB5D9C00757E86 /* TDReplicator.m */; };
-		DA04650514BB5D9C00757E86 /* TDRevision.h in Headers */ = {isa = PBXBuildFile; fileRef = DA0464D414BB5D9C00757E86 /* TDRevision.h */; };
-		DA04650614BB5D9C00757E86 /* TDRevision.m in Sources */ = {isa = PBXBuildFile; fileRef = DA0464D514BB5D9C00757E86 /* TDRevision.m */; };
-		DA04650714BB5D9C00757E86 /* TDRouter+Handlers.m in Sources */ = {isa = PBXBuildFile; fileRef = DA0464D614BB5D9C00757E86 /* TDRouter+Handlers.m */; };
-		DA04650814BB5D9C00757E86 /* TDRouter.h in Headers */ = {isa = PBXBuildFile; fileRef = DA0464D714BB5D9C00757E86 /* TDRouter.h */; };
-		DA04650914BB5D9C00757E86 /* TDRouter.m in Sources */ = {isa = PBXBuildFile; fileRef = DA0464D814BB5D9C00757E86 /* TDRouter.m */; };
-		DA04650B14BB5D9C00757E86 /* TDServer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA0464DA14BB5D9C00757E86 /* TDServer.h */; };
-		DA04650C14BB5D9C00757E86 /* TDServer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA0464DB14BB5D9C00757E86 /* TDServer.m */; };
-		DA04650D14BB5D9C00757E86 /* TDURLProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = DA0464DC14BB5D9C00757E86 /* TDURLProtocol.h */; };
-		DA04650E14BB5D9C00757E86 /* TDURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = DA0464DD14BB5D9C00757E86 /* TDURLProtocol.m */; };
-		DA04650F14BB5D9C00757E86 /* TDView.h in Headers */ = {isa = PBXBuildFile; fileRef = DA0464DE14BB5D9C00757E86 /* TDView.h */; };
-		DA04651014BB5D9C00757E86 /* TDView.m in Sources */ = {isa = PBXBuildFile; fileRef = DA0464DF14BB5D9C00757E86 /* TDView.m */; };
-		DA04651314BB5D9C00757E86 /* TouchDB.h in Headers */ = {isa = PBXBuildFile; fileRef = DA0464E314BB5D9C00757E86 /* TouchDB.h */; };
-		DA04651C14BB5E3900757E86 /* CollectionUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = DA04651814BB5E3900757E86 /* CollectionUtils.h */; };
-		DA04651D14BB5E3900757E86 /* CollectionUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = DA04651914BB5E3900757E86 /* CollectionUtils.m */; };
-		DA04651E14BB5E3900757E86 /* ExceptionUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = DA04651A14BB5E3900757E86 /* ExceptionUtils.h */; };
-		DA04651F14BB5E3900757E86 /* ExceptionUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = DA04651B14BB5E3900757E86 /* ExceptionUtils.m */; };
-		DA04652614BB5E5100757E86 /* FMDatabase.h in Headers */ = {isa = PBXBuildFile; fileRef = DA04652014BB5E5100757E86 /* FMDatabase.h */; };
-		DA04652714BB5E5100757E86 /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = DA04652114BB5E5100757E86 /* FMDatabase.m */; };
-		DA04652814BB5E5100757E86 /* FMDatabaseAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = DA04652214BB5E5100757E86 /* FMDatabaseAdditions.h */; };
-		DA04652914BB5E5100757E86 /* FMDatabaseAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = DA04652314BB5E5100757E86 /* FMDatabaseAdditions.m */; };
-		DA04652A14BB5E5100757E86 /* FMResultSet.h in Headers */ = {isa = PBXBuildFile; fileRef = DA04652414BB5E5100757E86 /* FMResultSet.h */; };
-		DA04652B14BB5E5100757E86 /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = DA04652514BB5E5100757E86 /* FMResultSet.m */; };
-		DA04653814BB5EF300757E86 /* TDHTTPConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = DA04652F14BB5EF300757E86 /* TDHTTPConnection.h */; };
-		DA04653914BB5EF300757E86 /* TDHTTPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = DA04653014BB5EF300757E86 /* TDHTTPConnection.m */; };
-		DA04653A14BB5EF300757E86 /* TDHTTPResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = DA04653114BB5EF300757E86 /* TDHTTPResponse.h */; };
-		DA04653B14BB5EF300757E86 /* TDHTTPResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = DA04653214BB5EF300757E86 /* TDHTTPResponse.m */; };
-		DA04653C14BB5EF300757E86 /* TDHTTPServer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA04653314BB5EF300757E86 /* TDHTTPServer.h */; };
-		DA04653D14BB5EF300757E86 /* TDListener.h in Headers */ = {isa = PBXBuildFile; fileRef = DA04653414BB5EF300757E86 /* TDListener.h */; };
-		DA04653E14BB5EF300757E86 /* TDListener.m in Sources */ = {isa = PBXBuildFile; fileRef = DA04653514BB5EF300757E86 /* TDListener.m */; };
-		DA04656014BB5FA600757E86 /* DDData.h in Headers */ = {isa = PBXBuildFile; fileRef = DA04654314BB5FA600757E86 /* DDData.h */; };
-		DA04656114BB5FA600757E86 /* DDData.m in Sources */ = {isa = PBXBuildFile; fileRef = DA04654414BB5FA600757E86 /* DDData.m */; };
-		DA04656214BB5FA600757E86 /* DDNumber.h in Headers */ = {isa = PBXBuildFile; fileRef = DA04654514BB5FA600757E86 /* DDNumber.h */; };
-		DA04656314BB5FA600757E86 /* DDNumber.m in Sources */ = {isa = PBXBuildFile; fileRef = DA04654614BB5FA600757E86 /* DDNumber.m */; };
-		DA04656414BB5FA600757E86 /* DDRange.h in Headers */ = {isa = PBXBuildFile; fileRef = DA04654714BB5FA600757E86 /* DDRange.h */; };
-		DA04656514BB5FA600757E86 /* DDRange.m in Sources */ = {isa = PBXBuildFile; fileRef = DA04654814BB5FA600757E86 /* DDRange.m */; };
-		DA04656614BB5FA600757E86 /* HTTPAuthenticationRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = DA04654914BB5FA600757E86 /* HTTPAuthenticationRequest.h */; };
-		DA04656714BB5FA600757E86 /* HTTPAuthenticationRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = DA04654A14BB5FA600757E86 /* HTTPAuthenticationRequest.m */; };
-		DA04656814BB5FA600757E86 /* HTTPConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = DA04654B14BB5FA600757E86 /* HTTPConnection.h */; };
-		DA04656914BB5FA600757E86 /* HTTPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = DA04654C14BB5FA600757E86 /* HTTPConnection.m */; };
-		DA04656A14BB5FA600757E86 /* HTTPLogging.h in Headers */ = {isa = PBXBuildFile; fileRef = DA04654D14BB5FA600757E86 /* HTTPLogging.h */; };
-		DA04656B14BB5FA600757E86 /* HTTPMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = DA04654E14BB5FA600757E86 /* HTTPMessage.h */; };
-		DA04656C14BB5FA600757E86 /* HTTPMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = DA04654F14BB5FA600757E86 /* HTTPMessage.m */; };
-		DA04656D14BB5FA600757E86 /* HTTPResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = DA04655014BB5FA600757E86 /* HTTPResponse.h */; };
-		DA04656E14BB5FA600757E86 /* HTTPServer.h in Headers */ = {isa = PBXBuildFile; fileRef = DA04655114BB5FA600757E86 /* HTTPServer.h */; };
-		DA04656F14BB5FA600757E86 /* HTTPServer.m in Sources */ = {isa = PBXBuildFile; fileRef = DA04655214BB5FA600757E86 /* HTTPServer.m */; };
-		DA04657014BB5FA600757E86 /* HTTPAsyncFileResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = DA04655414BB5FA600757E86 /* HTTPAsyncFileResponse.h */; };
-		DA04657114BB5FA600757E86 /* HTTPAsyncFileResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = DA04655514BB5FA600757E86 /* HTTPAsyncFileResponse.m */; };
-		DA04657214BB5FA600757E86 /* HTTPDataResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = DA04655614BB5FA600757E86 /* HTTPDataResponse.h */; };
-		DA04657314BB5FA600757E86 /* HTTPDataResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = DA04655714BB5FA600757E86 /* HTTPDataResponse.m */; };
-		DA04657414BB5FA600757E86 /* HTTPDynamicFileResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = DA04655814BB5FA600757E86 /* HTTPDynamicFileResponse.h */; };
-		DA04657514BB5FA600757E86 /* HTTPDynamicFileResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = DA04655914BB5FA600757E86 /* HTTPDynamicFileResponse.m */; };
-		DA04657614BB5FA600757E86 /* HTTPFileResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = DA04655A14BB5FA600757E86 /* HTTPFileResponse.h */; };
-		DA04657714BB5FA600757E86 /* HTTPFileResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = DA04655B14BB5FA600757E86 /* HTTPFileResponse.m */; };
-		DA04657814BB5FA600757E86 /* HTTPRedirectResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = DA04655C14BB5FA600757E86 /* HTTPRedirectResponse.h */; };
-		DA04657914BB5FA600757E86 /* HTTPRedirectResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = DA04655D14BB5FA600757E86 /* HTTPRedirectResponse.m */; };
-		DA04657A14BB5FA600757E86 /* WebSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = DA04655E14BB5FA600757E86 /* WebSocket.h */; };
-		DA04657B14BB5FA600757E86 /* WebSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = DA04655F14BB5FA600757E86 /* WebSocket.m */; };
-		DA04658114BB5FD100757E86 /* GCDAsyncSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = DA04657F14BB5FD100757E86 /* GCDAsyncSocket.h */; };
-		DA04658214BB5FD100757E86 /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = DA04658014BB5FD100757E86 /* GCDAsyncSocket.m */; };
-		DA04658714BB5FE900757E86 /* Logging.h in Headers */ = {isa = PBXBuildFile; fileRef = DA04658314BB5FE900757E86 /* Logging.h */; };
-		DA04658814BB5FE900757E86 /* Logging.m in Sources */ = {isa = PBXBuildFile; fileRef = DA04658414BB5FE900757E86 /* Logging.m */; };
-		DA04658914BB5FE900757E86 /* Test.h in Headers */ = {isa = PBXBuildFile; fileRef = DA04658514BB5FE900757E86 /* Test.h */; };
-		DA04658A14BB5FE900757E86 /* Test.m in Sources */ = {isa = PBXBuildFile; fileRef = DA04658614BB5FE900757E86 /* Test.m */; };
-		DA04659714BB5FFF00757E86 /* DDAbstractDatabaseLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = DA04658D14BB5FFF00757E86 /* DDAbstractDatabaseLogger.h */; };
-		DA04659814BB5FFF00757E86 /* DDAbstractDatabaseLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = DA04658E14BB5FFF00757E86 /* DDAbstractDatabaseLogger.m */; };
-		DA04659914BB5FFF00757E86 /* DDASLLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = DA04658F14BB5FFF00757E86 /* DDASLLogger.h */; };
-		DA04659A14BB5FFF00757E86 /* DDASLLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = DA04659014BB5FFF00757E86 /* DDASLLogger.m */; };
-		DA04659B14BB5FFF00757E86 /* DDFileLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = DA04659114BB5FFF00757E86 /* DDFileLogger.h */; };
-		DA04659C14BB5FFF00757E86 /* DDFileLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = DA04659214BB5FFF00757E86 /* DDFileLogger.m */; };
-		DA04659D14BB5FFF00757E86 /* DDLog.h in Headers */ = {isa = PBXBuildFile; fileRef = DA04659314BB5FFF00757E86 /* DDLog.h */; };
-		DA04659E14BB5FFF00757E86 /* DDLog.m in Sources */ = {isa = PBXBuildFile; fileRef = DA04659414BB5FFF00757E86 /* DDLog.m */; };
-		DA04659F14BB5FFF00757E86 /* DDTTYLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = DA04659514BB5FFF00757E86 /* DDTTYLogger.h */; };
-		DA0465A014BB5FFF00757E86 /* DDTTYLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = DA04659614BB5FFF00757E86 /* DDTTYLogger.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -148,111 +45,6 @@
 		AA747D9E0F9514B9006C5449 /* ComObscureTi_touchdb_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComObscureTi_touchdb_Prefix.pch; sourceTree = SOURCE_ROOT; };
 		AACBBE490F95108600F1A2B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D2AAC07E0554694100DB518D /* libComObscureTi_touchdb.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libComObscureTi_touchdb.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		DA0464B414BB5D9C00757E86 /* TDBase64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDBase64.h; sourceTree = "<group>"; };
-		DA0464B514BB5D9C00757E86 /* TDBase64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDBase64.m; sourceTree = "<group>"; };
-		DA0464B614BB5D9C00757E86 /* TDChangeTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDChangeTracker.h; sourceTree = "<group>"; };
-		DA0464B714BB5D9C00757E86 /* TDChangeTracker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDChangeTracker.m; sourceTree = "<group>"; };
-		DA0464B814BB5D9C00757E86 /* TDConnectionChangeTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDConnectionChangeTracker.h; sourceTree = "<group>"; };
-		DA0464B914BB5D9C00757E86 /* TDConnectionChangeTracker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDConnectionChangeTracker.m; sourceTree = "<group>"; };
-		DA0464BA14BB5D9C00757E86 /* TDRemoteRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDRemoteRequest.h; sourceTree = "<group>"; };
-		DA0464BB14BB5D9C00757E86 /* TDRemoteRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDRemoteRequest.m; sourceTree = "<group>"; };
-		DA0464BC14BB5D9C00757E86 /* TDSocketChangeTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDSocketChangeTracker.h; sourceTree = "<group>"; };
-		DA0464BD14BB5D9C00757E86 /* TDSocketChangeTracker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDSocketChangeTracker.m; sourceTree = "<group>"; };
-		DA0464BE14BB5D9C00757E86 /* TDBatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDBatcher.h; sourceTree = "<group>"; };
-		DA0464BF14BB5D9C00757E86 /* TDBatcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDBatcher.m; sourceTree = "<group>"; };
-		DA0464C014BB5D9C00757E86 /* TDBlobStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDBlobStore.h; sourceTree = "<group>"; };
-		DA0464C114BB5D9C00757E86 /* TDBlobStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDBlobStore.m; sourceTree = "<group>"; };
-		DA0464C214BB5D9C00757E86 /* TDBody.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDBody.h; sourceTree = "<group>"; };
-		DA0464C314BB5D9C00757E86 /* TDBody.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDBody.m; sourceTree = "<group>"; };
-		DA0464C414BB5D9C00757E86 /* TDCollateJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDCollateJSON.h; sourceTree = "<group>"; };
-		DA0464C514BB5D9C00757E86 /* TDCollateJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDCollateJSON.m; sourceTree = "<group>"; };
-		DA0464C614BB5D9C00757E86 /* TDDatabase+Attachments.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TDDatabase+Attachments.m"; sourceTree = "<group>"; };
-		DA0464C714BB5D9C00757E86 /* TDDatabase+Insertion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TDDatabase+Insertion.m"; sourceTree = "<group>"; };
-		DA0464C814BB5D9C00757E86 /* TDDatabase+Replication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TDDatabase+Replication.m"; sourceTree = "<group>"; };
-		DA0464C914BB5D9C00757E86 /* TDDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDDatabase.h; sourceTree = "<group>"; };
-		DA0464CA14BB5D9C00757E86 /* TDDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDDatabase.m; sourceTree = "<group>"; };
-		DA0464CC14BB5D9C00757E86 /* TDInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDInternal.h; sourceTree = "<group>"; };
-		DA0464CD14BB5D9C00757E86 /* TDPuller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDPuller.h; sourceTree = "<group>"; };
-		DA0464CE14BB5D9C00757E86 /* TDPuller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDPuller.m; sourceTree = "<group>"; };
-		DA0464D014BB5D9C00757E86 /* TDPusher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDPusher.h; sourceTree = "<group>"; };
-		DA0464D114BB5D9C00757E86 /* TDPusher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDPusher.m; sourceTree = "<group>"; };
-		DA0464D214BB5D9C00757E86 /* TDReplicator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDReplicator.h; sourceTree = "<group>"; };
-		DA0464D314BB5D9C00757E86 /* TDReplicator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDReplicator.m; sourceTree = "<group>"; };
-		DA0464D414BB5D9C00757E86 /* TDRevision.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDRevision.h; sourceTree = "<group>"; };
-		DA0464D514BB5D9C00757E86 /* TDRevision.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDRevision.m; sourceTree = "<group>"; };
-		DA0464D614BB5D9C00757E86 /* TDRouter+Handlers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TDRouter+Handlers.m"; sourceTree = "<group>"; };
-		DA0464D714BB5D9C00757E86 /* TDRouter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDRouter.h; sourceTree = "<group>"; };
-		DA0464D814BB5D9C00757E86 /* TDRouter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDRouter.m; sourceTree = "<group>"; };
-		DA0464DA14BB5D9C00757E86 /* TDServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDServer.h; sourceTree = "<group>"; };
-		DA0464DB14BB5D9C00757E86 /* TDServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDServer.m; sourceTree = "<group>"; };
-		DA0464DC14BB5D9C00757E86 /* TDURLProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDURLProtocol.h; sourceTree = "<group>"; };
-		DA0464DD14BB5D9C00757E86 /* TDURLProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDURLProtocol.m; sourceTree = "<group>"; };
-		DA0464DE14BB5D9C00757E86 /* TDView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDView.h; sourceTree = "<group>"; };
-		DA0464DF14BB5D9C00757E86 /* TDView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDView.m; sourceTree = "<group>"; };
-		DA0464E314BB5D9C00757E86 /* TouchDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TouchDB.h; sourceTree = "<group>"; };
-		DA04651814BB5E3900757E86 /* CollectionUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CollectionUtils.h; path = "../TouchDB-iOS/vendor/MYUtilities/CollectionUtils.h"; sourceTree = "<group>"; };
-		DA04651914BB5E3900757E86 /* CollectionUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CollectionUtils.m; path = "../TouchDB-iOS/vendor/MYUtilities/CollectionUtils.m"; sourceTree = "<group>"; };
-		DA04651A14BB5E3900757E86 /* ExceptionUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ExceptionUtils.h; path = "../TouchDB-iOS/vendor/MYUtilities/ExceptionUtils.h"; sourceTree = "<group>"; };
-		DA04651B14BB5E3900757E86 /* ExceptionUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ExceptionUtils.m; path = "../TouchDB-iOS/vendor/MYUtilities/ExceptionUtils.m"; sourceTree = "<group>"; };
-		DA04652014BB5E5100757E86 /* FMDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMDatabase.h; path = "../TouchDB-iOS/vendor/fmdb/src/FMDatabase.h"; sourceTree = "<group>"; };
-		DA04652114BB5E5100757E86 /* FMDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FMDatabase.m; path = "../TouchDB-iOS/vendor/fmdb/src/FMDatabase.m"; sourceTree = "<group>"; };
-		DA04652214BB5E5100757E86 /* FMDatabaseAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMDatabaseAdditions.h; path = "../TouchDB-iOS/vendor/fmdb/src/FMDatabaseAdditions.h"; sourceTree = "<group>"; };
-		DA04652314BB5E5100757E86 /* FMDatabaseAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FMDatabaseAdditions.m; path = "../TouchDB-iOS/vendor/fmdb/src/FMDatabaseAdditions.m"; sourceTree = "<group>"; };
-		DA04652414BB5E5100757E86 /* FMResultSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FMResultSet.h; path = "../TouchDB-iOS/vendor/fmdb/src/FMResultSet.h"; sourceTree = "<group>"; };
-		DA04652514BB5E5100757E86 /* FMResultSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FMResultSet.m; path = "../TouchDB-iOS/vendor/fmdb/src/FMResultSet.m"; sourceTree = "<group>"; };
-		DA04652F14BB5EF300757E86 /* TDHTTPConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDHTTPConnection.h; sourceTree = "<group>"; };
-		DA04653014BB5EF300757E86 /* TDHTTPConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDHTTPConnection.m; sourceTree = "<group>"; };
-		DA04653114BB5EF300757E86 /* TDHTTPResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDHTTPResponse.h; sourceTree = "<group>"; };
-		DA04653214BB5EF300757E86 /* TDHTTPResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDHTTPResponse.m; sourceTree = "<group>"; };
-		DA04653314BB5EF300757E86 /* TDHTTPServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDHTTPServer.h; sourceTree = "<group>"; };
-		DA04653414BB5EF300757E86 /* TDListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TDListener.h; sourceTree = "<group>"; };
-		DA04653514BB5EF300757E86 /* TDListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TDListener.m; sourceTree = "<group>"; };
-		DA04654314BB5FA600757E86 /* DDData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDData.h; sourceTree = "<group>"; };
-		DA04654414BB5FA600757E86 /* DDData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDData.m; sourceTree = "<group>"; };
-		DA04654514BB5FA600757E86 /* DDNumber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDNumber.h; sourceTree = "<group>"; };
-		DA04654614BB5FA600757E86 /* DDNumber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDNumber.m; sourceTree = "<group>"; };
-		DA04654714BB5FA600757E86 /* DDRange.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDRange.h; sourceTree = "<group>"; };
-		DA04654814BB5FA600757E86 /* DDRange.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDRange.m; sourceTree = "<group>"; };
-		DA04654914BB5FA600757E86 /* HTTPAuthenticationRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTTPAuthenticationRequest.h; sourceTree = "<group>"; };
-		DA04654A14BB5FA600757E86 /* HTTPAuthenticationRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTTPAuthenticationRequest.m; sourceTree = "<group>"; };
-		DA04654B14BB5FA600757E86 /* HTTPConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTTPConnection.h; sourceTree = "<group>"; };
-		DA04654C14BB5FA600757E86 /* HTTPConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTTPConnection.m; sourceTree = "<group>"; };
-		DA04654D14BB5FA600757E86 /* HTTPLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTTPLogging.h; sourceTree = "<group>"; };
-		DA04654E14BB5FA600757E86 /* HTTPMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTTPMessage.h; sourceTree = "<group>"; };
-		DA04654F14BB5FA600757E86 /* HTTPMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTTPMessage.m; sourceTree = "<group>"; };
-		DA04655014BB5FA600757E86 /* HTTPResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTTPResponse.h; sourceTree = "<group>"; };
-		DA04655114BB5FA600757E86 /* HTTPServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTTPServer.h; sourceTree = "<group>"; };
-		DA04655214BB5FA600757E86 /* HTTPServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTTPServer.m; sourceTree = "<group>"; };
-		DA04655414BB5FA600757E86 /* HTTPAsyncFileResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTTPAsyncFileResponse.h; sourceTree = "<group>"; };
-		DA04655514BB5FA600757E86 /* HTTPAsyncFileResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTTPAsyncFileResponse.m; sourceTree = "<group>"; };
-		DA04655614BB5FA600757E86 /* HTTPDataResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTTPDataResponse.h; sourceTree = "<group>"; };
-		DA04655714BB5FA600757E86 /* HTTPDataResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTTPDataResponse.m; sourceTree = "<group>"; };
-		DA04655814BB5FA600757E86 /* HTTPDynamicFileResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTTPDynamicFileResponse.h; sourceTree = "<group>"; };
-		DA04655914BB5FA600757E86 /* HTTPDynamicFileResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTTPDynamicFileResponse.m; sourceTree = "<group>"; };
-		DA04655A14BB5FA600757E86 /* HTTPFileResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTTPFileResponse.h; sourceTree = "<group>"; };
-		DA04655B14BB5FA600757E86 /* HTTPFileResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTTPFileResponse.m; sourceTree = "<group>"; };
-		DA04655C14BB5FA600757E86 /* HTTPRedirectResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTTPRedirectResponse.h; sourceTree = "<group>"; };
-		DA04655D14BB5FA600757E86 /* HTTPRedirectResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTTPRedirectResponse.m; sourceTree = "<group>"; };
-		DA04655E14BB5FA600757E86 /* WebSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebSocket.h; sourceTree = "<group>"; };
-		DA04655F14BB5FA600757E86 /* WebSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebSocket.m; sourceTree = "<group>"; };
-		DA04657E14BB5FD100757E86 /* About.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = About.txt; sourceTree = "<group>"; };
-		DA04657F14BB5FD100757E86 /* GCDAsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDAsyncSocket.h; sourceTree = "<group>"; };
-		DA04658014BB5FD100757E86 /* GCDAsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDAsyncSocket.m; sourceTree = "<group>"; };
-		DA04658314BB5FE900757E86 /* Logging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Logging.h; path = "../TouchDB-iOS/vendor/MYUtilities/Logging.h"; sourceTree = "<group>"; };
-		DA04658414BB5FE900757E86 /* Logging.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Logging.m; path = "../TouchDB-iOS/vendor/MYUtilities/Logging.m"; sourceTree = "<group>"; };
-		DA04658514BB5FE900757E86 /* Test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Test.h; path = "../TouchDB-iOS/vendor/MYUtilities/Test.h"; sourceTree = "<group>"; };
-		DA04658614BB5FE900757E86 /* Test.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Test.m; path = "../TouchDB-iOS/vendor/MYUtilities/Test.m"; sourceTree = "<group>"; };
-		DA04658C14BB5FFF00757E86 /* About.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = About.txt; sourceTree = "<group>"; };
-		DA04658D14BB5FFF00757E86 /* DDAbstractDatabaseLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDAbstractDatabaseLogger.h; sourceTree = "<group>"; };
-		DA04658E14BB5FFF00757E86 /* DDAbstractDatabaseLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDAbstractDatabaseLogger.m; sourceTree = "<group>"; };
-		DA04658F14BB5FFF00757E86 /* DDASLLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDASLLogger.h; sourceTree = "<group>"; };
-		DA04659014BB5FFF00757E86 /* DDASLLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDASLLogger.m; sourceTree = "<group>"; };
-		DA04659114BB5FFF00757E86 /* DDFileLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDFileLogger.h; sourceTree = "<group>"; };
-		DA04659214BB5FFF00757E86 /* DDFileLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDFileLogger.m; sourceTree = "<group>"; };
-		DA04659314BB5FFF00757E86 /* DDLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDLog.h; sourceTree = "<group>"; };
-		DA04659414BB5FFF00757E86 /* DDLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDLog.m; sourceTree = "<group>"; };
-		DA04659514BB5FFF00757E86 /* DDTTYLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDTTYLogger.h; sourceTree = "<group>"; };
-		DA04659614BB5FFF00757E86 /* DDTTYLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDTTYLogger.m; sourceTree = "<group>"; };
 		DA3DBAD714B768C1007F9419 /* app.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = app.js; path = example/app.js; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -282,7 +74,6 @@
 				08FB77AEFE84172EC02AAC07 /* Classes */,
 				32C88DFF0371C24200C91783 /* Other Sources */,
 				0867D69AFE84028FC02AAC07 /* Frameworks */,
-				DA04625614BB5B8300757E86 /* TouchDB */,
 				034768DFFF38A50411DB9C8B /* Products */,
 			);
 			name = ti_touchdb;
@@ -315,227 +106,6 @@
 			name = "Other Sources";
 			sourceTree = "<group>";
 		};
-		DA04625614BB5B8300757E86 /* TouchDB */ = {
-			isa = PBXGroup;
-			children = (
-				DA04652C14BB5EF200757E86 /* Listener */,
-				DA04651514BB5DF300757E86 /* vendor */,
-				DA0464B214BB5D9C00757E86 /* Source */,
-			);
-			name = TouchDB;
-			sourceTree = "<group>";
-		};
-		DA0464B214BB5D9C00757E86 /* Source */ = {
-			isa = PBXGroup;
-			children = (
-				DA0464B314BB5D9C00757E86 /* ChangeTracker */,
-				DA0464BE14BB5D9C00757E86 /* TDBatcher.h */,
-				DA0464BF14BB5D9C00757E86 /* TDBatcher.m */,
-				DA0464C014BB5D9C00757E86 /* TDBlobStore.h */,
-				DA0464C114BB5D9C00757E86 /* TDBlobStore.m */,
-				DA0464C214BB5D9C00757E86 /* TDBody.h */,
-				DA0464C314BB5D9C00757E86 /* TDBody.m */,
-				DA0464C414BB5D9C00757E86 /* TDCollateJSON.h */,
-				DA0464C514BB5D9C00757E86 /* TDCollateJSON.m */,
-				DA0464C614BB5D9C00757E86 /* TDDatabase+Attachments.m */,
-				DA0464C714BB5D9C00757E86 /* TDDatabase+Insertion.m */,
-				DA0464C814BB5D9C00757E86 /* TDDatabase+Replication.m */,
-				DA0464C914BB5D9C00757E86 /* TDDatabase.h */,
-				DA0464CA14BB5D9C00757E86 /* TDDatabase.m */,
-				DA0464CC14BB5D9C00757E86 /* TDInternal.h */,
-				DA0464CD14BB5D9C00757E86 /* TDPuller.h */,
-				DA0464CE14BB5D9C00757E86 /* TDPuller.m */,
-				DA0464D014BB5D9C00757E86 /* TDPusher.h */,
-				DA0464D114BB5D9C00757E86 /* TDPusher.m */,
-				DA0464D214BB5D9C00757E86 /* TDReplicator.h */,
-				DA0464D314BB5D9C00757E86 /* TDReplicator.m */,
-				DA0464D414BB5D9C00757E86 /* TDRevision.h */,
-				DA0464D514BB5D9C00757E86 /* TDRevision.m */,
-				DA0464D614BB5D9C00757E86 /* TDRouter+Handlers.m */,
-				DA0464D714BB5D9C00757E86 /* TDRouter.h */,
-				DA0464D814BB5D9C00757E86 /* TDRouter.m */,
-				DA0464DA14BB5D9C00757E86 /* TDServer.h */,
-				DA0464DB14BB5D9C00757E86 /* TDServer.m */,
-				DA0464DC14BB5D9C00757E86 /* TDURLProtocol.h */,
-				DA0464DD14BB5D9C00757E86 /* TDURLProtocol.m */,
-				DA0464DE14BB5D9C00757E86 /* TDView.h */,
-				DA0464DF14BB5D9C00757E86 /* TDView.m */,
-				DA0464E314BB5D9C00757E86 /* TouchDB.h */,
-			);
-			name = Source;
-			path = "../TouchDB-iOS/Source";
-			sourceTree = "<group>";
-		};
-		DA0464B314BB5D9C00757E86 /* ChangeTracker */ = {
-			isa = PBXGroup;
-			children = (
-				DA0464B414BB5D9C00757E86 /* TDBase64.h */,
-				DA0464B514BB5D9C00757E86 /* TDBase64.m */,
-				DA0464B614BB5D9C00757E86 /* TDChangeTracker.h */,
-				DA0464B714BB5D9C00757E86 /* TDChangeTracker.m */,
-				DA0464B814BB5D9C00757E86 /* TDConnectionChangeTracker.h */,
-				DA0464B914BB5D9C00757E86 /* TDConnectionChangeTracker.m */,
-				DA0464BA14BB5D9C00757E86 /* TDRemoteRequest.h */,
-				DA0464BB14BB5D9C00757E86 /* TDRemoteRequest.m */,
-				DA0464BC14BB5D9C00757E86 /* TDSocketChangeTracker.h */,
-				DA0464BD14BB5D9C00757E86 /* TDSocketChangeTracker.m */,
-			);
-			path = ChangeTracker;
-			sourceTree = "<group>";
-		};
-		DA04651514BB5DF300757E86 /* vendor */ = {
-			isa = PBXGroup;
-			children = (
-				DA04654014BB5F9800757E86 /* CocoaHTTPServer */,
-				DA04651714BB5E2600757E86 /* MYUtilities */,
-				DA04651614BB5E1C00757E86 /* fmdb */,
-			);
-			name = vendor;
-			sourceTree = "<group>";
-		};
-		DA04651614BB5E1C00757E86 /* fmdb */ = {
-			isa = PBXGroup;
-			children = (
-				DA04652014BB5E5100757E86 /* FMDatabase.h */,
-				DA04652114BB5E5100757E86 /* FMDatabase.m */,
-				DA04652214BB5E5100757E86 /* FMDatabaseAdditions.h */,
-				DA04652314BB5E5100757E86 /* FMDatabaseAdditions.m */,
-				DA04652414BB5E5100757E86 /* FMResultSet.h */,
-				DA04652514BB5E5100757E86 /* FMResultSet.m */,
-			);
-			name = fmdb;
-			sourceTree = "<group>";
-		};
-		DA04651714BB5E2600757E86 /* MYUtilities */ = {
-			isa = PBXGroup;
-			children = (
-				DA04658314BB5FE900757E86 /* Logging.h */,
-				DA04658414BB5FE900757E86 /* Logging.m */,
-				DA04658514BB5FE900757E86 /* Test.h */,
-				DA04658614BB5FE900757E86 /* Test.m */,
-				DA04651814BB5E3900757E86 /* CollectionUtils.h */,
-				DA04651914BB5E3900757E86 /* CollectionUtils.m */,
-				DA04651A14BB5E3900757E86 /* ExceptionUtils.h */,
-				DA04651B14BB5E3900757E86 /* ExceptionUtils.m */,
-			);
-			name = MYUtilities;
-			sourceTree = "<group>";
-		};
-		DA04652C14BB5EF200757E86 /* Listener */ = {
-			isa = PBXGroup;
-			children = (
-				DA04652F14BB5EF300757E86 /* TDHTTPConnection.h */,
-				DA04653014BB5EF300757E86 /* TDHTTPConnection.m */,
-				DA04653114BB5EF300757E86 /* TDHTTPResponse.h */,
-				DA04653214BB5EF300757E86 /* TDHTTPResponse.m */,
-				DA04653314BB5EF300757E86 /* TDHTTPServer.h */,
-				DA04653414BB5EF300757E86 /* TDListener.h */,
-				DA04653514BB5EF300757E86 /* TDListener.m */,
-			);
-			name = Listener;
-			path = "../TouchDB-iOS/Listener";
-			sourceTree = "<group>";
-		};
-		DA04654014BB5F9800757E86 /* CocoaHTTPServer */ = {
-			isa = PBXGroup;
-			children = (
-				DA04657C14BB5FC500757E86 /* Vendor */,
-				DA04654114BB5FA600757E86 /* Core */,
-			);
-			name = CocoaHTTPServer;
-			sourceTree = "<group>";
-		};
-		DA04654114BB5FA600757E86 /* Core */ = {
-			isa = PBXGroup;
-			children = (
-				DA04654214BB5FA600757E86 /* Categories */,
-				DA04654914BB5FA600757E86 /* HTTPAuthenticationRequest.h */,
-				DA04654A14BB5FA600757E86 /* HTTPAuthenticationRequest.m */,
-				DA04654B14BB5FA600757E86 /* HTTPConnection.h */,
-				DA04654C14BB5FA600757E86 /* HTTPConnection.m */,
-				DA04654D14BB5FA600757E86 /* HTTPLogging.h */,
-				DA04654E14BB5FA600757E86 /* HTTPMessage.h */,
-				DA04654F14BB5FA600757E86 /* HTTPMessage.m */,
-				DA04655014BB5FA600757E86 /* HTTPResponse.h */,
-				DA04655114BB5FA600757E86 /* HTTPServer.h */,
-				DA04655214BB5FA600757E86 /* HTTPServer.m */,
-				DA04655314BB5FA600757E86 /* Responses */,
-				DA04655E14BB5FA600757E86 /* WebSocket.h */,
-				DA04655F14BB5FA600757E86 /* WebSocket.m */,
-			);
-			name = Core;
-			path = "../TouchDB-iOS/vendor/CocoaHTTPServer/Core";
-			sourceTree = "<group>";
-		};
-		DA04654214BB5FA600757E86 /* Categories */ = {
-			isa = PBXGroup;
-			children = (
-				DA04654314BB5FA600757E86 /* DDData.h */,
-				DA04654414BB5FA600757E86 /* DDData.m */,
-				DA04654514BB5FA600757E86 /* DDNumber.h */,
-				DA04654614BB5FA600757E86 /* DDNumber.m */,
-				DA04654714BB5FA600757E86 /* DDRange.h */,
-				DA04654814BB5FA600757E86 /* DDRange.m */,
-			);
-			path = Categories;
-			sourceTree = "<group>";
-		};
-		DA04655314BB5FA600757E86 /* Responses */ = {
-			isa = PBXGroup;
-			children = (
-				DA04655414BB5FA600757E86 /* HTTPAsyncFileResponse.h */,
-				DA04655514BB5FA600757E86 /* HTTPAsyncFileResponse.m */,
-				DA04655614BB5FA600757E86 /* HTTPDataResponse.h */,
-				DA04655714BB5FA600757E86 /* HTTPDataResponse.m */,
-				DA04655814BB5FA600757E86 /* HTTPDynamicFileResponse.h */,
-				DA04655914BB5FA600757E86 /* HTTPDynamicFileResponse.m */,
-				DA04655A14BB5FA600757E86 /* HTTPFileResponse.h */,
-				DA04655B14BB5FA600757E86 /* HTTPFileResponse.m */,
-				DA04655C14BB5FA600757E86 /* HTTPRedirectResponse.h */,
-				DA04655D14BB5FA600757E86 /* HTTPRedirectResponse.m */,
-			);
-			path = Responses;
-			sourceTree = "<group>";
-		};
-		DA04657C14BB5FC500757E86 /* Vendor */ = {
-			isa = PBXGroup;
-			children = (
-				DA04658B14BB5FFF00757E86 /* CocoaLumberjack */,
-				DA04657D14BB5FD100757E86 /* CocoaAsyncSocket */,
-			);
-			name = Vendor;
-			sourceTree = "<group>";
-		};
-		DA04657D14BB5FD100757E86 /* CocoaAsyncSocket */ = {
-			isa = PBXGroup;
-			children = (
-				DA04657E14BB5FD100757E86 /* About.txt */,
-				DA04657F14BB5FD100757E86 /* GCDAsyncSocket.h */,
-				DA04658014BB5FD100757E86 /* GCDAsyncSocket.m */,
-			);
-			name = CocoaAsyncSocket;
-			path = "../TouchDB-iOS/vendor/CocoaHTTPServer/Vendor/CocoaAsyncSocket";
-			sourceTree = "<group>";
-		};
-		DA04658B14BB5FFF00757E86 /* CocoaLumberjack */ = {
-			isa = PBXGroup;
-			children = (
-				DA04658C14BB5FFF00757E86 /* About.txt */,
-				DA04658D14BB5FFF00757E86 /* DDAbstractDatabaseLogger.h */,
-				DA04658E14BB5FFF00757E86 /* DDAbstractDatabaseLogger.m */,
-				DA04658F14BB5FFF00757E86 /* DDASLLogger.h */,
-				DA04659014BB5FFF00757E86 /* DDASLLogger.m */,
-				DA04659114BB5FFF00757E86 /* DDFileLogger.h */,
-				DA04659214BB5FFF00757E86 /* DDFileLogger.m */,
-				DA04659314BB5FFF00757E86 /* DDLog.h */,
-				DA04659414BB5FFF00757E86 /* DDLog.m */,
-				DA04659514BB5FFF00757E86 /* DDTTYLogger.h */,
-				DA04659614BB5FFF00757E86 /* DDTTYLogger.m */,
-			);
-			name = CocoaLumberjack;
-			path = "../TouchDB-iOS/vendor/CocoaHTTPServer/Vendor/CocoaLumberjack";
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -545,58 +115,6 @@
 			files = (
 				AA747D9F0F9514B9006C5449 /* ComObscureTi_touchdb_Prefix.pch in Headers */,
 				24DD6CF91134B3F500162E58 /* ComObscureTi_touchdbModule.h in Headers */,
-				DA0464E514BB5D9C00757E86 /* TDBase64.h in Headers */,
-				DA0464E714BB5D9C00757E86 /* TDChangeTracker.h in Headers */,
-				DA0464E914BB5D9C00757E86 /* TDConnectionChangeTracker.h in Headers */,
-				DA0464EB14BB5D9C00757E86 /* TDRemoteRequest.h in Headers */,
-				DA0464ED14BB5D9C00757E86 /* TDSocketChangeTracker.h in Headers */,
-				DA0464EF14BB5D9C00757E86 /* TDBatcher.h in Headers */,
-				DA0464F114BB5D9C00757E86 /* TDBlobStore.h in Headers */,
-				DA0464F314BB5D9C00757E86 /* TDBody.h in Headers */,
-				DA0464F514BB5D9C00757E86 /* TDCollateJSON.h in Headers */,
-				DA0464FA14BB5D9C00757E86 /* TDDatabase.h in Headers */,
-				DA0464FD14BB5D9C00757E86 /* TDInternal.h in Headers */,
-				DA0464FE14BB5D9C00757E86 /* TDPuller.h in Headers */,
-				DA04650114BB5D9C00757E86 /* TDPusher.h in Headers */,
-				DA04650314BB5D9C00757E86 /* TDReplicator.h in Headers */,
-				DA04650514BB5D9C00757E86 /* TDRevision.h in Headers */,
-				DA04650814BB5D9C00757E86 /* TDRouter.h in Headers */,
-				DA04650B14BB5D9C00757E86 /* TDServer.h in Headers */,
-				DA04650D14BB5D9C00757E86 /* TDURLProtocol.h in Headers */,
-				DA04650F14BB5D9C00757E86 /* TDView.h in Headers */,
-				DA04651314BB5D9C00757E86 /* TouchDB.h in Headers */,
-				DA04651C14BB5E3900757E86 /* CollectionUtils.h in Headers */,
-				DA04651E14BB5E3900757E86 /* ExceptionUtils.h in Headers */,
-				DA04652614BB5E5100757E86 /* FMDatabase.h in Headers */,
-				DA04652814BB5E5100757E86 /* FMDatabaseAdditions.h in Headers */,
-				DA04652A14BB5E5100757E86 /* FMResultSet.h in Headers */,
-				DA04653814BB5EF300757E86 /* TDHTTPConnection.h in Headers */,
-				DA04653A14BB5EF300757E86 /* TDHTTPResponse.h in Headers */,
-				DA04653C14BB5EF300757E86 /* TDHTTPServer.h in Headers */,
-				DA04653D14BB5EF300757E86 /* TDListener.h in Headers */,
-				DA04656014BB5FA600757E86 /* DDData.h in Headers */,
-				DA04656214BB5FA600757E86 /* DDNumber.h in Headers */,
-				DA04656414BB5FA600757E86 /* DDRange.h in Headers */,
-				DA04656614BB5FA600757E86 /* HTTPAuthenticationRequest.h in Headers */,
-				DA04656814BB5FA600757E86 /* HTTPConnection.h in Headers */,
-				DA04656A14BB5FA600757E86 /* HTTPLogging.h in Headers */,
-				DA04656B14BB5FA600757E86 /* HTTPMessage.h in Headers */,
-				DA04656D14BB5FA600757E86 /* HTTPResponse.h in Headers */,
-				DA04656E14BB5FA600757E86 /* HTTPServer.h in Headers */,
-				DA04657014BB5FA600757E86 /* HTTPAsyncFileResponse.h in Headers */,
-				DA04657214BB5FA600757E86 /* HTTPDataResponse.h in Headers */,
-				DA04657414BB5FA600757E86 /* HTTPDynamicFileResponse.h in Headers */,
-				DA04657614BB5FA600757E86 /* HTTPFileResponse.h in Headers */,
-				DA04657814BB5FA600757E86 /* HTTPRedirectResponse.h in Headers */,
-				DA04657A14BB5FA600757E86 /* WebSocket.h in Headers */,
-				DA04658114BB5FD100757E86 /* GCDAsyncSocket.h in Headers */,
-				DA04658714BB5FE900757E86 /* Logging.h in Headers */,
-				DA04658914BB5FE900757E86 /* Test.h in Headers */,
-				DA04659714BB5FFF00757E86 /* DDAbstractDatabaseLogger.h in Headers */,
-				DA04659914BB5FFF00757E86 /* DDASLLogger.h in Headers */,
-				DA04659B14BB5FFF00757E86 /* DDFileLogger.h in Headers */,
-				DA04659D14BB5FFF00757E86 /* DDLog.h in Headers */,
-				DA04659F14BB5FFF00757E86 /* DDTTYLogger.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -672,57 +190,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				24DD6CFA1134B3F500162E58 /* ComObscureTi_touchdbModule.m in Sources */,
-				DA0464E614BB5D9C00757E86 /* TDBase64.m in Sources */,
-				DA0464E814BB5D9C00757E86 /* TDChangeTracker.m in Sources */,
-				DA0464EA14BB5D9C00757E86 /* TDConnectionChangeTracker.m in Sources */,
-				DA0464EC14BB5D9C00757E86 /* TDRemoteRequest.m in Sources */,
-				DA0464EE14BB5D9C00757E86 /* TDSocketChangeTracker.m in Sources */,
-				DA0464F014BB5D9C00757E86 /* TDBatcher.m in Sources */,
-				DA0464F214BB5D9C00757E86 /* TDBlobStore.m in Sources */,
-				DA0464F414BB5D9C00757E86 /* TDBody.m in Sources */,
-				DA0464F614BB5D9C00757E86 /* TDCollateJSON.m in Sources */,
-				DA0464F714BB5D9C00757E86 /* TDDatabase+Attachments.m in Sources */,
-				DA0464F814BB5D9C00757E86 /* TDDatabase+Insertion.m in Sources */,
-				DA0464F914BB5D9C00757E86 /* TDDatabase+Replication.m in Sources */,
-				DA0464FB14BB5D9C00757E86 /* TDDatabase.m in Sources */,
-				DA0464FF14BB5D9C00757E86 /* TDPuller.m in Sources */,
-				DA04650214BB5D9C00757E86 /* TDPusher.m in Sources */,
-				DA04650414BB5D9C00757E86 /* TDReplicator.m in Sources */,
-				DA04650614BB5D9C00757E86 /* TDRevision.m in Sources */,
-				DA04650714BB5D9C00757E86 /* TDRouter+Handlers.m in Sources */,
-				DA04650914BB5D9C00757E86 /* TDRouter.m in Sources */,
-				DA04650C14BB5D9C00757E86 /* TDServer.m in Sources */,
-				DA04650E14BB5D9C00757E86 /* TDURLProtocol.m in Sources */,
-				DA04651014BB5D9C00757E86 /* TDView.m in Sources */,
-				DA04651D14BB5E3900757E86 /* CollectionUtils.m in Sources */,
-				DA04651F14BB5E3900757E86 /* ExceptionUtils.m in Sources */,
-				DA04652714BB5E5100757E86 /* FMDatabase.m in Sources */,
-				DA04652914BB5E5100757E86 /* FMDatabaseAdditions.m in Sources */,
-				DA04652B14BB5E5100757E86 /* FMResultSet.m in Sources */,
-				DA04653914BB5EF300757E86 /* TDHTTPConnection.m in Sources */,
-				DA04653B14BB5EF300757E86 /* TDHTTPResponse.m in Sources */,
-				DA04653E14BB5EF300757E86 /* TDListener.m in Sources */,
-				DA04656114BB5FA600757E86 /* DDData.m in Sources */,
-				DA04656314BB5FA600757E86 /* DDNumber.m in Sources */,
-				DA04656514BB5FA600757E86 /* DDRange.m in Sources */,
-				DA04656714BB5FA600757E86 /* HTTPAuthenticationRequest.m in Sources */,
-				DA04656914BB5FA600757E86 /* HTTPConnection.m in Sources */,
-				DA04656C14BB5FA600757E86 /* HTTPMessage.m in Sources */,
-				DA04656F14BB5FA600757E86 /* HTTPServer.m in Sources */,
-				DA04657114BB5FA600757E86 /* HTTPAsyncFileResponse.m in Sources */,
-				DA04657314BB5FA600757E86 /* HTTPDataResponse.m in Sources */,
-				DA04657514BB5FA600757E86 /* HTTPDynamicFileResponse.m in Sources */,
-				DA04657714BB5FA600757E86 /* HTTPFileResponse.m in Sources */,
-				DA04657914BB5FA600757E86 /* HTTPRedirectResponse.m in Sources */,
-				DA04657B14BB5FA600757E86 /* WebSocket.m in Sources */,
-				DA04658214BB5FD100757E86 /* GCDAsyncSocket.m in Sources */,
-				DA04658814BB5FE900757E86 /* Logging.m in Sources */,
-				DA04658A14BB5FE900757E86 /* Test.m in Sources */,
-				DA04659814BB5FFF00757E86 /* DDAbstractDatabaseLogger.m in Sources */,
-				DA04659A14BB5FFF00757E86 /* DDASLLogger.m in Sources */,
-				DA04659C14BB5FFF00757E86 /* DDFileLogger.m in Sources */,
-				DA04659E14BB5FFF00757E86 /* DDLog.m in Sources */,
-				DA0465A014BB5FFF00757E86 /* DDTTYLogger.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -869,7 +336,13 @@
 					"-DDEBUG",
 					"-DTI_POST_1_2",
 				);
-				OTHER_LDFLAGS = "-ObjC";
+				OTHER_LDFLAGS = (
+					"-framework",
+					TouchDB,
+					"-framework",
+					TouchDBListener,
+					"-ObjC",
+				);
 				PRODUCT_NAME = ComObscureTi_touchdb;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
@@ -913,7 +386,13 @@
 				INSTALL_PATH = /usr/local/lib;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				OTHER_CFLAGS = "-DTI_POST_1_2";
-				OTHER_LDFLAGS = "-ObjC";
+				OTHER_LDFLAGS = (
+					"-framework",
+					TouchDB,
+					"-framework",
+					TouchDBListener,
+					"-ObjC",
+				);
 				PRODUCT_NAME = ComObscureTi_touchdb;
 				RUN_CLANG_STATIC_ANALYZER = NO;
 				SDKROOT = iphoneos;
