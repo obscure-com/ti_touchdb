@@ -181,30 +181,33 @@ TDListener * touchListener;
 
 #pragma mark TDViewCompiler
 
-
-- (TDMapBlock)compileMapFunction:(NSString*)mapSource language:(NSString*)language {
+- (KrollCallback *)compileJavascriptFunction:(NSString *)source {
     static NSString * MAP_EVAL_FORMAT = @"(function() { return %@; })()";
     
-    if (![@"javascript" isEqualToString:language])
-        return nil;
-
     KrollBridge * bridge = (KrollBridge *)self.pageContext;
     KrollContext * context = [bridge krollContext];
     
-    KrollEval * eval = [[KrollEval alloc] initWithCode:[NSString stringWithFormat:MAP_EVAL_FORMAT, mapSource]];
+    KrollEval * eval = [[KrollEval alloc] initWithCode:[NSString stringWithFormat:MAP_EVAL_FORMAT, source]];
     TiValueRef exception = NULL;
     TiValueRef resultRef = [eval jsInvokeInContext:context exception:&exception];
     [eval release];
     
     if (exception != NULL) {
 		id excm = [KrollObject toID:context value:exception];
-		NSLog(@"[ERROR] Map function script error = %@", [TiUtils exceptionMessage:excm]);
+		NSLog(@"[ERROR] Function script error = %@", [TiUtils exceptionMessage:excm]);
 		fflush(stderr);
         return nil;
     }
     
-    KrollCallback * cb = [[KrollCallback alloc] initWithCallback:resultRef thisObject:nil context:context];
-    
+    return [[[KrollCallback alloc] initWithCallback:resultRef thisObject:nil context:context] autorelease];
+}
+
+- (TDMapBlock)compileMapFunction:(NSString*)mapSource language:(NSString*)language {
+    if (![@"javascript" isEqualToString:language])
+        return nil;
+
+    KrollCallback * cb = [self compileJavascriptFunction:mapSource];
+
     TDMapBlock result = ^(NSDictionary* doc, TDMapEmitBlock emit) {
         emit_block = emit;
         [cb call:[NSArray arrayWithObject:doc] thisObject:nil];
@@ -213,17 +216,17 @@ TDListener * touchListener;
     return [[result copy] autorelease];
 }
 
- - (TDReduceBlock)compileReduceFunction:(NSString*)reduceSource language:(NSString*)language {
-     if (![@"javascript" isEqualToString:language])
-         return nil;
+- (TDReduceBlock)compileReduceFunction:(NSString*)reduceSource language:(NSString*)language {
+    if (![@"javascript" isEqualToString:language])
+        return nil;
      
-     __block KrollCallback * fn = (KrollCallback *) [self.pageContext evalJSAndWait:[NSString stringWithFormat:@"(%s)", reduceSource]];
-     TDReduceBlock result = ^(NSArray* keys, NSArray* values, BOOL rereduce) {
-         return [fn call:[NSArray arrayWithObjects:keys, values, rereduce, nil] thisObject:nil];
-     };
+    KrollCallback * cb = [self compileJavascriptFunction:reduceSource];
+    TDReduceBlock result = ^(NSArray* keys, NSArray* values, BOOL rereduce) {
+        return [cb call:[NSArray arrayWithObjects:keys, values, nil] thisObject:nil];
+    };
      
-     return result;
- }
+    return result;
+}
 
 
 @end
