@@ -225,7 +225,7 @@ TDListener * touchListener;
         return [cb call:[NSArray arrayWithObjects:keys, values, nil] thisObject:nil];
     };
      
-    return result;
+    return [[result copy] autorelease];
 }
 
 
