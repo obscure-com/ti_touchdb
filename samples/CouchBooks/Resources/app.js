@@ -73,10 +73,12 @@ var fsm = StateMachine.create({
       }
       else {
         var contents = f.read();
+        /*
         if (contents.mimeType !== 'text/json' && contents.mimeType !== 'application/json') {
           self.show_error('Error reading seed data: wrong content type '+contents.mimeType);
           return;
         }
+        */
         
         var docs;
         try {
