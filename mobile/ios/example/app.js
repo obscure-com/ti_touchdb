@@ -12,7 +12,13 @@ Ti.API.info("module is => " + ti_touchdb);
 
 ti_touchdb.startListenerOnPort(5985, function() {
   Ti.API.info("started listener!");
-})
+});
+
+/*
+ti_touchdb.registerMapFunction('test1', function(doc) {
+  Ti.API.info('this is test1, doc is '+JSON.stringify(doc));                             
+});
+*/
 
 /*
 Ti.API.info("module exampleProp is => " + ti_touchdb.exampleProp);

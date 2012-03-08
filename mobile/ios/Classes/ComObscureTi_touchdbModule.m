@@ -17,6 +17,37 @@
 #import <TouchDB/TDServer.h>
 #import <TouchDBListener/TDListener.h>
 
+
+static TDMapEmitBlock emit_block;
+
+static TiValueRef ThrowException (TiContextRef ctx, NSString *message, TiValueRef *exception) {
+	TiStringRef jsString = TiStringCreateWithCFString((CFStringRef)message);
+	*exception = TiValueMakeString(ctx,jsString);
+	TiStringRelease(jsString);
+	return TiValueMakeUndefined(ctx);
+}
+
+static TiValueRef EmitCallback(TiContextRef jsContext, TiObjectRef jsFunction, TiObjectRef jsThis, size_t argCount, const TiValueRef args[], TiValueRef* exception) {
+    
+	if (argCount!=2) {
+		return ThrowException(jsContext, @"invalid number of arguments", exception);
+	}
+	
+	KrollContext *ctx = GetKrollContext(jsContext);
+    NSObject * key = [KrollObject toID:ctx value:args[0]];
+    NSObject * value = [KrollObject toID:ctx value:args[1]];
+    
+    emit_block(key, value);
+    
+    return nil;
+}
+
+
+@interface ComObscureTi_touchdbModule (PrivateMethods)
+- (void)bindCallback:(NSString*)name callback:(TiObjectCallAsFunctionCallback)fn;
+@end
+
+
 @implementation ComObscureTi_touchdbModule
 
 TDServer * touchServer;
@@ -54,9 +85,11 @@ TDListener * touchListener;
 -(void)startup {
 	[super startup];
 
+    // bind the emit() function to the module JS context
+    [self bindCallback:@"emit" callback:&EmitCallback];
+    
 	[self startTouchDBServer];
-//    [self startTouchDBListener];
-//    [TDView setCompiler:self];
+    [TDView setCompiler:self];
     
 	NSLog(@"[INFO] %@ loaded",self);
 }
@@ -128,6 +161,69 @@ TDListener * touchListener;
     [cb call:nil thisObject:nil];
 }
 
+#pragma mark JS Context Helpers
+
+- (void)bindCallback:(NSString*)name callback:(TiObjectCallAsFunctionCallback)fn {
+    TiContextRef context = [[self pageContext] krollContext].context;
+    
+	// create the invoker bridge
+	TiStringRef invokerFnName = TiStringCreateWithCFString((CFStringRef) name);
+	TiValueRef invoker = TiObjectMakeFunctionWithCallback(context, invokerFnName, fn);
+	if (invoker) {
+		TiObjectRef global = TiContextGetGlobalObject(context); 
+		TiObjectSetProperty(context, global,   
+							invokerFnName, invoker,   
+							kTiPropertyAttributeReadOnly | kTiPropertyAttributeDontDelete,   
+							NULL); 
+	}
+	TiStringRelease(invokerFnName);	
+}
+
+#pragma mark TDViewCompiler
+
+
+- (TDMapBlock)compileMapFunction:(NSString*)mapSource language:(NSString*)language {
+    static NSString * MAP_EVAL_FORMAT = @"(function() { return %@; })()";
+    
+    if (![@"javascript" isEqualToString:language])
+        return nil;
+
+    KrollBridge * bridge = (KrollBridge *)self.pageContext;
+    KrollContext * context = [bridge krollContext];
+    
+    KrollEval * eval = [[KrollEval alloc] initWithCode:[NSString stringWithFormat:MAP_EVAL_FORMAT, mapSource]];
+    TiValueRef exception = NULL;
+    TiValueRef resultRef = [eval jsInvokeInContext:context exception:&exception];
+    [eval release];
+    
+    if (exception != NULL) {
+		id excm = [KrollObject toID:context value:exception];
+		NSLog(@"[ERROR] Map function script error = %@", [TiUtils exceptionMessage:excm]);
+		fflush(stderr);
+        return nil;
+    }
+    
+    KrollCallback * cb = [[KrollCallback alloc] initWithCallback:resultRef thisObject:nil context:context];
+    
+    TDMapBlock result = ^(NSDictionary* doc, TDMapEmitBlock emit) {
+        emit_block = emit;
+        [cb call:[NSArray arrayWithObject:doc] thisObject:nil];
+    };
+    
+    return [[result copy] autorelease];
+}
+
+ - (TDReduceBlock)compileReduceFunction:(NSString*)reduceSource language:(NSString*)language {
+     if (![@"javascript" isEqualToString:language])
+         return nil;
+     
+     __block KrollCallback * fn = (KrollCallback *) [self.pageContext evalJSAndWait:[NSString stringWithFormat:@"(%s)", reduceSource]];
+     TDReduceBlock result = ^(NSArray* keys, NSArray* values, BOOL rereduce) {
+         return [fn call:[NSArray arrayWithObjects:keys, values, rereduce, nil] thisObject:nil];
+     };
+     
+     return result;
+ }
 
 
 @end

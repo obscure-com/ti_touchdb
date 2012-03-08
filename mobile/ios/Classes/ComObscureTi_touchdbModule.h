@@ -9,7 +9,8 @@
  */
 
 #import "TiModule.h"
+#import <TouchDB/TDView.h>
 
-@interface ComObscureTi_touchdbModule : TiModule 
+@interface ComObscureTi_touchdbModule : TiModule <TDViewCompiler>
 
 @end
