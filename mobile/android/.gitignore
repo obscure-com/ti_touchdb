@@ -1,0 +1,7 @@
+tmp
+bin
+build
+*.zip
+build.properties
+.apt_generated
+.*
