@@ -37,6 +37,6 @@
     </iphone>
     <android xmlns:android="http://schemas.android.com/apk/res/android"/>
     <modules>
-        <module version="0.1">com.obscure.ti_touchdb</module>
+        <module version="0.1">com.obscure.TiTouchDB</module>
     </modules>
 </ti:app>

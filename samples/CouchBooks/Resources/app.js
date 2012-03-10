@@ -1,7 +1,7 @@
 var NavigationController = require('lib/NavigationController').NavigationController,
     StateMachine = require('lib/state-machine').StateMachine,
     CouchClient = require('lib/couch_client').CouchClient,
-    TouchDB = require('com.obscure.ti_touchdb'),
+    TouchDB = require('com.obscure.TiTouchDB'),
     books = require('ui/books');
     
 var controller = new NavigationController();
