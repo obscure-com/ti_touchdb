@@ -8,10 +8,13 @@
 #import <TouchDB/TDView.h>
 #import "TDDatabaseProxy.h"
 #import "TDRevisionProxy.h"
+#import "TDViewProxy.h"
 
 @implementation TDDatabaseProxy
 
 @synthesize database;
+
+#pragma mark Lifecycle
 
 - (id)initWithTDDatabase:(TDDatabase *)db {
     if (self = [super init]) {
@@ -20,14 +23,17 @@
     return self;
 }
 
-- (void)dispatchCallback:(KrollCallback *)cb forError:(NSError *)err {
+#pragma mark -
+#pragma mark Platform Utils
+
++ (void)dispatchCallback:(KrollCallback *)cb forError:(NSError *)err {
     if (err && cb) {
         NSDictionary * dict = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:[err code]], @"code", [err domain], @"domain", [err localizedDescription], @"description", nil];
         [cb call:[NSArray arrayWithObject:dict] thisObject:nil];
     }
 }
 
-- (NSArray *)toRevisionProxyArray:(NSArray *)revs {
++ (NSArray *)toRevisionProxyArray:(NSArray *)revs {
     NSMutableArray * result = [NSMutableArray arrayWithCapacity:[revs count]];
     for (TDRevision * rev in revs) {
         [result addObject:[[[TDRevisionProxy alloc] initWithTDRevision:rev] autorelease]];
@@ -35,7 +41,7 @@
     return result;
 }
 
-- (NSDictionary *)toDocumentDictionary:(NSDictionary *)dict {
++ (NSDictionary *)toDocumentDictionary:(NSDictionary *)dict {
     NSMutableDictionary * result = [NSMutableDictionary dictionaryWithDictionary:dict];
     for (NSString * key in [NSArray arrayWithObjects:@"docs", @"rows", nil]) {
         NSArray * v = [result valueForKey:key];
@@ -47,7 +53,7 @@
     return result;
 }
 
-- (void)populateQueryOptions:(TDQueryOptions *)options fromDict:(NSDictionary *)dict {
++ (void)populateQueryOptions:(TDQueryOptions *)options fromDict:(NSDictionary *)dict {
     if (!dict || !options) return;
     
     options->startKey = [dict valueForKey:@"startKey"];
@@ -119,7 +125,7 @@
     BOOL result = [self.database deleteDatabase:&err];
     
     if (!result) {
-        [self dispatchCallback:cb forError:err];
+        [TDDatabaseProxy dispatchCallback:cb forError:err];
     }
     
     return [NSNumber numberWithBool:result];
@@ -178,7 +184,7 @@
     ENSURE_ARG_AT_INDEX(revisionProxy, args, 0, TDRevisionProxy);
     
     if (!revisionProxy) return nil;
-    return [self toRevisionProxyArray:[self.database getRevisionHistory:revisionProxy.revision]];
+    return [TDDatabaseProxy toRevisionProxyArray:[self.database getRevisionHistory:revisionProxy.revision]];
 }
 
 
@@ -189,7 +195,7 @@
     ENSURE_ARG_OR_NIL_AT_INDEX(queryOptionsDict, args, 0, NSDictionary);
     
     TDQueryOptions queryOptions = kDefaultTDQueryOptions;
-    [self populateQueryOptions:&queryOptions fromDict:queryOptionsDict];
+    [TDDatabaseProxy populateQueryOptions:&queryOptions fromDict:queryOptionsDict];
     return [self.database getAllDocs:&queryOptions];
 }
 
@@ -200,10 +206,17 @@
     ENSURE_ARG_OR_NIL_AT_INDEX(queryOptionsDict, args, 1, NSDictionary);
     
     TDQueryOptions queryOptions = kDefaultTDQueryOptions;
-    [self populateQueryOptions:&queryOptions fromDict:queryOptionsDict];
+    [TDDatabaseProxy populateQueryOptions:&queryOptions fromDict:queryOptionsDict];
     return [self.database getAllDocs:&queryOptions];
 }
 
+- (id)viewNamed:(id)args {
+    NSString * name;
+    ENSURE_ARG_AT_INDEX(name, args, 0, NSString);
+    
+    TDView * view = [self.database viewNamed:name];
+    return [[[TDViewProxy alloc] initWithTDView:view] autorelease];
+}
 
 
 

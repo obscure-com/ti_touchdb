@@ -1,10 +1,9 @@
-//
-//  TDRevisionProxy.h
-//  titouchdb
-//
-//  Created by Paul Mietz Egli on 3/12/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
+/**
+ * $Id$
+ * 
+ * Copyright (c) 2012 Paul Mietz Egli
+ * Licensed under the Apache Public License version 2.
+ */
 
 #import "TiProxy.h"
 #import <TouchDB/TDRevision.h>
