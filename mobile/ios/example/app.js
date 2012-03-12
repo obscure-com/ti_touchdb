@@ -7,37 +7,25 @@ window.add(label);
 window.open();
 
 // TODO: write your module tests here
-var ti_touchdb = require('com.obscure.TiTouchDB');
-Ti.API.info("module is => " + ti_touchdb);
+var TiTouchDB = require('com.obscure.TiTouchDB');
 
-ti_touchdb.startListenerOnPort(5985, function() {
+
+TiTouchDB.startListenerOnPort(5985, function() {
   Ti.API.info("started listener!");
 });
 
-/*
-ti_touchdb.registerMapFunction('test1', function(doc) {
-  Ti.API.info('this is test1, doc is '+JSON.stringify(doc));                             
-});
-*/
-
-/*
-Ti.API.info("module exampleProp is => " + ti_touchdb.exampleProp);
-ti_touchdb.exampleProp = "This is a test value";
-
-if (Ti.Platform.name == "android") {
-	var proxy = ti_touchdb.createExample({
-		message: "Creating an example Proxy",
-		backgroundColor: "red",
-		width: 100,
-		height: 100,
-		top: 100,
-		left: 150
-	});
-
-	proxy.printMessage("Hello world!");
-	proxy.message = "Hi world!.  It's me again.";
-	proxy.printMessage("Hello world!");
-	window.add(proxy);
+var db = TiTouchDB.databaseNamed("test1");
+if (db) {
+  db.open();
+  var doc = db.getDocument('D30739F2-2E1C-4936-8E68-B90501D1474F');
+  label.text = JSON.stringify(doc.properties);
+  // label.text = String.format("name: %s; path: %s; exists: %s; document count: %d", db.name, db.path, db.exists ? 'YES' : 'NO', db.documentCount);
+  
+  var docs = db.getAllDocs();
+  Ti.API.info(JSON.stringify(docs));
+  Ti.API.info(JSON.stringify(docs.rows[0]));
+}
+else {
+  label.text = "error creating db";
 }
 
-*/

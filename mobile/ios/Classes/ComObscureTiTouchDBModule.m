@@ -14,6 +14,7 @@
 #import "TiUtils.h"
 #import <TouchDB/TouchDB.h>
 #import <TouchDBListener/TDListener.h>
+#import "TDDatabaseProxy.h"
 
 static TDMapEmitBlock emit_block;
 
@@ -135,7 +136,55 @@ TDListener * touchListener;
 	}
 }
 
-#pragma Public APIs
+#pragma mark -
+#pragma mark TDServer
+
+- (id)directory {
+    return touchServer.directory;
+}
+
+- (id)allDatabaseNames {
+    return touchServer.allDatabaseNames;
+}
+
+- (id)allOpenDatabases {
+    return touchServer.allOpenDatabases;
+}
+
+- (id)isValidDatabaseName:(id)args {
+    NSString * name;
+    ENSURE_ARG_AT_INDEX(name, args, 0, NSString);
+    return [NSNumber numberWithBool:[TDServer isValidDatabaseName:name]];
+}
+
+- (void)close:(id)args {
+    [touchServer close];
+}
+
+- (id)databaseNamed:(id)args {
+    NSString * name;
+    ENSURE_ARG_AT_INDEX(name, args, 0, NSString);
+    
+    TDDatabase * db = [touchServer databaseNamed:name];
+    return db ? [[[TDDatabaseProxy alloc] initWithTDDatabase:db] autorelease] : nil;
+}
+
+- (id)existingDatabaseNamed:(id)args {
+    NSString * name;
+    ENSURE_ARG_AT_INDEX(name, args, 0, NSString);
+
+    TDDatabase * db = [touchServer existingDatabaseNamed:name];
+    return db ? [[[TDDatabaseProxy alloc] initWithTDDatabase:db] autorelease] : nil;
+}
+
+- (id)deleteDatabaseNamed:(id)args {
+    NSString * name;
+    ENSURE_ARG_AT_INDEX(name, args, 0, NSString);
+    return [NSNumber numberWithBool:[touchServer deleteDatabaseNamed:name]];
+}
+
+#pragma mark -
+#pragma mark TDListener
 
 - (void)startListenerOnPort:(id)args {
     NSAssert(touchServer, @"TouchDB not present!");
@@ -158,6 +207,9 @@ TDListener * touchListener;
     [cb call:nil thisObject:nil];
 }
 
+
+
+#pragma mark -
 #pragma mark JS Context Helpers
 
 - (void)bindCallback:(NSString*)name callback:(TiObjectCallAsFunctionCallback)fn {
@@ -175,8 +227,6 @@ TDListener * touchListener;
 	}
 	TiStringRelease(invokerFnName);	
 }
-
-#pragma mark TDViewCompiler
 
 - (KrollCallback *)compileJavascriptFunction:(NSString *)source {
     static NSString * MAP_EVAL_FORMAT = @"(function() { return %@; })()";
@@ -198,6 +248,8 @@ TDListener * touchListener;
 
     return [[[KrollCallback alloc] initWithCallback:resultRef thisObject:nil context:context] autorelease];
 }
+
+#pragma mark TDViewCompiler
 
 - (TDMapBlock)compileMapFunction:(NSString*)mapSource language:(NSString*)language {
     if (![@"javascript" isEqualToString:language])
