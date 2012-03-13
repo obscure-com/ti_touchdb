@@ -12,7 +12,6 @@ var BookDetailView = function(db, e) {
       author: L('book_default_author'),
       copyright: [1970],
     });
-    Ti.API.info("doc ID is "+doc.docID);
   }
   
   var result = Ti.UI.createTableView({
@@ -30,13 +29,13 @@ var BookDetailView = function(db, e) {
   result.setData(rows);
   
   result.saveChanges = function() {
-    var updated = _.map(rows, function(row) {
-      var o = {};
-      o[row.key] = row.value;
-      return o; 
+    var updated = {};
+    _.each(rows, function(row) {
+      updated[row.key] = row.value;
     });
     doc.properties = _.extend(doc.properties, updated);
-    db.putRevision(doc, doc.revID);
+    var status = db.putRevision(doc, doc.revID);
+    return (status < 300);
   }
   
   result.addEventListener('books:change', function(e) {
@@ -44,10 +43,6 @@ var BookDetailView = function(db, e) {
     var book = doc.properties;
     book[e.key] = e.value;
     doc.properties = book;
-    if (e.key === 'title') {
-      // TODO it would be nice to change the window title here
-    }
-    // TODO store the updated value in the detail row
   });
   
   return result;

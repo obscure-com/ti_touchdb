@@ -9,10 +9,11 @@ var BookDetailWindow = function(e) {
     systemButton: Ti.UI.iPhone.SystemButton.DONE,
   });
   doneButton.addEventListener('click', function(e) {
-   // TODO validate and save
-   result.tableView.in_edit_mode = false;
-   result.tableView.saveChanges();
-   result.rightNavButton = editButton;
+    result.tableView.in_edit_mode = false;
+    result.rightNavButton = editButton;
+    if (!result.tableView.saveChanges()) {
+      alert(L('book_save_error'));
+    }
   });
 
   var editButton = Ti.UI.createButton({
@@ -22,12 +23,19 @@ var BookDetailWindow = function(e) {
     result.tableView.in_edit_mode = true;
     result.rightNavButton = doneButton;
   });
-  
+
   result.rightNavButton = editButton;
   
   result.addEventListener('open', function(e) {
     result.tableView = _.find(result.children, function(child) {
       return child.uid === 1;
+    });
+    
+    // event listener to change the window title
+    result.tableView.addEventListener('books:change', function(e) {
+      if (e.key === 'title') {
+        result.title = e.value;
+      }
     });
   });
   
