@@ -43,7 +43,7 @@ var BookListWindow = function() {
 
   result.addEventListener('open', function(e) {
     result.tableView = _.find(result.children, function(child) {
-      return child.appendRow !== undefined;
+      return child.uid === 1;
     });
     result.tableView.fireEvent('refresh');
   });

@@ -1,28 +1,22 @@
 
-function BookListView(server, options) {
-  var _ = require('lib/underscore'),
-      db = server.databaseNamed('books');
-
-
-  db.open();
+function BookListView(db, options) {
+  var _ = require('lib/underscore');
   
-  var result = Ti.UI.createTableView(_.extend({}, options));
+  var result = Ti.UI.createTableView(_.extend({ uid: 1 }, options));
   
   result.addEventListener('click', function(e) {
     var book = e.rowData.book;
-    // controller.open(exports.createDetailWindow(controller, db, book));
+    Ti.App.fireEvent('books:show_detail_view', {
+      title: book.title,
+      isbn: book._id
+    });
   });
   
   result.addEventListener('delete', function(e) {
     var book = e.rowData.book;
     if (book) {
-      /*
-      db.remove(book._id, book._rev, function(resp, status) {
-        if (status !== 200) {
-          alert('Error deleting book: '+JSON.stringify(resp));
-        }
-      });
-      */
+      var status = db.deleteRevision(book);
+      Ti.API.info('delete book '+book.properties.isbn+': '+status);
     }
   });
   
@@ -30,45 +24,6 @@ function BookListView(server, options) {
     load_book_list(db, result);
   });
   
-/*
-
-  var editButton = Ti.UI.createButton({
-    systemButton: Ti.UI.iPhone.SystemButton.EDIT,
-  });
-  editButton.addEventListener('click', function(e) {
-    tableView.editing = true;
-    result.leftNavButton = doneButton;
-  });
-  
-  var doneButton = Ti.UI.createButton({
-    systemButton: Ti.UI.iPhone.SystemButton.DONE,
-  });
-  doneButton.addEventListener('click', function(e) {
-    tableView.editing = false;
-    result.leftNavButton = editButton;
-  });
-  
-  result.leftNavButton = editButton;
-  
-  var addButton = Ti.UI.createButton({
-    systemButton: Ti.UI.iPhone.SystemButton.ADD,
-  });
-  addButton.addEventListener('click', function(e) {
-    var win = exports.createDetailWindow(controller, db, {
-      title: L('book.default_title'),
-      author: L('book.default_author'),
-      copyright: [1970],
-    });
-    win._set_editing(true);
-    controller.open(win);
-  });
-  result.rightNavButton = addButton;
-
-  result.addEventListener('open', function(e) {
-    load_book_list(db, tableView);
-  });
-    
-*/
   return result;  
 }
 
@@ -78,6 +33,7 @@ function load_book_list(db, table) {
     includeDocs: true
   });
 
+  // TODO use underscore
   var sections = [], section;
   for (i in data.rows) {
     var author = data.rows[i].key[0];

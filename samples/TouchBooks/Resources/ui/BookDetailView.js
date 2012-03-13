@@ -1,3 +1,5 @@
+var _ = require('/lib/underscore')._,
+    dateFormatter = require('/lib/dateformat').dateFormatter;
 
 var BookDetailView = function(db, e) {
   var doc;
@@ -10,31 +12,53 @@ var BookDetailView = function(db, e) {
       author: L('book_default_author'),
       copyright: [1970],
     });
+    Ti.API.info("doc ID is "+doc.docID);
   }
   
-  var rows = [];
-  rows.push(createDetailRow(L('DetailRow__id'), doc.properties, '_id'));
-  rows.push(createDetailRow(L('DetailRow_title'), doc.properties, 'title'));
-  rows.push(createDetailRow(L('DetailRow_author'), doc.properties, 'author'));
-  rows.push(createDetailRow(L('DetailRow_copyright'), doc.properties, 'copyright', dateFormatter));
-  
   var result = Ti.UI.createTableView({
-    data: rows,
+    uid: 1,
     style: Ti.UI.iPhone.TableViewStyle.GROUPED,
+    in_edit_mode: false,
   });
 
-  // TODO event listeners
+  var rows = [];
+  rows.push(createDetailRow(result, L('DetailRow__id'), doc.properties, '_id', null, (doc.docID && doc.docID.length > 0)));
+  rows.push(createDetailRow(result, L('DetailRow_title'), doc.properties, 'title'));
+  rows.push(createDetailRow(result, L('DetailRow_author'), doc.properties, 'author'));
+  rows.push(createDetailRow(result, L('DetailRow_copyright'), doc.properties, 'copyright', dateFormatter));
+  
+  result.setData(rows);
+  
+  result.saveChanges = function() {
+    var updated = _.map(rows, function(row) {
+      var o = {};
+      o[row.key] = row.value;
+      return o; 
+    });
+    doc.properties = _.extend(doc.properties, updated);
+    db.putRevision(doc, doc.revID);
+  }
+  
+  result.addEventListener('books:change', function(e) {
+    // still need to copy/modify/assign TiProxy dictionaries
+    var book = doc.properties;
+    book[e.key] = e.value;
+    doc.properties = book;
+    if (e.key === 'title') {
+      // TODO it would be nice to change the window title here
+    }
+    // TODO store the updated value in the detail row
+  });
   
   return result;
 };
 
-var _ = require('/lib/underscore')._,
-    dateFormatter = require('/lib/dateformat').dateFormatter;
 
-var createDetailRow = function(label, book, key, formatter) {
+var createDetailRow = function(tableView, label, book, key, formatter, immutable) {
   var result = Ti.UI.createTableViewRow({
     touchEnabled: false,
-    // _value: book[key],
+    key: key,
+    value: book[key],
   });
   
   formatter = (formatter || function(v) { return v; }),
@@ -57,41 +81,34 @@ var createDetailRow = function(label, book, key, formatter) {
     width: 190,
     color: 'black',
     font: { fontSize: 14, fontWeight: 'bold' },
-    text: formatter(book[key]),
+    text: formatter(result.value),
   });
   result.add(valueLabel);
   
-  result.label = function() {
-    return label;
-  }
-  
-  /*
-  result._current_value = function() {
-    return this._value;
-  };
-  
-  result._set_current_value = function(v) {
-    this._value = v;
-    valueLabel.text = formatter(v);
-    parentWin.fireEvent('book:change', {
-      key: key,
-      value: this._value,
+  // set up modal window to edit values
+  var EditorWindow = require('/ui/EditorWindow'),
+      EditorView = require('/ui/EditorView');
+
+  if (!immutable) {
+    result.addEventListener('click', function(e) {
+      if (tableView.in_edit_mode) {
+        var editorWin = new EditorWindow(result, { title: label });
+        var editorView = new EditorView(key, book[key]);
+        editorWin.add(editorView);
+        editorWin.open({
+          modal: true,
+          style: Ti.UI.iPhone.MODAL_TRANSITION_STYLE_COVER_VERTICAL,
+          presentation: Ti.UI.iPhone.MODAL_PRESENTATION_PAGESHEET,
+        });
+      }
     });
-  };
-    
-  result.addEventListener('click', function(e) {
-    // not sure why we are receiving events if touchEnabled == false...
-    if (result.touchEnabled) {
-      var editor = exports.createEditorWindow(result);
-      editor.open({
-        modal: true,
-        style: Ti.UI.iPhone.MODAL_TRANSITION_STYLE_COVER_VERTICAL,
-        presentation: Ti.UI.iPhone.MODAL_PRESENTATION_PAGESHEET,
-      });
-    }
-  });
-  */
+  }      
   
+  result.addEventListener('books:change', function(e) {
+    result.value = e.value;
+    valueLabel.text = formatter(result.value);
+  });
+
   return result;
 };
 
