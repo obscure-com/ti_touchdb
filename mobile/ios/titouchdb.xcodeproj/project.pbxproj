@@ -28,14 +28,16 @@
 		24DE9E1211C5FE74003F90F6 /* ComObscureTiTouchDBModuleAssets.m in Sources */ = {isa = PBXBuildFile; fileRef = 24DE9E1011C5FE74003F90F6 /* ComObscureTiTouchDBModuleAssets.m */; };
 		AA747D9F0F9514B9006C5449 /* ComObscureTiTouchDB_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* ComObscureTiTouchDB_Prefix.pch */; };
 		AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
+		DA6D3B9115100154006E35F1 /* TDDatabaseProxy+Replication.h in Headers */ = {isa = PBXBuildFile; fileRef = DA6D3B8F15100153006E35F1 /* TDDatabaseProxy+Replication.h */; };
+		DA6D3B9215100154006E35F1 /* TDDatabaseProxy+Replication.m in Sources */ = {isa = PBXBuildFile; fileRef = DA6D3B9015100154006E35F1 /* TDDatabaseProxy+Replication.m */; };
 		DAD0DE9B150E5607004FFC31 /* TDDatabaseProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = DAD0DE99150E5607004FFC31 /* TDDatabaseProxy.h */; };
 		DAD0DE9C150E5607004FFC31 /* TDDatabaseProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = DAD0DE9A150E5607004FFC31 /* TDDatabaseProxy.m */; };
 		DAD0DEA4150E61CA004FFC31 /* TDRevisionProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = DAD0DEA2150E61CA004FFC31 /* TDRevisionProxy.h */; };
 		DAD0DEA5150E61CA004FFC31 /* TDRevisionProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = DAD0DEA3150E61CA004FFC31 /* TDRevisionProxy.m */; };
-		DAD0DEA8150E7B0B004FFC31 /* TDDatabaseProxy+TDDatabaseProxy_Attachments.h in Headers */ = {isa = PBXBuildFile; fileRef = DAD0DEA6150E7B0B004FFC31 /* TDDatabaseProxy+TDDatabaseProxy_Attachments.h */; };
-		DAD0DEA9150E7B0B004FFC31 /* TDDatabaseProxy+TDDatabaseProxy_Attachments.m in Sources */ = {isa = PBXBuildFile; fileRef = DAD0DEA7150E7B0B004FFC31 /* TDDatabaseProxy+TDDatabaseProxy_Attachments.m */; };
-		DAD0DEAC150E7B6E004FFC31 /* TDDatabaseProxy+TDDatabaseProxy_Insertion.h in Headers */ = {isa = PBXBuildFile; fileRef = DAD0DEAA150E7B6E004FFC31 /* TDDatabaseProxy+TDDatabaseProxy_Insertion.h */; };
-		DAD0DEAD150E7B6E004FFC31 /* TDDatabaseProxy+TDDatabaseProxy_Insertion.m in Sources */ = {isa = PBXBuildFile; fileRef = DAD0DEAB150E7B6E004FFC31 /* TDDatabaseProxy+TDDatabaseProxy_Insertion.m */; };
+		DAD0DEA8150E7B0B004FFC31 /* TDDatabaseProxy+Attachments.h in Headers */ = {isa = PBXBuildFile; fileRef = DAD0DEA6150E7B0B004FFC31 /* TDDatabaseProxy+Attachments.h */; };
+		DAD0DEA9150E7B0B004FFC31 /* TDDatabaseProxy+Attachments.m in Sources */ = {isa = PBXBuildFile; fileRef = DAD0DEA7150E7B0B004FFC31 /* TDDatabaseProxy+Attachments.m */; };
+		DAD0DEAC150E7B6E004FFC31 /* TDDatabaseProxy+Insertion.h in Headers */ = {isa = PBXBuildFile; fileRef = DAD0DEAA150E7B6E004FFC31 /* TDDatabaseProxy+Insertion.h */; };
+		DAD0DEAD150E7B6E004FFC31 /* TDDatabaseProxy+Insertion.m in Sources */ = {isa = PBXBuildFile; fileRef = DAD0DEAB150E7B6E004FFC31 /* TDDatabaseProxy+Insertion.m */; };
 		DAD0DEB0150E9CF3004FFC31 /* TDViewProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = DAD0DEAE150E9CF2004FFC31 /* TDViewProxy.h */; };
 		DAD0DEB1150E9CF3004FFC31 /* TDViewProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = DAD0DEAF150E9CF2004FFC31 /* TDViewProxy.m */; };
 /* End PBXBuildFile section */
@@ -59,14 +61,16 @@
 		AA747D9E0F9514B9006C5449 /* ComObscureTiTouchDB_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComObscureTiTouchDB_Prefix.pch; sourceTree = SOURCE_ROOT; };
 		AACBBE490F95108600F1A2B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D2AAC07E0554694100DB518D /* libComObscureTiTouchDB.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libComObscureTiTouchDB.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		DA6D3B8F15100153006E35F1 /* TDDatabaseProxy+Replication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "TDDatabaseProxy+Replication.h"; path = "Classes/TDDatabaseProxy+Replication.h"; sourceTree = "<group>"; };
+		DA6D3B9015100154006E35F1 /* TDDatabaseProxy+Replication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "TDDatabaseProxy+Replication.m"; path = "Classes/TDDatabaseProxy+Replication.m"; sourceTree = "<group>"; };
 		DAD0DE99150E5607004FFC31 /* TDDatabaseProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TDDatabaseProxy.h; path = Classes/TDDatabaseProxy.h; sourceTree = "<group>"; };
 		DAD0DE9A150E5607004FFC31 /* TDDatabaseProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = TDDatabaseProxy.m; path = Classes/TDDatabaseProxy.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		DAD0DEA2150E61CA004FFC31 /* TDRevisionProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TDRevisionProxy.h; path = Classes/TDRevisionProxy.h; sourceTree = "<group>"; };
 		DAD0DEA3150E61CA004FFC31 /* TDRevisionProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TDRevisionProxy.m; path = Classes/TDRevisionProxy.m; sourceTree = "<group>"; };
-		DAD0DEA6150E7B0B004FFC31 /* TDDatabaseProxy+TDDatabaseProxy_Attachments.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "TDDatabaseProxy+TDDatabaseProxy_Attachments.h"; path = "Classes/TDDatabaseProxy+TDDatabaseProxy_Attachments.h"; sourceTree = "<group>"; };
-		DAD0DEA7150E7B0B004FFC31 /* TDDatabaseProxy+TDDatabaseProxy_Attachments.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "TDDatabaseProxy+TDDatabaseProxy_Attachments.m"; path = "Classes/TDDatabaseProxy+TDDatabaseProxy_Attachments.m"; sourceTree = "<group>"; };
-		DAD0DEAA150E7B6E004FFC31 /* TDDatabaseProxy+TDDatabaseProxy_Insertion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "TDDatabaseProxy+TDDatabaseProxy_Insertion.h"; path = "Classes/TDDatabaseProxy+TDDatabaseProxy_Insertion.h"; sourceTree = "<group>"; };
-		DAD0DEAB150E7B6E004FFC31 /* TDDatabaseProxy+TDDatabaseProxy_Insertion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = "TDDatabaseProxy+TDDatabaseProxy_Insertion.m"; path = "Classes/TDDatabaseProxy+TDDatabaseProxy_Insertion.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		DAD0DEA6150E7B0B004FFC31 /* TDDatabaseProxy+Attachments.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "TDDatabaseProxy+Attachments.h"; path = "Classes/TDDatabaseProxy+Attachments.h"; sourceTree = "<group>"; };
+		DAD0DEA7150E7B0B004FFC31 /* TDDatabaseProxy+Attachments.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "TDDatabaseProxy+Attachments.m"; path = "Classes/TDDatabaseProxy+Attachments.m"; sourceTree = "<group>"; };
+		DAD0DEAA150E7B6E004FFC31 /* TDDatabaseProxy+Insertion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "TDDatabaseProxy+Insertion.h"; path = "Classes/TDDatabaseProxy+Insertion.h"; sourceTree = "<group>"; };
+		DAD0DEAB150E7B6E004FFC31 /* TDDatabaseProxy+Insertion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = "TDDatabaseProxy+Insertion.m"; path = "Classes/TDDatabaseProxy+Insertion.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		DAD0DEAE150E9CF2004FFC31 /* TDViewProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TDViewProxy.h; path = Classes/TDViewProxy.h; sourceTree = "<group>"; };
 		DAD0DEAF150E9CF2004FFC31 /* TDViewProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TDViewProxy.m; path = Classes/TDViewProxy.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -119,10 +123,12 @@
 				24DD6CF81134B3F500162E58 /* ComObscureTiTouchDBModule.m */,
 				DAD0DE99150E5607004FFC31 /* TDDatabaseProxy.h */,
 				DAD0DE9A150E5607004FFC31 /* TDDatabaseProxy.m */,
-				DAD0DEA6150E7B0B004FFC31 /* TDDatabaseProxy+TDDatabaseProxy_Attachments.h */,
-				DAD0DEA7150E7B0B004FFC31 /* TDDatabaseProxy+TDDatabaseProxy_Attachments.m */,
-				DAD0DEAA150E7B6E004FFC31 /* TDDatabaseProxy+TDDatabaseProxy_Insertion.h */,
-				DAD0DEAB150E7B6E004FFC31 /* TDDatabaseProxy+TDDatabaseProxy_Insertion.m */,
+				DAD0DEA6150E7B0B004FFC31 /* TDDatabaseProxy+Attachments.h */,
+				DAD0DEA7150E7B0B004FFC31 /* TDDatabaseProxy+Attachments.m */,
+				DAD0DEAA150E7B6E004FFC31 /* TDDatabaseProxy+Insertion.h */,
+				DAD0DEAB150E7B6E004FFC31 /* TDDatabaseProxy+Insertion.m */,
+				DA6D3B8F15100153006E35F1 /* TDDatabaseProxy+Replication.h */,
+				DA6D3B9015100154006E35F1 /* TDDatabaseProxy+Replication.m */,
 				DAD0DEA2150E61CA004FFC31 /* TDRevisionProxy.h */,
 				DAD0DEA3150E61CA004FFC31 /* TDRevisionProxy.m */,
 				DAD0DEAE150E9CF2004FFC31 /* TDViewProxy.h */,
@@ -152,9 +158,10 @@
 				24DE9E1111C5FE74003F90F6 /* ComObscureTiTouchDBModuleAssets.h in Headers */,
 				DAD0DE9B150E5607004FFC31 /* TDDatabaseProxy.h in Headers */,
 				DAD0DEA4150E61CA004FFC31 /* TDRevisionProxy.h in Headers */,
-				DAD0DEA8150E7B0B004FFC31 /* TDDatabaseProxy+TDDatabaseProxy_Attachments.h in Headers */,
-				DAD0DEAC150E7B6E004FFC31 /* TDDatabaseProxy+TDDatabaseProxy_Insertion.h in Headers */,
+				DAD0DEA8150E7B0B004FFC31 /* TDDatabaseProxy+Attachments.h in Headers */,
+				DAD0DEAC150E7B6E004FFC31 /* TDDatabaseProxy+Insertion.h in Headers */,
 				DAD0DEB0150E9CF3004FFC31 /* TDViewProxy.h in Headers */,
+				DA6D3B9115100154006E35F1 /* TDDatabaseProxy+Replication.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -229,9 +236,10 @@
 				24DE9E1211C5FE74003F90F6 /* ComObscureTiTouchDBModuleAssets.m in Sources */,
 				DAD0DE9C150E5607004FFC31 /* TDDatabaseProxy.m in Sources */,
 				DAD0DEA5150E61CA004FFC31 /* TDRevisionProxy.m in Sources */,
-				DAD0DEA9150E7B0B004FFC31 /* TDDatabaseProxy+TDDatabaseProxy_Attachments.m in Sources */,
-				DAD0DEAD150E7B6E004FFC31 /* TDDatabaseProxy+TDDatabaseProxy_Insertion.m in Sources */,
+				DAD0DEA9150E7B0B004FFC31 /* TDDatabaseProxy+Attachments.m in Sources */,
+				DAD0DEAD150E7B6E004FFC31 /* TDDatabaseProxy+Insertion.m in Sources */,
 				DAD0DEB1150E9CF3004FFC31 /* TDViewProxy.m in Sources */,
+				DA6D3B9215100154006E35F1 /* TDDatabaseProxy+Replication.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
