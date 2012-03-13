@@ -45,7 +45,20 @@
     
     TDStatus status;
     
+    if (!proxy.revision)
+        return [NSNumber numberWithInt:400];
+    
+    if (!proxy.revision.docID) {
+        // create a new TDRevision with the document body.
+        // this grabs the _id, _rev, and _deleted properties and puts them in the
+        // correct fields in the new TDRevision object.
+        proxy.revision = [[TDRevision alloc] initWithBody:proxy.revision.body];
+    }
+    
     TDRevision * result = [self.database putRevision:proxy.revision prevRevisionID:prevRevID allowConflict:[allowConflict boolValue] status:&status];
+    
+    // insertion modifies at least the TDRevision.revID property
+    proxy.revision = result;
     
     return [NSNumber numberWithInt:status];
 }
