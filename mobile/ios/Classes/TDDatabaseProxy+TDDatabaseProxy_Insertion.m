@@ -49,5 +49,21 @@
     
     return [NSNumber numberWithInt:status];
 }
- 
+
+#pragma mark -
+#pragma mark Helper Methods
+
+- (id)deleteRevision:(id)args {
+    TDRevisionProxy * proxy;
+    ENSURE_ARG_AT_INDEX(proxy, args, 0, TDRevisionProxy);
+    
+    if (!proxy || !proxy.revision) return [NSNumber numberWithInt:404];
+    
+    TDStatus status;
+    [proxy.revision.properties setValue:[NSNumber numberWithBool:YES] forKey:@"_deleted"];
+    [self.database putRevision:proxy.revision prevRevisionID:proxy.revision.revID allowConflict:YES status:&status];
+    return [NSNumber numberWithInt:status];
+}
+              
+
 @end

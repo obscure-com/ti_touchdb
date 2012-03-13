@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+  <string name="RootWindow_title">Books</string>
+  <string name="DetailWindow_title">Info</string>
+  <string name="DetailWindow_error_missing_id">ISBN is required_</string>
+  <string name="DetailWindow_warning_changed_id">You've changed the ISBN, which will save a new book record.  Is this ok?</string>
+  <string name="DetailRow__id">ISBN</string>
+  <string name="DetailRow_title">Title</string>
+  <string name="DetailRow_author">Author</string>
+  <string name="DetailRow_copyright">Copyright</string>
+  <string name="book_default_title">Title</string>
+  <string name="book_default_author">Author</string>
+</resources>
