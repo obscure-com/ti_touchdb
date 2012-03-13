@@ -15,8 +15,10 @@ function BookListView(db, options) {
   result.addEventListener('delete', function(e) {
     var book = e.rowData.book;
     if (book) {
-      var status = db.deleteRevision(book);
-      Ti.API.info('delete book '+book.properties.isbn+': '+status);
+      // book is a dictionary because it came from a view function.
+      // need to get the full document object to delete
+      var doc = db.getDocument(book._id);
+      var status = db.deleteRevision(doc);
     }
   });
   
