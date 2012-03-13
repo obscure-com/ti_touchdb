@@ -72,6 +72,35 @@
     if ([dict valueForKey:@"group"]) options->group = [[dict valueForKey:@"group"] boolValue];
 }
 
+- (TDView *) compileView:(NSString *)viewName fromProperties:(NSDictionary *)viewProps {
+    NSString * language = [viewProps objectForKey: @"language"] ?: @"javascript";
+    NSString * mapSource = [viewProps objectForKey: @"map"];
+    if (!mapSource)
+        return nil;
+    TDMapBlock mapBlock = [[TDView compiler] compileMapFunction:mapSource language:language];
+    if (!mapBlock) {
+        NSLog(@"[WARNING] View %@ has unknown map function: %@", viewName, mapSource);
+        return nil;
+    }
+    NSString* reduceSource = [viewProps objectForKey: @"reduce"];
+    TDReduceBlock reduceBlock = NULL;
+    if (reduceSource) {
+        reduceBlock =[[TDView compiler] compileReduceFunction: reduceSource language: language];
+        if (!reduceBlock) {
+            NSLog(@"[WARNING] View %@ has unknown reduce function: %@", viewName, reduceSource);
+            return nil;
+        }
+    }
+    
+    TDView * view = [self.database viewNamed:viewName];
+    [view setMapBlock:mapBlock reduceBlock:reduceBlock version: @"1"];
+    
+    NSDictionary * options = [viewProps objectForKey: @"options"];
+    if ([@"raw" isEqualToString:[options objectForKey: @"collation"]])
+        view.collation = kTDViewCollationRaw;
+    return view;
+}
+
 #pragma mark -
 #pragma mark TDDatabase
 
@@ -214,9 +243,35 @@
     NSString * name;
     ENSURE_ARG_AT_INDEX(name, args, 0, NSString);
     
-    TDView * view = [self.database viewNamed:name];
-    return [[[TDViewProxy alloc] initWithTDView:view] autorelease];
+    TDView * result = [self.database viewNamed:name];
+    /*
+    if (!result || !result.mapBlock) {
+        // compile view and set map block
+        NSArray * viewName = [name pathComponents];
+        NSAssert([viewName count] == 2, @"Invalid view path: %@", name);
+        
+        // get the design doc
+        NSString * path = [NSString pathWithComponents:[NSArray arrayWithObjects:@"_design", [viewName objectAtIndex:0], nil]];
+        TDRevision * ddoc = [result.database getDocumentWithID:path revisionID:nil options:nil];
+        if (!ddoc) return nil;
+        
+        // get the view from the views property of the design doc
+        NSDictionary * views = [ddoc.properties objectForKey:@"views"];
+        NSDictionary * view = [views objectForKey:[viewName objectAtIndex:1]];
+        if (!view) return nil;
+        
+        result = [self compileView:name fromProperties:view];
+        if (!result) return nil; // TODO error callback?
+    }
+    */
+    return [[[TDViewProxy alloc] initWithTDView:result] autorelease];
 }
+
+
+#pragma mark Bulk Documents
+
+// TODO!
+
 
 
 
