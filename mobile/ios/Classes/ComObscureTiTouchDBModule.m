@@ -193,7 +193,7 @@ TDListener * touchListener;
     KrollCallback * cb;
 
     ENSURE_ARG_AT_INDEX(port, args, 0, NSNumber);
-    ENSURE_ARG_OR_NIL_AT_INDEX(cb, args, 1, KrollCallback);
+    ENSURE_ARG_OR_NULL_AT_INDEX(cb, args, 1, KrollCallback);
 
     // destroy any existing listener
     [touchListener stop];

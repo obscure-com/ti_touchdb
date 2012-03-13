@@ -148,7 +148,7 @@
 
 - (id)deleteDatabase:(id)args {
     KrollCallback * cb;
-    ENSURE_ARG_OR_NIL_AT_INDEX(cb, args, 0, KrollCallback);
+    ENSURE_ARG_OR_NULL_AT_INDEX(cb, args, 0, KrollCallback);
     
     NSError * err;
     BOOL result = [self.database deleteDatabase:&err];
@@ -173,7 +173,7 @@
 
 - (id)endTransaction:(id)args {
     NSNumber * commit;
-    ENSURE_ARG_OR_NIL_AT_INDEX(commit, args, 0, NSNumber);
+    ENSURE_ARG_OR_NULL_AT_INDEX(commit, args, 0, NSNumber);
     
     BOOL result = [self.database endTransaction:(commit ? [commit boolValue] : YES)];
     return [NSNumber numberWithBool:result];
@@ -191,8 +191,8 @@
     NSNumber * contentOptions;
     
     ENSURE_ARG_AT_INDEX(docID, args, 0, NSString);
-    ENSURE_ARG_OR_NIL_AT_INDEX(revID, args, 1, NSString);
-    ENSURE_ARG_OR_NIL_AT_INDEX(contentOptions, args, 2, NSNumber);
+    ENSURE_ARG_OR_NULL_AT_INDEX(revID, args, 1, NSString);
+    ENSURE_ARG_OR_NULL_AT_INDEX(contentOptions, args, 2, NSNumber);
     
     TDRevision * document = [self.database getDocumentWithID:docID revisionID:revID options:[contentOptions intValue]];
     return [[[TDRevisionProxy alloc] initWithTDRevision:document] autorelease];
@@ -203,7 +203,7 @@
     NSString * revID;
     
     ENSURE_ARG_AT_INDEX(docID, args, 0, NSString);
-    ENSURE_ARG_OR_NIL_AT_INDEX(revID, args, 1, NSString);
+    ENSURE_ARG_OR_NULL_AT_INDEX(revID, args, 1, NSString);
     
     return [NSNumber numberWithBool:[self.database existsDocumentWithID:docID revisionID:revID]];
 }
@@ -220,7 +220,7 @@
 
 - (id)getAllDocs:(id)args {
     NSDictionary * queryOptionsDict;
-    ENSURE_ARG_OR_NIL_AT_INDEX(queryOptionsDict, args, 0, NSDictionary);
+    ENSURE_ARG_OR_NULL_AT_INDEX(queryOptionsDict, args, 0, NSDictionary);
     
     TDQueryOptions queryOptions = kDefaultTDQueryOptions;
     [TDDatabaseProxy populateQueryOptions:&queryOptions fromDict:queryOptionsDict];
@@ -231,7 +231,7 @@
     NSArray * docIDs;
     NSDictionary * queryOptionsDict;
     ENSURE_ARG_AT_INDEX(docIDs, args, 0, NSArray);
-    ENSURE_ARG_OR_NIL_AT_INDEX(queryOptionsDict, args, 1, NSDictionary);
+    ENSURE_ARG_OR_NULL_AT_INDEX(queryOptionsDict, args, 1, NSDictionary);
     
     TDQueryOptions queryOptions = kDefaultTDQueryOptions;
     [TDDatabaseProxy populateQueryOptions:&queryOptions fromDict:queryOptionsDict];

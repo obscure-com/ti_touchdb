@@ -111,7 +111,7 @@
 
 - (id)queryWithOptions:(id)args {
     NSDictionary * queryOptionsDict;
-    ENSURE_ARG_OR_NIL_AT_INDEX(queryOptionsDict, args, 0, NSDictionary);
+    ENSURE_ARG_OR_NULL_AT_INDEX(queryOptionsDict, args, 0, NSDictionary);
     
     TDStatus status;
     TDQueryOptions queryOptions = kDefaultTDQueryOptions;

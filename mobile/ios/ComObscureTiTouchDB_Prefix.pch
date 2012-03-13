@@ -2,3 +2,20 @@
 #ifdef __OBJC__
     #import <Foundation/Foundation.h>
 #endif
+
+#define ENSURE_ARG_OR_NULL_AT_INDEX(out,args,index,type) \
+if (args==nil || args==[NSNull null]) \
+{ \
+out = nil; \
+} \
+else if ([args isKindOfClass:[NSArray class]]) { \
+if ([args count]>index) {\
+out = [args objectAtIndex:index]; \
+}\
+else { \
+out = nil; \
+} \
+if (out && ![out isKindOfClass:[NSNull class]] && ![out isKindOfClass:[type class]]) { \
+[self throwException:TiExceptionInvalidType subreason:[NSString stringWithFormat:@"expected: %@, was: %@",[type class],[out class]] location:CODELOCATION]; \
+} \
+} \

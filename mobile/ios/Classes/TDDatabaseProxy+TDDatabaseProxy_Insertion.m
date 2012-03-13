@@ -40,8 +40,8 @@
     NSNumber * allowConflict;
     
     ENSURE_ARG_AT_INDEX(proxy, args, 0, TDRevisionProxy);
-    ENSURE_ARG_OR_NIL_AT_INDEX(prevRevID, args, 1, NSString);
-    ENSURE_ARG_OR_NIL_AT_INDEX(allowConflict, args, 2, NSNumber);
+    ENSURE_ARG_OR_NULL_AT_INDEX(prevRevID, args, 1, NSString);
+    ENSURE_ARG_OR_NULL_AT_INDEX(allowConflict, args, 2, NSNumber);
     
     TDStatus status;
     
