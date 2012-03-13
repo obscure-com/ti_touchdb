@@ -43,6 +43,10 @@ var EditorView = function(key, value) {
     });
 
     result.add(textField);
+
+    result.addEventListener('open', function(e) {
+      textField.focus();
+    });
   }
   
   return result;

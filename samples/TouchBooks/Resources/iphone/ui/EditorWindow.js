@@ -35,6 +35,12 @@ var EditorWindow = function(changeEventTarget, opts) {
   });
   result.rightNavButton = saveButton;
   
+  result.addEventListener('open', function(e) {
+    _.each(result.children, function(child) {
+      child.fireEvent('open');
+    });
+  });
+  
   return result;  
 };
 
