@@ -73,8 +73,9 @@
     if (!proxy || !proxy.revision) return [NSNumber numberWithInt:404];
     
     TDStatus status;
-    [proxy.revision.properties setValue:[NSNumber numberWithBool:YES] forKey:@"_deleted"];
-    [self.database putRevision:proxy.revision prevRevisionID:proxy.revision.revID allowConflict:YES status:&status];
+    TDRevision * revToDelete = [[TDRevision alloc] initWithDocID:proxy.revision.docID revID:proxy.revision.revID deleted:YES];
+    revToDelete.body = proxy.revision.body;
+    [self.database putRevision:revToDelete prevRevisionID:proxy.revision.revID allowConflict:YES status:&status];
     return [NSNumber numberWithInt:status];
 }
               
