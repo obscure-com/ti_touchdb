@@ -15,7 +15,9 @@ out = [args objectAtIndex:index]; \
 else { \
 out = nil; \
 } \
-if (out && ![out isKindOfClass:[NSNull class]] && ![out isKindOfClass:[type class]]) { \
+if ([out isKindOfClass:[NSNull class]]) { \
+  out = nil; \
+} else if (out && ![out isKindOfClass:[type class]]) { \
 [self throwException:TiExceptionInvalidType subreason:[NSString stringWithFormat:@"expected: %@, was: %@",[type class],[out class]] location:CODELOCATION]; \
 } \
 } \
