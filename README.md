@@ -28,7 +28,8 @@ See the Wiki pages for usage instructions and the samples directory for example 
 
 **pre-alpha**
 
-I'm working on getting the iOS version up and running.  Once it is reasonably stable, I'll post a binary
-for download and will start on the Android version.
+* iOS version is wrapped and has a functional HTTP listener.
+* Android version HTTP listener is problematic, so that is set aside for now
+* Currently working on the iOS in-process API
+* Recently pushed samples/TouchBooks, a version of CouchBooks that uses the in-process TiTouchDB API
 
-This module will eventually contain an in-process API similar to CouchCocoa.
