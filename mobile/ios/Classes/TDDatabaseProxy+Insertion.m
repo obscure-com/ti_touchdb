@@ -5,7 +5,7 @@
  * Licensed under the Apache Public License version 2.
  */
 
-#import "TDDatabaseProxy+TDDatabaseProxy_Insertion.h"
+#import "TDDatabaseProxy+Insertion.h"
 #import "TDRevisionProxy.h"
 #import <TouchDB/TDDatabase+Insertion.h>
 

@@ -5,7 +5,7 @@
  * Licensed under the Apache Public License version 2.
  */
 
-#import "TDDatabaseProxy+TDDatabaseProxy_Attachments.h"
+#import "TDDatabaseProxy+Attachments.h"
 #import <TouchDB/TDDatabase+Attachments.h>
 #import "TiBlob.h"
 
