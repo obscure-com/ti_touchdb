@@ -216,7 +216,6 @@
     return [TDDatabaseProxy toRevisionProxyArray:[self.database getRevisionHistory:revisionProxy.revision]];
 }
 
-
 #pragma mark Views and Queries
 
 - (id)getAllDocs:(id)args {
@@ -244,26 +243,7 @@
     ENSURE_ARG_AT_INDEX(name, args, 0, NSString);
     
     TDView * result = [self.database viewNamed:name];
-    /*
-    if (!result || !result.mapBlock) {
-        // compile view and set map block
-        NSArray * viewName = [name pathComponents];
-        NSAssert([viewName count] == 2, @"Invalid view path: %@", name);
-        
-        // get the design doc
-        NSString * path = [NSString pathWithComponents:[NSArray arrayWithObjects:@"_design", [viewName objectAtIndex:0], nil]];
-        TDRevision * ddoc = [result.database getDocumentWithID:path revisionID:nil options:nil];
-        if (!ddoc) return nil;
-        
-        // get the view from the views property of the design doc
-        NSDictionary * views = [ddoc.properties objectForKey:@"views"];
-        NSDictionary * view = [views objectForKey:[viewName objectAtIndex:1]];
-        if (!view) return nil;
-        
-        result = [self compileView:name fromProperties:view];
-        if (!result) return nil; // TODO error callback?
-    }
-    */
+    if (!result) return nil;
     return [[[TDViewProxy alloc] initWithTDView:result] autorelease];
 }
 
