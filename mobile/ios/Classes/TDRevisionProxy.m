@@ -40,9 +40,12 @@
     return self.revision.properties;
 }
 
+- (void)setProperties:(id)value {
+    self.revision.properties = (NSDictionary *)value;
+}
+
 - (id)sequence {
     return [NSNumber numberWithLong:self.revision.sequence];
 }
-
 
 @end
