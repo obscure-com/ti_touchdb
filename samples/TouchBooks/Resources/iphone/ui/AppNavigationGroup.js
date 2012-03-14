@@ -1,9 +1,5 @@
 
-function AppNavigationGroup(server) {
-  // get the database object and ensure that it is open
-  var db = server.databaseNamed('books');
-  db.open();
-  
+function AppNavigationGroup(db) {
   // set up the root window
   var BookListWindow = require('/ui/BookListWindow'),
       BookListView = require('/ui/BookListView');

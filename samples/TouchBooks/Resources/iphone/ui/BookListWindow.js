@@ -29,15 +29,6 @@ var BookListWindow = function() {
   });
   addButton.addEventListener('click', function(e) {
     Ti.App.fireEvent('books:show_detail_view');
-    /*
-    var win = exports.createDetailWindow(controller, db, {
-      title: L('book.default_title'),
-      author: L('book.default_author'),
-      copyright: [1970],
-    });
-    win._set_editing(true);
-    controller.open(win);
-    */
   });
   result.rightNavButton = addButton;
 
@@ -45,6 +36,11 @@ var BookListWindow = function() {
     result.tableView = _.find(result.children, function(child) {
       return child.uid === 1;
     });
+    result.tableView.fireEvent('refresh');
+  });
+
+  // maybe move to view?
+  Ti.App.addEventListener('books:refresh_all', function(e) {
     result.tableView.fireEvent('refresh');
   });
   
