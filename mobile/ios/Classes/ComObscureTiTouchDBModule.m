@@ -83,11 +83,22 @@ TDListener * touchListener;
 -(void)startup {
 	[super startup];
 
+    // listen for TouchDB notifications
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(processNotification:) name:nil object:nil];
+    
     // bind the emit() function to the module JS context
     [self bindCallback:@"emit" callback:&EmitCallback];
 
 	[self startTouchDBServer];
     [TDView setCompiler:self];
+    
+    if (YES) {
+        NSLog(@"logging sync stuff");
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"Log"];
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"LogSync"];
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"LogSyncVerbose"];
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"LogRemoteRequest"];
+    }
 
 	NSLog(@"[INFO] %@ loaded",self);
 }
@@ -116,6 +127,10 @@ TDListener * touchListener;
 }
 
 #pragma mark Listener Notifications
+
+- (void)processNotification:(NSNotification *)notification {
+    [self fireEvent:notification.name withObject:notification.userInfo];
+}
 
 -(void)_listenerAdded:(NSString *)type count:(int)count
 {
@@ -276,6 +291,5 @@ TDListener * touchListener;
 
     return [[result copy] autorelease];
 }
-
 
 @end

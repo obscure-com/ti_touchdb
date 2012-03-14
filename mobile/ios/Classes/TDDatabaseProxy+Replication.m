@@ -7,6 +7,7 @@
 
 #import "TDDatabaseProxy+Replication.h"
 #import <TouchDB/TDDatabase+Replication.h>
+#import <TouchDB/TDPusher.h>
 
 @implementation TDDatabaseProxy (Replication)
 
@@ -14,57 +15,49 @@
 #pragma mark Helper Methods
 
 - (id)replicateDatabase:(id)args {
-    TDDatabaseProxy * proxy;
     NSString * remote;
     NSNumber * push;
     NSDictionary * options;
     
-    ENSURE_ARG_AT_INDEX(proxy, args, 0, TDDatabaseProxy);
     ENSURE_ARG_AT_INDEX(remote, args, 0, NSString);
-    ENSURE_ARG_AT_INDEX(push, args, 0, NSNumber);
-    ENSURE_ARG_OR_NULL_AT_INDEX(options, args, 0, NSDictionary);
+    ENSURE_ARG_AT_INDEX(push, args, 1, NSNumber);
+    ENSURE_ARG_OR_NULL_AT_INDEX(options, args, 2, NSDictionary);
     
+    NSURL * remoteUrl = [NSURL URLWithString:remote];
+    BOOL continuous = [[options objectForKey:@"continuous"] boolValue];
+    BOOL cancel = [[options objectForKey:@"cancel"] boolValue];
+    BOOL createTarget = [[options objectForKey:@"create_target"] boolValue];
     
-}
-
-/*
-
-- (TDStatus) do_POST_replicate {
-    // Extract the parameters from the JSON request body:
-    // http://wiki.apache.org/couchdb/Replication
-    TDDatabase* db;
-    NSURL* remote;
-    BOOL push, createTarget;
-    NSDictionary* body = self.bodyAsDictionary;
-    TDStatus status = [_server.replicatorManager parseReplicatorProperties: body
-                                                                toDatabase: &db remote: &remote
-                                                                    isPush: &push
-                                                              createTarget: &createTarget];
-    if (status >= 300)
-        return status;
-    
-    BOOL continuous = [$castIf(NSNumber, [body objectForKey: @"continuous"]) boolValue];
-    BOOL cancel = [$castIf(NSNumber, [body objectForKey: @"cancel"]) boolValue];
     if (!cancel) {
-        // Start replication:
-        TDReplicator* repl = [db replicatorWithRemoteURL: remote push: push continuous: continuous];
-        if (!repl)
-            return 500;
-        repl.filterName = $castIf(NSString, [body objectForKey: @"filter"]);;
-        repl.filterParameters = $castIf(NSDictionary, [body objectForKey: @"query_params"]);
-        if (push)
-            ((TDPusher*)repl).createTarget = createTarget;
-        [repl start];
-        _response.bodyObject = $dict({@"session_id", repl.sessionID});
-    } else {
-        // Cancel replication:
-        TDReplicator* repl = [db activeReplicatorWithRemoteURL: remote push: push];
-        if (!repl)
-            return 404;
+        // start a new replication
+        TDReplicator * repl = [self.database replicatorWithRemoteURL:remoteUrl push:[push boolValue] continuous:continuous];
+        if (!repl) {
+            return [NSNumber numberWithInt:500];
+        }
+
+        // TODO filters
+        
+        if ([push boolValue]) {
+            ((TDPusher *)repl).createTarget = createTarget;
+        }
+        
+        // replication is an asynchronous process that depends on the starting
+        // thread to be around through the lifetime of the NSURLConnection.  It
+        // looks like we can't guarantee that this will be the case in a call to
+        // a module, but wrapping the start message call in an NSOperation seems
+        // to work fine.
+        [[NSOperationQueue mainQueue] addOperation:[NSBlockOperation blockOperationWithBlock:^{
+            [repl start];
+        }]];
+    }
+    else {
+        TDReplicator * repl = [self.database activeReplicatorWithRemoteURL:remoteUrl push:[push boolValue]];
+        if (!repl) {
+            return [NSNumber numberWithInt:404];
+        }
         [repl stop];
     }
-    return 200;
+    return [NSNumber numberWithInt:200];
 }
-*/
 
 @end

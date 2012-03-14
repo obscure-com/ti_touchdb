@@ -14,6 +14,12 @@ TiTouchDB.startListenerOnPort(5985, function() {
   Ti.API.info("started listener!");
 });
 
+// replication test
+var db = TiTouchDB.databaseNamed('books');
+db.open();
+db.replicateDatabase('http://localhost:5984/books', false, { create_target: true });
+
+/*
 var db = TiTouchDB.databaseNamed("test1");
 if (db) {
   db.open();
@@ -29,3 +35,4 @@ else {
   label.text = "error creating db";
 }
 
+*/
