@@ -22,7 +22,7 @@ var EditorView = function(key, value) {
      * picker.value doesn't seem to work, so listen for changes
      */
     picker.addEventListener('change', function(e) {
-      result.value = e.value;
+      result.value = dateformat.date_to_array(e.value);
     });
     
     result.add(picker);
