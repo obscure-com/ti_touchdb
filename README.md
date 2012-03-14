@@ -28,8 +28,9 @@ See the Wiki pages for usage instructions and the samples directory for example 
 
 **pre-alpha**
 
-* iOS version is wrapped and has a functional HTTP listener.
+* iOS version is wrapped and has a functional HTTP listener (replication not working -- threading issue?).
 * Android version HTTP listener is problematic, so that is set aside for now
-* Currently working on the iOS in-process API
-* Recently pushed samples/TouchBooks, a version of CouchBooks that uses the in-process TiTouchDB API
+* Most of the in-process API for iOS is done, including basic replication.
+* Recently pushed samples/TouchBooks, a version of CouchBooks that uses the in-process TiTouchDB API to sync
+with a db hosted by Iris Couch.
 
