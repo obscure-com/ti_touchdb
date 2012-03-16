@@ -7,5 +7,6 @@
 	<iphone>
 	</iphone>
 	<android xmlns:android="http://schemas.android.com/apk/res/android">
+          <uses-sdk android:minSdkVersion="8" />
 	</android>
 </ti:module>
