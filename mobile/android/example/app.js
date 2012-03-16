@@ -14,9 +14,11 @@ TiTouchDB.addEventListener('TDReplicatorProgressChanged', function(e) {
 
 var db = TiTouchDB.databaseNamed('books');
 db.open();
-// db.replicateDatabase('http://192.168.99.119:5984/books');
+// db.replicateDatabase('http://touchbooks.iriscouch.com/books');
 var docs = db.getAllDocs({ includeDocs: true });
 Ti.API.info(JSON.stringify(docs));
+
+var view = db.viewNamed('')
 
 /*
 var doc = db.createRevision({
