@@ -27,10 +27,12 @@ import com.couchbase.touchdb.replicator.TDReplicator;
 @Kroll.proxy
 public class TDDatabaseProxy extends KrollProxy {
 
-	private static final String	LCAT	= "TDDatabaseProxy";
+	private static final EnumSet<TDContentOptions>	EMPTY_CONTENT_OPTIONS_SET	= EnumSet.noneOf(TDContentOptions.class);
 
+	private static final String						LCAT						= "TDDatabaseProxy";
+	
 	public static EnumSet<TDContentOptions> toContentOptions(String[] opts) {
-		if (opts == null) return null;
+		if (opts == null) return EMPTY_CONTENT_OPTIONS_SET;
 
 		List<TDContentOptions> list = new ArrayList<TDContentOptions>();
 		for (String str : opts) {
@@ -41,14 +43,14 @@ public class TDDatabaseProxy extends KrollProxy {
 
 	@SuppressWarnings("unchecked")
 	public static TDQueryOptions toQueryOptions(Map<String, Object> queryOptions) {
-		if (queryOptions == null) return null;
-
 		/*
 		 * TDQueryOptions has default values for all properties, so only make
 		 * changes if the incoming map contains a property value.
 		 */
 
 		TDQueryOptions result = new TDQueryOptions();
+		if (queryOptions == null) return result;
+
 		// not exactly sure what this is
 		if (queryOptions.containsKey("content_options")) {
 			result.setContentOptions(toContentOptions((String[]) queryOptions.get("content_options")));
@@ -174,7 +176,7 @@ public class TDDatabaseProxy extends KrollProxy {
 
 	@Kroll.method
 	public KrollDict getDocsWithIDs(String[] docIDs, KrollDict queryOptions) {
-		Map<String,Object> result = database.getDocsWithIDs(Arrays.asList(docIDs), toQueryOptions(queryOptions));
+		Map<String, Object> result = database.getDocsWithIDs(Arrays.asList(docIDs), toQueryOptions(queryOptions));
 		return (KrollDict) TitouchdbModule.krollify(result);
 	}
 

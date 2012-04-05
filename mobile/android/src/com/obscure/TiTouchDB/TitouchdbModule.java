@@ -9,18 +9,18 @@ package com.obscure.TiTouchDB;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.appcelerator.kroll.KrollDict;
-import org.appcelerator.kroll.KrollEvaluator;
 import org.appcelerator.kroll.KrollFunction;
 import org.appcelerator.kroll.KrollModule;
-import org.appcelerator.kroll.KrollObject;
-import org.appcelerator.kroll.KrollRuntime;
 import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.kroll.common.Log;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.Function;
+import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.ScriptableObject;
 
 import android.app.Activity;
 
@@ -42,64 +42,6 @@ public class TitouchdbModule extends KrollModule implements TDViewCompiler {
 	private static TDDatabaseProxy[]	EMPTY_TDDATABASEPROXY_ARRAY	= new TDDatabaseProxy[0];
 
 	private static final String			LCAT						= "TiTouchDB";
-
-	private TDViewMapEmitBlock			currentEmitBlock;
-
-	private KrollEvaluator				evaluator;
-
-	private TDServer					server;
-
-	public TitouchdbModule() {
-		super();
-	}
-
-	@Kroll.getProperty
-	public TDDatabaseProxy[] allOpenDatabases() {
-		List<TDDatabaseProxy> result = new ArrayList<TDDatabaseProxy>();
-		for (TDDatabase db : server.allOpenDatabases()) {
-			result.add(new TDDatabaseProxy(db));
-		}
-		return result.toArray(EMPTY_TDDATABASEPROXY_ARRAY);
-	}
-
-	@Kroll.method
-	public void close() {
-		server.close();
-	}
-
-	public TDViewMapBlock compileMapFunction(String source, String language) {
-		if (!"javascript".equalsIgnoreCase(language)) {
-			Log.w(LCAT, String.format("cannot compile non-javascript language '%s'", language));
-			return null;
-		}
-
-		final KrollObject self = this.getKrollObject();
-		final KrollFunction fn = (KrollFunction) evaluator.evaluateString(self, source, null);
-		return new TDViewMapBlock() {
-			public void map(Map<String, Object> doc, TDViewMapEmitBlock emit) {
-				currentEmitBlock = emit;
-
-				// KrollFunction why u use concrete type instead of interface?
-				HashMap<String, Object> arg = new HashMap<String, Object>(doc);
-				fn.call(self, arg);
-			}
-		};
-	}
-
-	public TDViewReduceBlock compileReduceFunction(String source, String language) {
-		if (!"javascript".equalsIgnoreCase(language)) {
-			Log.w(LCAT, String.format("cannot compile non-javascript language '%s'", language));
-			return null;
-		}
-
-		final KrollObject self = this.getKrollObject();
-		final KrollFunction fn = (KrollFunction) evaluator.evaluateString(self, source, null);
-		return new TDViewReduceBlock() {
-			public Object reduce(List<Object> keys, List<Object> values, boolean rereduce) {
-				return fn.call(self, new Object[] { keys, values, new Boolean(rereduce) });
-			}
-		};
-	}
 
 	/**
 	 * Convert object to a form that can be returned from a Kroll method.
@@ -131,6 +73,123 @@ public class TitouchdbModule extends KrollModule implements TDViewCompiler {
 		else {
 			return obj;
 		}
+	}
+
+	private TDViewMapEmitBlock	currentEmitBlock;
+
+	private TDServer			server;
+
+	public TitouchdbModule() {
+		super();
+	}
+
+	@Kroll.getProperty
+	public TDDatabaseProxy[] allOpenDatabases() {
+		List<TDDatabaseProxy> result = new ArrayList<TDDatabaseProxy>();
+		for (TDDatabase db : server.allOpenDatabases()) {
+			result.add(new TDDatabaseProxy(db));
+		}
+		return result.toArray(EMPTY_TDDATABASEPROXY_ARRAY);
+	}
+
+	@Kroll.method
+	public void close() {
+		server.close();
+	}
+
+	private static TDViewMapEmitBlock	EMIT_BLOCK	= null;
+
+	public static class EmitHolder extends ScriptableObject {
+
+		private static final long	serialVersionUID	= 175821839328120859L;
+
+		@Override
+		public String getClassName() {
+			return EmitHolder.class.getName();
+		}
+
+		public static void emit(Object key, Object value) {
+			if (EMIT_BLOCK != null) {
+				Object k = ScriptValueConverter.unwrapValue(key);
+				Object v = ScriptValueConverter.unwrapValue(value);
+				EMIT_BLOCK.emit(k, v);
+			}
+			else {
+				Log.w(LCAT, "missing emit block");
+			}
+		}
+	}
+
+	public TDViewMapBlock compileMapFunction(final String source, String language) {
+		if (!"javascript".equalsIgnoreCase(language)) {
+			Log.w(LCAT, String.format("cannot compile non-javascript language '%s'", language));
+			return null;
+		}
+
+		/*
+		 * Ok, using Rhino to compile and run map functions is less efficient
+		 * than V8, but it seems like I'll need to add a native call to get V8
+		 * working as there are no hooks it in the Titanium common kroll
+		 * context.
+		 */
+
+		return new TDViewMapBlock() {
+			private Context				cx;
+			private Function			fn;
+			private ScriptableObject	scope;
+
+			@Override
+			protected void finalize() throws Throwable {
+				Context.exit();
+				super.finalize();
+			}
+
+			public void map(Map<String, Object> doc, TDViewMapEmitBlock emit) {
+				EMIT_BLOCK = emit;
+
+				if (cx == null) {
+					cx = Context.enter();
+					cx.setOptimizationLevel(-1);
+					scope = cx.initStandardObjects();
+					scope.defineFunctionProperties(new String[] { "emit" }, EmitHolder.class, ScriptableObject.DONTENUM);
+					fn = cx.compileFunction(scope, source, "<map>", 1, null);
+				}
+
+				fn.call(cx, scope, scope, new Object[] { ScriptValueConverter.wrapValue(scope, doc) });
+			}
+		};
+	}
+
+	public TDViewReduceBlock compileReduceFunction(final String source, String language) {
+		if (!"javascript".equalsIgnoreCase(language)) {
+			Log.w(LCAT, String.format("cannot compile non-javascript language '%s'", language));
+			return null;
+		}
+
+		return new TDViewReduceBlock() {
+			private Context		cx;
+			private Function	fn;
+			private Scriptable	scope;
+
+			@Override
+			protected void finalize() throws Throwable {
+				Context.exit();
+				super.finalize();
+			}
+
+			public Object reduce(List<Object> keys, List<Object> values, boolean rereduce) {
+				if (cx == null) {
+					cx = Context.enter();
+					cx.setOptimizationLevel(-1);
+					scope = cx.initStandardObjects();
+					fn = cx.compileFunction(scope, source, "<reduce>", 1, null);
+				}
+
+				return fn.call(cx, scope, scope, new Object[] { ScriptValueConverter.wrapValue(scope, keys), ScriptValueConverter.wrapValue(scope, values),
+						ScriptValueConverter.wrapValue(scope, rereduce) });
+			}
+
+		};
 	}
 
 	@Kroll.method
@@ -172,7 +231,7 @@ public class TitouchdbModule extends KrollModule implements TDViewCompiler {
 	@Override
 	protected void initActivity(Activity activity) {
 		super.initActivity(activity);
-		evaluator = KrollRuntime.getInstance().getEvaluator();
+
 		TDView.setCompiler(this);
 		try {
 			String filesDir = activity.getFilesDir().getAbsolutePath();

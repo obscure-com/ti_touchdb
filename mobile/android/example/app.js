@@ -14,11 +14,13 @@ TiTouchDB.addEventListener('TDReplicatorProgressChanged', function(e) {
 
 var db = TiTouchDB.databaseNamed('books');
 db.open();
-// db.replicateDatabase('http://touchbooks.iriscouch.com/books');
-var docs = db.getAllDocs({ includeDocs: true });
-Ti.API.info(JSON.stringify(docs));
+db.replicateDatabase('http://touchbooks.iriscouch.com/books');
+// var docs = db.getAllDocs({ includeDocs: true });
+// Ti.API.info(JSON.stringify(docs));
 
-var view = db.viewNamed('')
+var view = db.viewNamed('books/by_author');
+var viewResult = view.queryWithOptions({});
+Ti.API.info(JSON.stringify(viewResult));
 
 /*
 var doc = db.createRevision({

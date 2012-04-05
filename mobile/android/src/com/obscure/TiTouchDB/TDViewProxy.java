@@ -1,6 +1,5 @@
 package com.obscure.TiTouchDB;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -71,7 +70,7 @@ public class TDViewProxy extends KrollProxy {
 			}
 
 			String ddocname = String.format("_design/%s", viewName[0]);
-			TDRevision ddoc = view.getDb().getDocumentWithIDAndRev(ddocname, null, null);
+			TDRevision ddoc = view.getDb().getDocumentWithIDAndRev(ddocname, null, TDDatabaseProxy.toContentOptions(null));
 			if (ddoc == null) {
 				Log.e(LCAT, String.format("Missing view named '%s'", view.getName()));
 				return;
@@ -82,44 +81,50 @@ public class TDViewProxy extends KrollProxy {
 				Log.e(LCAT, String.format("Design doc %s is missing view named %s", ddocname, viewName[1]));
 				return;
 			}
-			Map<String,Object> viewdoc = (Map<String, Object>) views.get(viewName[1]);
+			Map<String, Object> viewdoc = (Map<String, Object>) views.get(viewName[1]);
 			compileViewFromProperties(viewdoc);
 		}
 	}
 
 	private void compileViewFromProperties(Map<String, Object> props) {
 		if (props == null) return;
-		
+
 		String language = props.containsKey("language") ? (String) props.get("language") : "javascript";
 		String mapSource = (String) props.get("map");
 		if (mapSource == null) {
 			Log.w(LCAT, "Missing map source; not compiling view");
 			return;
 		}
-		
+
 		TDViewMapBlock mapBlock = TDView.getCompiler().compileMapFunction(mapSource, language);
 		if (mapBlock == null) {
 			Log.e(LCAT, "Could not compile map function");
 			return;
 		}
-		
+
 		TDViewReduceBlock reduceBlock = null;
 		String reduceSource = (String) props.get("reduce");
 		if (reduceSource != null) {
 			reduceBlock = TDView.getCompiler().compileReduceFunction(reduceSource, language);
 		}
-		
+
 		view.setMapReduceBlocks(mapBlock, reduceBlock, "1");
 	}
 
 	@Kroll.method
-	public KrollDict queryWithOptions(KrollDict options) {
-		TDStatus status = new TDStatus();
-		updateIndex();
-		List<Map<String, Object>> rows = view.queryWithOptions(TDDatabaseProxy.toQueryOptions(options), status);
-		// TODO check status?
-		KrollDict result = new KrollDict();
-		result.put("rows", TitouchdbModule.krollify(rows));
-		return result;
+	public KrollDict queryWithOptions(@Kroll.argument(optional = true) KrollDict options) {
+		try {
+			TDStatus status = new TDStatus();
+			updateIndex();
+			List<Map<String, Object>> rows = view.queryWithOptions(TDDatabaseProxy.toQueryOptions(options), status);
+			// TODO check status?
+			KrollDict result = new KrollDict();
+			result.put("rows", TitouchdbModule.krollify(rows));
+			return result;
+		}
+		catch (Throwable t) {
+			Log.e(LCAT, "view error", t);
+		}
+		return null;
 	}
 }
