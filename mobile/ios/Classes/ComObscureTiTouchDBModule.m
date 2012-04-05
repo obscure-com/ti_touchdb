@@ -12,9 +12,10 @@
 #import "TiBase.h"
 #import "TiHost.h"
 #import "TiUtils.h"
-#import <TouchDB/TouchDB.h>
-#import <TouchDBListener/TDListener.h>
-#import "TDDatabaseProxy.h"
+#import "CouchDatabaseProxy.h"
+#import "CouchPersistentReplicationProxy.h"
+#import <CouchCocoa/CouchTouchDBServer.h>
+
 
 static TDMapEmitBlock emit_block;
 
@@ -48,8 +49,7 @@ static TiValueRef EmitCallback(TiContextRef jsContext, TiObjectRef jsFunction, T
 
 @implementation ComObscureTiTouchDBModule
 
-TDServer * touchServer;
-TDListener * touchListener;
+CouchTouchDBServer * server;
 
 #pragma mark Internal
 
@@ -63,6 +63,7 @@ TDListener * touchListener;
 
 #pragma mark Lifecycle
 
+/*
 - (void)startTouchDBServer {
     NSArray * paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
     NSString * path = [paths objectAtIndex:0];
@@ -79,6 +80,7 @@ TDListener * touchListener;
     }
     NSAssert(!error, @"Error creating TouchDB server: %@", error);    
 }
+*/
 
 -(void)startup {
 	[super startup];
@@ -89,7 +91,8 @@ TDListener * touchListener;
     // bind the emit() function to the module JS context
     [self bindCallback:@"emit" callback:&EmitCallback];
 
-	[self startTouchDBServer];
+	server = [CouchTouchDBServer sharedInstance];
+    // TODO check error
     [TDView setCompiler:self];
     
     if (YES) {
@@ -104,16 +107,12 @@ TDListener * touchListener;
 }
 
 -(void)shutdown:(id)sender {
-    [touchListener stop];
-    [touchServer close];
 	[super shutdown:sender];
 }
 
 #pragma mark Cleanup 
 
 -(void)dealloc {
-    [touchListener dealloc];
-    [touchServer dealloc];
 	[super dealloc];
 }
 
@@ -151,6 +150,65 @@ TDListener * touchListener;
 	}
 }
 
+
+#pragma mark -
+#pragma mark CouchServer
+
+- (id)getVersion:(id)args {
+    return [server getVersion:nil];
+}
+
+- (id)generateUUIDs:(id)args {
+    NSUInteger count;
+    ENSURE_INT_AT_INDEX(count, args, 0)
+    
+    return [server generateUUIDs:count];
+}
+
+- (id)getDatabases:(id)args {
+    NSArray * dbs = [server getDatabases];
+    
+    NSMutableArray * result = [NSMutableArray arrayWithCapacity:[dbs count]];
+    for (CouchDatabase * db in dbs) {
+        [result addObject:[CouchDatabaseProxy proxyWith:db]];
+    }
+    return result;
+}
+
+- (id)databaseNamed:(id)args {
+    NSString * name;
+    ENSURE_ARG_AT_INDEX(name, args, 0, NSString)
+    
+    CouchDatabase * db = [server databaseNamed:name];
+    return [CouchDatabaseProxy proxyWith:db];
+}
+
+- (id)activeTasks {    
+    return server.activeTasks;
+}
+
+- (id)activityPollingInterval {
+    return [NSNumber numberWithLong:server.activityPollInterval];
+}
+
+- (void)setActivityPollingInterval:(id)value {
+    server.activityPollInterval = [value longValue]; 
+}
+
+- (id)replications {
+    NSMutableArray * result = [NSMutableArray array];
+    for (CouchPersistentReplication * rep in server.replications) {
+        [result addObject:[CouchPersistentReplicationProxy proxyWith:rep]];
+    }
+    return result;
+}
+
+#pragma mark -
+#pragma mark CouchTouchDBServer
+
+
+
+/*
 #pragma mark -
 #pragma mark TDServer
 
@@ -221,7 +279,7 @@ TDListener * touchListener;
 
     [cb call:nil thisObject:nil];
 }
-
+*/
 
 
 #pragma mark -

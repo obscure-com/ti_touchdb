@@ -9,15 +9,18 @@ window.open();
 // TODO: write your module tests here
 var TiTouchDB = require('com.obscure.TiTouchDB');
 
-
-TiTouchDB.startListenerOnPort(5985, function() {
-  Ti.API.info("started listener!");
-});
-
 // replication test
 var db = TiTouchDB.databaseNamed('books');
-db.open();
-db.replicateDatabase('http://localhost:5984/books', false, { create_target: true });
+db.ensureCreated();
+
+db.pullFromDatabaseAtURL('http://localhost:5984/books');
+
+var count = db.getDocumentCount();
+label.text = String.format("db has %d documents", count);
+
+//db.replicateDatabase('http://localhost:5984/books', false, { create_target: true });
+
+
 
 /*
 var db = TiTouchDB.databaseNamed("test1");
