@@ -26,9 +26,12 @@ See the Wiki pages for usage instructions and the samples directory for example 
 
 ## Development Status
 
-**pre-alpha**
+**refactoring**
 
-* iOS version is working well with the in-process API.
-* initial Android version running the in-process API checked in.  Not much testing yet, but creating/fetching
-docs and replication appear to work.
-* will be updating TouchBooks to work on Android next
+TouchDB is being combined with CouchCocoa and a new client/server framework called SyncPoint.  The
+initial impact of this is that the TouchDB APIs are essentially being pushed beneath CouchCocoa.
+This module currently exposes the TouchDB API, but CouchCocoa is the future, so I'm refactoring
+the module to conform to the [CouchCocoa API](https://github.com/couchbaselabs/CouchCocoa).  Read
+more about this effort here:
+
+https://groups.google.com/d/topic/mobile-couchbase/cJXGe5vijSY/discussion
