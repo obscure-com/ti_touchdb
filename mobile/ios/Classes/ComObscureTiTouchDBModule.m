@@ -14,6 +14,9 @@
 #import "TiUtils.h"
 #import "CouchDatabaseProxy.h"
 #import "CouchPersistentReplicationProxy.h"
+#import <CouchCocoa/CouchPersistentReplication.h>
+#import <CouchCocoa/CouchQuery.h>
+#import <CouchCocoa/CouchReplication.h>
 #import <CouchCocoa/CouchTouchDBServer.h>
 
 
@@ -62,25 +65,6 @@ CouchTouchDBServer * server;
 }
 
 #pragma mark Lifecycle
-
-/*
-- (void)startTouchDBServer {
-    NSArray * paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
-    NSString * path = [paths objectAtIndex:0];
-#if !TARGET_OS_IPHONE
-    path = [path stringByAppendingPathComponent: [[NSBundle mainBundle] bundleIdentifier]];
-#endif
-    path = [path stringByAppendingPathComponent: @"TouchDB"];
-    NSError* error = nil;
-    if ([[NSFileManager defaultManager] createDirectoryAtPath:path
-                                  withIntermediateDirectories:YES
-                                                   attributes:nil
-                                                        error:&error]) {
-        touchServer = [[TDServer alloc] initWithDirectory:path error:&error];
-    }
-    NSAssert(!error, @"Error creating TouchDB server: %@", error);    
-}
-*/
 
 -(void)startup {
 	[super startup];
@@ -204,82 +188,51 @@ CouchTouchDBServer * server;
 }
 
 #pragma mark -
-#pragma mark CouchTouchDBServer
+#pragma mark Constants
 
-
-
-/*
-#pragma mark -
-#pragma mark TDServer
-
-- (id)directory {
-    return touchServer.directory;
+- (id)REPLICATION_STATE_IDLE {
+    return [NSNumber numberWithInt:kReplicationIdle];
 }
 
-- (id)allDatabaseNames {
-    return touchServer.allDatabaseNames;
+- (id)REPLICATION_STATE_TRIGGERED {
+    return [NSNumber numberWithInt:kReplicationTriggered];
 }
 
-- (id)allOpenDatabases {
-    return touchServer.allOpenDatabases;
+- (id)REPLICATION_STATE_COMPLETED {
+    return [NSNumber numberWithInt:kReplicationCompleted];
 }
 
-- (id)isValidDatabaseName:(id)args {
-    NSString * name;
-    ENSURE_ARG_AT_INDEX(name, args, 0, NSString);
-    return [NSNumber numberWithBool:[TDServer isValidDatabaseName:name]];
+- (id)REPLICATION_STATE_ERROR {
+    return [NSNumber numberWithInt:kReplicationError];
 }
 
-- (void)close:(id)args {
-    [touchServer close];
+- (id)REPLICATION_MODE_STOPPED {
+    return [NSNumber numberWithInt:kCouchReplicationStopped];
 }
 
-- (id)databaseNamed:(id)args {
-    NSString * name;
-    ENSURE_ARG_AT_INDEX(name, args, 0, NSString);
-    
-    TDDatabase * db = [touchServer databaseNamed:name];
-    return db ? [[[TDDatabaseProxy alloc] initWithTDDatabase:db] autorelease] : nil;
+- (id)REPLICATION_MODE_OFFLINE {
+    return [NSNumber numberWithInt:kCouchReplicationOffline];
 }
 
-- (id)existingDatabaseNamed:(id)args {
-    NSString * name;
-    ENSURE_ARG_AT_INDEX(name, args, 0, NSString);
-
-    TDDatabase * db = [touchServer existingDatabaseNamed:name];
-    return db ? [[[TDDatabaseProxy alloc] initWithTDDatabase:db] autorelease] : nil;
+- (id)REPLICATION_MODE_IDLE {
+    return [NSNumber numberWithInt:kCouchReplicationIdle];
 }
 
-- (id)deleteDatabaseNamed:(id)args {
-    NSString * name;
-    ENSURE_ARG_AT_INDEX(name, args, 0, NSString);
-    return [NSNumber numberWithBool:[touchServer deleteDatabaseNamed:name]];
+- (id)REPLICATION_MODE_ACTIVE {
+    return [NSNumber numberWithInt:kCouchReplicationActive];
 }
 
-#pragma mark -
-#pragma mark TDListener
-
-- (void)startListenerOnPort:(id)args {
-    NSAssert(touchServer, @"TouchDB not present!");
-
-    NSNumber * port;
-    KrollCallback * cb;
-
-    ENSURE_ARG_AT_INDEX(port, args, 0, NSNumber);
-    ENSURE_ARG_OR_NULL_AT_INDEX(cb, args, 1, KrollCallback);
-
-    // destroy any existing listener
-    [touchListener stop];
-    RELEASE_TO_NIL(touchListener);
-
-    touchListener = [[TDListener alloc] initWithTDServer:touchServer port:[port intValue]];
-    [touchListener start];
-
-    NSLog(@"Started TouchDB listener on port %@", port);
-
-    [cb call:nil thisObject:nil];
+- (id)STALE_QUERY_NEVER {
+    return [NSNumber numberWithInt:kCouchStaleNever];
 }
-*/
+
+- (id)STALE_QUERY_OK {
+    return [NSNumber numberWithInt:kCouchStaleOK];
+}
+
+- (id)STALE_QUERY_UPDATE_AFTER {
+    return [NSNumber numberWithInt:kCouchStaleUpdateAfter];
+}
 
 
 #pragma mark -

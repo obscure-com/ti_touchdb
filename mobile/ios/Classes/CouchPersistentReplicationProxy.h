@@ -11,5 +11,6 @@
 @class CouchPersistentReplication;
 
 @interface CouchPersistentReplicationProxy : TiProxy
-+ (CouchPersistentReplicationProxy *)proxyWith:(CouchPersistentReplication *)replication;
+@property (nonatomic, strong) CouchPersistentReplication * replication;
++ (CouchPersistentReplicationProxy *)proxyWith:(CouchPersistentReplication *)rep;
 @end

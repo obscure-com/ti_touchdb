@@ -13,12 +13,19 @@ var TiTouchDB = require('com.obscure.TiTouchDB');
 var db = TiTouchDB.databaseNamed('books');
 db.ensureCreated();
 
-db.pullFromDatabaseAtURL('http://localhost:5984/books');
+var rep = db.pullFromDatabaseAtURL('http://touchbooks.iriscouch.com/books');
+rep.start(function(r) {
+  Ti.API.info(r.status);        
+});
 
 var count = db.getDocumentCount();
 label.text = String.format("db has %d documents", count);
 
-//db.replicateDatabase('http://localhost:5984/books', false, { create_target: true });
+var ddoc = db.designDocumentWithName('books');
+var query = ddoc.queryViewNamed('by_author');
+
+var queryResults = query.rows();
+Ti.API.info(JSON.stringify(queryResults));
 
 
 

@@ -53,6 +53,8 @@
 		DAE72A2C152E518300622013 /* CouchDesignDocumentProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = DAE72A2A152E518300622013 /* CouchDesignDocumentProxy.m */; };
 		DAE72A2F152E550400622013 /* CouchReplicationProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = DAE72A2D152E550400622013 /* CouchReplicationProxy.h */; };
 		DAE72A30152E550400622013 /* CouchReplicationProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = DAE72A2E152E550400622013 /* CouchReplicationProxy.m */; };
+		DAE72A37152E66C900622013 /* TiProxy+Errors.h in Headers */ = {isa = PBXBuildFile; fileRef = DAE72A35152E66C800622013 /* TiProxy+Errors.h */; };
+		DAE72A38152E66C900622013 /* TiProxy+Errors.m in Sources */ = {isa = PBXBuildFile; fileRef = DAE72A36152E66C800622013 /* TiProxy+Errors.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -99,6 +101,8 @@
 		DAE72A2A152E518300622013 /* CouchDesignDocumentProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CouchDesignDocumentProxy.m; path = Classes/CouchDesignDocumentProxy.m; sourceTree = "<group>"; };
 		DAE72A2D152E550400622013 /* CouchReplicationProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CouchReplicationProxy.h; path = Classes/CouchReplicationProxy.h; sourceTree = "<group>"; };
 		DAE72A2E152E550400622013 /* CouchReplicationProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CouchReplicationProxy.m; path = Classes/CouchReplicationProxy.m; sourceTree = "<group>"; };
+		DAE72A35152E66C800622013 /* TiProxy+Errors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "TiProxy+Errors.h"; path = "Classes/TiProxy+Errors.h"; sourceTree = "<group>"; };
+		DAE72A36152E66C800622013 /* TiProxy+Errors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "TiProxy+Errors.m"; path = "Classes/TiProxy+Errors.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -171,6 +175,8 @@
 				DAE72A2A152E518300622013 /* CouchDesignDocumentProxy.m */,
 				DAE72A2D152E550400622013 /* CouchReplicationProxy.h */,
 				DAE72A2E152E550400622013 /* CouchReplicationProxy.m */,
+				DAE72A35152E66C800622013 /* TiProxy+Errors.h */,
+				DAE72A36152E66C800622013 /* TiProxy+Errors.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -207,6 +213,7 @@
 				DAE72A27152E4E7F00622013 /* CouchRevisionProxy.h in Headers */,
 				DAE72A2B152E518300622013 /* CouchDesignDocumentProxy.h in Headers */,
 				DAE72A2F152E550400622013 /* CouchReplicationProxy.h in Headers */,
+				DAE72A37152E66C900622013 /* TiProxy+Errors.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -295,6 +302,7 @@
 				DAE72A28152E4E7F00622013 /* CouchRevisionProxy.m in Sources */,
 				DAE72A2C152E518300622013 /* CouchDesignDocumentProxy.m in Sources */,
 				DAE72A30152E550400622013 /* CouchReplicationProxy.m in Sources */,
+				DAE72A38152E66C900622013 /* TiProxy+Errors.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -46,7 +46,7 @@
 - (void)compact:(id)args {
     RESTOperation * op = [self.database compact];
     if (![op wait]) {
-        NSAssert(op.error, @"Error compacting db: %@", op.error);
+        NSAssert(!op.error, @"Error compacting db: %@", op.error);
     }
 }
 
@@ -95,13 +95,13 @@
         
         RESTOperation * op = [self.database putChanges:props toRevisions:revs];
         if (![op wait]) {
-            NSAssert(op.error, @"Error putting changes to revisions: %@", op.error);
+            NSAssert(!op.error, @"Error putting changes to revisions: %@", op.error);
         }
     }
     else {
         RESTOperation * op = [self.database putChanges:props];
         if (![op wait]) {
-            NSAssert(op.error, @"Error putting changes: %@", op.error);
+            NSAssert(!op.error, @"Error putting changes: %@", op.error);
         }
         // TODO: [op resultObject] is an NSArray of CouchDocument objects; maybe return?
     }
@@ -119,7 +119,7 @@
     
     RESTOperation * op = [self.database deleteRevisions:revs];
     if (![op wait]) {
-        NSAssert(op.error, @"Error deleting revisions: %@", op.error);
+        NSAssert(!op.error, @"Error deleting revisions: %@", op.error);
     }
 }
 
@@ -134,7 +134,7 @@
     
     RESTOperation * op = [self.database deleteDocuments:docs];
     if (![op wait]) {
-        NSAssert(op.error, @"Error deleting documents: %@", op.error);
+        NSAssert(!op.error, @"Error deleting documents: %@", op.error);
     }
 }
 
@@ -184,6 +184,8 @@
     ENSURE_ARG_AT_INDEX(urlstr, args, 0, NSString)
     
     NSURL * url = [NSURL URLWithString:urlstr];
+    NSLog(@"pull replication from %@", url);
+    
     return [CouchReplicationProxy proxyWith:[self.database pullFromDatabaseAtURL:url]];
 }
 
