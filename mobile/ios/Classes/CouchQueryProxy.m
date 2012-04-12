@@ -145,11 +145,11 @@
 }
 
 //sync query
-- (id)rows:(id)args {
+- (id)fetchRows:(id)args {
     return [self toQueryResult:[self.query rows]];
 }
 
-- (id)rowsIfChanged:(id)args {
+- (id)fetchRowsIfChanged:(id)args {
     return [self toQueryResult:[self.query rowsIfChanged]];
 }
 

@@ -12,6 +12,8 @@ window.addEventListener('open', function(e) {
         label.text = 'test01_server complete';
         require('test02_createdocument').run_tests();
         label.text = 'test02_createdocument complete';
+        require('test02_createrevisions').run_tests();
+        label.text = 'test02_createrevisions complete';
     }
     catch (e) {
         label.text = e;

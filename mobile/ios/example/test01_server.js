@@ -1,12 +1,7 @@
+Ti.include('test_utils.js')
 
 var _ = require('underscore'),
     server = require('com.obscure.TiTouchDB');
-
-function assert(exp, msg) {
-    if (!exp) {
-        throw "FAILURE: "+msg;
-    }
-}
 
 exports.run_tests = function() {
     // version string
