@@ -23,7 +23,7 @@
 }
 
 + (CouchReplicationProxy *)proxyWith:(CouchReplication *)rep {
-    return [[[CouchReplicationProxy alloc] initWithCouchReplication:rep] autorelease];
+    return rep ? [[[CouchReplicationProxy alloc] initWithCouchReplication:rep] autorelease] : nil;
 }
 
 #pragma mark PROPERTIES

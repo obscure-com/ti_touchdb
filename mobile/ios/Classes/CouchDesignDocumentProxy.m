@@ -23,7 +23,7 @@
 }
 
 + (CouchDesignDocumentProxy *)proxyWith:(CouchDesignDocument *)ddoc {
-    return [[[CouchDesignDocumentProxy alloc] initWithCouchDesignDocument:ddoc] autorelease];
+    return ddoc ? [[[CouchDesignDocumentProxy alloc] initWithCouchDesignDocument:ddoc] autorelease] : nil;
 }
 
 #pragma mark PROPERTIES

@@ -28,8 +28,16 @@
 }
 
 + (CouchDatabaseProxy *)proxyWith:(CouchDatabase *)db {
-    return [[[CouchDatabaseProxy alloc] initWithCouchDatabase:db] autorelease];
+    return db ? [[[CouchDatabaseProxy alloc] initWithCouchDatabase:db] autorelease] : nil;
 }
+
+#pragma mark PROPERTIES
+
+- (id)relativePath {
+    return self.database.relativePath;
+}
+
+#pragma mark METHODS
 
 - (void)create:(id)args {
     RESTOperation * op = [self.database create];
@@ -41,6 +49,13 @@
 - (id)ensureCreated:(id)args {
     BOOL result = [self.database ensureCreated:nil];
     return [NSNumber numberWithBool:result];
+}
+
+- (void)deleteDatabase:(id)args {
+    RESTOperation * op = [self.database DELETE];
+    if (![op wait]) {
+        NSAssert(op.error.code == 200 || op.error.code == 404, @"Error deleting db: %@", op.error);
+    }
 }
 
 - (void)compact:(id)args {

@@ -23,7 +23,7 @@
 }
 
 + (CouchQueryProxy *)proxyWith:(CouchQuery *)q {
-    return [[[CouchQueryProxy alloc] initWithCouchQuery:q] autorelease];
+    return q ? [[[CouchQueryProxy alloc] initWithCouchQuery:q] autorelease] : nil;
 }
 
 - (NSDictionary *)toQueryResult:(CouchQueryEnumerator *)e {

@@ -26,7 +26,7 @@
 }
 
 + (CouchDocumentProxy *)proxyWith:(CouchDocument *)doc {
-    return [[[CouchDocumentProxy alloc] initWithCouchDocument:doc] autorelease];
+    return doc ? [[[CouchDocumentProxy alloc] initWithCouchDocument:doc] autorelease] : nil;
 }
 
 - (id)documentID {

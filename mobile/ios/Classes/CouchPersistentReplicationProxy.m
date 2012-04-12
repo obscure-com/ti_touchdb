@@ -22,7 +22,7 @@
 }
 
 + (CouchPersistentReplicationProxy *)proxyWith:(CouchPersistentReplication *)rep {
-    return [[[CouchPersistentReplicationProxy alloc] initWithCouchPersistentReplication:rep] autorelease];
+    return rep ? [[[CouchPersistentReplicationProxy alloc] initWithCouchPersistentReplication:rep] autorelease] : nil;
 }
 
 - (id)source {

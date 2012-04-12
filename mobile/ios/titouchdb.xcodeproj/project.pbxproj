@@ -26,6 +26,8 @@
 		24DD6CFA1134B3F500162E58 /* ComObscureTiTouchDBModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 24DD6CF81134B3F500162E58 /* ComObscureTiTouchDBModule.m */; };
 		AA747D9F0F9514B9006C5449 /* ComObscureTiTouchDB_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* ComObscureTiTouchDB_Prefix.pch */; };
 		AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
+		DA09BDF21534B58B00B9936C /* CouchAttachmentProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = DA09BDF01534B58B00B9936C /* CouchAttachmentProxy.h */; };
+		DA09BDF31534B58B00B9936C /* CouchAttachmentProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = DA09BDF11534B58B00B9936C /* CouchAttachmentProxy.m */; };
 		DA0E41B2152E3083004CAF63 /* CouchDatabaseProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = DA0E41B0152E3083004CAF63 /* CouchDatabaseProxy.h */; };
 		DA0E41B3152E3083004CAF63 /* CouchDatabaseProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = DA0E41B1152E3083004CAF63 /* CouchDatabaseProxy.m */; };
 		DA0E41B6152E329B004CAF63 /* CouchPersistentReplicationProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = DA0E41B4152E329B004CAF63 /* CouchPersistentReplicationProxy.h */; };
@@ -33,18 +35,6 @@
 		DA0E41B9152E34D3004CAF63 /* app.js in Sources */ = {isa = PBXBuildFile; fileRef = DA0E41B8152E34D3004CAF63 /* app.js */; };
 		DA0E41BC152E474E004CAF63 /* CouchDocumentProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = DA0E41BA152E474E004CAF63 /* CouchDocumentProxy.h */; };
 		DA0E41BD152E474E004CAF63 /* CouchDocumentProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = DA0E41BB152E474E004CAF63 /* CouchDocumentProxy.m */; };
-		DA6D3B9115100154006E35F1 /* TDDatabaseProxy+Replication.h in Headers */ = {isa = PBXBuildFile; fileRef = DA6D3B8F15100153006E35F1 /* TDDatabaseProxy+Replication.h */; };
-		DA6D3B9215100154006E35F1 /* TDDatabaseProxy+Replication.m in Sources */ = {isa = PBXBuildFile; fileRef = DA6D3B9015100154006E35F1 /* TDDatabaseProxy+Replication.m */; };
-		DAD0DE9B150E5607004FFC31 /* TDDatabaseProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = DAD0DE99150E5607004FFC31 /* TDDatabaseProxy.h */; };
-		DAD0DE9C150E5607004FFC31 /* TDDatabaseProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = DAD0DE9A150E5607004FFC31 /* TDDatabaseProxy.m */; };
-		DAD0DEA4150E61CA004FFC31 /* TDRevisionProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = DAD0DEA2150E61CA004FFC31 /* TDRevisionProxy.h */; };
-		DAD0DEA5150E61CA004FFC31 /* TDRevisionProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = DAD0DEA3150E61CA004FFC31 /* TDRevisionProxy.m */; };
-		DAD0DEA8150E7B0B004FFC31 /* TDDatabaseProxy+Attachments.h in Headers */ = {isa = PBXBuildFile; fileRef = DAD0DEA6150E7B0B004FFC31 /* TDDatabaseProxy+Attachments.h */; };
-		DAD0DEA9150E7B0B004FFC31 /* TDDatabaseProxy+Attachments.m in Sources */ = {isa = PBXBuildFile; fileRef = DAD0DEA7150E7B0B004FFC31 /* TDDatabaseProxy+Attachments.m */; };
-		DAD0DEAC150E7B6E004FFC31 /* TDDatabaseProxy+Insertion.h in Headers */ = {isa = PBXBuildFile; fileRef = DAD0DEAA150E7B6E004FFC31 /* TDDatabaseProxy+Insertion.h */; };
-		DAD0DEAD150E7B6E004FFC31 /* TDDatabaseProxy+Insertion.m in Sources */ = {isa = PBXBuildFile; fileRef = DAD0DEAB150E7B6E004FFC31 /* TDDatabaseProxy+Insertion.m */; };
-		DAD0DEB0150E9CF3004FFC31 /* TDViewProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = DAD0DEAE150E9CF2004FFC31 /* TDViewProxy.h */; };
-		DAD0DEB1150E9CF3004FFC31 /* TDViewProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = DAD0DEAF150E9CF2004FFC31 /* TDViewProxy.m */; };
 		DAE72A22152E4BBF00622013 /* CouchQueryProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = DAE72A20152E4BBF00622013 /* CouchQueryProxy.h */; };
 		DAE72A23152E4BBF00622013 /* CouchQueryProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = DAE72A21152E4BBF00622013 /* CouchQueryProxy.m */; };
 		DAE72A27152E4E7F00622013 /* CouchRevisionProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = DAE72A25152E4E7F00622013 /* CouchRevisionProxy.h */; };
@@ -74,6 +64,8 @@
 		AA747D9E0F9514B9006C5449 /* ComObscureTiTouchDB_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComObscureTiTouchDB_Prefix.pch; sourceTree = SOURCE_ROOT; };
 		AACBBE490F95108600F1A2B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D2AAC07E0554694100DB518D /* libComObscureTiTouchDB.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libComObscureTiTouchDB.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		DA09BDF01534B58B00B9936C /* CouchAttachmentProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CouchAttachmentProxy.h; path = Classes/CouchAttachmentProxy.h; sourceTree = "<group>"; };
+		DA09BDF11534B58B00B9936C /* CouchAttachmentProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CouchAttachmentProxy.m; path = Classes/CouchAttachmentProxy.m; sourceTree = "<group>"; };
 		DA0E41B0152E3083004CAF63 /* CouchDatabaseProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CouchDatabaseProxy.h; path = Classes/CouchDatabaseProxy.h; sourceTree = "<group>"; };
 		DA0E41B1152E3083004CAF63 /* CouchDatabaseProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CouchDatabaseProxy.m; path = Classes/CouchDatabaseProxy.m; sourceTree = "<group>"; };
 		DA0E41B4152E329B004CAF63 /* CouchPersistentReplicationProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CouchPersistentReplicationProxy.h; path = Classes/CouchPersistentReplicationProxy.h; sourceTree = "<group>"; };
@@ -81,18 +73,7 @@
 		DA0E41B8152E34D3004CAF63 /* app.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = app.js; path = example/app.js; sourceTree = "<group>"; };
 		DA0E41BA152E474E004CAF63 /* CouchDocumentProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CouchDocumentProxy.h; path = Classes/CouchDocumentProxy.h; sourceTree = "<group>"; };
 		DA0E41BB152E474E004CAF63 /* CouchDocumentProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CouchDocumentProxy.m; path = Classes/CouchDocumentProxy.m; sourceTree = "<group>"; };
-		DA6D3B8F15100153006E35F1 /* TDDatabaseProxy+Replication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "TDDatabaseProxy+Replication.h"; path = "Classes/TDDatabaseProxy+Replication.h"; sourceTree = "<group>"; };
-		DA6D3B9015100154006E35F1 /* TDDatabaseProxy+Replication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "TDDatabaseProxy+Replication.m"; path = "Classes/TDDatabaseProxy+Replication.m"; sourceTree = "<group>"; };
-		DAD0DE99150E5607004FFC31 /* TDDatabaseProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TDDatabaseProxy.h; path = Classes/TDDatabaseProxy.h; sourceTree = "<group>"; };
-		DAD0DE9A150E5607004FFC31 /* TDDatabaseProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = TDDatabaseProxy.m; path = Classes/TDDatabaseProxy.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		DAD0DEA2150E61CA004FFC31 /* TDRevisionProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TDRevisionProxy.h; path = Classes/TDRevisionProxy.h; sourceTree = "<group>"; };
-		DAD0DEA3150E61CA004FFC31 /* TDRevisionProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TDRevisionProxy.m; path = Classes/TDRevisionProxy.m; sourceTree = "<group>"; };
-		DAD0DEA6150E7B0B004FFC31 /* TDDatabaseProxy+Attachments.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "TDDatabaseProxy+Attachments.h"; path = "Classes/TDDatabaseProxy+Attachments.h"; sourceTree = "<group>"; };
-		DAD0DEA7150E7B0B004FFC31 /* TDDatabaseProxy+Attachments.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "TDDatabaseProxy+Attachments.m"; path = "Classes/TDDatabaseProxy+Attachments.m"; sourceTree = "<group>"; };
-		DAD0DEAA150E7B6E004FFC31 /* TDDatabaseProxy+Insertion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "TDDatabaseProxy+Insertion.h"; path = "Classes/TDDatabaseProxy+Insertion.h"; sourceTree = "<group>"; };
-		DAD0DEAB150E7B6E004FFC31 /* TDDatabaseProxy+Insertion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = "TDDatabaseProxy+Insertion.m"; path = "Classes/TDDatabaseProxy+Insertion.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		DAD0DEAE150E9CF2004FFC31 /* TDViewProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TDViewProxy.h; path = Classes/TDViewProxy.h; sourceTree = "<group>"; };
-		DAD0DEAF150E9CF2004FFC31 /* TDViewProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TDViewProxy.m; path = Classes/TDViewProxy.m; sourceTree = "<group>"; };
+		DAA708311533A18B00E30D4F /* metadata.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = metadata.plist; path = ../../../../../../../Desktop/celine/tmp/metadata.plist; sourceTree = "<group>"; };
 		DAE72A20152E4BBF00622013 /* CouchQueryProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CouchQueryProxy.h; path = Classes/CouchQueryProxy.h; sourceTree = "<group>"; };
 		DAE72A21152E4BBF00622013 /* CouchQueryProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CouchQueryProxy.m; path = Classes/CouchQueryProxy.m; sourceTree = "<group>"; };
 		DAE72A25152E4E7F00622013 /* CouchRevisionProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CouchRevisionProxy.h; path = Classes/CouchRevisionProxy.h; sourceTree = "<group>"; };
@@ -149,18 +130,6 @@
 			children = (
 				24DD6CF71134B3F500162E58 /* ComObscureTiTouchDBModule.h */,
 				24DD6CF81134B3F500162E58 /* ComObscureTiTouchDBModule.m */,
-				DAD0DE99150E5607004FFC31 /* TDDatabaseProxy.h */,
-				DAD0DE9A150E5607004FFC31 /* TDDatabaseProxy.m */,
-				DAD0DEA6150E7B0B004FFC31 /* TDDatabaseProxy+Attachments.h */,
-				DAD0DEA7150E7B0B004FFC31 /* TDDatabaseProxy+Attachments.m */,
-				DAD0DEAA150E7B6E004FFC31 /* TDDatabaseProxy+Insertion.h */,
-				DAD0DEAB150E7B6E004FFC31 /* TDDatabaseProxy+Insertion.m */,
-				DA6D3B8F15100153006E35F1 /* TDDatabaseProxy+Replication.h */,
-				DA6D3B9015100154006E35F1 /* TDDatabaseProxy+Replication.m */,
-				DAD0DEA2150E61CA004FFC31 /* TDRevisionProxy.h */,
-				DAD0DEA3150E61CA004FFC31 /* TDRevisionProxy.m */,
-				DAD0DEAE150E9CF2004FFC31 /* TDViewProxy.h */,
-				DAD0DEAF150E9CF2004FFC31 /* TDViewProxy.m */,
 				DA0E41B0152E3083004CAF63 /* CouchDatabaseProxy.h */,
 				DA0E41B1152E3083004CAF63 /* CouchDatabaseProxy.m */,
 				DA0E41B4152E329B004CAF63 /* CouchPersistentReplicationProxy.h */,
@@ -177,6 +146,8 @@
 				DAE72A2E152E550400622013 /* CouchReplicationProxy.m */,
 				DAE72A35152E66C800622013 /* TiProxy+Errors.h */,
 				DAE72A36152E66C800622013 /* TiProxy+Errors.m */,
+				DA09BDF01534B58B00B9936C /* CouchAttachmentProxy.h */,
+				DA09BDF11534B58B00B9936C /* CouchAttachmentProxy.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -185,6 +156,7 @@
 			isa = PBXGroup;
 			children = (
 				DA0E41B8152E34D3004CAF63 /* app.js */,
+				DAA708311533A18B00E30D4F /* metadata.plist */,
 				AA747D9E0F9514B9006C5449 /* ComObscureTiTouchDB_Prefix.pch */,
 				24DD6D1B1134B66800162E58 /* titanium.xcconfig */,
 			);
@@ -200,12 +172,6 @@
 			files = (
 				AA747D9F0F9514B9006C5449 /* ComObscureTiTouchDB_Prefix.pch in Headers */,
 				24DD6CF91134B3F500162E58 /* ComObscureTiTouchDBModule.h in Headers */,
-				DAD0DE9B150E5607004FFC31 /* TDDatabaseProxy.h in Headers */,
-				DAD0DEA4150E61CA004FFC31 /* TDRevisionProxy.h in Headers */,
-				DAD0DEA8150E7B0B004FFC31 /* TDDatabaseProxy+Attachments.h in Headers */,
-				DAD0DEAC150E7B6E004FFC31 /* TDDatabaseProxy+Insertion.h in Headers */,
-				DAD0DEB0150E9CF3004FFC31 /* TDViewProxy.h in Headers */,
-				DA6D3B9115100154006E35F1 /* TDDatabaseProxy+Replication.h in Headers */,
 				DA0E41B2152E3083004CAF63 /* CouchDatabaseProxy.h in Headers */,
 				DA0E41B6152E329B004CAF63 /* CouchPersistentReplicationProxy.h in Headers */,
 				DA0E41BC152E474E004CAF63 /* CouchDocumentProxy.h in Headers */,
@@ -214,6 +180,7 @@
 				DAE72A2B152E518300622013 /* CouchDesignDocumentProxy.h in Headers */,
 				DAE72A2F152E550400622013 /* CouchReplicationProxy.h in Headers */,
 				DAE72A37152E66C900622013 /* TiProxy+Errors.h in Headers */,
+				DA09BDF21534B58B00B9936C /* CouchAttachmentProxy.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -288,12 +255,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				24DD6CFA1134B3F500162E58 /* ComObscureTiTouchDBModule.m in Sources */,
-				DAD0DE9C150E5607004FFC31 /* TDDatabaseProxy.m in Sources */,
-				DAD0DEA5150E61CA004FFC31 /* TDRevisionProxy.m in Sources */,
-				DAD0DEA9150E7B0B004FFC31 /* TDDatabaseProxy+Attachments.m in Sources */,
-				DAD0DEAD150E7B6E004FFC31 /* TDDatabaseProxy+Insertion.m in Sources */,
-				DAD0DEB1150E9CF3004FFC31 /* TDViewProxy.m in Sources */,
-				DA6D3B9215100154006E35F1 /* TDDatabaseProxy+Replication.m in Sources */,
 				DA0E41B3152E3083004CAF63 /* CouchDatabaseProxy.m in Sources */,
 				DA0E41B7152E329B004CAF63 /* CouchPersistentReplicationProxy.m in Sources */,
 				DA0E41B9152E34D3004CAF63 /* app.js in Sources */,
@@ -303,6 +264,7 @@
 				DAE72A2C152E518300622013 /* CouchDesignDocumentProxy.m in Sources */,
 				DAE72A30152E550400622013 /* CouchReplicationProxy.m in Sources */,
 				DAE72A38152E66C900622013 /* TiProxy+Errors.m in Sources */,
+				DA09BDF31534B58B00B9936C /* CouchAttachmentProxy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
