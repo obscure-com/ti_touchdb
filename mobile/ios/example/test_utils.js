@@ -21,3 +21,15 @@ function createDocWithProperties(db, props) {
     
     return doc;
 }
+
+function createDocuments(db, n) {
+    var result = [];
+    for (var i=0; i < n; i++) {
+        var doc = createDocWithProperties(db, {
+            testName: 'someTest',
+            sequence: i
+        });
+        result.push(doc);
+    }
+    return result;
+}

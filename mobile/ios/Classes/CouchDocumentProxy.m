@@ -41,6 +41,13 @@
     return [NSNumber numberWithBool:self.document.isDeleted];
 }
 
+- (void)deleteDocument:(id)args {
+    RESTOperation * op = [self.document DELETE];
+    if (![op wait]) {
+        NSAssert(op.error.code == 404, @"Error deleting document: %@", op.error);
+    }
+}
+
 // skip modelObject
 
 #pragma mark REVISIONS:

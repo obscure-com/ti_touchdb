@@ -27,10 +27,10 @@ exports.run_tests = function() {
         var q = db.getAllDocuments();
         assert(q, "getAllDocuments() returned nothing");
         
-        var results = q.fetchRows();
-        assert(results && results.rows, "getAllDocuments() query has no results");
-        assert(results.rows.length == 1, "wrong number of documents: "+results.rows.length);
-        assert(results.rows[0].doc._id === doc.documentID, "wrong document ID "+results.rows[0].doc._id);
+        var rows = q.rows();
+        assert(rows, "getAllDocuments() query has no rows");
+        assert(rows.rowCount == 1, "wrong number of documents: "+rows.rowCount);
+        assert(rows.rowAtIndex(0).documentID === doc.documentID, "wrong document ID "+rows.rowAtIndex(0).documentID);
 
         db.deleteDatabase();
     }

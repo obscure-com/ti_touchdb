@@ -8,6 +8,7 @@
 
 #import "CouchQueryProxy.h"
 #import "CouchDesignDocumentProxy.h"
+#import "CouchDocumentProxy.h"
 #import <CouchCocoa/CouchQuery.h>
 #import <CouchCocoa/RESTOperation.h>
 
@@ -24,17 +25,6 @@
 
 + (CouchQueryProxy *)proxyWith:(CouchQuery *)q {
     return q ? [[[CouchQueryProxy alloc] initWithCouchQuery:q] autorelease] : nil;
-}
-
-- (NSDictionary *)toQueryResult:(CouchQueryEnumerator *)e {
-    if (!e) return nil;
-    
-    NSMutableArray * result = [NSMutableArray arrayWithCapacity:[e count]];
-    for (CouchQueryRow * row in e) {
-        [result addObject:[NSDictionary dictionaryWithObjectsAndKeys:row.documentID, @"id", row.key, @"key", row.value, @"value", row.documentProperties, @"doc", nil]];
-    }
-    
-    return [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInteger:e.totalCount], @"total_rows", [NSNumber numberWithUnsignedInteger:self.query.skip], @"offset", result, @"rows", nil];
 }
 
 #pragma mark PROPERTIES
@@ -139,18 +129,121 @@
     RESTOperation * op = [self.query start];
     if (cb) {
         [op onCompletion:^() {
-            [cb call:[NSArray arrayWithObject:[self toQueryResult:op.resultObject]] thisObject:nil];
+            [cb call:[NSArray arrayWithObject:[CouchQueryEnumeratorProxy proxyWith:op.resultObject]] thisObject:nil];
         }];
     }
 }
 
 //sync query
-- (id)fetchRows:(id)args {
-    return [self toQueryResult:[self.query rows]];
+- (id)rows:(id)args {
+    return [CouchQueryEnumeratorProxy proxyWith:[self.query rows]];
 }
 
-- (id)fetchRowsIfChanged:(id)args {
-    return [self toQueryResult:[self.query rowsIfChanged]];
+- (id)rowsIfChanged:(id)args {
+    return [CouchQueryEnumeratorProxy proxyWith:[self.query rowsIfChanged]];
+}
+
+@end
+
+
+@implementation CouchQueryRowProxy
+@synthesize row;
+
+- (id)initWithCouchQueryRow:(CouchQueryRow *)r {
+    if (self = [super init]) {
+        self.row = r;
+    }
+    return self;
+}
+
++ (CouchQueryRowProxy *)proxyWith:(CouchQueryRow *)r {
+    return r ? [[[CouchQueryRowProxy alloc] initWithCouchQueryRow:r] autorelease] : nil;
+}
+
+#pragma mark PROPERTIES
+
+- (id)query {
+    return [CouchQueryProxy proxyWith:self.row.query];
+}
+
+- (id)key {
+    return self.row.key;
+}
+
+- (id)value {
+    return self.row.value;
+}
+
+- (id)documentID {
+    return self.row.documentID;
+}
+
+- (id)sourceDocumentID {
+    return self.row.sourceDocumentID;
+}
+
+- (id)documentRevision {
+    return self.row.documentRevision;
+}
+
+- (id)document {
+    return [CouchDocumentProxy proxyWith:self.row.document];
+}
+
+- (id)documentProperties {
+    return self.row.documentProperties;
+}
+
+#pragma mark METHODS
+
+- (id)keyAtIndex:(id)args {
+    NSNumber * index;
+    ENSURE_ARG_AT_INDEX(index, args, 0, NSNumber)
+    return [self.row keyAtIndex:[index unsignedIntegerValue]];
+}
+
+@end
+
+
+@implementation CouchQueryEnumeratorProxy
+@synthesize enumerator;
+
+- (id)initWithCouchQueryEnumerator:(CouchQueryEnumerator *)e {
+    if (self = [super init]) {
+        self.enumerator = e;
+    }
+    return self;
+}
+
++ (CouchQueryEnumeratorProxy *)proxyWith:(CouchQueryEnumerator *)e {
+    return e ? [[[CouchQueryEnumeratorProxy alloc] initWithCouchQueryEnumerator:e] autorelease] : nil;
+}
+
+#pragma mark PROPERTIES
+
+- (id)rowCount {
+    return [NSNumber numberWithUnsignedInteger:self.enumerator.count];
+}
+
+- (id)totalCount {
+    return [NSNumber numberWithUnsignedInteger:self.enumerator.totalCount];
+}
+
+- (id)sequenceNumber {
+    return [NSNumber numberWithUnsignedInteger:self.enumerator.sequenceNumber];
+}
+
+#pragma mark METHODS
+
+- (id)nextRow:(id)args {
+    return [CouchQueryRowProxy proxyWith:[self.enumerator nextRow]];
+}
+
+- (id)rowAtIndex:(id)args {
+    NSNumber * index;
+    ENSURE_ARG_AT_INDEX(index, args, 0, NSNumber)
+
+    return [CouchQueryRowProxy proxyWith:[self.enumerator rowAtIndex:[index unsignedIntegerValue]]];
 }
 
 @end

@@ -18,6 +18,12 @@ window.addEventListener('open', function(e) {
         label.text = 'test03_savemultipledocuments complete';
         require('test03_savemultipleunsaveddocuments').run_tests();
         label.text = 'test03_savemultipleunsaveddocuments complete';
+        require('test03_deletemultipledocuments').run_tests();
+        label.text = 'test03_deletemultipledocuments complete';
+        require('test04_deletedocument').run_tests();
+        label.text = 'test04_deletedocument complete';
+        require('test05_alldocuments').run_tests();
+        label.text = 'test05_alldocuments complete';
     }
     catch (e) {
         label.text = e;
