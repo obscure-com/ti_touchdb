@@ -14,6 +14,8 @@ window.addEventListener('open', function(e) {
         label.text = 'test02_createdocument complete';
         require('test02_createrevisions').run_tests();
         label.text = 'test02_createrevisions complete';
+        require('test03_savemultipledocuments').run_tests();
+        label.text = 'test03_savemultipledocuments complete';
     }
     catch (e) {
         label.text = e;
