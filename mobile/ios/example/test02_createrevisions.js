@@ -14,7 +14,7 @@ exports.run_tests = function() {
         };
         
         var doc = createDocWithProperties(db, properties);
-        var rev1 = doc.currentRevision();
+        var rev1 = doc.currentRevision;
         assert(rev1, "missing current revision");
         assert(rev1.revisionID, "missing revision ID on rev1");
         assert(rev1.revisionID.indexOf('1-') == 0, "invalid revision ID: "+rev1.revisionID);
@@ -22,7 +22,7 @@ exports.run_tests = function() {
         var properties2 = _.extend(properties, { tag: 4567 });
         rev1.putProperties(properties2);
         
-        var rev2 = doc.currentRevision();
+        var rev2 = doc.currentRevision;
         assert(rev2.revisionID === doc.currentRevisionID, "revision ID mismatch");
         assert(rev2.revisionID.indexOf('2-') == 0, "invalid revision ID: "+rev2.revisionID);
         

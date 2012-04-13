@@ -4,7 +4,7 @@ var _ = require('underscore'),
     server = require('com.obscure.TiTouchDB');
 
 exports.run_tests = function() {
-    var db = server.databaseNamed('test03');
+    var db = server.databaseNamed('test03a');
     db.create();
 
     try {
@@ -20,7 +20,7 @@ exports.run_tests = function() {
         
         var revisions = [], revisionProperties = [];
         _.each(docs, function(doc) {
-            var rev = doc.currentRevision();
+            var rev = doc.currentRevision;
             assert(rev.revisionID.indexOf('1-') == 0, "first revision should start with 1-");
             var p = rev.properties;
             p.misc = 'updated!';
@@ -31,7 +31,7 @@ exports.run_tests = function() {
         db.putChanges(revisionProperties, revisions);
         
         _.each(docs, function(doc) {
-           var rev = doc.currentRevision(); 
+           var rev = doc.currentRevision; 
            assert(rev.revisionID.indexOf('2-') == 0, "second revision should start with 2-");
            var p = rev.properties;
            assert(p.misc === 'updated!', "missing updated field");

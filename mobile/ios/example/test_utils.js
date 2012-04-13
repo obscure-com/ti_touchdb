@@ -10,7 +10,7 @@ function createDocWithProperties(db, props) {
     var doc = db.untitledDocument();
     assert(doc, "couldn't create doc");
     assert(!doc.currentRevisionID, "new doc should not have currentRevisionID");
-    assert(doc.currentRevision, "new doc should have currentRevision");
+    assert(!doc.currentRevision, "new doc should not have currentRevision");
     assert(!doc.documentID, "new untitled doc should not have documentID");
     
     doc.putProperties(props); // saves the doc!

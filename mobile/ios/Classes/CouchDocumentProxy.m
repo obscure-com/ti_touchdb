@@ -49,7 +49,7 @@
     return self.document.currentRevisionID;
 }
 
-- (id)currentRevision:(id)args {
+- (id)currentRevision {
     return [CouchRevisionProxy proxyWith:[self.document currentRevision]];
 }
 
