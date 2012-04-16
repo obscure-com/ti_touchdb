@@ -79,7 +79,7 @@ CouchTouchDBServer * server;
     // TODO check error
     [TDView setCompiler:self];
     
-    if (YES) {
+    if (NO) {
         NSLog(@"logging sync stuff");
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"Log"];
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"LogSync"];
