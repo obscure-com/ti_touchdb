@@ -16,7 +16,7 @@
 @synthesize designDocument;
 
 - (id)initWithCouchDesignDocument:(CouchDesignDocument *)ddoc {
-    if (self = [super init]) {
+    if (self = [super initWithCouchDocument:ddoc]) {
         self.designDocument = ddoc;
     }
     return self;
@@ -59,6 +59,8 @@
 - (id)changed {
     return [NSNumber numberWithBool:self.designDocument.changed];
 }
+
+
 
 #pragma mark METHODS
 

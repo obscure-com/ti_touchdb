@@ -13,4 +13,5 @@
 @interface CouchDocumentProxy : TiProxy
 @property (nonatomic, strong) CouchDocument * document;
 + (CouchDocumentProxy *)proxyWith:(CouchDocument *)doc;
+- (id)initWithCouchDocument:(CouchDocument *)doc;
 @end

@@ -6,11 +6,11 @@
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
-#import "TiProxy.h"
+#import "CouchDocumentProxy.h"
 
 @class CouchDesignDocument;
 
-@interface CouchDesignDocumentProxy : TiProxy
+@interface CouchDesignDocumentProxy : CouchDocumentProxy
 @property (nonatomic, strong) CouchDesignDocument * designDocument;
 + (CouchDesignDocumentProxy *)proxyWith:(CouchDesignDocument *)ddoc;
 @end
