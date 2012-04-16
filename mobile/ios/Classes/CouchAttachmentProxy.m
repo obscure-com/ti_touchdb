@@ -10,6 +10,7 @@
 #import "CouchDocumentProxy.h"
 #import "CouchRevisionProxy.h"
 #import <CouchCocoa/CouchAttachment.h>
+#import <CouchCocoa/RESTOperation.h>
 #import "TiBlob.h"
 
 @implementation CouchAttachmentProxy
@@ -54,7 +55,7 @@
 }
 
 - (id)body {
-    return [[TiBlob alloc] initWithData:self.attachment.body mimetype:self.attachment.contentType];
+    return [[[TiBlob alloc] initWithData:self.attachment.body mimetype:self.attachment.contentType] autorelease];
 }
 
 - (void)setBody:(id)val {
@@ -66,8 +67,19 @@
     return [self.attachment.unversionedURL absoluteString];
 }
 
+- (id)relativePath {
+    return [self.attachment relativePath];
+}
+
 #pragma mark METHODS
 
 // TODO do we need specific GET and PUT methods, or can they be baked into the accessors?
+
+- (void)deleteAttachment:(id)args {
+    RESTOperation * op = [self.attachment DELETE];
+    if (![op wait]) {
+        NSAssert(op.error.code == 200 || op.error.code == 404, @"Error deleting attachment: %@", op.error);
+    }
+}
 
 @end

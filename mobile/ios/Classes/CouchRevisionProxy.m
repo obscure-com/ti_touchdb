@@ -63,7 +63,8 @@
 }
 
 - (id)attachmentNames {
-    return self.revision.attachmentNames;
+    id result = self.revision.attachmentNames;
+    return result ? result : [NSArray array];
 }
 
 #pragma mark METHODS
