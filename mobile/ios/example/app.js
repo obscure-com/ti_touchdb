@@ -30,6 +30,22 @@ window.addEventListener('open', function(e) {
         label.text = 'test07_history complete';
         require('test08_attachments').run_tests();
         label.text = 'test08_attachments complete';
+        require('test12_createview').run_tests();
+        label.text = 'test12_createview complete';
+        require('test13_runview').run_tests();
+        label.text = 'test13_runview complete';
+        require('test13_validation').run_tests();
+        label.text = 'test13_validation complete';
+        require('test14_runslowview').run_tests();
+        label.text = 'test14_runslowview complete';
+        require('test14_viewwithlinkeddocs').run_tests();
+        label.text = 'test14_viewwithlinkeddocs complete';
+        require('test15_uncacheviews').run_tests();
+        label.text = 'test15_uncacheviews complete';
+        require('test16_viewoptions').run_tests();
+        label.text = 'test16_viewoptions complete';
+        
+        label.text = "all tests passed! whoopee!"
     }
     catch (e) {
         label.text = e;

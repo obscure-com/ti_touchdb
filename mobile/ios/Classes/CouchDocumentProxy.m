@@ -97,7 +97,7 @@
         NSAssert(op.error.code == 412, @"Error putting document properties: %@", op.error);
     }
     
-    return op.error.code == 412 ? [self errorDict:op.error] : [CouchRevisionProxy proxyWith:[op resultObject]];
+    return (op.error.code == 200 || op.error.code == 201) ? [CouchRevisionProxy proxyWith:[op resultObject]] : [self errorDict:op.error];
 }
 
 #pragma mark CONFLICTS:
