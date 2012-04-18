@@ -240,8 +240,8 @@
     return [CouchPersistentReplicationProxy proxyWith:[self.database replicationToDatabaseAtURL:url]];
 }
 
-- (id)replications:(id)args {
-    NSArray * reps = [self.database replications];
+- (id)replications {
+    NSArray * reps = self.database.replications;
     NSMutableArray * result = [NSMutableArray arrayWithCapacity:[reps count]];
     
     for (CouchPersistentReplication * rep in reps) {
