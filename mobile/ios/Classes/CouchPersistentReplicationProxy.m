@@ -37,11 +37,11 @@
     return [self.replication.remoteURL absoluteString];
 }
 
-- (id)create_target {
+- (id)createTarget {
     return [NSNumber numberWithBool:self.replication.create_target];
 }
 
-- (void)setCreate_target:(id)val {
+- (void)setCreateTarget:(id)val {
     self.replication.create_target = [val boolValue];
 }
 
@@ -61,11 +61,11 @@
     self.replication.filter = val;
 }
 
-- (id)query_params {
+- (id)filterParams {
     return self.replication.query_params;
 }
 
-- (id)setQuery_params:(id)val {
+- (id)setFilterParams:(id)val {
     self.replication.query_params = val;
 }
 
@@ -87,7 +87,7 @@
     [self.replication restart];
 }
 
-- (id)state {
+- (id)status {
     return [NSNumber numberWithInt:self.replication.state];
 }
 
