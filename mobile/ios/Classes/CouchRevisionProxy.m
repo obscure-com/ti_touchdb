@@ -85,7 +85,9 @@
         NSAssert(op.error.code == 412, @"Error putting document properties: %@", op.error);
     }
 
-    return op.error.code == 412 ? [self errorDict:op.error] : [CouchRevisionProxy proxyWith:[op resultObject]];
+    // error/revision not being set on op
+    // return op.error.code == 412 ? [self errorDict:op.error] : [CouchRevisionProxy proxyWith:[op resultObject]];
+    return [NSNumber numberWithInt:op.httpStatus];
 }
 
 - (id)attachmentNamed:(id)args {
