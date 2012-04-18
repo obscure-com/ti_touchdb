@@ -4,10 +4,11 @@ var _ = require('/lib/underscore')._,
 var BookDetailView = function(db, e) {
   var doc;
   if (e.isbn) {
-    doc = db.getDocument(e.isbn);
+    doc = db.documentWithID(e.isbn);
   }
   else {
-    doc = db.createRevision({
+    doc = db.untitledDocument();
+    doc.putProperties({
       title: L('book_default_title'),
       author: L('book_default_author'),
       copyright: [1970],
@@ -33,9 +34,9 @@ var BookDetailView = function(db, e) {
     _.each(rows, function(row) {
       updated[row.key] = row.value;
     });
-    doc.properties = _.extend(doc.properties, updated);
-    var status = db.putRevision(doc, doc.revID);
-    return (status < 300);
+    var properties = _.extend(doc.properties, updated);
+    var result = doc.putProperties(properties);
+    return (result < 300);
   }
   
   result.addEventListener('books:change', function(e) {
@@ -54,6 +55,7 @@ var createDetailRow = function(tableView, label, book, key, formatter, immutable
     touchEnabled: false,
     key: key,
     value: book[key],
+    height: 48,
   });
   
   formatter = (formatter || function(v) { return v; }),

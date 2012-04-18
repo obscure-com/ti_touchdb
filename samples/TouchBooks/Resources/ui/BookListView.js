@@ -7,8 +7,8 @@ function BookListView(db, options) {
   result.addEventListener('click', function(e) {
     var book = e.rowData.book;
     Ti.App.fireEvent('books:show_detail_view', {
-      title: book.title,
-      isbn: book._id
+      title: book.properties.title,
+      isbn: book.documentID
     });
   });
   
@@ -17,8 +17,8 @@ function BookListView(db, options) {
     if (book) {
       // book is a dictionary because it came from a view function.
       // need to get the full document object to delete
-      var doc = db.getDocument(book._id);
-      var status = db.deleteRevision(doc);
+      var doc = db.documentWithID(book.documentID);
+      var status = doc.deleteDocument();
     }
   });
   
@@ -30,16 +30,15 @@ function BookListView(db, options) {
 }
 
 function load_book_list(db, table) {  
-  var view = db.viewNamed('books/by_author');
-  var data = view.queryWithOptions({
-    includeDocs: true
-  });
+  var ddoc = db.designDocumentWithName('books');
+  var query = ddoc.queryViewNamed('by_author');
+  var result = query.rows();
 
   // TODO use underscore
   var sections = [], section;
-  for (i in data.rows) {
-    var author = data.rows[i].key[0];
-    var book = data.rows[i].doc;
+  while (row = result.nextRow()) {
+    var author = row.key[0];
+    var book = row.document;
     
     if (!section || section.headerTitle !== author) {
       section && sections.push(section);
@@ -50,9 +49,10 @@ function load_book_list(db, table) {
     
     section.add(Ti.UI.createTableViewRow({
       id: 'BookListRow',
-      title: book.title,
+      title: book.properties.title,
       hasChild: true,
       book: book,
+      height: 48,
     }));
   }
   table.setData(sections);
