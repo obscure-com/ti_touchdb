@@ -7,13 +7,10 @@
  */
 package com.obscure.TiTouchDB;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.appcelerator.kroll.KrollDict;
-import org.appcelerator.kroll.KrollFunction;
 import org.appcelerator.kroll.KrollModule;
 import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.kroll.common.Log;
@@ -22,11 +19,7 @@ import org.mozilla.javascript.Function;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 
-import android.app.Activity;
-
-import com.couchbase.touchdb.TDDatabase;
 import com.couchbase.touchdb.TDServer;
-import com.couchbase.touchdb.TDView;
 import com.couchbase.touchdb.TDViewCompiler;
 import com.couchbase.touchdb.TDViewMapBlock;
 import com.couchbase.touchdb.TDViewMapEmitBlock;
@@ -36,10 +29,12 @@ import com.couchbase.touchdb.TDViewReduceBlock;
 
 @Kroll.module(name = "Titouchdb", id = "com.obscure.TiTouchDB")
 public class TitouchdbModule extends KrollModule implements TDViewCompiler {
-
+	
+	/*
 	private static final String[]		EMPTY_STRING_ARRAY			= new String[0];
 
 	private static TDDatabaseProxy[]	EMPTY_TDDATABASEPROXY_ARRAY	= new TDDatabaseProxy[0];
+	*/
 
 	private static final String			LCAT						= "TiTouchDB";
 
@@ -81,20 +76,6 @@ public class TitouchdbModule extends KrollModule implements TDViewCompiler {
 
 	public TitouchdbModule() {
 		super();
-	}
-
-	@Kroll.getProperty
-	public TDDatabaseProxy[] allOpenDatabases() {
-		List<TDDatabaseProxy> result = new ArrayList<TDDatabaseProxy>();
-		for (TDDatabase db : server.allOpenDatabases()) {
-			result.add(new TDDatabaseProxy(db));
-		}
-		return result.toArray(EMPTY_TDDATABASEPROXY_ARRAY);
-	}
-
-	@Kroll.method
-	public void close() {
-		server.close();
 	}
 
 	private static TDViewMapEmitBlock	EMIT_BLOCK	= null;
@@ -192,6 +173,43 @@ public class TitouchdbModule extends KrollModule implements TDViewCompiler {
 		};
 	}
 
+	@Kroll.getProperty(name="activeTasks")
+	public KrollDict[] activeTasks() {
+		return null;
+	}
+	
+	@Kroll.getProperty(name="activityPollingInterval")
+	public int activityPollingInterval() {
+		return 0;
+	}
+	
+	@Kroll.setProperty(name="activityPollingInterval")
+	public void setActivityPollingInterval(int val) {
+		
+	}
+	
+	@Kroll.getProperty(name="replications")
+	public CouchReplicationProxy[] replications() {
+		return null;
+	}
+	
+	/*
+	@Kroll.getProperty
+	public TDDatabaseProxy[] allOpenDatabases() {
+		List<TDDatabaseProxy> result = new ArrayList<TDDatabaseProxy>();
+		for (TDDatabase db : server.allOpenDatabases()) {
+			result.add(new TDDatabaseProxy(db));
+		}
+		return result.toArray(EMPTY_TDDATABASEPROXY_ARRAY);
+	}
+
+	@Kroll.method
+	public void close() {
+		server.close();
+	}
+
+
+	
 	@Kroll.method
 	public TDDatabaseProxy databaseNamed(String name) {
 		TDDatabase db = server.getDatabaseNamed(name);
@@ -253,4 +271,6 @@ public class TitouchdbModule extends KrollModule implements TDViewCompiler {
 	public void startListenerOnPort(int port, @Kroll.argument(optional = true) KrollFunction cb) {
 		throw new RuntimeException("startListenerOnPort not yet implemented");
 	}
+	*/
 }
+
