@@ -1,0 +1,6 @@
+[submodule "mobile/ios/vendor/TouchDB-iOS"]
+	path = mobile/ios/vendor/TouchDB-iOS
+	url = git@github.com:pegli/TouchDB-iOS.git
+[submodule "mobile/ios/vendor/CouchCocoa"]
+	path = mobile/ios/vendor/CouchCocoa
+	url = git@github.com:pegli/CouchCocoa.git
