@@ -36,7 +36,7 @@ function load_book_list(db, table) {
 
   // TODO use underscore
   var sections = [], section;
-  while (row = result.nextRow()) {
+  while (result && (row = result.nextRow())) {
     var author = row.key[0];
     var book = row.document;
     
