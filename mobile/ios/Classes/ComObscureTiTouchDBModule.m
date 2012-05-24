@@ -69,6 +69,15 @@ CouchTouchDBServer * server;
 -(void)startup {
 	[super startup];
 
+    // set up logging
+    if (NO) {
+        gCouchLogLevel = 10;
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"Log"];
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"LogSync"];
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"LogSyncVerbose"];
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"LogRemoteRequest"];
+    }
+    
     // listen for TouchDB notifications
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(processNotification:) name:nil object:nil];
     
@@ -79,14 +88,6 @@ CouchTouchDBServer * server;
     // TODO check error
     [TDView setCompiler:self];
     
-    if (NO) {
-        NSLog(@"logging sync stuff");
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"Log"];
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"LogSync"];
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"LogSyncVerbose"];
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"LogRemoteRequest"];
-    }
-
 	NSLog(@"[INFO] %@ loaded",self);
 }
 
