@@ -10,6 +10,7 @@
 #import "TiProxy+Errors.h"
 #import <CouchCocoa/CouchReplication.h>
 #import <CouchCocoa/RESTOperation.h>
+#import <TouchDB/TDReplicator.h>
 
 @implementation CouchReplicationProxy
 
@@ -24,6 +25,16 @@
 
 + (CouchReplicationProxy *)proxyWith:(CouchReplication *)rep {
     return rep ? [[[CouchReplicationProxy alloc] initWithCouchReplication:rep] autorelease] : nil;
+}
+
+- (NSDictionary *)toStatusDictionary {
+    return [NSDictionary dictionaryWithObjectsAndKeys:
+            [self completed], @"completed",
+            [self total], @"total",
+            [self status], @"status",
+            [self error], @"error",
+            [self running], @"running",
+            nil];
 }
 
 #pragma mark PROPERTIES
@@ -96,21 +107,50 @@
 #pragma mark METHODS
 
 - (void)start:(id)args {
-    KrollCallback * cb;
-    ENSURE_ARG_OR_NIL_AT_INDEX(cb, args, 0, KrollCallback)
-    
-    RESTOperation * op = [self.replication start];
-    if (cb) {
-        [op onCompletion:^() {
-            [cb call:[NSArray arrayWithObject:self] thisObject:nil];
-        }];
-    }
+    TiThreadPerformOnMainThread(^{
+        [self.replication start];
+    }, NO);
 }
 
 - (void)stop:(id)args {
-    [self.replication stop];
+    TiThreadPerformOnMainThread(^{
+        [self.replication stop];
+    }, NO);
 }
 
+#pragma mark EVENTS
 
+#define kReplicatorProgressChanged @"progress"
+#define kReplicatorStopped @"stopped"
+
+- (void)replicatorProgressChanged:(NSNotification *)n {
+    [self fireEvent:kReplicatorProgressChanged withObject:[self toStatusDictionary]];
+}
+
+- (void)replicatorStopped:(NSNotification *)n {
+    [self fireEvent:kReplicatorStopped withObject:[self toStatusDictionary]];
+}
+
+- (void)_listenerAdded:(NSString *)type count:(int)count {
+	if (count == 1) {
+        if ([type isEqualToString:kReplicatorProgressChanged]) {
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(replicatorProgressChanged:) name:TDReplicatorProgressChangedNotification object:nil];
+        }
+        else if ([type isEqualToString:kReplicatorStopped]) {
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(replicatorStopped:) name:TDReplicatorStoppedNotification object:nil];
+        }
+    }
+}
+
+- (void)_listenerRemoved:(NSString *)type count:(int)count {
+	if (count == 0) {
+        if ([type isEqualToString:kReplicatorProgressChanged]) {
+            [[NSNotificationCenter defaultCenter] removeObserver:self name:TDReplicatorProgressChangedNotification object:nil];
+        }
+        else if ([type isEqualToString:kReplicatorStopped]) {
+            [[NSNotificationCenter defaultCenter] removeObserver:self name:TDReplicatorStoppedNotification object:nil];
+        }
+    }
+}
 
 @end
