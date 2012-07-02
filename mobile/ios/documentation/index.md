@@ -738,16 +738,19 @@ number, read-only.  The current mode of the replication.  One of `server.REPLICA
 
 ### Methods
 
-**start**(callback)
+**start**()
 
-* callback (function(replication)): function that is called with the [`replication`](#replication)
-  object when replication is complete.
-  
-Starts the replication process.  When replication is complete, the callback function is called.
+Starts the replication process.
 
 **stop**()
 
 Stops a running replication process.
+
+### Events
+
+**progress**
+
+* 
 
 <a name="persistent replication"/>
 ## Persistent Replication
