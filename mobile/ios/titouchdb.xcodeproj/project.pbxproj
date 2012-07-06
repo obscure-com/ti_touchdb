@@ -34,7 +34,6 @@
 		DA0E41B3152E3083004CAF63 /* CouchDatabaseProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = DA0E41B1152E3083004CAF63 /* CouchDatabaseProxy.m */; };
 		DA0E41B6152E329B004CAF63 /* CouchPersistentReplicationProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = DA0E41B4152E329B004CAF63 /* CouchPersistentReplicationProxy.h */; };
 		DA0E41B7152E329B004CAF63 /* CouchPersistentReplicationProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = DA0E41B5152E329B004CAF63 /* CouchPersistentReplicationProxy.m */; };
-		DA0E41B9152E34D3004CAF63 /* app.js in Sources */ = {isa = PBXBuildFile; fileRef = DA0E41B8152E34D3004CAF63 /* app.js */; };
 		DA0E41BC152E474E004CAF63 /* CouchDocumentProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = DA0E41BA152E474E004CAF63 /* CouchDocumentProxy.h */; };
 		DA0E41BD152E474E004CAF63 /* CouchDocumentProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = DA0E41BB152E474E004CAF63 /* CouchDocumentProxy.m */; };
 		DAE72A22152E4BBF00622013 /* CouchQueryProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = DAE72A20152E4BBF00622013 /* CouchQueryProxy.h */; };
@@ -228,10 +227,8 @@
 		DA0E41B1152E3083004CAF63 /* CouchDatabaseProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CouchDatabaseProxy.m; path = Classes/CouchDatabaseProxy.m; sourceTree = "<group>"; };
 		DA0E41B4152E329B004CAF63 /* CouchPersistentReplicationProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CouchPersistentReplicationProxy.h; path = Classes/CouchPersistentReplicationProxy.h; sourceTree = "<group>"; };
 		DA0E41B5152E329B004CAF63 /* CouchPersistentReplicationProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CouchPersistentReplicationProxy.m; path = Classes/CouchPersistentReplicationProxy.m; sourceTree = "<group>"; };
-		DA0E41B8152E34D3004CAF63 /* app.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = app.js; path = example/app.js; sourceTree = "<group>"; };
 		DA0E41BA152E474E004CAF63 /* CouchDocumentProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CouchDocumentProxy.h; path = Classes/CouchDocumentProxy.h; sourceTree = "<group>"; };
 		DA0E41BB152E474E004CAF63 /* CouchDocumentProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CouchDocumentProxy.m; path = Classes/CouchDocumentProxy.m; sourceTree = "<group>"; };
-		DAA708311533A18B00E30D4F /* metadata.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = metadata.plist; path = ../../../../../../../Desktop/celine/tmp/metadata.plist; sourceTree = "<group>"; };
 		DAE72A20152E4BBF00622013 /* CouchQueryProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CouchQueryProxy.h; path = Classes/CouchQueryProxy.h; sourceTree = "<group>"; };
 		DAE72A21152E4BBF00622013 /* CouchQueryProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CouchQueryProxy.m; path = Classes/CouchQueryProxy.m; sourceTree = "<group>"; };
 		DAE72A25152E4E7F00622013 /* CouchRevisionProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CouchRevisionProxy.h; path = Classes/CouchRevisionProxy.h; sourceTree = "<group>"; };
@@ -317,8 +314,6 @@
 		32C88DFF0371C24200C91783 /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
-				DA0E41B8152E34D3004CAF63 /* app.js */,
-				DAA708311533A18B00E30D4F /* metadata.plist */,
 				AA747D9E0F9514B9006C5449 /* ComObscureTiTouchDB_Prefix.pch */,
 				24DD6D1B1134B66800162E58 /* titanium.xcconfig */,
 			);
@@ -608,7 +603,6 @@
 				24DD6CFA1134B3F500162E58 /* ComObscureTiTouchDBModule.m in Sources */,
 				DA0E41B3152E3083004CAF63 /* CouchDatabaseProxy.m in Sources */,
 				DA0E41B7152E329B004CAF63 /* CouchPersistentReplicationProxy.m in Sources */,
-				DA0E41B9152E34D3004CAF63 /* app.js in Sources */,
 				DA0E41BD152E474E004CAF63 /* CouchDocumentProxy.m in Sources */,
 				DAE72A23152E4BBF00622013 /* CouchQueryProxy.m in Sources */,
 				DAE72A28152E4E7F00622013 /* CouchRevisionProxy.m in Sources */,
@@ -675,8 +669,8 @@
 				HEADER_SEARCH_PATHS = (
 					"$(TITANIUM_BASE_SDK)",
 					"$(TITANIUM_BASE_SDK2)",
+					"vendor/TouchDB-iOS/Source",
 					vendor/CouchCocoa,
-					"vendor/TouchDB-iOS",
 				);
 				INSTALL_PATH = /usr/local/lib;
 				OTHER_CFLAGS = (
@@ -726,8 +720,8 @@
 				HEADER_SEARCH_PATHS = (
 					"$(TITANIUM_BASE_SDK)",
 					"$(TITANIUM_BASE_SDK2)",
+					"vendor/TouchDB-iOS/Source",
 					vendor/CouchCocoa,
-					"vendor/TouchDB-iOS",
 				);
 				INSTALL_PATH = /usr/local/lib;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;

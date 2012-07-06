@@ -9,8 +9,8 @@
 #import "CouchDocumentProxy.h"
 #import "CouchRevisionProxy.h"
 #import "TiProxy+Errors.h"
-#import <CouchCocoa/CouchDocument.h>
-#import <CouchCocoa/RESTOperation.h>
+#import "Couch/CouchDocument.h"
+#import "REST/RESTOperation.h"
 
 @implementation CouchDocumentProxy
 

@@ -8,7 +8,7 @@
  * and licensed under the Apache Public License (version 2)
  */
 #import "TiModule.h"
-#import <TouchDB/TDView.h>
+#import "TDView.h"
 
-@interface ComObscureTiTouchDBModule : TiModule <TDViewCompiler>
+@interface ComObscureTiTouchDBModule : TiModule <TDViewCompiler,KrollDelegate>
 @end

@@ -14,10 +14,10 @@
 #import "TiUtils.h"
 #import "CouchDatabaseProxy.h"
 #import "CouchPersistentReplicationProxy.h"
-#import <CouchCocoa/CouchPersistentReplication.h>
-#import <CouchCocoa/CouchQuery.h>
-#import <CouchCocoa/CouchReplication.h>
-#import <CouchCocoa/CouchTouchDBServer.h>
+#import "Couch/CouchPersistentReplication.h"
+#import "Couch/CouchQuery.h"
+#import "Couch/CouchReplication.h"
+#import "Couch/CouchTouchDBServer.h"
 
 
 static TDMapEmitBlock emit_block;
@@ -46,12 +46,13 @@ static TiValueRef EmitCallback(TiContextRef jsContext, TiObjectRef jsFunction, T
 
 
 @interface ComObscureTiTouchDBModule (PrivateMethods)
-- (void)bindCallback:(NSString*)name callback:(TiObjectCallAsFunctionCallback)fn;
+- (void)bindCallback:(TiObjectCallAsFunctionCallback)fn name:(NSString*)name context:(KrollContext *)context;
 @end
 
 
 @implementation ComObscureTiTouchDBModule
 
+KrollContext * krollContext;
 CouchTouchDBServer * server;
 
 #pragma mark Internal
@@ -70,9 +71,10 @@ CouchTouchDBServer * server;
 	[super startup];
 
     // set up logging
-    if (NO) {
+    if (YES) {
         gCouchLogLevel = 10;
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"Log"];
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"TDDatabase"];
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"LogSync"];
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"LogSyncVerbose"];
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"LogRemoteRequest"];
@@ -81,10 +83,14 @@ CouchTouchDBServer * server;
     // listen for TouchDB notifications
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(processNotification:) name:nil object:nil];
     
-    // bind the emit() function to the module JS context
-    [self bindCallback:@"emit" callback:&EmitCallback];
-
+    // set up the isolated context for map/reduce
+    krollContext = [[KrollContext alloc] init];
+    krollContext.delegate = self;
+    [krollContext start];
+    
 	server = [CouchTouchDBServer sharedInstance];
+    NSAssert(!server.error, @"Error initializing TouchDB: %@", server.error);
+    
     // TODO check error
     [TDView setCompiler:self];
     
@@ -98,6 +104,7 @@ CouchTouchDBServer * server;
 #pragma mark Cleanup 
 
 -(void)dealloc {
+    [krollContext stop];
 	[super dealloc];
 }
 
@@ -135,6 +142,42 @@ CouchTouchDBServer * server;
 	}
 }
 
+#pragma mark -
+#pragma mark KrollDelegate
+
+- (BOOL)usesProxy:(id)proxy {
+    return NO;
+}
+
+- (id)require:(KrollContext*)kroll path:(NSString*)path {
+    // TODO support modules?
+    return nil;
+}
+
+- (BOOL)shouldDebugContext {
+    return YES;
+}
+
+-(void)didStartNewContext:(KrollContext*)kroll {
+    [self bindCallback:EmitCallback name:@"emit" context:kroll];    
+}
+
+#pragma mark Context Functions
+
+- (void)bindCallback:(TiObjectCallAsFunctionCallback)fn name:(NSString*)name context:(KrollContext *)krollContext; {    
+	// create the invoker bridge
+    TiContextRef context = [krollContext context];
+	TiStringRef invokerFnName = TiStringCreateWithCFString((CFStringRef) name);
+	TiValueRef invoker = TiObjectMakeFunctionWithCallback(context, invokerFnName, fn);
+	if (invoker) {
+		TiObjectRef global = TiContextGetGlobalObject(context); 
+		TiObjectSetProperty(context, global,   
+							invokerFnName, invoker,   
+							kTiPropertyAttributeReadOnly | kTiPropertyAttributeDontDelete,   
+							NULL); 
+	}
+	TiStringRelease(invokerFnName);
+}
 
 #pragma mark -
 #pragma mark CouchServer
@@ -236,6 +279,7 @@ CouchTouchDBServer * server;
 }
 
 
+/*
 #pragma mark -
 #pragma mark JS Context Helpers
 
@@ -255,7 +299,7 @@ CouchTouchDBServer * server;
 	TiStringRelease(invokerFnName);	
 }
 
-- (KrollCallback *)compileJavascriptFunction:(NSString *)source {
+- (KrollCallback *)compileJavascriptFunction185:(NSString *)source {
     static NSString * MAP_EVAL_FORMAT = @"(function() { return %@; })()";
 
     KrollBridge * bridge = (KrollBridge *)self.pageContext;
@@ -276,19 +320,38 @@ CouchTouchDBServer * server;
     return [[[KrollCallback alloc] initWithCallback:resultRef thisObject:nil context:context] autorelease];
 }
 
+
+- (KrollCallback *)compileJavascriptFunction:(NSString *)source {
+    static NSString * MAP_EVAL_FORMAT = @"(function() { return %@; })()";
+
+    NSString * wrapped = [NSString stringWithFormat:MAP_EVAL_FORMAT, source];
+    
+    KrollEval *eval = [[KrollEval alloc] initWithCode:wrapped];
+    NSLog(@"eval is %@", eval);
+	id result = [eval invokeWithResult:self.pageContext];
+    NSLog(@"result is %@", result);
+    [eval release];
+    return result;
+}
+*/
+
 #pragma mark TDViewCompiler
+
+#define SOURCE_WRAPPER @"(function() { return %@; })()"
 
 - (TDMapBlock)compileMapFunction:(NSString*)mapSource language:(NSString*)language {
     if (![@"javascript" isEqualToString:language])
         return nil;
 
-    KrollCallback * cb = [self compileJavascriptFunction:mapSource];
+    KrollCallback * cb = [krollContext evalJSAndWait:[NSString stringWithFormat:SOURCE_WRAPPER, mapSource]];
 
     TDMapBlock result = ^(NSDictionary* doc, TDMapEmitBlock emit) {
         emit_block = emit;
         [cb call:[NSArray arrayWithObject:doc] thisObject:nil];
     };
 
+    NSLog(@"compiled map: %@", mapSource);
+    
     return [[result copy] autorelease];
 }
 
@@ -296,7 +359,7 @@ CouchTouchDBServer * server;
     if (![@"javascript" isEqualToString:language])
         return nil;
 
-    KrollCallback * cb = [self compileJavascriptFunction:reduceSource];
+    KrollCallback * cb = [krollContext evalJSAndWait:[NSString stringWithFormat:SOURCE_WRAPPER, reduceSource]];
     TDReduceBlock result = ^(NSArray* keys, NSArray* values, BOOL rereduce) {
         return [cb call:[NSArray arrayWithObjects:keys, values, nil] thisObject:nil];
     };

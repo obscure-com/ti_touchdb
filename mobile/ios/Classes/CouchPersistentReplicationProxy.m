@@ -8,7 +8,7 @@
 
 #import "CouchPersistentReplicationProxy.h"
 #import "TiProxy+Errors.h"
-#import <CouchCocoa/CouchPersistentReplication.h>
+#import "Couch/CouchPersistentReplication.h"
 
 @implementation CouchPersistentReplicationProxy
 
@@ -25,6 +25,7 @@
     return rep ? [[[CouchPersistentReplicationProxy alloc] initWithCouchPersistentReplication:rep] autorelease] : nil;
 }
 
+/* TODO
 - (id)source {
     return self.replication.source;
 }
@@ -32,6 +33,7 @@
 - (id)target {
     return self.replication.target;
 }
+*/
 
 - (id)remoteURL {
     return [self.replication.remoteURL absoluteString];

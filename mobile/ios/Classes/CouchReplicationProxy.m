@@ -8,9 +8,9 @@
 
 #import "CouchReplicationProxy.h"
 #import "TiProxy+Errors.h"
-#import <CouchCocoa/CouchReplication.h>
-#import <CouchCocoa/RESTOperation.h>
-#import <TouchDB/TDReplicator.h>
+#import "Couch/CouchReplication.h"
+#import "REST/RESTOperation.h"
+#import "TDReplicator.h"
 
 @implementation CouchReplicationProxy
 
