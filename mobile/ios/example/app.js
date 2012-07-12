@@ -10,6 +10,7 @@ window.addEventListener('open', function(e) {
         label.text = 'starting tests';
         require('test01_server').run_tests();    
         label.text = 'test01_server complete';
+        /*
         require('test02_createdocument').run_tests();
         label.text = 'test02_createdocument complete';
         require('test02_createrevisions').run_tests();
@@ -44,7 +45,6 @@ window.addEventListener('open', function(e) {
         label.text = 'test15_uncacheviews complete';
         require('test16_viewoptions').run_tests();
         label.text = 'test16_viewoptions complete';
-        /*
         require('test17_replication').run_tests();
         label.text = 'test17_replication complete';
         */
