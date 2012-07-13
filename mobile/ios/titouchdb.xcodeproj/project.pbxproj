@@ -24,7 +24,6 @@
 /* Begin PBXBuildFile section */
 		24DD6CF91134B3F500162E58 /* ComObscureTiTouchDBModule.h in Headers */ = {isa = PBXBuildFile; fileRef = 24DD6CF71134B3F500162E58 /* ComObscureTiTouchDBModule.h */; };
 		24DD6CFA1134B3F500162E58 /* ComObscureTiTouchDBModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 24DD6CF81134B3F500162E58 /* ComObscureTiTouchDBModule.m */; };
-		AA747D9F0F9514B9006C5449 /* ComObscureTiTouchDB_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* ComObscureTiTouchDB_Prefix.pch */; };
 		AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
 		DA09BDF21534B58B00B9936C /* CouchAttachmentProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = DA09BDF01534B58B00B9936C /* CouchAttachmentProxy.h */; };
 		DA09BDF31534B58B00B9936C /* CouchAttachmentProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = DA09BDF11534B58B00B9936C /* CouchAttachmentProxy.m */; };
@@ -34,7 +33,10 @@
 		DA0E41B7152E329B004CAF63 /* CouchPersistentReplicationProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = DA0E41B5152E329B004CAF63 /* CouchPersistentReplicationProxy.m */; };
 		DA0E41BC152E474E004CAF63 /* CouchDocumentProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = DA0E41BA152E474E004CAF63 /* CouchDocumentProxy.h */; };
 		DA0E41BD152E474E004CAF63 /* CouchDocumentProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = DA0E41BB152E474E004CAF63 /* CouchDocumentProxy.m */; };
-		DAB46D7F15AF899A00BDA85E /* TouchDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAB46D7E15AF899A00BDA85E /* TouchDB.framework */; };
+		DA5837C815B08FF2005CA068 /* TouchDB in Frameworks */ = {isa = PBXBuildFile; fileRef = DA5837C715B08FF2005CA068 /* TouchDB */; };
+		DA5837CA15B08FFB005CA068 /* CouchCocoa in Frameworks */ = {isa = PBXBuildFile; fileRef = DA5837C915B08FFB005CA068 /* CouchCocoa */; };
+		DA5837CC15B09030005CA068 /* ComObscureTitouchdb_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = DA5837CB15B09030005CA068 /* ComObscureTitouchdb_Prefix.pch */; };
+		DA5837DB15B0943F005CA068 /* TouchDBListener in Frameworks */ = {isa = PBXBuildFile; fileRef = DA5837DA15B0943F005CA068 /* TouchDBListener */; };
 		DAE72A22152E4BBF00622013 /* CouchQueryProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = DAE72A20152E4BBF00622013 /* CouchQueryProxy.h */; };
 		DAE72A23152E4BBF00622013 /* CouchQueryProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = DAE72A21152E4BBF00622013 /* CouchQueryProxy.m */; };
 		DAE72A27152E4E7F00622013 /* CouchRevisionProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = DAE72A25152E4E7F00622013 /* CouchRevisionProxy.h */; };
@@ -61,7 +63,6 @@
 		24DD6CF71134B3F500162E58 /* ComObscureTiTouchDBModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ComObscureTiTouchDBModule.h; path = Classes/ComObscureTiTouchDBModule.h; sourceTree = "<group>"; };
 		24DD6CF81134B3F500162E58 /* ComObscureTiTouchDBModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = ComObscureTiTouchDBModule.m; path = Classes/ComObscureTiTouchDBModule.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		24DD6D1B1134B66800162E58 /* titanium.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = titanium.xcconfig; sourceTree = "<group>"; };
-		AA747D9E0F9514B9006C5449 /* ComObscureTiTouchDB_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComObscureTiTouchDB_Prefix.pch; sourceTree = SOURCE_ROOT; };
 		AACBBE490F95108600F1A2B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D2AAC07E0554694100DB518D /* libComObscureTiTouchDB.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libComObscureTiTouchDB.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA09BDF01534B58B00B9936C /* CouchAttachmentProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CouchAttachmentProxy.h; path = Classes/CouchAttachmentProxy.h; sourceTree = "<group>"; };
@@ -72,7 +73,10 @@
 		DA0E41B5152E329B004CAF63 /* CouchPersistentReplicationProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CouchPersistentReplicationProxy.m; path = Classes/CouchPersistentReplicationProxy.m; sourceTree = "<group>"; };
 		DA0E41BA152E474E004CAF63 /* CouchDocumentProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CouchDocumentProxy.h; path = Classes/CouchDocumentProxy.h; sourceTree = "<group>"; };
 		DA0E41BB152E474E004CAF63 /* CouchDocumentProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CouchDocumentProxy.m; path = Classes/CouchDocumentProxy.m; sourceTree = "<group>"; };
-		DAB46D7E15AF899A00BDA85E /* TouchDB.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TouchDB.framework; path = vendor/TouchDB.framework; sourceTree = "<group>"; };
+		DA5837C715B08FF2005CA068 /* TouchDB */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = TouchDB; path = vendor/TouchDB.framework/TouchDB; sourceTree = "<group>"; };
+		DA5837C915B08FFB005CA068 /* CouchCocoa */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = CouchCocoa; path = vendor/CouchCocoa.framework/CouchCocoa; sourceTree = "<group>"; };
+		DA5837CB15B09030005CA068 /* ComObscureTitouchdb_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComObscureTitouchdb_Prefix.pch; sourceTree = "<group>"; };
+		DA5837DA15B0943F005CA068 /* TouchDBListener */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = TouchDBListener; path = vendor/TouchDBListener.framework/TouchDBListener; sourceTree = "<group>"; };
 		DAE72A20152E4BBF00622013 /* CouchQueryProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CouchQueryProxy.h; path = Classes/CouchQueryProxy.h; sourceTree = "<group>"; };
 		DAE72A21152E4BBF00622013 /* CouchQueryProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CouchQueryProxy.m; path = Classes/CouchQueryProxy.m; sourceTree = "<group>"; };
 		DAE72A25152E4E7F00622013 /* CouchRevisionProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CouchRevisionProxy.h; path = Classes/CouchRevisionProxy.h; sourceTree = "<group>"; };
@@ -90,7 +94,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DAB46D7F15AF899A00BDA85E /* TouchDB.framework in Frameworks */,
+				DA5837DB15B0943F005CA068 /* TouchDBListener in Frameworks */,
+				DA5837CA15B08FFB005CA068 /* CouchCocoa in Frameworks */,
+				DA5837C815B08FF2005CA068 /* TouchDB in Frameworks */,
 				AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -120,7 +126,9 @@
 		0867D69AFE84028FC02AAC07 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				DAB46D7E15AF899A00BDA85E /* TouchDB.framework */,
+				DA5837DA15B0943F005CA068 /* TouchDBListener */,
+				DA5837C915B08FFB005CA068 /* CouchCocoa */,
+				DA5837C715B08FF2005CA068 /* TouchDB */,
 				AACBBE490F95108600F1A2B1 /* Foundation.framework */,
 			);
 			name = Frameworks;
@@ -156,7 +164,7 @@
 		32C88DFF0371C24200C91783 /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
-				AA747D9E0F9514B9006C5449 /* ComObscureTiTouchDB_Prefix.pch */,
+				DA5837CB15B09030005CA068 /* ComObscureTitouchdb_Prefix.pch */,
 				24DD6D1B1134B66800162E58 /* titanium.xcconfig */,
 			);
 			name = "Other Sources";
@@ -169,7 +177,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AA747D9F0F9514B9006C5449 /* ComObscureTiTouchDB_Prefix.pch in Headers */,
 				24DD6CF91134B3F500162E58 /* ComObscureTiTouchDBModule.h in Headers */,
 				DA0E41B2152E3083004CAF63 /* CouchDatabaseProxy.h in Headers */,
 				DA0E41B6152E329B004CAF63 /* CouchPersistentReplicationProxy.h in Headers */,
@@ -180,6 +187,7 @@
 				DAE72A2F152E550400622013 /* CouchReplicationProxy.h in Headers */,
 				DAE72A37152E66C900622013 /* TiProxy+Errors.h in Headers */,
 				DA09BDF21534B58B00B9936C /* CouchAttachmentProxy.h in Headers */,
+				DA5837CC15B09030005CA068 /* ComObscureTitouchdb_Prefix.pch in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -293,10 +301,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DSTROOT = /tmp/ComObscureTiTouchDB.dst;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/vendor\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/vendor";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -316,13 +321,16 @@
 				HEADER_SEARCH_PATHS = (
 					"$(TITANIUM_BASE_SDK)",
 					"$(TITANIUM_BASE_SDK2)",
-					"vendor/TouchDB-iOS/Source",
-					vendor/CouchCocoa,
+					vendor/TouchDB/Headers,
+					vendor/CouchCocoa/Headers,
+					vendor/TouchDBListener/Headers,
 				);
 				INSTALL_PATH = /usr/local/lib;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/vendor/TouchDB.framework\"",
+					"\"$(SRCROOT)/vendor/CouchCocoa.framework\"",
+					"\"$(SRCROOT)/vendor/TouchDBListener.framework\"",
 				);
 				OTHER_CFLAGS = (
 					"-DDEBUG",
@@ -352,10 +360,7 @@
 				);
 				"ARCHS[sdk=iphonesimulator*]" = i386;
 				DSTROOT = /tmp/ComObscureTiTouchDB.dst;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/vendor\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/vendor";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -375,14 +380,17 @@
 				HEADER_SEARCH_PATHS = (
 					"$(TITANIUM_BASE_SDK)",
 					"$(TITANIUM_BASE_SDK2)",
-					"vendor/TouchDB-iOS/Source",
-					vendor/CouchCocoa,
+					vendor/TouchDB/Headers,
+					vendor/CouchCocoa/Headers,
+					vendor/TouchDBListener/Headers,
 				);
 				INSTALL_PATH = /usr/local/lib;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/vendor/TouchDB.framework\"",
+					"\"$(SRCROOT)/vendor/CouchCocoa.framework\"",
+					"\"$(SRCROOT)/vendor/TouchDBListener.framework\"",
 				);
 				OTHER_CFLAGS = "-DTI_POST_1_2";
 				OTHER_LDFLAGS = "-ObjC";

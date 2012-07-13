@@ -13,8 +13,6 @@
 #import "CouchQueryProxy.h"
 #import "CouchReplicationProxy.h"
 #import "CouchRevisionProxy.h"
-#import "REST/RESTOperation.h"
-#import "Couch/CouchDatabase.h"
 
 @implementation CouchDatabaseProxy
 

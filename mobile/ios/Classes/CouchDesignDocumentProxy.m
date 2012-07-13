@@ -8,8 +8,6 @@
 
 #import "CouchDesignDocumentProxy.h"
 #import "CouchQueryProxy.h"
-#import "Couch/CouchDesignDocument.h"
-#import "REST/RESTOperation.h"
 
 @implementation CouchDesignDocumentProxy
 

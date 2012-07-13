@@ -14,10 +14,6 @@
 #import "TiUtils.h"
 #import "CouchDatabaseProxy.h"
 #import "CouchPersistentReplicationProxy.h"
-#import "Couch/CouchPersistentReplication.h"
-#import "Couch/CouchQuery.h"
-#import "Couch/CouchReplication.h"
-#import "Couch/CouchTouchDBServer.h"
 
 
 static TDMapEmitBlock emit_block;
@@ -93,7 +89,7 @@ CouchTouchDBServer * server;
     
     // TODO check error
     [TDView setCompiler:self];
-    
+
 	NSLog(@"[INFO] %@ loaded",self);
 }
 

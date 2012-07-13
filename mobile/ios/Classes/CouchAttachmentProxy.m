@@ -9,8 +9,6 @@
 #import "CouchAttachmentProxy.h"
 #import "CouchDocumentProxy.h"
 #import "CouchRevisionProxy.h"
-#import "Couch/CouchAttachment.h"
-#import "REST/RESTOperation.h"
 #import "TiBlob.h"
 
 @implementation CouchAttachmentProxy

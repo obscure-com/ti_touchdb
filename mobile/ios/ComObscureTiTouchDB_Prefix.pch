@@ -2,6 +2,7 @@
 #ifdef __OBJC__
     #import <Foundation/Foundation.h>
     #import <TouchDB/TouchDB.h>
+    #import <CouchCocoa/CouchCocoa.h>
 #endif
 
 #define ENSURE_ARG_OR_NULL_AT_INDEX(out,args,index,type) \

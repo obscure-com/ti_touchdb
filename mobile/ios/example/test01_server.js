@@ -1,7 +1,7 @@
 Ti.include('test_utils.js')
 
 var _ = require('underscore'),
-    server = require('com.obscure.titouchdb');
+    server = require('com.obscure.TiTouchDB');
 
 exports.run_tests = function() {
     // version string
