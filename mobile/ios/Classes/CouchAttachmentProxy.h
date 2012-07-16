@@ -8,8 +8,6 @@
 
 #import "TiProxy.h"
 
-@class CouchAttachment;
-
 @interface CouchAttachmentProxy : TiProxy
 @property (nonatomic, strong) CouchAttachment * attachment;
 + (id)proxyWith:(CouchAttachment *)att;

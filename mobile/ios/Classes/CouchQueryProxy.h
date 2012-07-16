@@ -8,8 +8,6 @@
 
 #import "TiProxy.h"
 
-@class CouchQuery, CouchQueryRow, CouchQueryEnumerator;
-
 @interface CouchQueryProxy : TiProxy
 @property (nonatomic, strong) CouchQuery * query;
 + (CouchQueryProxy *)proxyWith:(CouchQuery *)q;

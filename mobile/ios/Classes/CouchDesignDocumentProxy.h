@@ -8,8 +8,6 @@
 
 #import "CouchDocumentProxy.h"
 
-@class CouchDesignDocument;
-
 @interface CouchDesignDocumentProxy : CouchDocumentProxy
 @property (nonatomic, strong) CouchDesignDocument * designDocument;
 + (CouchDesignDocumentProxy *)proxyWith:(CouchDesignDocument *)ddoc;

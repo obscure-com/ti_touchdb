@@ -8,8 +8,6 @@
 
 #import "TiProxy.h"
 
-@class CouchDatabase;
-
 @interface CouchDatabaseProxy : TiProxy
 @property (nonatomic, strong) CouchDatabase * database;
 + (CouchDatabaseProxy *)proxyWith:(CouchDatabase *)db;

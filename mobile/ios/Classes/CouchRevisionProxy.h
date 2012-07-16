@@ -8,8 +8,6 @@
 
 #import "TiProxy.h"
 
-@class CouchRevision;
-
 @interface CouchRevisionProxy : TiProxy
 @property (nonatomic, strong) CouchRevision * revision;
 + (CouchRevisionProxy *)proxyWith:(CouchRevision *)rev;

@@ -8,8 +8,6 @@
 
 #import "TiProxy.h"
 
-@class CouchDocument;
-
 @interface CouchDocumentProxy : TiProxy
 @property (nonatomic, strong) CouchDocument * document;
 + (CouchDocumentProxy *)proxyWith:(CouchDocument *)doc;

@@ -8,8 +8,6 @@
 
 #import "TiProxy.h"
 
-@class CouchReplication;
-
 @interface CouchReplicationProxy : TiProxy
 @property (nonatomic, strong) CouchReplication * replication;
 + (CouchReplicationProxy *)proxyWith:(CouchReplication *)rep;
