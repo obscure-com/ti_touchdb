@@ -9,5 +9,5 @@
  */
 #import "TiModule.h"
 
-@interface ComObscureTiTouchDBModule : TiModule <TDViewCompiler,KrollDelegate>
+@interface ComObscureTiTouchDBModule : TiModule
 @end
