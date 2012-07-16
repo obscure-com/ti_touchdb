@@ -1,6 +1,64 @@
-var _ = require('underscore');
+var _ = require('underscore'),
+    Q = require('q'),
+    couch = require('CouchDBClient');
 
-exports.run_tests = function() {
+
+
+exports.run_tests = function(port) {
+  var conn = new couch.Connection(String.format('http://localhost:%d', port));
+  
+  var db = conn.database('test01');
+  
+  var setupDatabase = function() {
+    return db.exists()
+      .then(function(metadata) {
+        db.delete()
+        .then
+      })
+  }
+  
+  db.exists().then(
+    function(metadata) {
+      Ti.API.info('database exists: '+JSON.stringify(metadata));
+    },
+    function(err) {
+      if (err.status == 404) {
+        db.create()
+        .fail(function(err) {
+          Ti.API.err(err);
+        });
+      }
+    }
+  );
+  */
+  
+  
+
+/*  
+  db.exists(function(err, resp) {
+    if (err) {
+      Ti.API.info('db does not exist: '+JSON.stringify(err));
+    }
+    else {
+      Ti.API.info('db exists: '+JSON.stringify(resp.body));
+    }
+  });
+*/
+
+  // db.create();
+
+/*  
+  client.info({
+    success: function(resp) {
+      Ti.API.info(JSON.stringify(resp));
+    }
+    failure: function(err) {
+      throw err;
+    }
+  });
+*/  
+  
+  
   /*
     // version string
     var version = server.getVersion();

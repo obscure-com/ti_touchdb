@@ -1,9 +1,9 @@
 var titouchdb = require('com.obscure.titouchdb');
 
-function runTests() {
+function runTests(port) {
   try {
       label.text = 'starting tests';
-      require('test01_server').run_tests();    
+      require('test01_server').run_tests(port);    
       label.text = 'test01_server complete';
       /*
       require('test02_createdocument').run_tests();
@@ -60,8 +60,8 @@ window.add(label);
 window.addEventListener('open', function(e) {
   titouchdb.startServer(function(e) {
     Ti.API.info(JSON.stringify(e));
-    runTests();
-  })
+    require('test01_server').run_tests(e.port);    
+  });  
 });
 
 window.open();
