@@ -10,7 +10,7 @@ exports.run_tests = function() {
     try {
         createDocuments(db, 50);
         
-        var query = db.slowQuery('function(doc){emit(doc.sequence,null);};');
+        var query = db.slowQuery('function(doc){emit(doc.sequence,null);}');
         query.startKey = 23;
         query.endKey = 33;
         

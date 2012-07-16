@@ -20,7 +20,7 @@ exports.run_tests = function() {
             lastDocID = doc.documentID;
         });
         
-        var query = db.slowQuery('function(doc){emit(doc.sequence,{_id:doc.prev});};');
+        var query = db.slowQuery('function(doc){emit(doc.sequence,{_id:doc.prev});}');
         query.startKey = 23;
         query.endKey = 33;
         query.prefetch = true;

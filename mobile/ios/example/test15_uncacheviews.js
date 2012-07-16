@@ -9,7 +9,7 @@ exports.run_tests = function() {
 
     try {
         var ddoc = db.designDocumentWithName('mydesign');
-        ddoc.defineView('vu', 'function(doc){emit(doc.sequence,null);};', '_count');
+        ddoc.defineView('vu', 'function(doc){emit(doc.sequence,null);}', '_count');
         ddoc.saveChanges();
         
         // delete the view without going through the view API

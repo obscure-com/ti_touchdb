@@ -11,7 +11,7 @@ exports.run_tests = function() {
         createDocuments(db, 50);
         
         var ddoc = db.designDocumentWithName('mydesign');
-        ddoc.defineView('vu', 'function(doc){emit(doc.sequence,null);};');
+        ddoc.defineView('vu', 'function(doc){emit(doc.sequence,null);}');
         ddoc.saveChanges();
         
         var query = ddoc.queryViewNamed('vu');
