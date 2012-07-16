@@ -121,8 +121,6 @@
 
 // async query
 - (void)start:(id)args {
-    ENSURE_UI_THREAD_1_ARG(args)
-
     KrollCallback * cb;
     ENSURE_ARG_OR_NIL_AT_INDEX(cb, args, 0, KrollCallback);
     
@@ -136,12 +134,10 @@
 
 //sync query
 - (id)rows:(id)args {
-    ENSURE_UI_THREAD_1_ARG(args)
     return [CouchQueryEnumeratorProxy proxyWith:[self.query rows]];
 }
 
 - (id)rowsIfChanged:(id)args {
-    ENSURE_UI_THREAD_1_ARG(args)
     return [CouchQueryEnumeratorProxy proxyWith:[self.query rowsIfChanged]];
 }
 
