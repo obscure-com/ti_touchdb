@@ -61,18 +61,19 @@ TDMapEmitBlock _emitBlock;
 - (TDMapBlock)compileMapFunction:(NSString*)mapSource language:(NSString*)language {
     if (![@"javascript" isEqualToString:language])
         return nil;
-    
+
+    TDMapBlock result = nil;
     __block TiObjectRef fn = [self compile:mapSource context:_context];
-    NSLog(@"compiled fn");
-    TDMapBlock result = ^(NSDictionary* doc, TDMapEmitBlock emit) {
-        _emitBlock = emit;
-        
-        TiValueRef args[1];
-        args[0] = IdToTiValue(_context, doc);
-        
-        TiObjectCallAsFunction(_context, fn, nil, 1, args, nil);
-    };
-    NSLog(@"created block");
+    if (fn) {
+        result = ^(NSDictionary* doc, TDMapEmitBlock emit) {
+            _emitBlock = emit;
+            
+            TiValueRef args[1];
+            args[0] = IdToTiValue(_context, doc);
+            
+            TiObjectCallAsFunction(_context, fn, nil, 1, args, nil);
+        };
+    }
     
     return [[result copy] autorelease];
 }
@@ -81,17 +82,20 @@ TDMapEmitBlock _emitBlock;
     if (![@"javascript" isEqualToString:language])
         return nil;
     
+    TDReduceBlock result = nil;
     __block TiObjectRef fn = [self compile:reduceSource context:_context];
-    TDReduceBlock result = ^(NSArray * keys, NSArray * values, BOOL rereduce) {
-        TiValueRef args[3];
-        
-        args[0] = IdToTiValue(_context, keys);
-        args[1] = IdToTiValue(_context, values);
-        args[2] = IdToTiValue(_context, NUMBOOL(rereduce));
-        
-        TiValueRef val = TiObjectCallAsFunction(_context, fn, nil, 1, args, nil);
-        return TiValueToId(_context, val);
-    };
+    if (fn) {
+        result = ^(NSArray * keys, NSArray * values, BOOL rereduce) {
+            TiValueRef args[3];
+            
+            args[0] = IdToTiValue(_context, keys);
+            args[1] = IdToTiValue(_context, values);
+            args[2] = IdToTiValue(_context, NUMBOOL(rereduce));
+            
+            TiValueRef val = TiObjectCallAsFunction(_context, fn, nil, 1, args, nil);
+            return TiValueToId(_context, val);
+        };
+    }
     
     return [[result copy] autorelease];
 }
