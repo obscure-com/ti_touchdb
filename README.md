@@ -15,8 +15,8 @@ See the Wiki pages for usage instructions and the samples directory for example 
 
 ## Requirements
 
-* Titanium SDK 1.8.2 or later
-* Xcode 4.2 or later to build
+* Titanium SDK 2.1.0 or later
+* Xcode 4.3 or later to build
 * Runtime requirement is iOS 5+
 
 ## License
@@ -26,16 +26,10 @@ See the Wiki pages for usage instructions and the samples directory for example 
 
 ## Development Status
 
-**refactoring**
+**alpha**
 
-TouchDB and CouchCocoa are now submodules of this project.  If you are building from source,
-please read the [Building](https://github.com/pegli/ti_touchdb/wiki/Building) page on the
-wiki for changes to the build process.
+Many people reported build issues with the previous organization of the project which had
+TouchDB-iOS and CouchCocoa as submodules.  I've reworked the project so it builds from binary
+versions of those frameworks instead of source, which should address this issue.
 
-TouchDB is being combined with CouchCocoa and a new client/server framework called SyncPoint.  The
-initial impact of this is that the TouchDB APIs are essentially being pushed beneath CouchCocoa.
-This module currently exposes the TouchDB API, but CouchCocoa is the future, so I'm refactoring
-the module to conform to the [CouchCocoa API](https://github.com/couchbaselabs/CouchCocoa).  Read
-more about this effort here:
-
-https://groups.google.com/d/topic/mobile-couchbase/cJXGe5vijSY/discussion
+The project currently builds with TouchDB-iOS version 0.9, which is a beta build.
