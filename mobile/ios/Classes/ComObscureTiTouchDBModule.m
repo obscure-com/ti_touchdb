@@ -41,7 +41,7 @@ CouchTouchDBServer * server;
 	[super startup];
 
     // set up logging
-    if (YES) {
+    if (NO) {
         gCouchLogLevel = 10;
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"Log"];
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"LogTDRouter"];
