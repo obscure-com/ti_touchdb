@@ -44,10 +44,8 @@ window.addEventListener('open', function(e) {
         label.text = 'test15_uncacheviews complete';
         require('test16_viewoptions').run_tests();
         label.text = 'test16_viewoptions complete';
-        /*
         require('test17_replication').run_tests();
         label.text = 'test17_replication complete';
-        */
         
         label.text = "all tests passed! whoopee!"
     }
