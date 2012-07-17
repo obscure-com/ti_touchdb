@@ -16,8 +16,17 @@
 - (id)initWithCouchReplication:(CouchReplication *)rep {
     if (self = [super init]) {
         self.replication = rep;
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(replicatorProgressChanged:) name:TDReplicatorProgressChangedNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(replicatorStopped:) name:TDReplicatorStoppedNotification object:nil];
+
     }
     return self;
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [super dealloc];
 }
 
 + (CouchReplicationProxy *)proxyWith:(CouchReplication *)rep {
@@ -121,33 +130,13 @@
 #define kReplicatorStopped @"stopped"
 
 - (void)replicatorProgressChanged:(NSNotification *)n {
+    ENSURE_UI_THREAD_1_ARG(n)
     [self fireEvent:kReplicatorProgressChanged withObject:[self toStatusDictionary]];
 }
 
 - (void)replicatorStopped:(NSNotification *)n {
+    ENSURE_UI_THREAD_1_ARG(n)
     [self fireEvent:kReplicatorStopped withObject:[self toStatusDictionary]];
-}
-
-- (void)_listenerAdded:(NSString *)type count:(int)count {
-	if (count == 1) {
-        if ([type isEqualToString:kReplicatorProgressChanged]) {
-            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(replicatorProgressChanged:) name:TDReplicatorProgressChangedNotification object:nil];
-        }
-        else if ([type isEqualToString:kReplicatorStopped]) {
-            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(replicatorStopped:) name:TDReplicatorStoppedNotification object:nil];
-        }
-    }
-}
-
-- (void)_listenerRemoved:(NSString *)type count:(int)count {
-	if (count == 0) {
-        if ([type isEqualToString:kReplicatorProgressChanged]) {
-            [[NSNotificationCenter defaultCenter] removeObserver:self name:TDReplicatorProgressChangedNotification object:nil];
-        }
-        else if ([type isEqualToString:kReplicatorStopped]) {
-            [[NSNotificationCenter defaultCenter] removeObserver:self name:TDReplicatorStoppedNotification object:nil];
-        }
-    }
 }
 
 @end
