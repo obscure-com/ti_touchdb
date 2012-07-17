@@ -165,47 +165,18 @@ CouchTouchDBServer * server;
 #pragma mark -
 #pragma mark Constants
 
-- (id)REPLICATION_STATE_IDLE {
-    return [NSNumber numberWithInt:kReplicationIdle];
-}
+MAKE_SYSTEM_PROP(REPLICATION_STATE_IDLE, kReplicationIdle)
+MAKE_SYSTEM_PROP(REPLICATION_STATE_TRIGGERED, kReplicationTriggered)
+MAKE_SYSTEM_PROP(REPLICATION_STATE_COMPLETED, kReplicationCompleted)
+MAKE_SYSTEM_PROP(REPLICATION_STATE_ERROR, kReplicationError)
 
-- (id)REPLICATION_STATE_TRIGGERED {
-    return [NSNumber numberWithInt:kReplicationTriggered];
-}
+MAKE_SYSTEM_PROP(REPLICATION_MODE_STOPPED, kCouchReplicationStopped)
+MAKE_SYSTEM_PROP(REPLICATION_MODE_OFFLINE, kCouchReplicationOffline)
+MAKE_SYSTEM_PROP(REPLICATION_MODE_IDLE, kCouchReplicationIdle)
+MAKE_SYSTEM_PROP(REPLICATION_MODE_ACTIVE, kCouchReplicationActive)
 
-- (id)REPLICATION_STATE_COMPLETED {
-    return [NSNumber numberWithInt:kReplicationCompleted];
-}
+MAKE_SYSTEM_PROP(STALE_QUERY_NEVER, kCouchStaleNever)
+MAKE_SYSTEM_PROP(STALE_QUERY_OK, kCouchStaleOK)
+MAKE_SYSTEM_PROP(STALE_QUERY_UPDATE_AFTER, kCouchStaleUpdateAfter)
 
-- (id)REPLICATION_STATE_ERROR {
-    return [NSNumber numberWithInt:kReplicationError];
-}
-
-- (id)REPLICATION_MODE_STOPPED {
-    return [NSNumber numberWithInt:kCouchReplicationStopped];
-}
-
-- (id)REPLICATION_MODE_OFFLINE {
-    return [NSNumber numberWithInt:kCouchReplicationOffline];
-}
-
-- (id)REPLICATION_MODE_IDLE {
-    return [NSNumber numberWithInt:kCouchReplicationIdle];
-}
-
-- (id)REPLICATION_MODE_ACTIVE {
-    return [NSNumber numberWithInt:kCouchReplicationActive];
-}
-
-- (id)STALE_QUERY_NEVER {
-    return [NSNumber numberWithInt:kCouchStaleNever];
-}
-
-- (id)STALE_QUERY_OK {
-    return [NSNumber numberWithInt:kCouchStaleOK];
-}
-
-- (id)STALE_QUERY_UPDATE_AFTER {
-    return [NSNumber numberWithInt:kCouchStaleUpdateAfter];
-}
 @end
