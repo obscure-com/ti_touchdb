@@ -1,3 +1,6 @@
+var _ = require('lib/underscore');
+
+var repl;
 
 exports.launch = function() {
   var TiTouchDB = require('com.obscure.TiTouchDB'),
@@ -8,11 +11,13 @@ exports.launch = function() {
   db.ensureCreated();
   
   // start with one replication at the beginning
-  var repl = db.pullFromDatabaseAtURL('http://touchbooks.iriscouch.com/books');
-  repl.addEventListener('progress', function(e) {
-    Ti.API.info("progress!");
-  });
-  repl.start();
+  _.once(function() {
+    repl = db.pullFromDatabaseAtURL('http://touchbooks.iriscouch.com/books');
+    repl.addEventListener('stopped', function(e) {
+      Ti.App.fireEvent('books:refresh_all');
+    });
+    repl.start();
+  })();
 
   var win = Ti.UI.createWindow();
   
