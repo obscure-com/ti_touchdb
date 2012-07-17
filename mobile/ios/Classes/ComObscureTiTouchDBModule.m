@@ -86,6 +86,7 @@ CouchTouchDBServer * server;
 #pragma mark Listener Notifications
 
 - (void)processNotification:(NSNotification *)notification {
+    ENSURE_UI_THREAD_1_ARG(notification);
     [self fireEvent:notification.name withObject:notification.userInfo];
 }
 
