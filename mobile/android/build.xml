@@ -1,44 +1,10 @@
-<project name="TiTouchDB" default="dist">
+<project name="titouchdb" default="dist">
 	<description>
-		Ant build script for Titanium Android module TiTouchDB
+		Ant build script for Titanium Android module titouchdb
 	</description>
 
-	<property name="ti.module.root" location="${basedir}" />
+	<property name="ti.module.root" location="${basedir}"/>
 	<property file="build.properties" />
 
-	<import file="${titanium.platform}/../module/android/build.xml" />
-
-	<property name="genlocaljni" location="${build}/generated/local-jni" />
-
-	<target name="build.jni">
-		<mkdir dir="${genlocaljni}" />
-		<copy todir="${genlocaljni}">
-			<fileset dir="${ti.module.root}">
-				<include name="jni/**" />
-			</fileset>
-		</copy>
-
-		<check.ndk />
-		<condition property="ndk.build" value="${ndk.path}/ndk-build.cmd" else="${ndk.path}/ndk-build">
-			<os family="windows" />
-		</condition>
-
-		<exec executable="${ndk.build}" dir="${genlocaljni}" failonerror="true">
-			<arg value="TI_MOBILE_SDK=${mobilesdk.dir}" />
-			<arg value="NDK_PROJECT_PATH=${genlocaljni}" />
-			<arg value="PYTHON=${python.exec}" />
-			<arg value="V=${ndk.verbose}" />
-		</exec>
-
-		<copy todir="${libs}">
-			<fileset dir="${genlocaljni}/libs">
-				<include name="**/*.so" />
-			</fileset>
-		</copy>
-	</target>
-
-	<target name="post.compile">
-		<antcall target="build.jni" />
-	</target>
-
+	<import file="${titanium.platform}/../module/android/build.xml"/>
 </project>

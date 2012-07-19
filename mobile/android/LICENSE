@@ -1,12 +1,1 @@
-TiTouchDB Titanium module
-Licensed under the Apache License 2.0
-http://www.apache.org/licenses/LICENSE-2.0.html
-
-Contains compiled code from TouchDB-Android
-Copyright (c) 2012 Marty Schoch
-Licensed under the Apache License 2.0
-https://github.com/couchbaselabs/TouchDB-Android
-
-ScriptValueConverter.java and NativeMap.java from the Spring Surf Extension project
-Copyright (C) 2005-2009 Alfresco Software Limited.
-Licensed under the Apache License 2.0
+TODO: place your license here and we'll include it in the module distribution

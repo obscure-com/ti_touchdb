@@ -6,6 +6,7 @@ var label = Ti.UI.createLabel();
 window.add(label);
 
 window.addEventListener('open', function(e) {
+  Ti.API.info("starting tests");
     try {
         label.text = 'starting tests';
         require('test01_server').run_tests();    

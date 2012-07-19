@@ -1,7 +1,7 @@
 Ti.include('test_utils.js')
 
 var _ = require('underscore'),
-    server = require('com.obscure.TiTouchDB');
+    server = require('com.obscure.titouchdb');
 
 exports.run_tests = function() {
     // version string
@@ -19,7 +19,15 @@ exports.run_tests = function() {
     // initial state: no databases
     var dbs = server.getDatabases();
     assert(dbs, "getDatabases() returned null");
-    assert(dbs.length == 0, "wrong number of databases found: "+_.pluck(dbs, 'relativePath').join(','));
+    if (dbs.length > 0) {
+      var names = [];
+      for (i in dbs) {
+        names.push(dbs[i].relativePath);
+        dbs[i].deleteDatabase();
+      }
+      Ti.API.warn("removed leftover dbs: "+names.join(','));
+      // assert(false,  "wrong number of databases found: "+names.join(','))
+    }
     
     // create a database and check that it is returned
     var db = server.databaseNamed('test01');

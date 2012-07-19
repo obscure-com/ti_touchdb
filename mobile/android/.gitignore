@@ -1,10 +1,9 @@
 tmp
 bin
-dist
-libs
-obj
 build
 *.zip
-build.properties
 .apt_generated
 .*
+build.properties
+dist
+libs

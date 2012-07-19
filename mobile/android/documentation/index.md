@@ -8,7 +8,7 @@ TODO: Enter your module description here
 
 To access this module from JavaScript, you would do the following:
 
-	var titouchdb = require("com.obscure.TiTouchDB");
+	var titouchdb = require("com.obscure.titouchdb");
 
 The titouchdb variable is a reference to the Module object.	
 

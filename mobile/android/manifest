@@ -2,9 +2,9 @@
 # this is your module manifest and used by Titanium
 # during compilation, packaging, distribution, etc.
 #
-version: 0.3
+version: 0.1
 apiversion: 2
-description: TiTouchDB
+description: TouchDB for Titanium
 author: Paul Mietz Egli
 license: Apache License 2.0
 copyright: Copyright (c) 2012 by Paul Mietz Egli
@@ -12,7 +12,7 @@ copyright: Copyright (c) 2012 by Paul Mietz Egli
 
 # these should not be edited
 name: titouchdb
-moduleid: com.obscure.TiTouchDB
-guid: 91a5b925-4801-4b35-983f-b8b5ae9695bf
+moduleid: com.obscure.titouchdb
+guid: 619bf01b-0c43-43c3-9a66-792ba1093b1f
 platform: android
-minsdk: 1.8.2
+minsdk: 2.1.0.GA
