@@ -1,7 +1,7 @@
 Ti.include('test_utils.js')
 
 var _ = require('underscore'),
-    server = require('com.obscure.TiTouchDB');
+    server = require('com.obscure.titouchdb');
 
 exports.run_tests = function() {
     var db = server.databaseNamed('test15');

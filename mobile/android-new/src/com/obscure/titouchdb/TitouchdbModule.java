@@ -5,7 +5,7 @@
  * Please see the LICENSE included with this distribution for details.
  *
  */
-package com.obscure.TiTouchDB;
+package com.obscure.titouchdb;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,11 +23,22 @@ import com.couchbase.touchdb.TDMisc;
 import com.couchbase.touchdb.TDServer;
 import com.couchbase.touchdb.TouchDBVersion;
 
-@Kroll.module(name = "Titouchdb", id = "com.obscure.TiTouchDB")
+@Kroll.module(name = "Titouchdb", id = "com.obscure.titouchdb")
 public class TitouchdbModule extends KrollModule {
-	public static final String	LCAT	= "TitouchdbModule";
+	public static final String	LCAT	= "TiTouchDB";
 
 	private TDServer			server;
+
+	
+	
+	public TitouchdbModule() {
+		Log.i(LCAT, "no-arg constructor");
+	}
+
+	public TitouchdbModule(String name) {
+		super(name);
+		Log.i(LCAT, "one-arg constructor: "+name);
+	}
 
 	public TitouchdbModule(TiContext tiContext) {
 		super(tiContext);
@@ -39,6 +50,8 @@ public class TitouchdbModule extends KrollModule {
 		catch (IOException e) {
 			Log.e(LCAT, "Unable to create TDServer");
 		}
+		
+		Log.i(LCAT, this.toString() + " loaded");
 	}
 
 	@Kroll.getProperty(name = "activeTasks")

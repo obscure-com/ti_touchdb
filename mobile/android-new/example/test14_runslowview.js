@@ -1,20 +1,16 @@
 Ti.include('test_utils.js')
 
 var _ = require('underscore'),
-    server = require('com.obscure.TiTouchDB');
+    server = require('com.obscure.titouchdb');
 
 exports.run_tests = function() {
-    var db = server.databaseNamed('test13');
+    var db = server.databaseNamed('test14');
     db.create();
 
     try {
         createDocuments(db, 50);
         
-        var ddoc = db.designDocumentWithName('mydesign');
-        ddoc.defineView('vu', 'function(doc){emit(doc.sequence,null);}');
-        ddoc.saveChanges();
-        
-        var query = ddoc.queryViewNamed('vu');
+        var query = db.slowQuery('function(doc){emit(doc.sequence,null);}');
         query.startKey = 23;
         query.endKey = 33;
         
