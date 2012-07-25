@@ -27,12 +27,12 @@ exports.run_tests = function() {
             revisions.push(rev);
             revisionProperties.push(p);
         });
-        
+
         db.putChanges(revisionProperties, revisions);
         
         _.each(docs, function(doc) {
            var rev = doc.currentRevision; 
-           assert(rev.revisionID.indexOf('2-') == 0, "second revision should start with 2-");
+           assert(rev.revisionID.indexOf('2-') == 0, "second revision should start with 2- "+rev.revisionID);
            var p = rev.properties;
            assert(p.misc === 'updated!', "missing updated field");
            assert(p.testName === 'saveMultipleDocuments', "missing original field");

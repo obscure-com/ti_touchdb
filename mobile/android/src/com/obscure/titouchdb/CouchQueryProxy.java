@@ -39,6 +39,31 @@ public abstract class CouchQueryProxy extends KrollProxy {
 		this.db = db;
 	}
 
+	protected TDQueryOptions constructQueryOptions() {
+		TDQueryOptions result = new TDQueryOptions();
+		if (descending != null) result.setDescending(descending);
+		if (endKey != null) result.setEndKey(endKey);
+		if (groupLevel != null) result.setGroupLevel(groupLevel);
+		if (prefetch != null) result.setIncludeDocs(prefetch);
+		if (limit != null) result.setLimit(limit);
+		if (skip != null) result.setSkip(skip);
+		if (startKey != null) result.setStartKey(startKey);
+
+		// TODO set keys
+
+		// not part of this object:
+		// group
+		// inclusive_end
+		// startkey_docid
+		// endkey_docid
+		// reduce
+		// stale
+		// local_seq
+		// update_seq
+
+		return result;
+	}
+
 	@Kroll.getProperty(name = "endKey")
 	public KrollObject getEndKey() {
 		return endKey;
@@ -93,6 +118,9 @@ public abstract class CouchQueryProxy extends KrollProxy {
 	public boolean isPrefetch() {
 		return prefetch;
 	}
+
+	@Kroll.method
+	public abstract CouchQueryEnumeratorProxy rows();
 
 	@Kroll.setProperty(name = "descending")
 	public void setDescending(boolean descending) {
@@ -150,38 +178,7 @@ public abstract class CouchQueryProxy extends KrollProxy {
 	}
 
 	public void start(KrollFunction callback) {
-		// TODO
-	}
-
-	@Kroll.method
-	public abstract CouchQueryEnumeratorProxy rows();
-
-	@Kroll.method
-	public abstract CouchQueryEnumeratorProxy rowsIfChanged();
-
-	protected TDQueryOptions constructQueryOptions() {
-		TDQueryOptions result = new TDQueryOptions();
-		if (descending != null) result.setDescending(descending);
-		if (endKey != null) result.setEndKey(endKey);
-		if (groupLevel != null) result.setGroupLevel(groupLevel);
-		if (prefetch != null) result.setIncludeDocs(prefetch);
-		if (limit != null) result.setLimit(limit);
-		if (skip != null) result.setSkip(skip);
-		if (startKey != null) result.setStartKey(startKey);
-
-		// TODO set keys
-
-		// not part of this object:
-		// group
-		// inclusive_end
-		// startkey_docid
-		// endkey_docid
-		// reduce
-		// stale
-		// local_seq
-		// update_seq
-
-		return result;
+		// TODO threaded query
 	}
 
 }

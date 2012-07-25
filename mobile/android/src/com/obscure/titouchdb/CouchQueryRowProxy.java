@@ -7,10 +7,14 @@ import org.appcelerator.kroll.KrollObject;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 
+import android.util.Log;
+
 import com.couchbase.touchdb.TDDatabase;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)
 public class CouchQueryRowProxy extends KrollProxy {
+
+	private static final String	LCAT	= "CouchQueryRowProxy";
 
 	private TDDatabase			db;
 
@@ -44,8 +48,13 @@ public class CouchQueryRowProxy extends KrollProxy {
 	 */
 	@Kroll.getProperty(name = "document")
 	public CouchDocumentProxy document() {
-		return sourceDocumentID != null ? new CouchDocumentProxy(db, db.getDocumentWithIDAndRev(sourceDocumentID, null, Constants.EMPTY_CONTENT_OPTIONS))
-				: null;
+		if (sourceDocumentID != null && document == null) {
+			document = new CouchDocumentProxy(db, db.getDocumentWithIDAndRev(sourceDocumentID, null, Constants.EMPTY_CONTENT_OPTIONS));
+
+			// "preload" the revision properties
+			document.currentRevision().properties();
+		}
+		return document;
 	}
 
 	/**

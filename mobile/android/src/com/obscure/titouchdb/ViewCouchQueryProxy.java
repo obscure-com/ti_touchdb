@@ -24,11 +24,4 @@ public class ViewCouchQueryProxy extends CouchQueryProxy {
 		return null;
 	}
 
-	@Override
-	public CouchQueryEnumeratorProxy rowsIfChanged() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-
 }

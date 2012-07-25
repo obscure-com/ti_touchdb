@@ -17,14 +17,14 @@ exports.run_tests = function() {
         var rev1 = doc.currentRevision;
         assert(rev1, "missing current revision");
         assert(rev1.revisionID, "missing revision ID on rev1");
-        assert(rev1.revisionID.indexOf('1-') == 0, "invalid revision ID: "+rev1.revisionID);
+        assert(rev1.revisionID.indexOf('1-') == 0, "invalid revision 1 ID: "+rev1.revisionID);
         
         var properties2 = _.extend(properties, { tag: 4567 });
         rev1.putProperties(properties2);
         
         var rev2 = doc.currentRevision;
         assert(rev2.revisionID === doc.currentRevisionID, "revision ID mismatch");
-        assert(rev2.revisionID.indexOf('2-') == 0, "invalid revision ID: "+rev2.revisionID);
+        assert(rev2.revisionID.indexOf('2-') == 0, "invalid revision 2 ID: "+rev2.revisionID);
         
         assert(!rev2.propertiesAreLoaded, "rev2 properties shouldn't be loaded until they are accessed");
         var userProperties = rev2.userProperties;

@@ -54,8 +54,12 @@ public class CouchQueryEnumeratorProxy extends KrollProxy implements Iterator<Co
 	}
 
 	public CouchQueryRowProxy next() {
-		Map<String, Object> row = iterator.next();
-		return new CouchQueryRowProxy(db, row);
+		CouchQueryRowProxy result = null;
+		if (iterator.hasNext()) {
+			Map<String, Object> row = iterator.next();
+			result = new CouchQueryRowProxy(db, row);
+		}
+		return result;
 	}
 
 	@Kroll.method

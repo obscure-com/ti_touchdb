@@ -23,12 +23,4 @@ public class AllDocumentsCouchQueryProxy extends CouchQueryProxy {
 		return new CouchQueryEnumeratorProxy(db, queryResponse);
 	}
 
-	@Override
-	public CouchQueryEnumeratorProxy rowsIfChanged() {
-		// TODO
-		// Same as -rows, except returns nil if the query results have not
-		// changed since the last time it was evaluated
-		return this.rows();
-	}
-
 }
