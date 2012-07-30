@@ -27,9 +27,9 @@ window.addEventListener('open', function(e) {
         label.text = 'test05_alldocuments complete';
         require('test07_history').run_tests();
         label.text = 'test07_history complete';
-        /*
         require('test08_attachments').run_tests();
         label.text = 'test08_attachments complete';
+        /*
         require('test12_createview').run_tests();
         label.text = 'test12_createview complete';
         require('test13_runview').run_tests();

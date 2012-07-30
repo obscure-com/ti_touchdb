@@ -1,23 +1,28 @@
 package com.obscure.titouchdb;
 
+import java.util.List;
+
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 
 import android.util.Log;
 
+import com.couchbase.touchdb.TDAttachment;
 import com.couchbase.touchdb.TDRevision;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)
 public class CouchRevisionProxy extends KrollProxy {
 
-	private static final String	LCAT				= "CouchRevisionProxy";
+	private static final String		LCAT				= "CouchRevisionProxy";
 
-	private CouchDocumentProxy	doc;
+	private static final String[]	EMPTY_STRING_ARRAY	= new String[0];
 
-	private boolean				propertiesAreLoaded	= false;
+	private CouchDocumentProxy		doc;
 
-	private TDRevision			rev;
+	private boolean					propertiesAreLoaded	= false;
+
+	private TDRevision				rev;
 
 	public CouchRevisionProxy(CouchDocumentProxy doc, TDRevision rev) {
 		assert doc != null;
@@ -28,18 +33,20 @@ public class CouchRevisionProxy extends KrollProxy {
 
 	@Kroll.method
 	public CouchAttachmentProxy attachmentNamed(String name) {
-		return null;
+		TDAttachment attachment = doc.attachmentNamed(name);
+		return attachment != null ? new CouchAttachmentProxy(doc, rev, attachment, name) : null;
 	}
 
 	@Kroll.getProperty(name = "attachmentNames")
 	public String[] attachmentNames() {
-		// TODO
-		return null;
+		List<String> names = doc.attachmentNames();
+		return names != null ? names.toArray(EMPTY_STRING_ARRAY) : EMPTY_STRING_ARRAY;
 	}
 
 	@Kroll.method
 	public CouchAttachmentProxy createAttachment(String name, String contentType) {
-		return null;
+		TDAttachment attachment = new TDAttachment(null, contentType);
+		return new CouchAttachmentProxy(doc, rev, attachment, name);
 	}
 
 	@Kroll.getProperty(name = "document")
@@ -71,7 +78,7 @@ public class CouchRevisionProxy extends KrollProxy {
 	public KrollDict properties() {
 		if (rev.getProperties() == null && rev.getDocId() != null) {
 			// load the full revision if this is a stub
-			rev = doc.loadRevision(rev.getRevId());
+			rev = doc.loadRevision(rev.getDocId(), rev.getRevId());
 		}
 		propertiesAreLoaded = rev.getProperties() != null;
 		return new KrollDict(rev.getProperties());

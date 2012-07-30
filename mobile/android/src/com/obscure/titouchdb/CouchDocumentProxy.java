@@ -2,6 +2,7 @@ package com.obscure.titouchdb;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
@@ -9,6 +10,7 @@ import org.appcelerator.kroll.annotations.Kroll;
 
 import android.util.Log;
 
+import com.couchbase.touchdb.TDAttachment;
 import com.couchbase.touchdb.TDBody;
 import com.couchbase.touchdb.TDDatabase;
 import com.couchbase.touchdb.TDRevision;
@@ -89,7 +91,7 @@ public class CouchDocumentProxy extends KrollProxy {
 			// returns revisions in descending order
 			TDRevisionList list = db.getAllRevisionsOfDocumentID(currentRevision.getDocId(), false);
 			if (list != null) {
-				list.sortBySequence();				
+				list.sortBySequence();
 				List<CouchRevisionProxy> proxies = new ArrayList<CouchRevisionProxy>(list.size());
 				for (TDRevision rev : list) {
 					proxies.add(new CouchRevisionProxy(this, rev));
@@ -138,18 +140,13 @@ public class CouchDocumentProxy extends KrollProxy {
 		// were passed in. Need to re-select the current revision (revid of
 		// null) to get the full TDRevision back.
 		if (status.getCode() == TDStatus.OK || status.getCode() == TDStatus.CREATED) {
-			currentRevision = db.getDocumentWithIDAndRev(stub.getDocId(), null, Constants.EMPTY_CONTENT_OPTIONS);
+			currentRevision = loadRevision(stub.getDocId(), stub.getRevId());
 			currentRevisionProxy = null;
-			Log.i(LCAT, "updated " + documentID() + " from " + rev.getRevId() + " to " + (currentRevision != null ? currentRevision.getRevId() : "[deleted]"));
 		}
 	}
-	
-	protected TDRevision loadRevision(String revid) {
-		TDRevision result = null;
-		if (currentRevision != null && currentRevision.getDocId() != null) {
-			result = db.getDocumentWithIDAndRev(currentRevision.getDocId(), revid, Constants.EMPTY_CONTENT_OPTIONS);
-		}
-		return result;
+
+	protected TDRevision loadRevision(String docid, String revid) {
+		return db.getDocumentWithIDAndRev(docid, revid, Constants.EMPTY_CONTENT_OPTIONS);
 	}
 
 	@Kroll.method
@@ -159,12 +156,18 @@ public class CouchDocumentProxy extends KrollProxy {
 		return false;
 	}
 
-	// CONFLICTS
-
 	@Kroll.method
 	public CouchRevisionProxy revisionWithID(String revid) {
-		// TODO
-		return null;
+		if (currentRevision == null || currentRevision.getDocId() == null) {
+			return null;
+		}
+
+		TDRevision rev = db.getDocumentWithIDAndRev(currentRevision.getDocId(), revid, Constants.EMPTY_CONTENT_OPTIONS);
+		return rev != null ? new CouchRevisionProxy(this, rev) : null;
+	}
+
+	protected String relativePath() {
+		return currentRevision != null ? String.format("/%s/%s", db.getName(), currentRevision.getDocId()) : null;
 	}
 
 	@Kroll.getProperty(name = "userProperties")
@@ -176,6 +179,40 @@ public class CouchDocumentProxy extends KrollProxy {
 				result.put(key, props.get(key));
 			}
 		}
+		return result;
+	}
+
+	protected void saveAttachment(TDAttachment attachment, String filename) {
+		if (currentRevision == null || currentRevision.getDocId() == null) {
+			Log.e(LCAT, "cannot add attachment to unsaved document");
+			return;
+		}
+		TDStatus status = new TDStatus();
+		TDRevision stub = db.updateAttachment(filename, attachment.getData(), attachment.getContentType(), currentRevision.getDocId(),
+				currentRevision.getRevId(), status);
+		if (status.getCode() == TDStatus.OK || status.getCode() == TDStatus.CREATED) {
+			currentRevision = loadRevision(stub.getDocId(), stub.getRevId());
+			currentRevisionProxy = null;
+		}
+	}
+
+	protected TDAttachment attachmentNamed(String name) {
+		TDStatus status = new TDStatus();
+		TDAttachment result = db.getAttachmentForSequence(currentRevision.getSequence(), name, status);
+		return status.getCode() == TDStatus.OK ? result : null;
+	}
+
+	protected List<String> attachmentNames() {
+		if (currentRevision == null) return null;
+
+		Map<String, Object> dict = db.getAttachmentsDictForSequenceWithContent(currentRevision.getSequence(), false);
+		if (dict == null) return null;
+
+		List<String> result = new ArrayList<String>(dict.size());
+		for (String key : dict.keySet()) {
+			result.add(key);
+		}
+
 		return result;
 	}
 
