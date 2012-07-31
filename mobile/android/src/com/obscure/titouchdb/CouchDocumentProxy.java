@@ -22,9 +22,9 @@ public class CouchDocumentProxy extends KrollProxy {
 
 	private static final String	LCAT	= "CouchDocumentProxy";
 
-	private TDRevision			currentRevision;
+	protected TDRevision			currentRevision;
 
-	private TDDatabase			db;
+	protected TDDatabase			db;
 
 	private CouchRevisionProxy	currentRevisionProxy;
 

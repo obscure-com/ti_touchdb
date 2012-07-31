@@ -1,5 +1,7 @@
 package com.obscure.titouchdb;
 
+import java.security.KeyStore.LoadStoreParameter;
+
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
@@ -56,8 +58,10 @@ public class CouchDatabaseProxy extends KrollProxy {
 
 	@Kroll.method
 	public CouchDesignDocumentProxy designDocumentWithName(String name) {
-		// TODO
-		return null;
+		// return an existing design doc or create one if the doc doesn't exist.
+		String id = String.format("_design/%s", name);
+		TDRevision doc = db.getDocumentWithIDAndRev(id, null, Constants.EMPTY_CONTENT_OPTIONS);
+		return new CouchDesignDocumentProxy(db, doc);
 	}
 
 	@Kroll.method
