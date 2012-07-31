@@ -118,17 +118,7 @@ public class CouchDesignDocumentProxy extends CouchDocumentProxy {
 
 	@Kroll.method
 	public String mapFunctionOfViewNamed(String name) {
-		Map<String, Object> views = (Map<String, Object>) docGet("views");
-
-		if (views == null) {
-			return null;
-		}
-
-		Map<String, Object> view = (Map<String, Object>) views.get(name);
-		if (view == null) {
-			return null;
-		}
-
+		Map<String, Object> view = viewNamed(name);
 		return (String) view.get("map");
 	}
 
@@ -151,17 +141,7 @@ public class CouchDesignDocumentProxy extends CouchDocumentProxy {
 
 	@Kroll.method
 	public String reduceFunctionOfViewNamed(String name) {
-		Map<String, Object> views = (Map<String, Object>) docGet("views");
-
-		if (views == null) {
-			return null;
-		}
-
-		Map<String, Object> view = (Map<String, Object>) views.get(name);
-		if (view == null) {
-			return null;
-		}
-
+		Map<String, Object> view = viewNamed(name);
 		return (String) view.get("reduce");
 	}
 
