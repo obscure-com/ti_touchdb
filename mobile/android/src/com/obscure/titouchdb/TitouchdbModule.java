@@ -21,7 +21,10 @@ import android.util.Log;
 import com.couchbase.touchdb.TDDatabase;
 import com.couchbase.touchdb.TDMisc;
 import com.couchbase.touchdb.TDServer;
+import com.couchbase.touchdb.TDView;
+import com.couchbase.touchdb.TDViewCompiler;
 import com.couchbase.touchdb.TouchDBVersion;
+import com.couchbase.touchdb.javascript.TDJavaScriptViewCompiler;
 
 @Kroll.module(name = "Titouchdb", id = "com.obscure.titouchdb")
 public class TitouchdbModule extends KrollModule {
@@ -29,7 +32,7 @@ public class TitouchdbModule extends KrollModule {
 
 	private TDServer			server;
 
-	
+	private TDViewCompiler compiler;
 	
 	public TitouchdbModule() {
 		Log.i(LCAT, "no-arg constructor");
@@ -50,6 +53,9 @@ public class TitouchdbModule extends KrollModule {
 		catch (IOException e) {
 			Log.e(LCAT, "Unable to create TDServer");
 		}
+		
+		compiler = new TDJavaScriptViewCompiler();
+		TDView.setCompiler(compiler);
 		
 		Log.i(LCAT, this.toString() + " loaded");
 	}

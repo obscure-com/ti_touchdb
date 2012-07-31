@@ -76,7 +76,7 @@ public abstract class CouchQueryProxy extends KrollProxy {
 
 	@Kroll.getProperty(name = "groupLevel")
 	public int getGroupLevel() {
-		return groupLevel;
+		return groupLevel != null ? groupLevel : 0;
 	}
 
 	@Kroll.getProperty(name = "keys")
@@ -86,17 +86,17 @@ public abstract class CouchQueryProxy extends KrollProxy {
 
 	@Kroll.getProperty(name = "limit")
 	public int getLimit() {
-		return limit;
+		return limit != null ? limit : 0;
 	}
 
 	@Kroll.getProperty(name = "skip")
 	public int getSkip() {
-		return skip;
+		return skip != null ? skip : 0;
 	}
 
 	@Kroll.getProperty(name = "stale")
 	public int getStale() {
-		return stale;
+		return stale != null ? stale : 0;
 	}
 
 	@Kroll.getProperty(name = "startKey")
@@ -111,12 +111,16 @@ public abstract class CouchQueryProxy extends KrollProxy {
 
 	@Kroll.getProperty(name = "descending")
 	public boolean isDescending() {
-		return descending;
+		return descending != null ? descending : false;
 	}
 
 	@Kroll.getProperty(name = "prefetch")
 	public boolean isPrefetch() {
-		return prefetch;
+		return prefetch != null ? prefetch : false;
+	}
+
+	public boolean isUpdateSeq() {
+		return false;
 	}
 
 	@Kroll.method
@@ -175,6 +179,10 @@ public abstract class CouchQueryProxy extends KrollProxy {
 	@Kroll.setProperty(name = "startKeyDocID")
 	public void setStartKeyDocID(String startKeyDocID) {
 		this.startKeyDocID = startKeyDocID;
+	}
+
+	public void setUpdateSeq(boolean updateSeq) {
+		// TODO
 	}
 
 	public void start(KrollFunction callback) {

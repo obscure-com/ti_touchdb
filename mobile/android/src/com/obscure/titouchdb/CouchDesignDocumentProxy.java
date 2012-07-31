@@ -53,7 +53,6 @@ public class CouchDesignDocumentProxy extends CouchDocumentProxy {
 	 */
 	@Kroll.method
 	public void defineView(String name, String mapFunction, @Kroll.argument(optional=true) String reduceFunction) {
-		Log.i(LCAT, "define view 3 arg");
 		if (name == null || name.length() < 1) {
 			Log.w(LCAT, "invalid view name: " + name);
 			return;
@@ -135,8 +134,8 @@ public class CouchDesignDocumentProxy extends CouchDocumentProxy {
 
 	@Kroll.method
 	public CouchQueryProxy queryViewNamed(String name) {
-		// TODO
-		return null;
+		saveChanges();
+		return new ViewCouchQueryProxy(db, name, this);
 	}
 
 	private Map<String, Object> viewNamed(String name) {
