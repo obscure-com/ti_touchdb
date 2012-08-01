@@ -24,8 +24,6 @@ window.addEventListener('open', function(e) {
         label.text = 'test04_deletedocument complete';
         require('test05_alldocuments').run_tests();
         label.text = 'test05_alldocuments complete';
-        require('test06_rowsifchanged').run_tests();
-        label.text = 'test06_rowsifchanged complete';
         require('test07_history').run_tests();
         label.text = 'test07_history complete';
         require('test08_attachments').run_tests();
