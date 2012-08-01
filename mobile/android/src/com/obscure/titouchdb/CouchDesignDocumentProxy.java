@@ -11,6 +11,8 @@ import android.util.Log;
 import com.couchbase.touchdb.TDBody;
 import com.couchbase.touchdb.TDDatabase;
 import com.couchbase.touchdb.TDRevision;
+import com.couchbase.touchdb.TDValidationBlock;
+import com.obscure.titouchdb.js.JavascriptValidationCompiler;
 
 @SuppressWarnings("unchecked")
 @Kroll.proxy(parentModule = TitouchdbModule.class)
@@ -26,8 +28,15 @@ public class CouchDesignDocumentProxy extends CouchDocumentProxy {
 
 	private boolean								includeLocalSequence	= false;
 
-	public CouchDesignDocumentProxy(TDDatabase db, TDRevision rev) {
+	private boolean								changedValidation		= false;
+
+	private JavascriptValidationCompiler		validationCompiler		= new JavascriptValidationCompiler();
+
+	private String								ddocName;
+
+	public CouchDesignDocumentProxy(TDDatabase db, TDRevision rev, String ddocName) {
 		super(db, rev);
+		this.ddocName = ddocName;
 	}
 
 	@Kroll.getProperty(name = "changed")
@@ -52,7 +61,7 @@ public class CouchDesignDocumentProxy extends CouchDocumentProxy {
 	 *            none.
 	 */
 	@Kroll.method
-	public void defineView(String name, String mapFunction, @Kroll.argument(optional=true) String reduceFunction) {
+	public void defineView(String name, String mapFunction, @Kroll.argument(optional = true) String reduceFunction) {
 		if (name == null || name.length() < 1) {
 			Log.w(LCAT, "invalid view name: " + name);
 			return;
@@ -60,11 +69,12 @@ public class CouchDesignDocumentProxy extends CouchDocumentProxy {
 
 		Map<String, Object> views = (Map<String, Object>) docGet("views");
 		if (views == null) {
-			views = new HashMap<String,Object>();
+			views = new HashMap<String, Object>();
 		}
 
 		if (mapFunction == null) {
 			views.remove(name);
+			db.deleteViewNamed(name);
 		}
 		else {
 			Map<String, Object> fns = new HashMap<String, Object>();
@@ -153,6 +163,13 @@ public class CouchDesignDocumentProxy extends CouchDocumentProxy {
 		}
 		putProperties(new KrollDict(props));
 		changed = false;
+
+		String validationFunction = (String) docGet("validate_doc_update");
+		if (validationFunction != null && changedValidation) {
+			TDValidationBlock validationBlock = validationCompiler.compileValidationFunction(db, validationFunction, language());
+			db.defineValidation(ddocName, validationBlock);
+			changedValidation = false;
+		}
 	}
 
 	@Kroll.setProperty(name = "includeLocalSequence")
@@ -167,12 +184,14 @@ public class CouchDesignDocumentProxy extends CouchDocumentProxy {
 
 	@Kroll.setProperty(name = "validation")
 	public void setValidation(String validation) {
-		docPut("validation", validation);
+		// TODO check to make sure fn hasn't changed
+		docPut("validate_doc_update", validation);
+		changedValidation = true;
 	}
 
 	@Kroll.getProperty(name = "validation")
 	public String validation() {
-		return (String) docGet("validation");
+		return (String) docGet("validate_doc_update");
 	}
 
 	@Kroll.getProperty(name = "viewNames")

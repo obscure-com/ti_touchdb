@@ -1,6 +1,7 @@
 package com.obscure.titouchdb;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,9 +23,9 @@ public class CouchDocumentProxy extends KrollProxy {
 
 	private static final String	LCAT	= "CouchDocumentProxy";
 
-	protected TDRevision			currentRevision;
+	protected TDRevision		currentRevision;
 
-	protected TDDatabase			db;
+	protected TDDatabase		db;
 
 	private CouchRevisionProxy	currentRevisionProxy;
 
@@ -121,17 +122,29 @@ public class CouchDocumentProxy extends KrollProxy {
 	// DOCUMENT PROPERTIES
 
 	@Kroll.method
-	public void putProperties(KrollDict props) {
-		putPropertiesForRevisionID(currentRevision != null ? currentRevision.getRevId() : null, props);
+	public KrollDict putProperties(KrollDict props) {
+		Map<String, Object> result = putPropertiesForRevisionID(currentRevision != null ? currentRevision.getRevId() : null, props);
+		return new KrollDict(result);
 	}
 
-	protected void putPropertiesForRevisionID(String revid, KrollDict props) {
+	protected Map<String, Object> putPropertiesForRevisionID(String revid, KrollDict props) {
 		TDRevision rev = new TDRevision(documentID(), revid, false);
 		rev.setBody(new TDBody(props));
-		saveRevision(rev);
+		TDStatus status = saveRevision(rev);
+
+		Map<String, Object> result = null;
+		if (status.isSuccessful()) {
+			result = rev.getProperties();
+		}
+		else {
+			result = new HashMap<String, Object>();
+			result.put("code", status.getCode());
+			result.put("description", status.toString());
+		}
+		return result;
 	}
 
-	private void saveRevision(TDRevision rev) {
+	private TDStatus saveRevision(TDRevision rev) {
 		TDStatus status = new TDStatus();
 		TDRevision stub = db.putRevision(rev, rev.getRevId(), false, status);
 
@@ -143,6 +156,7 @@ public class CouchDocumentProxy extends KrollProxy {
 			currentRevision = loadRevision(stub.getDocId(), stub.getRevId());
 			currentRevisionProxy = null;
 		}
+		return status;
 	}
 
 	protected TDRevision loadRevision(String docid, String revid) {

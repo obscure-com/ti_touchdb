@@ -1,6 +1,10 @@
 package com.obscure.titouchdb;
 
-import java.security.KeyStore.LoadStoreParameter;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
@@ -12,6 +16,7 @@ import com.couchbase.touchdb.TDBody;
 import com.couchbase.touchdb.TDDatabase;
 import com.couchbase.touchdb.TDRevision;
 import com.couchbase.touchdb.TDStatus;
+import com.couchbase.touchdb.TDView;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)
 public class CouchDatabaseProxy extends KrollProxy {
@@ -22,6 +27,15 @@ public class CouchDatabaseProxy extends KrollProxy {
 
 	public CouchDatabaseProxy(TDDatabase db) {
 		this.db = db;
+		
+		registerValidationFunctions();
+	}
+	
+	@SuppressWarnings("unchecked")
+	private void registerValidationFunctions() {
+		// TODO get design doc names
+		// TODO fetch the docs
+		// TODO compile and register validation functions
 	}
 
 	@Kroll.method
@@ -61,7 +75,7 @@ public class CouchDatabaseProxy extends KrollProxy {
 		// return an existing design doc or create one if the doc doesn't exist.
 		String id = String.format("_design/%s", name);
 		TDRevision doc = db.getDocumentWithIDAndRev(id, null, Constants.EMPTY_CONTENT_OPTIONS);
-		return new CouchDesignDocumentProxy(db, doc);
+		return new CouchDesignDocumentProxy(db, doc, name);
 	}
 
 	@Kroll.method

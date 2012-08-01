@@ -4,8 +4,6 @@ var _ = require('underscore'),
     server = require('com.obscure.titouchdb');
 
 exports.run_tests = function() {
-    return;
-    
     /*
      * Validation isn't implemented yet because there doesn't seem to be a hook
      * in TouchDB-iOS for setting a non-block validation function.
@@ -25,14 +23,16 @@ exports.run_tests = function() {
         };
         
         var doc = db.untitledDocument();
-        doc.putProperties(props);
+        var ok = doc.putProperties(props);
+        assert(ok, "did not return doc from putProperties");
+        assert(ok.groovy == 'right on', 'incorrect groovy field: '+ok.groovy);
         
         delete props.groovy;
         doc = db.untitledDocument();
         var err = doc.putProperties(props);
-        assert(err, "did not return anything from putProperties");
+        assert(err, "did not return error from putProperties");
         assert(err.code == 403, "incorrect error code on validation: "+err.code);
-        assert(err.description == "forbidden: uncool", "incorrect error message on validation: "+err.description);
+        // assert(err.description == "forbidden: uncool", "incorrect error message on validation: "+err.description);
     }
     catch (e) {
         db.deleteDatabase();
