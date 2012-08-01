@@ -11,6 +11,7 @@ exports.run_tests = function() {
         createDocuments(db, 50);
         
         var query = db.slowQuery('function(doc){emit(doc.sequence,null);}');
+        assert(query, "missing query");
         query.startKey = 23;
         query.endKey = 33;
         

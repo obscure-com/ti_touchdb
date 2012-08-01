@@ -27,10 +27,10 @@ public class CouchDatabaseProxy extends KrollProxy {
 
 	public CouchDatabaseProxy(TDDatabase db) {
 		this.db = db;
-		
+
 		registerValidationFunctions();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private void registerValidationFunctions() {
 		// TODO get design doc names
@@ -205,8 +205,8 @@ public class CouchDatabaseProxy extends KrollProxy {
 	}
 
 	@Kroll.method
-	public CouchQueryProxy slowQuery(String mapSource, String reduceSource, String language) {
-		throw new UnsupportedOperationException("slowQuery not supported on Android");
+	public CouchQueryProxy slowQuery(String mapSource, @Kroll.argument(optional = true) String reduceSource, @Kroll.argument(optional = true) String language) {
+		return new SlowQueryCouchQueryProxy(db, mapSource, reduceSource, language);
 	}
 
 	@Kroll.method
