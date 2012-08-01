@@ -9,7 +9,6 @@ window.addEventListener('open', function(e) {
   Ti.API.info("starting tests");
     try {
         label.text = 'starting tests';
-        /*
         require('test01_server').run_tests();    
         label.text = 'test01_server complete';
         require('test02_createdocument').run_tests();
@@ -42,7 +41,6 @@ window.addEventListener('open', function(e) {
         label.text = 'test14_viewwithlinkeddocs complete';
         require('test15_uncacheviews').run_tests();
         label.text = 'test15_uncacheviews complete';
-        */
         require('test16_viewoptions').run_tests();
         label.text = 'test16_viewoptions complete';
         /*
