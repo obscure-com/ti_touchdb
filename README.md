@@ -24,7 +24,7 @@ See the Wiki pages for usage instructions and the samples directory for example 
 * TiTouchDB is under the Apache License 2.0
 * TouchDB is under the Apache License 2.0. See that project for additional licenses.
 
-## Development Status
+## Development Status - iOS
 
 **alpha**
 
@@ -33,3 +33,13 @@ TouchDB-iOS and CouchCocoa as submodules.  I've reworked the project so it build
 versions of those frameworks instead of source, which should address this issue.
 
 The project currently builds with TouchDB-iOS version 0.9, which is a beta build.
+
+## Development Status - Android
+
+**alpha**
+
+The Android version of the module passes all of the unit tests except replication, which I
+haven't implemented yet.  This is enough of a milestone that I've uploaded a binary build to
+the Downloads section.  Once Android has replication in place, I'll bump the version number
+to match the iOS version.
+
