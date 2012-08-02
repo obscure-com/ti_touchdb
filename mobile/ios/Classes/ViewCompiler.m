@@ -106,7 +106,7 @@ TDMapEmitBlock _emitBlock;
 - (TiObjectRef)compile:(NSString *)source context:(TiContextRef)context {
     TiValueRef exception;
     
-    TiStringRef code = TiStringCreateWithCFString((__bridge CFStringRef) [NSString stringWithFormat:@"(%@)", source]);
+    TiStringRef code = TiStringCreateWithCFString((CFStringRef) [NSString stringWithFormat:@"(%@)", source]);
     
     BOOL syntaxValid = TiCheckScriptSyntax(context, code, NULL, 0, &exception);
     if (!syntaxValid) {
