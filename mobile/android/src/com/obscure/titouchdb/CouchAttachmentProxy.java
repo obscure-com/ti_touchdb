@@ -1,5 +1,10 @@
 package com.obscure.titouchdb;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
@@ -18,6 +23,8 @@ public class CouchAttachmentProxy extends KrollProxy {
 	private static final String	LCAT				= "CouchAttachmentProxy";
 
 	private TDAttachment		attachment;
+
+	private byte[]				data;
 
 	private CouchDocumentProxy	document;
 
@@ -41,11 +48,7 @@ public class CouchAttachmentProxy extends KrollProxy {
 
 	@Kroll.getProperty(name = "body")
 	public TiBlob body() {
-		byte[] data = attachment.getData();
-		if (data == null) {
-			data = new byte[0];
-		}
-		return TiBlob.blobFromData(data, attachment.getContentType());
+		return TiBlob.blobFromData(getAttachmentData(), attachment.getContentType());
 	}
 
 	@Kroll.getProperty(name = "contentType")
@@ -63,10 +66,28 @@ public class CouchAttachmentProxy extends KrollProxy {
 		return document;
 	}
 
+	private byte[] getAttachmentData() {
+		if (data == null) {
+			try {
+				InputStream in = attachment.getContentStream();
+				ByteArrayOutputStream out = new ByteArrayOutputStream();
+				byte[] buffer = new byte[2048];
+				int count;
+				while ((count = in.read(buffer)) > 0) {
+					out.write(buffer, 0, count);
+				}
+				data = out.toByteArray();
+			}
+			catch (IOException e) {
+				Log.e(LCAT, e.getMessage());
+			}
+		}
+		return data != null ? data : new byte[0];
+	}
+
 	@Kroll.getProperty(name = "length")
-	public Long length() {
-		byte[] data = attachment.getData();
-		return data != null ? data.length : 0L;
+	public int length() {
+		return getAttachmentData().length;
 	}
 
 	@Kroll.getProperty(name = "metadata")
@@ -96,7 +117,8 @@ public class CouchAttachmentProxy extends KrollProxy {
 	@Kroll.setProperty(name = "body")
 	public void setBody(TiBlob body) {
 		if (body == null || body.getBytes() == null) return;
-		attachment.setData(body.getBytes());
+		data = body.getBytes();
+		attachment.setContentStream(new ByteArrayInputStream(data));
 
 		String contentType = body.getMimeType();
 		if (contentType != null && attachment.getContentType() != null && !attachment.getContentType().startsWith(contentType)) {

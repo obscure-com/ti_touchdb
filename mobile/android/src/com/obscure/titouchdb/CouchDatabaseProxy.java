@@ -1,10 +1,7 @@
 package com.obscure.titouchdb;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
@@ -16,7 +13,7 @@ import com.couchbase.touchdb.TDBody;
 import com.couchbase.touchdb.TDDatabase;
 import com.couchbase.touchdb.TDRevision;
 import com.couchbase.touchdb.TDStatus;
-import com.couchbase.touchdb.TDView;
+import com.couchbase.touchdb.replicator.TDReplicator;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)
 public class CouchDatabaseProxy extends KrollProxy {
@@ -117,17 +114,29 @@ public class CouchDatabaseProxy extends KrollProxy {
 	public long lastSequenceNumber() {
 		return db.getLastSequence();
 	}
+	
+	private TDReplicator constructReplicator(String urlstr, boolean push, boolean continuous) {
+		URL url = null;
+		
+		try {
+			url = new URL(urlstr);
+		}
+		catch (MalformedURLException e) {
+			Log.e(LCAT, e.getMessage());
+			return null;
+		}
+		
+		return db.getReplicator(url, push, continuous);
+	}
 
 	@Kroll.method
 	public CouchReplicationProxy pullFromDatabaseAtURL(String url) {
-		// TODO
-		return null;
+		return new CouchReplicationProxy(constructReplicator(url, false, false));
 	}
 
 	@Kroll.method
 	public CouchReplicationProxy pushToDatabaseAtURL(String url) {
-		// TODO
-		return null;
+		return new CouchReplicationProxy(constructReplicator(url, true, false));
 	}
 
 	/**
