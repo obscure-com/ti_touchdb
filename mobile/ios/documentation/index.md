@@ -581,13 +581,6 @@ object.
 Synchronous call to get all of the results of querying the associated view.  Returns a
 [`query enumerator`](#query enumerator) object.
 
-**rowsIfChanged**()
-
-Synchronous call to get the results of querying the associated view.  Returns a
-[`query enumerator`](#query enumerator) object containing the rows that were changed after the last
-time the view was evaluated.
-
-
 <a name="query enumerator"/>
 ## Query Enumerator
 
