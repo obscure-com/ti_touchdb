@@ -61,10 +61,6 @@
     self.attachment.body = body.data;
 }
 
-- (id)unversionedURL {
-    return [self.attachment.unversionedURL absoluteString];
-}
-
 - (id)relativePath {
     return [self.attachment relativePath];
 }
