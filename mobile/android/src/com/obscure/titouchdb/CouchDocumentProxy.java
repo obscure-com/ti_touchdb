@@ -202,7 +202,7 @@ public class CouchDocumentProxy extends KrollProxy {
 			return;
 		}
 		TDStatus status = new TDStatus();
-		TDRevision stub = db.updateAttachment(filename, attachment.getData(), attachment.getContentType(), currentRevision.getDocId(),
+		TDRevision stub = db.updateAttachment(filename, attachment.getContentStream(), attachment.getContentType(), currentRevision.getDocId(),
 				currentRevision.getRevId(), status);
 		if (status.getCode() == TDStatus.OK || status.getCode() == TDStatus.CREATED) {
 			currentRevision = loadRevision(stub.getDocId(), stub.getRevId());
