@@ -132,13 +132,8 @@
     }
 }
 
-//sync query
 - (id)rows:(id)args {
     return [CouchQueryEnumeratorProxy proxyWith:[self.query rows]];
-}
-
-- (id)rowsIfChanged:(id)args {
-    return [CouchQueryEnumeratorProxy proxyWith:[self.query rowsIfChanged]];
 }
 
 @end
