@@ -5,7 +5,7 @@ var window = Ti.UI.createWindow({
 var label = Ti.UI.createLabel();
 window.add(label);
 
-window.addEventListener('open', function(e) {
+window.addEventListener('open', function() {
   Ti.API.info("starting tests");
     try {
         label.text = 'starting tests';
@@ -43,11 +43,9 @@ window.addEventListener('open', function(e) {
         label.text = 'test15_uncacheviews complete';
         require('test16_viewoptions').run_tests();
         label.text = 'test16_viewoptions complete';
-        /*
         require('test17_replication').run_tests();
         label.text = 'test17_replication complete';
-        */
-        label.text = "all tests passed! whoopee!"
+        label.text = "all tests passed! whoopee!";
     }
     catch (e) {
         label.text = e;

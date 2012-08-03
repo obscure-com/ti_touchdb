@@ -34,7 +34,8 @@ exports.run_tests = function() {
         db.deleteDatabase();
       }
       else if (checkCount-- < 0) {
-        throw Error("timed out waiting for replication");
+        clearInterval(interval);
+        throw new Error("timed out waiting for replication");
       }
     }, 2000);
 

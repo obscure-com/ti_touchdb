@@ -28,19 +28,52 @@ import com.couchbase.touchdb.javascript.TDJavaScriptViewCompiler;
 
 @Kroll.module(name = "Titouchdb", id = "com.obscure.titouchdb")
 public class TitouchdbModule extends KrollModule {
-	public static final String	LCAT	= "TiTouchDB";
+	public static final String	LCAT						= "TiTouchDB";
+
+	@Kroll.constant
+	public static final int		REPLICATION_MODE_ACTIVE		= 3;
+
+	@Kroll.constant
+	public static final int		REPLICATION_MODE_IDLE		= 2;
+
+	@Kroll.constant
+	public static final int		REPLICATION_MODE_OFFLINE	= 1;
+
+	@Kroll.constant
+	public static final int		REPLICATION_MODE_STOPPED	= 0;
+
+	@Kroll.constant
+	public static final int		REPLICATION_STATE_COMPLETED	= 2;
+
+	@Kroll.constant
+	public static final int		REPLICATION_STATE_ERROR		= 3;
+
+	@Kroll.constant
+	public static final int		REPLICATION_STATE_IDLE		= 0;
+
+	@Kroll.constant
+	public static final int		REPLICATION_STATE_TRIGGERED	= 1;
+
+	@Kroll.constant
+	public static final int		STALE_QUERY_NEVER			= 0;
+
+	@Kroll.constant
+	public static final int		STALE_QUERY_OK				= 1;
+
+	@Kroll.constant
+	public static final int		STALE_QUERY_UPDATE_AFTER	= 2;
+
+	private TDViewCompiler		compiler;
 
 	private TDServer			server;
 
-	private TDViewCompiler compiler;
-	
 	public TitouchdbModule() {
 		Log.i(LCAT, "no-arg constructor");
 	}
 
 	public TitouchdbModule(String name) {
 		super(name);
-		Log.i(LCAT, "one-arg constructor: "+name);
+		Log.i(LCAT, "one-arg constructor: " + name);
 	}
 
 	public TitouchdbModule(TiContext tiContext) {
@@ -53,10 +86,10 @@ public class TitouchdbModule extends KrollModule {
 		catch (IOException e) {
 			Log.e(LCAT, "Unable to create TDServer");
 		}
-		
+
 		compiler = new TDJavaScriptViewCompiler();
 		TDView.setCompiler(compiler);
-		
+
 		Log.i(LCAT, this.toString() + " loaded");
 	}
 
@@ -70,25 +103,16 @@ public class TitouchdbModule extends KrollModule {
 		return 0;
 	}
 
-	@Kroll.setProperty(name = "activityPollingInterval")
-	public void setActivityPollingInterval(int val) {
-
-	}
-
-	@Kroll.getProperty(name = "replications")
-	public CouchReplicationProxy[] replications() {
-		return null;
-	}
-
 	@Kroll.method
-	public String getVersion() {
-		return TouchDBVersion.TouchDBVersionNumber;
+	public CouchDatabaseProxy databaseNamed(String name) {
+		TDDatabase db = server.getDatabaseNamed(name);
+		return db != null ? new CouchDatabaseProxy(db) : null;
 	}
 
 	@Kroll.method
 	public String[] generateUUIDs(int count) {
 		String[] result = new String[count];
-		for (int i=0; i < count; i++) {
+		for (int i = 0; i < count; i++) {
 			result[i] = TDMisc.TDCreateUUID();
 		}
 		return result;
@@ -104,9 +128,18 @@ public class TitouchdbModule extends KrollModule {
 	}
 
 	@Kroll.method
-	public CouchDatabaseProxy databaseNamed(String name) {
-		TDDatabase db = server.getDatabaseNamed(name);
-		return db != null ? new CouchDatabaseProxy(db) : null;
+	public String getVersion() {
+		return TouchDBVersion.TouchDBVersionNumber;
+	}
+
+	@Kroll.getProperty(name = "replications")
+	public CouchReplicationProxy[] replications() {
+		return null;
+	}
+
+	@Kroll.setProperty(name = "activityPollingInterval")
+	public void setActivityPollingInterval(int val) {
+
 	}
 
 }
