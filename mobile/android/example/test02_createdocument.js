@@ -11,6 +11,7 @@ exports.run_tests = function() {
         var properties = {
             testName: 'testCreateDocument',
             tag: 1337,
+            arrprop: [1,2,3,4]
         };
 
         var doc = createDocWithProperties(db, properties);
@@ -20,7 +21,7 @@ exports.run_tests = function() {
         assert(_.isEqual(properties, userProperties), "user properties "+JSON.stringify(userProperties)+" don't match original "+JSON.stringify(properties));
         _.each(properties, function(value, key) {
             assert(_.has(userProperties, key), "missing property "+key);
-            assert(userProperties[key] === value, "wrong value for "+key+": "+userProperties[key]);
+            assert(_.isEqual(userProperties[key], value), "wrong value for "+key+": "+userProperties[key] +" != " + value);
         });
 
         // verify that document was saved
