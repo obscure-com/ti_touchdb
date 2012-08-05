@@ -30,6 +30,10 @@ exports.run_tests = function() {
             assert(r.key == expectedKey, "key mismatch: "+r.key+" != "+expectedKey);
             expectedKey++;
         }
+        
+        // TODO test quering a non-existant view
+        var missing = ddoc.queryViewNamed("no-view-by-this-name");
+        assert(missing == null, "queryViewNamed() should return null for non-existant view");
     }
     catch (e) {
         db.deleteDatabase();
