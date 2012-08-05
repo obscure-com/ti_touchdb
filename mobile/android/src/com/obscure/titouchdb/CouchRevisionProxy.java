@@ -6,10 +6,9 @@ import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 
-import android.util.Log;
-
 import com.couchbase.touchdb.TDAttachment;
 import com.couchbase.touchdb.TDRevision;
+import com.obscure.titouchdb.js.TypeConverter;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)
 public class CouchRevisionProxy extends KrollProxy {
@@ -81,7 +80,7 @@ public class CouchRevisionProxy extends KrollProxy {
 			rev = doc.loadRevision(rev.getDocId(), rev.getRevId());
 		}
 		propertiesAreLoaded = rev.getProperties() != null;
-		return new KrollDict(rev.getProperties());
+		return (KrollDict) TypeConverter.toJSObject(rev.getProperties());
 	}
 
 	/**
@@ -114,7 +113,7 @@ public class CouchRevisionProxy extends KrollProxy {
 		KrollDict props = this.properties();
 		for (String key : props.keySet()) {
 			if (!key.startsWith("_")) {
-				result.put(key, props.get(key));
+				result.put(key, TypeConverter.toJSObject(props.get(key)));
 			}
 		}
 		return result;
