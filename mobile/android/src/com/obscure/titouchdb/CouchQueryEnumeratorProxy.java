@@ -7,8 +7,6 @@ import java.util.Map;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 
-import android.util.Log;
-
 import com.couchbase.touchdb.TDDatabase;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)
@@ -33,7 +31,6 @@ public class CouchQueryEnumeratorProxy extends KrollProxy implements Iterator<Co
 		assert db != null;
 		assert queryResponse != null;
 
-		Log.i(LCAT, "query response: " + queryResponse);
 		this.db = db;
 		this.rows = (List<Map<String, Object>>) queryResponse.get("rows");
 		this.iterator = this.rows.iterator();
@@ -49,6 +46,7 @@ public class CouchQueryEnumeratorProxy extends KrollProxy implements Iterator<Co
 		return rows.size();
 	}
 
+	@Kroll.method
 	public boolean hasNext() {
 		return iterator.hasNext();
 	}
@@ -72,8 +70,8 @@ public class CouchQueryEnumeratorProxy extends KrollProxy implements Iterator<Co
 	}
 
 	@Kroll.method
-	public CouchQueryRowProxy rowAtIndex(int index) {
-		return new CouchQueryRowProxy(db, rows.get(index));
+	public CouchQueryRowProxy rowAtIndex(@Kroll.argument(optional = false) Integer index) {
+		return index < rows.size() ? new CouchQueryRowProxy(db, rows.get(index)) : null;
 	}
 
 	@Kroll.getProperty(name = "totalCount")
