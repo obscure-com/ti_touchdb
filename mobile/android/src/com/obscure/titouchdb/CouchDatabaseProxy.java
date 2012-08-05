@@ -72,6 +72,9 @@ public class CouchDatabaseProxy extends KrollProxy {
 		// return an existing design doc or create one if the doc doesn't exist.
 		String id = String.format("_design/%s", name);
 		TDRevision doc = db.getDocumentWithIDAndRev(id, null, Constants.EMPTY_CONTENT_OPTIONS);
+		if (doc == null) {
+			doc = new TDRevision(id, null, false);
+		}
 		return new CouchDesignDocumentProxy(db, doc, name);
 	}
 

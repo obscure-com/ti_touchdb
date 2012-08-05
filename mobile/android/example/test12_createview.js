@@ -10,6 +10,7 @@ exports.run_tests = function() {
     try {
         var ddoc = db.designDocumentWithName('mydesign');
         assert(ddoc, "missing design document");
+        assert(ddoc.documentID == '_design/mydesign', "incorrect document ID: "+ddoc.documentID);
         assert(!ddoc.changed, "design doc should not be changed");
         assert(ddoc.viewNames.length == 0, "new design doc should not have any views");
 
