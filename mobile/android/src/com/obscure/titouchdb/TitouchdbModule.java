@@ -106,6 +106,7 @@ public class TitouchdbModule extends KrollModule {
 	@Kroll.method
 	public CouchDatabaseProxy databaseNamed(String name) {
 		TDDatabase db = server.getDatabaseNamed(name);
+		db.open();
 		return db != null ? new CouchDatabaseProxy(db) : null;
 	}
 
