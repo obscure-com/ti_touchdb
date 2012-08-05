@@ -3,13 +3,11 @@ package com.obscure.titouchdb;
 import java.util.Map;
 
 import org.appcelerator.kroll.KrollDict;
-import org.appcelerator.kroll.KrollObject;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 
-import android.util.Log;
-
 import com.couchbase.touchdb.TDDatabase;
+import com.obscure.titouchdb.js.TypeConverter;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)
 public class CouchQueryRowProxy extends KrollProxy {
@@ -27,7 +25,7 @@ public class CouchQueryRowProxy extends KrollProxy {
 	private Object				value;
 
 	private Map<String, Object>	documentProperties;
-
+	
 	@SuppressWarnings("unchecked")
 	public CouchQueryRowProxy(TDDatabase db, Map<String, Object> row) {
 		assert db != null;
@@ -39,6 +37,7 @@ public class CouchQueryRowProxy extends KrollProxy {
 		if (row.containsKey("doc")) {
 			this.documentProperties = (Map<String, Object>) row.get("doc");
 		}
+		
 	}
 
 	/**
@@ -73,7 +72,7 @@ public class CouchQueryRowProxy extends KrollProxy {
 	 */
 	@Kroll.getProperty(name = "documentProperties")
 	public KrollDict documentProperties() {
-		return new KrollDict(documentProperties);
+		return (KrollDict) TypeConverter.toJSObject(documentProperties);
 	}
 
 	/**
@@ -86,8 +85,7 @@ public class CouchQueryRowProxy extends KrollProxy {
 
 	@Kroll.getProperty(name = "key")
 	public Object key() {
-		// TODO krollify'
-		return key;
+		return TypeConverter.toJSObject(key);
 	}
 
 	/**
@@ -96,7 +94,7 @@ public class CouchQueryRowProxy extends KrollProxy {
 	 * the index is out of range, returns nil.
 	 */
 	@Kroll.method
-	public KrollObject keyAtIndex(int index) {
+	public Object keyAtIndex(int index) {
 		Object obj = null;
 		if (key == null) {
 		}
@@ -106,8 +104,7 @@ public class CouchQueryRowProxy extends KrollProxy {
 		else if (index == 0) {
 			obj = key;
 		}
-		// TODO krollify
-		return (KrollObject) obj;
+		return TypeConverter.toJSObject(obj);
 	}
 
 	/**
@@ -125,7 +122,7 @@ public class CouchQueryRowProxy extends KrollProxy {
 
 	@Kroll.getProperty(name = "value")
 	public Object value() {
-		// TODO krollify
-		return value;
+		return TypeConverter.toJSObject(value);
 	}
+
 }
