@@ -89,7 +89,7 @@ public class CouchDesignDocumentProxy extends CouchDocumentProxy {
 	}
 
 	private Object docGet(String name) {
-		if (currentRevision == null) return null;
+		if (currentRevision == null || currentRevision.getBody() == null) return null;
 		Map<String, Object> props = currentRevision.getBody().getProperties();
 		if (props == null) {
 			props = new HashMap<String, Object>();
@@ -101,11 +101,11 @@ public class CouchDesignDocumentProxy extends CouchDocumentProxy {
 		if (currentRevision == null) {
 			currentRevision = new TDRevision(EMPTY_MAP);
 		}
-		Map<String, Object> props = currentRevision.getBody().getProperties();
-		if (props == null) {
-			props = new HashMap<String, Object>();
-			currentRevision.setBody(new TDBody(props));
+		if (currentRevision.getBody() == null) {
+			currentRevision.setBody(new TDBody(EMPTY_MAP));
 		}
+		
+		Map<String, Object> props = currentRevision.getBody().getProperties();
 		props.put(name, value);
 		changed = true;
 	}
