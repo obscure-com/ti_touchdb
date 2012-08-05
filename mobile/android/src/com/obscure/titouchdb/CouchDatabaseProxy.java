@@ -2,6 +2,7 @@ package com.obscure.titouchdb;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
 
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
@@ -74,6 +75,7 @@ public class CouchDatabaseProxy extends KrollProxy {
 		TDRevision doc = db.getDocumentWithIDAndRev(id, null, Constants.EMPTY_CONTENT_OPTIONS);
 		if (doc == null) {
 			doc = new TDRevision(id, null, false);
+			doc.setBody(new TDBody(new HashMap<String,Object>()));
 		}
 		return new CouchDesignDocumentProxy(db, doc, name);
 	}

@@ -134,7 +134,8 @@ public class CouchDesignDocumentProxy extends CouchDocumentProxy {
 
 	@Kroll.method
 	public CouchQueryProxy queryViewNamed(String name) {
-		saveChanges();
+		Map<String, Object> views = (Map<String, Object>) docGet("views");
+		if (views == null || !views.containsKey(name)) return null;
 		return new ViewCouchQueryProxy(db, name, this);
 	}
 

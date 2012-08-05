@@ -17,6 +17,7 @@ import com.couchbase.touchdb.TDDatabase;
 import com.couchbase.touchdb.TDRevision;
 import com.couchbase.touchdb.TDRevisionList;
 import com.couchbase.touchdb.TDStatus;
+import com.obscure.titouchdb.js.TypeConverter;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)
 public class CouchDocumentProxy extends KrollProxy {
@@ -112,7 +113,7 @@ public class CouchDocumentProxy extends KrollProxy {
 	@Kroll.getProperty(name = "properties")
 	public KrollDict properties() {
 		if (currentRevision != null && currentRevision.getProperties() != null) {
-			return new KrollDict(currentRevision.getProperties());
+			return (KrollDict) TypeConverter.toJSObject(currentRevision.getProperties());
 		}
 		else {
 			return new KrollDict();
@@ -124,7 +125,7 @@ public class CouchDocumentProxy extends KrollProxy {
 	@Kroll.method
 	public KrollDict putProperties(KrollDict props) {
 		Map<String, Object> result = putPropertiesForRevisionID(currentRevision != null ? currentRevision.getRevId() : null, props);
-		return new KrollDict(result);
+		return (KrollDict) TypeConverter.toJSObject(result);
 	}
 
 	protected Map<String, Object> putPropertiesForRevisionID(String revid, KrollDict props) {
@@ -190,7 +191,7 @@ public class CouchDocumentProxy extends KrollProxy {
 		KrollDict props = this.properties();
 		for (String key : props.keySet()) {
 			if (!key.startsWith("_")) {
-				result.put(key, props.get(key));
+				result.put(key, TypeConverter.toJSObject(props.get(key)));
 			}
 		}
 		return result;
