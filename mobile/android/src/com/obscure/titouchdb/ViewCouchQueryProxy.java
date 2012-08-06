@@ -52,7 +52,7 @@ public class ViewCouchQueryProxy extends CouchQueryProxy {
 		
 		// first, update the index
 		status = view.updateIndex();
-		if (status.getCode() != TDStatus.OK) {
+		if (status.getCode() != TDStatus.OK && status.getCode() != TDStatus.NOT_MODIFIED) {
 			Log.w(LCAT, "problem updating view: " + status);
 			return null;
 		}
