@@ -4,7 +4,7 @@ var BookListWindow = function(tableView) {
   
   var result = Ti.UI.createWindow({
     title: L('RootWindow_title'),
-    backgroundColor: 'black'
+    backgroundColor: 'white',
   });
   
   result.add(tableView);
@@ -39,7 +39,7 @@ var BookListWindow = function(tableView) {
  
   result.refresh = function() {
     tableView.fireEvent('refresh');
-  }
+  };
 
   result.addEventListener('open', function(e) {
     result.refresh();
@@ -58,5 +58,5 @@ var BookListWindow = function(tableView) {
 }
 
 
-
 module.exports = BookListWindow;
+

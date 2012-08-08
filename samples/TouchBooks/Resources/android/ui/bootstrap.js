@@ -1,14 +1,15 @@
 var _ = require('lib/underscore');
 
-var repl;
+var server = require('com.obscure.titouchdb'),
+    repl,
+    db;
 
 exports.launch = function() {
-  var server = require('com.obscure.titouchdb'),
-      BookListWindow = require('/ui/BookListWindow'),
+  var BookListWindow = require('/ui/BookListWindow'),
       BookListView = require('/ui/BookListView');
 
   // get the database object and ensure that it is open
-  var db = server.databaseNamed('books');
+  db = server.databaseNamed('books');
   db.ensureCreated();
   
   // start with one replication at the beginning
@@ -29,3 +30,17 @@ exports.launch = function() {
   
   listWin.open();
 };
+
+(function() {
+  Ti.App.addEventListener('books:show_detail_view', function(e) {
+    var BookDetailWindow = require('/ui/BookDetailWindow'),
+        BookDetailView = require('/ui/BookDetailView');
+        
+    var detailWindow = new BookDetailWindow(e);
+    var detailView = new BookDetailView(db, e);
+    detailWindow.add(detailView);
+    detailWindow.open();
+  });  
+}());
+  
+
