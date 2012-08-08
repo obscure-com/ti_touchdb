@@ -7,4 +7,8 @@
 	<property file="build.properties" />
 
 	<import file="${titanium.platform}/../module/android/build.xml"/>
+	
+	<target name="pre.dist">
+	    <symlink link="." resource="../noarch/example" failonerror="no"/>
+    </target>
 </project>

@@ -3,7 +3,7 @@
 # Appcelerator Titanium Module Packager
 #
 #
-import os, sys, glob, string
+import os, sys, glob, string, shutil
 import zipfile
 from datetime import date
 
@@ -72,6 +72,21 @@ def generate_doc(config):
 		html = markdown.markdown(md)
 		documentation.append({file:html});
 	return documentation
+
+def link_examples(manifest,config):
+	example = os.path.relpath('example')
+	target = os.path.relpath('../noarch/example')
+
+	if not os.path.exists(example):
+		os.symlink(target, 'example')
+	elif os.path.exists(example) and not os.path.islink(example):
+		if os.path.isdir(example):
+			shutil.rmtree(example)
+		else:
+			os.remove(example)
+		os.symlink(target, 'example')
+	else:
+		pass
 
 def compile_js(manifest,config):
 	js_file = os.path.join(cwd,'assets','com.obscure.TiTouchDB.js')
@@ -211,6 +226,7 @@ if __name__ == '__main__':
 	manifest,mf = validate_manifest()
 	validate_license()
 	config = read_ti_xcconfig()
+	link_examples(manifest,config)
 	compile_js(manifest,config)
 	build_module(manifest,config)
 	package_module(manifest,mf,config)

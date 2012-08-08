@@ -1,11 +1,16 @@
 // open a single window
 var window = Ti.UI.createWindow({
+  layout: 'vertical',
 	backgroundColor:'white'
 });
 var label = Ti.UI.createLabel();
 window.add(label);
 
-window.addEventListener('open', function(e) {
+var imageView = Ti.UI.createImageView();
+window.add(imageView);
+
+window.addEventListener('open', function() {
+  Ti.API.info("starting tests");
     try {
         label.text = 'starting tests';
         require('test01_server').run_tests();    
@@ -28,14 +33,12 @@ window.addEventListener('open', function(e) {
         label.text = 'test07_history complete';
         require('test08_attachments').run_tests();
         label.text = 'test08_attachments complete';
-        require('test12_createddocview').run_tests();
-        label.text = 'test12_createddocview complete';
-        /*
-        require('test12_createkrollview').run_tests();
-        label.text = 'test12_createkrollview complete';
-        */
+        require('test12_createview').run_tests();
+        label.text = 'test12_createview complete';
         require('test13_runview').run_tests();
         label.text = 'test13_runview complete';
+        require('test13_viewcomplexkeys').run_tests();
+        label.text = 'test13_viewcomplexkeys complete';
         require('test13_validation').run_tests();
         label.text = 'test13_validation complete';
         require('test14_runslowview').run_tests();
@@ -48,7 +51,7 @@ window.addEventListener('open', function(e) {
         label.text = 'test16_viewoptions complete';
         require('test17_replication').run_tests();
         label.text = 'test17_replication complete';
-        label.text = "all tests passed! whoopee!"
+        label.text = "all tests passed! whoopee!";
     }
     catch (e) {
         label.text = e;
