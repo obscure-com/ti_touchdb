@@ -1,5 +1,8 @@
 var _ = require('/lib/underscore')._,
-    dateFormatter = require('/lib/dateformat').dateFormatter;
+    EditorWindow = require('/ui/EditorWindow'),
+    EditorView = require('/ui/EditorView'),
+    dateFormatter = require('/lib/dateformat').dateFormatter,
+    ios = (Ti.Platform.osname === 'iphone' || Ti.Platform.osname === 'ipad');
 
 var BookDetailView = function(db, e) {
   var doc;
@@ -17,9 +20,12 @@ var BookDetailView = function(db, e) {
   
   var result = Ti.UI.createTableView({
     uid: 1,
-    style: Ti.UI.iPhone.TableViewStyle.GROUPED,
     in_edit_mode: false,
   });
+  
+  if (ios) {
+    result.style = Ti.UI.iPhone.TableViewStyle.GROUPED;
+  }
 
   var rows = [];
   rows.push(createDetailRow(result, L('DetailRow__id'), doc.properties, '_id', null, (doc.docID && doc.docID.length > 0)));
@@ -37,7 +43,7 @@ var BookDetailView = function(db, e) {
     var properties = _.extend(doc.properties, updated);
     var result = doc.putProperties(properties);
     return (result < 300);
-  }
+  };
   
   result.addEventListener('books:change', function(e) {
     // still need to copy/modify/assign TiProxy dictionaries
@@ -58,7 +64,7 @@ var createDetailRow = function(tableView, label, book, key, formatter, immutable
     height: 48,
   });
   
-  formatter = (formatter || function(v) { return v; }),
+  formatter = (formatter || function(v) { return v; });
 
   result.add(Ti.UI.createLabel({
     top: 4,
@@ -82,10 +88,6 @@ var createDetailRow = function(tableView, label, book, key, formatter, immutable
   });
   result.add(valueLabel);
   
-  // set up modal window to edit values
-  var EditorWindow = require('/ui/EditorWindow'),
-      EditorView = require('/ui/EditorView');
-
   if (!immutable) {
     result.addEventListener('click', function(e) {
       if (tableView.in_edit_mode) {

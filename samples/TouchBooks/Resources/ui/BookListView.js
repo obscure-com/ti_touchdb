@@ -5,7 +5,7 @@ function BookListView(db, options) {
   var result = Ti.UI.createTableView(_.extend({ uid: 1 }, options));
   
   result.addEventListener('click', function(e) {
-    var book = e.rowData.book;
+    var book = e.row.book;
     Ti.App.fireEvent('books:show_detail_view', {
       title: book.properties.title,
       isbn: book.documentID
@@ -13,7 +13,7 @@ function BookListView(db, options) {
   });
   
   result.addEventListener('delete', function(e) {
-    var book = e.rowData.book;
+    var book = e.row.book;
     if (book) {
       // book is a dictionary because it came from a view function.
       // need to get the full document object to delete
@@ -32,7 +32,12 @@ function BookListView(db, options) {
 function load_book_list(db, table) {  
   var ddoc = db.designDocumentWithName('books');
   var query = ddoc.queryViewNamed('by_author');
-  var result = query.rows();
+  var result = query != null ? query.rows() : null;
+
+  if (!result) {
+    Ti.API.info("query is "+query);
+    Ti.API.info("result is "+result);
+  }
 
   // TODO use underscore
   var sections = [], section;

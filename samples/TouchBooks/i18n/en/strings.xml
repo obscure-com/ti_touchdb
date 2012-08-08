@@ -4,6 +4,8 @@
   <string name="DetailWindow_title">Info</string>
   <string name="DetailWindow_error_missing_id">ISBN is required_</string>
   <string name="DetailWindow_warning_changed_id">You've changed the ISBN, which will save a new book record.  Is this ok?</string>
+  <string name="DetailWindow_menu_edit">Edit</string>
+  <string name="DetailWindow_menu_delete">Delete</string>
   <string name="DetailRow__id">ISBN</string>
   <string name="DetailRow_title">Title</string>
   <string name="DetailRow_author">Author</string>
