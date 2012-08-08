@@ -3,7 +3,7 @@ var _ = require('lib/underscore');
 var repl;
 
 exports.launch = function() {
-  var TiTouchDB = require('com.obscure.TiTouchDB'),
+  var TiTouchDB = require('com.obscure.titouchdb'),
       AppNavigationGroup = require('/ui/AppNavigationGroup');
 
   // get the database object and ensure that it is open
