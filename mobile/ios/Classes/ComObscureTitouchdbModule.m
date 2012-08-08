@@ -8,20 +8,21 @@
  * and licensed under the Apache Public License (version 2)
  */
 
-#import "ComObscureTiTouchDBModule.h"
+#import "ComObscureTitouchdbModule.h"
 #import "TiBase.h"
 #import "TiHost.h"
 #import "TiUtils.h"
 #import "CouchDatabaseProxy.h"
 #import "CouchPersistentReplicationProxy.h"
 #import "ViewCompiler.h"
+#import "TiMacroFixups.h"
 
 
-@interface ComObscureTiTouchDBModule (PrivateMethods)
+@interface ComObscureTitouchdbModule (PrivateMethods)
 @end
 
 
-@implementation ComObscureTiTouchDBModule
+@implementation ComObscureTitouchdbModule
 
 CouchTouchDBServer * server;
 
@@ -32,7 +33,7 @@ CouchTouchDBServer * server;
 }
 
 -(NSString*)moduleId {
-	return @"com.obscure.TiTouchDB";
+	return @"com.obscure.titouchdb";
 }
 
 #pragma mark Lifecycle

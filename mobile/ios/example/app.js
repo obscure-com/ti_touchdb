@@ -28,8 +28,12 @@ window.addEventListener('open', function(e) {
         label.text = 'test07_history complete';
         require('test08_attachments').run_tests();
         label.text = 'test08_attachments complete';
-        require('test12_createview').run_tests();
-        label.text = 'test12_createview complete';
+        require('test12_createddocview').run_tests();
+        label.text = 'test12_createddocview complete';
+        /*
+        require('test12_createkrollview').run_tests();
+        label.text = 'test12_createkrollview complete';
+        */
         require('test13_runview').run_tests();
         label.text = 'test13_runview complete';
         require('test13_validation').run_tests();
@@ -44,7 +48,6 @@ window.addEventListener('open', function(e) {
         label.text = 'test16_viewoptions complete';
         require('test17_replication').run_tests();
         label.text = 'test17_replication complete';
-        
         label.text = "all tests passed! whoopee!"
     }
     catch (e) {

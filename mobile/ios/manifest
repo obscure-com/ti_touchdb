@@ -12,7 +12,7 @@ copyright: Copyright (c) 2012 by Paul Mietz Egli
 
 # these should not be edited
 name: titouchdb
-moduleid: com.obscure.TiTouchDB
+moduleid: com.obscure.titouchdb
 guid: d7abdfb0-acc4-433e-aa74-f7e93063bb85
 platform: iphone
 minsdk: 1.8.2

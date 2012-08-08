@@ -9,6 +9,7 @@
 #import "CouchDocumentProxy.h"
 #import "CouchRevisionProxy.h"
 #import "TiProxy+Errors.h"
+#import "TiMacroFixups.h"
 
 @implementation CouchDocumentProxy
 

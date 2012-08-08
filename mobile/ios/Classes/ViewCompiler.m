@@ -14,7 +14,6 @@
 #import "KrollMethod.h"
 #import "KrollObject.h"
 
-
 @interface ViewCompiler ()
 - (TiObjectRef)compile:(NSString *)source context:(TiContextRef)context;
 - (void)bindCallback:(TiObjectCallAsFunctionCallback)fn name:(NSString*)name context:(TiContextRef)context;

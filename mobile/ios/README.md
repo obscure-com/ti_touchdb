@@ -19,12 +19,12 @@ really intrepid, you can clone this repo and try building it yourself.
 
 Once you have a binary, declare the module in your tiapp.xml file:
 
-    <module version="0.3">com.obscure.TiTouchDB</module>
+    <module version="0.3">com.obscure.titouchdb</module>
 
 Now you can import the module and start up the TouchDB HTTP listener on your port
 of choice:
 
-    var server = require('com.obscure.TiTouchDB');
+    var server = require('com.obscure.titouchdb');
     var db = server.databaseNamed('testfoo');
     db.ensureCreated();
 

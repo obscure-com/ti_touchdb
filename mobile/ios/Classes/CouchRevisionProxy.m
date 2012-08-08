@@ -10,6 +10,7 @@
 #import "CouchAttachmentProxy.h"
 #import "CouchDocumentProxy.h"
 #import "TiProxy+Errors.h"
+#import "TiMacroFixups.h"
 
 @implementation CouchRevisionProxy
 

@@ -13,6 +13,7 @@
 #import "CouchQueryProxy.h"
 #import "CouchReplicationProxy.h"
 #import "CouchRevisionProxy.h"
+#import "TiMacroFixups.h"
 
 @implementation CouchDatabaseProxy
 

@@ -81,6 +81,7 @@
 		DA5837C915B08FFB005CA068 /* CouchCocoa */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = CouchCocoa; path = vendor/CouchCocoa.framework/CouchCocoa; sourceTree = "<group>"; };
 		DA5837CB15B09030005CA068 /* ComObscureTitouchdb_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComObscureTitouchdb_Prefix.pch; sourceTree = "<group>"; };
 		DA5837DA15B0943F005CA068 /* TouchDBListener */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = TouchDBListener; path = vendor/TouchDBListener.framework/TouchDBListener; sourceTree = "<group>"; };
+		DA91DD4D15D2C131006414F2 /* TiMacroFixups.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TiMacroFixups.h; sourceTree = "<group>"; };
 		DAE72A20152E4BBF00622013 /* CouchQueryProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CouchQueryProxy.h; path = Classes/CouchQueryProxy.h; sourceTree = "<group>"; };
 		DAE72A21152E4BBF00622013 /* CouchQueryProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CouchQueryProxy.m; path = Classes/CouchQueryProxy.m; sourceTree = "<group>"; };
 		DAE72A25152E4E7F00622013 /* CouchRevisionProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CouchRevisionProxy.h; path = Classes/CouchRevisionProxy.h; sourceTree = "<group>"; };
@@ -163,6 +164,7 @@
 				DA09BDF11534B58B00B9936C /* CouchAttachmentProxy.m */,
 				DA305FCA15B4B5E700DBB89E /* ViewCompiler.h */,
 				DA305FCB15B4B5E700DBB89E /* ViewCompiler.m */,
+				DA91DD4D15D2C131006414F2 /* TiMacroFixups.h */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -345,7 +347,6 @@
 					"-DTI_POST_1_2",
 				);
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = ComObscureTiTouchDB;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				RUN_CLANG_STATIC_ANALYZER = NO;
@@ -402,7 +403,6 @@
 				);
 				OTHER_CFLAGS = "-DTI_POST_1_2";
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = ComObscureTiTouchDB;
 				RUN_CLANG_STATIC_ANALYZER = NO;
 				SDKROOT = iphoneos;
 			};
@@ -452,7 +452,7 @@
 					"-framework",
 					TouchDB,
 				);
-				PRODUCT_NAME = ComObscureTiTouchDB;
+				PRODUCT_NAME = ComObscureTitouchdb;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				RUN_CLANG_STATIC_ANALYZER = NO;
@@ -501,7 +501,7 @@
 					"-framework",
 					TouchDB,
 				);
-				PRODUCT_NAME = ComObscureTiTouchDB;
+				PRODUCT_NAME = ComObscureTitouchdb;
 				RUN_CLANG_STATIC_ANALYZER = NO;
 				SDKROOT = iphoneos;
 			};

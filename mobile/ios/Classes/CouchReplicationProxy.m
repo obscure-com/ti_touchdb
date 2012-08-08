@@ -8,6 +8,7 @@
 
 #import "CouchReplicationProxy.h"
 #import "TiProxy+Errors.h"
+#import "TiMacroFixups.h"
 
 @implementation CouchReplicationProxy
 
