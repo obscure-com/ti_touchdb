@@ -73,18 +73,18 @@ def generate_doc(config):
 		documentation.append({file:html});
 	return documentation
 
-def link_examples(manifest,config):
-	example = os.path.relpath('example')
-	target = os.path.relpath('../noarch/example')
+def link_common_dirs(sourcePath, targetPath):
+	target = os.path.relpath(targetPath)
+	source = os.path.relpath(sourcePath)
 
-	if not os.path.exists(example):
-		os.symlink(target, 'example')
-	elif os.path.exists(example) and not os.path.islink(example):
-		if os.path.isdir(example):
-			shutil.rmtree(example)
+	if not os.path.exists(target):
+		os.symlink(source, targetPath)
+	elif os.path.exists(target) and not os.path.islink(target):
+		if os.path.isdir(target):
+			shutil.rmtree(target)
 		else:
-			os.remove(example)
-		os.symlink(target, 'example')
+			os.remove(target)
+		os.symlink(source, targetPath)
 	else:
 		pass
 
@@ -226,7 +226,8 @@ if __name__ == '__main__':
 	manifest,mf = validate_manifest()
 	validate_license()
 	config = read_ti_xcconfig()
-	link_examples(manifest,config)
+	link_common_dirs('../noarch/example','example')
+	link_common_dirs('../noarch/documentation','documentation')
 	compile_js(manifest,config)
 	build_module(manifest,config)
 	package_module(manifest,mf,config)
