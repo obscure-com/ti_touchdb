@@ -525,7 +525,8 @@ A `query` object is used to set up a query against a CouchDB view.
 **designDocument**
 
 [`design document`](#design document) object, read-only.  The design document that contains the view
-being queried.
+being queried.  May be null for some database-level methods that return a query, like `getAllDocuments`
+and `slowQuery`.
 
 **limit**
 
@@ -569,15 +570,6 @@ boolean, read/write.  If true, query results will include the entire document co
 rows in the `documentContents` property.
 
 ### Methods
-
-**start**(callback)
-
-* callback (function(queryEnumerator)): function that is called with the [`query enumerator`](#query enumerator)
-  object when the query is complete.
-  
-Starts an asynchronous call to the view associated with this `query` object.  When the view has completed,
-the callback function will be called with the view results in the form of a [`query enumerator`](#query enumerator)
-object.
 
 **rows**()
 
@@ -840,7 +832,7 @@ TODO explain conflicts and resolution.
 
 Paul Mietz Egli (paul@obscure.com)
 
-based on TouchDB by Jens Alfke and others
+based on TouchDB by Jens Alfke, Marty Schoch and others
 
 ## License
 
