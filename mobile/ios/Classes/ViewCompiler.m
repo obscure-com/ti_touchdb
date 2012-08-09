@@ -100,6 +100,48 @@ TDMapEmitBlock _emitBlock;
 }
 
 #pragma mark -
+#pragma mark TDValidationBlock compiler
+
+- (TDValidationBlock)compileValidationFunction:(NSString *)validationSource language:(NSString *)language database:(TDDatabase *)db {
+    if (![@"javascript" isEqualToString:language])
+        return nil;
+    
+    TDValidationBlock result = nil;
+    TiObjectRef fn = [self compile:validationSource context:_context];
+    NSDictionary * userCtx = [NSDictionary dictionaryWithObjectsAndKeys:
+                                      db.name, @"database",
+                                      @"touchdb", @"name",
+                                      [NSArray array], @"roles",
+                                      nil];
+    NSDictionary * secObj = [NSDictionary dictionary];
+    
+    if (fn && TiObjectIsFunction(_context, fn)) {
+        result = ^(TDRevision* newRevision, id<TDValidationContext> context) {
+            NSDictionary * oldDoc = [context currentRevision].properties;
+            NSDictionary * newDoc = newRevision.properties;
+            
+            TiValueRef args[4];
+            args[0] = IdToTiValue(_context, newDoc);
+            args[1] = IdToTiValue(_context, oldDoc);
+            args[2] = IdToTiValue(_context, userCtx);
+            args[3] = IdToTiValue(_context, secObj);
+            
+            TiValueRef exception = TiValueMakeUndefined(_context);
+            TiObjectCallAsFunction(_context, fn, nil, 1, args, &exception);
+            
+            TiType type = TiValueGetType(_context, exception);
+            return (BOOL) (type == kTITypeUndefined);
+        };
+    }
+    else {
+        NSLog(@"could not compile validation function");
+    }
+    
+    return [[result copy] autorelease];
+}
+
+
+#pragma mark -
 #pragma mark Function Compiler
 
 - (TiObjectRef)compile:(NSString *)source context:(TiContextRef)context {
@@ -285,13 +327,13 @@ static id TiValueToId(TiContextRef jsContext, TiValueRef v)
 
 static TiValueRef IdToTiValue(TiContextRef jsContext, id obj)
 {
-	if ([obj isKindOfClass:[NSNull class]])
-	{
-		return TiValueMakeNull(jsContext);
-	}
-	else if (obj == nil)
+	if (obj == nil)
 	{
 		return TiValueMakeUndefined(jsContext);
+	}
+	else if ([obj isKindOfClass:[NSNull class]])
+	{
+		return TiValueMakeNull(jsContext);
 	}
 	else if ([obj isKindOfClass:[NSURL class]])
 	{

@@ -7,7 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <TouchDB/TDDatabase+Insertion.h>
 #import <TouchDB/TDView.h>
 
 @interface ViewCompiler : NSObject <TDViewCompiler>
+- (TDValidationBlock) compileValidationFunction:(NSString *)validationSource language:(NSString *)language database:(TDDatabase *)db;
 @end

@@ -93,12 +93,10 @@
     
     RESTOperation * op = [self.document putProperties:props];
     if (![op wait]) {
-        NSAssert(op.error.code == 412, @"Error putting document properties: %@", op.error);
+        return [self errorDict:op.error];
     }
     
-    // error/revision not being set on op
-    //return (op.error.code == 200 || op.error.code == 201) ? [CouchRevisionProxy proxyWith:[op resultObject]] : [self errorDict:op.error];
-    return [NSNumber numberWithInt:op.httpStatus];
+    return op.isSuccessful ? self.document.properties : [self errorDict:op.error];
 }
 
 #pragma mark CONFLICTS:

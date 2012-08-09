@@ -8,9 +8,13 @@
 
 #import "CouchDesignDocumentProxy.h"
 #import "CouchQueryProxy.h"
+#import <TouchDB/TDDatabase+Insertion.h>
+#import "ViewCompiler.h"
 #import "TiMacroFixups.h"
 
 @implementation CouchDesignDocumentProxy
+
+bool validationChanged = NO;
 
 @synthesize designDocument;
 
@@ -45,6 +49,7 @@
 
 - (void)setValidation:(id)val {
     self.designDocument.validation = val;
+    validationChanged = YES;
 }
 
 - (id)includeLocalSequence {
@@ -66,8 +71,14 @@
 - (id)queryViewNamed:(id)args {
     NSString * name;
     ENSURE_ARG_AT_INDEX(name, args, 0, NSString)
-    
-    return [CouchQueryProxy proxyWith:[self.designDocument queryViewNamed:name]];
+
+    // only return a query if the view exists
+    if ([self.designDocument mapFunctionOfViewNamed:name]) {
+        return [CouchQueryProxy proxyWith:[self.designDocument queryViewNamed:name]];
+    }
+    else {
+        return nil;
+    }
 }
 
 - (id)isLanguageAvailable:(id)args {
@@ -106,6 +117,29 @@
     if (![op wait]) {
         NSAssert(!op.error, @"Error calling saveChanges: %@", op.error);
     }
+    
+    if (validationChanged) {
+        // add validation function to db
+        CouchTouchDBServer * server = (CouchTouchDBServer *) self.designDocument.database.server;
+        NSString * fnname = self.designDocument.relativePath;
+        NSString * dbname = self.designDocument.database.relativePath;
+        NSString * valfn = self.designDocument.validation;
+        
+        [server tellTDDatabaseNamed:dbname to:^(TDDatabase * db) {
+            if (valfn) {
+                TDValidationBlock compiled = [(ViewCompiler *)TDView.compiler compileValidationFunction:self.designDocument.validation language:@"javascript" database:db];
+                [db defineValidation:fnname asBlock:compiled];
+                NSLog(@"saved validation %@ function to db %@", fnname, dbname);
+            }
+            else {
+                [db defineValidation:dbname asBlock:nil];
+                NSLog(@"removed validation %@ function from db %@", fnname, dbname);
+            }
+        }];
+        
+        validationChanged = NO;
+    }
+
 }
 
 @end
