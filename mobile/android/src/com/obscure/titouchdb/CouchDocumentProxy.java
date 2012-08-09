@@ -129,7 +129,13 @@ public class CouchDocumentProxy extends KrollProxy {
 	}
 
 	protected Map<String, Object> putPropertiesForRevisionID(String revid, KrollDict props) {
-		TDRevision rev = new TDRevision(documentID(), revid, false);
+		String docid = documentID();
+		if (docid == null && revid == null) {
+			// new document, get ID from properties if present
+			docid = (String) props.get("_id");
+		}
+		
+		TDRevision rev = new TDRevision(docid, revid, false);
 		rev.setBody(new TDBody(props));
 		TDStatus status = saveRevision(rev);
 
