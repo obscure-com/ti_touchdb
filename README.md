@@ -26,20 +26,19 @@ See the Wiki pages for usage instructions and the samples directory for example 
 
 ## Development Status - iOS
 
-**alpha**
+**0.4-beta**
 
-Many people reported build issues with the previous organization of the project which had
-TouchDB-iOS and CouchCocoa as submodules.  I've reworked the project so it builds from binary
-versions of those frameworks instead of source, which should address this issue.
+2012-08-09
 
-The project currently builds with TouchDB-iOS version 0.9, which is a beta build.
+Latest build of the project uses the head of TouchDB-iOS to get a JSON view collation bug
+fix.
 
 ## Development Status - Android
 
-**alpha**
+**0.4-beta**
 
-The Android version of the module passes all of the unit tests except replication, which I
-haven't implemented yet.  This is enough of a milestone that I've uploaded a binary build to
-the Downloads section.  Once Android has replication in place, I'll bump the version number
-to match the iOS version.
+2012-08-09
 
+Android version uses the latest version to TouchDB-Android.  Replication is working in the
+test case and in TouchBooks, but Marty Schoch, the author of TouchDB-Android, reports that
+there are issues with the replicator, so proceed with caution.
