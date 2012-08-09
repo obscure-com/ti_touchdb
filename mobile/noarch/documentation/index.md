@@ -14,6 +14,9 @@ The reference section follows these conventions:
   with key-value pairs and no functions.
 * Object functions are listed with parentheses and properties without.  Constants are
   implemented as read-only properties.
+  
+NOTE: there are currently some functions that are not yet implemented on Android.  See
+the project's issues on Github for a current status on these methods.
 
 ## Accessing the Module
 
