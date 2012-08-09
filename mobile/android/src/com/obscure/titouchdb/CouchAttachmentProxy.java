@@ -33,6 +33,8 @@ public class CouchAttachmentProxy extends KrollProxy {
 	private TDRevision			revision;
 
 	private CouchRevisionProxy	revisionProxy;
+	
+	private TiBlob body;
 
 	public CouchAttachmentProxy(CouchDocumentProxy document, TDRevision revision, TDAttachment attachment, String filename) {
 		assert document != null;
@@ -48,7 +50,10 @@ public class CouchAttachmentProxy extends KrollProxy {
 
 	@Kroll.getProperty(name = "body")
 	public TiBlob body() {
-		return TiBlob.blobFromData(getAttachmentData(), attachment.getContentType());
+		if (body == null) {
+			body = TiBlob.blobFromData(getAttachmentData(), attachment.getContentType()); 
+		}
+		return body;
 	}
 
 	@Kroll.getProperty(name = "contentType")
@@ -116,6 +121,8 @@ public class CouchAttachmentProxy extends KrollProxy {
 
 	@Kroll.setProperty(name = "body")
 	public void setBody(TiBlob body) {
+		this.body = null;
+		
 		if (body == null || body.getBytes() == null) return;
 		data = body.getBytes();
 		attachment.setContentStream(new ByteArrayInputStream(data));
