@@ -106,8 +106,7 @@ public class CouchDatabaseProxy extends KrollProxy {
 
 	@Kroll.method
 	public CouchQueryProxy getDocumentsWithIDs(String[] ids) {
-		// TODO
-		return null;
+		return new DocumentsWithIDsCouchQueryProxy(db, ids);
 	}
 
 	@Kroll.getProperty(name = "relativePath")

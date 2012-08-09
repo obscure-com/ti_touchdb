@@ -41,6 +41,19 @@ exports.run_tests = function() {
         });
         var namedRefetch = db.documentWithID('fooglebar');
         assert(namedRefetch, "db did not refetch document by ID");
+        
+        // test documentsWithIDs
+        var docids = ['fooglebar', doc.documentID];
+        var docs = db.getDocumentsWithIDs(docids);
+        assert(docs, "documentsWithIDs returned null query");
+        var rows2 = docs.rows();
+        assert(rows2, "documentsWithIDs query returned no rows");
+        assert(rows2.rowCount == 2, "documentsWithIDs returned the wrong number of documents: "+rows2.rowCount);
+        for (i=0; i < rows2.rowCount; i++) {
+          var r = rows2.rowAtIndex(i);
+          assert(r, "rowAtIndex "+i+" returned null");
+          assert(_.contains(docids, r.documentID), "didn't ask for document ID "+r.documentID);
+        }
 
         db.deleteDatabase();
     }
