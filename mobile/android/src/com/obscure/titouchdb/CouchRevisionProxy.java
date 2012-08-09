@@ -64,8 +64,15 @@ public class CouchRevisionProxy extends KrollProxy {
 
 	@Kroll.getProperty(name = "isCurrent")
 	public boolean isCurrent() {
-		// TODO
-		return true;
+		// no revisions, so we must be the current rev
+		if (doc.currentRevision == null || doc.currentRevision.getRevId() == null) return true; 
+		
+		// if we don't have a rev id and there is already a current revision, then
+		// we can't be current
+		if (rev.getRevId() == null) return false;
+		
+		// otherwise, if the current rev ID and our ID match, we are current
+		return rev.getRevId().equals(doc.currentRevision.getRevId());
 	}
 
 	@Kroll.getProperty(name = "isDeleted")
@@ -93,8 +100,7 @@ public class CouchRevisionProxy extends KrollProxy {
 
 	@Kroll.method
 	public Object propertyForKey(String key) {
-		// TODO get and krollify
-		return null;
+		return properties().get(key);
 	}
 
 	@Kroll.method
