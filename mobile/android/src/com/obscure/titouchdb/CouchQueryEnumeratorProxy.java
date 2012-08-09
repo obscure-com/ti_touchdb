@@ -41,11 +41,6 @@ public class CouchQueryEnumeratorProxy extends KrollProxy implements Iterator<Co
 		}
 	}
 
-	@Kroll.getProperty(name = "rowCount")
-	public int rowCount() {
-		return rows.size();
-	}
-
 	@Kroll.method
 	public boolean hasNext() {
 		return iterator.hasNext();
@@ -72,6 +67,16 @@ public class CouchQueryEnumeratorProxy extends KrollProxy implements Iterator<Co
 	@Kroll.method
 	public CouchQueryRowProxy rowAtIndex(@Kroll.argument(optional = false) Integer index) {
 		return index < rows.size() ? new CouchQueryRowProxy(db, rows.get(index)) : null;
+	}
+	
+	@Kroll.getProperty(name = "rowCount")
+	public int rowCount() {
+		return rows.size();
+	}
+
+	@Kroll.getProperty(name = "sequenceNumber")
+	public long sequenceNumber() {
+		return db.getLastSequence();
 	}
 
 	@Kroll.getProperty(name = "totalCount")
