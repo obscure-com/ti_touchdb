@@ -38,6 +38,7 @@ typedef enum {
     BOOL _descending, _prefetch, _sequences;
     NSArray *_keys;
     NSUInteger _groupLevel;
+    NSError* _error;
 }
 
 /** The design document that contains this view. */
@@ -77,11 +78,16 @@ typedef enum {
 @property NSUInteger groupLevel;
 
 /** If set to YES, the results will include the entire document contents of the associated rows.
-    These can be accessed via CouchQueryRow's -documentContents property. */
+    These can be accessed via CouchQueryRow's -documentProperties property.
+    This can be a good optimization if you know you'll need the entire contents of each document.
+    (This property is equivalent to "include_docs" in the CouchDB API.) */
 @property BOOL prefetch;
 
 @property BOOL sequences;
 
+/** If non-nil, the error of the last execution of the query.
+    If nil, the last exexution of the query was successful */
+@property (readonly,retain) NSError* error;
 
 /** Starts an asynchronous query of the CouchDB view.
     When complete, the operation's resultObject will be the CouchQueryEnumerator. */
