@@ -96,7 +96,6 @@ class TDValidationBlockRhino implements TDValidationBlock {
 			Function mapFun = (Function) globalScope.get("validate", globalScope);
 			Object[] functionArgs = { newDoc, oldDoc, userCtx, secObj };
 			mapFun.call(ctx, globalScope, globalScope, functionArgs);
-			Log.i(LCAT, "ran validation function!");
 			result = true;
 		}
 		catch (RhinoException e) { 

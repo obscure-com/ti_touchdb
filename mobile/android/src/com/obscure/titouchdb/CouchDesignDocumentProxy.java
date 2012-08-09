@@ -165,6 +165,8 @@ public class CouchDesignDocumentProxy extends CouchDocumentProxy {
 		putProperties(new KrollDict(props));
 		changed = false;
 
+		// TODO how do we remove validation?
+		
 		String validationFunction = (String) docGet("validate_doc_update");
 		if (validationFunction != null && changedValidation) {
 			TDValidationBlock validationBlock = validationCompiler.compileValidationFunction(db, validationFunction, language());
