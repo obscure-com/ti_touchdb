@@ -66,11 +66,18 @@ exports.run_tests = function() {
         assert(inlinerefetch, "did not refetch inline attachment doc");
         
         var inlinerev = inlinerefetch.currentRevision;
-        
         assert(inlinerev.attachmentNames.length == 1, "expect one attachment name for inline attachment revision");
         assert(inlinerev.attachmentNames[0] === 'image.png', 'incorrect attachment names array: '+rev.attachmentNames.join(','));
         
-        imageView.image = inlinerev.attachmentNamed('image.png').body;
+        var inlineatt = inlinerev.attachmentNamed('image.png');
+        assert(inlineatt, "missing attachment named image.png");
+        assert(inlineatt.body, "empty body for attachment");
+        assert(inlineatt.body.mimeType == 'image/png', "incorrect mime type for inline attachment: "+inlineatt.body.mimeType);
+        
+        if (Ti.Platform.osname != 'android') {
+          // not sure why this locks up the test
+          imageView.image = inlineatt.body;
+        }
     }
     catch (e) {
         db.deleteDatabase();
