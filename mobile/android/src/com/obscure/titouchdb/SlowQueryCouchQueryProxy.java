@@ -36,6 +36,11 @@ public class SlowQueryCouchQueryProxy extends CouchQueryProxy {
 	}
 
 	@Override
+	public CouchDesignDocumentProxy designDocument() {
+		return null;
+	}
+
+	@Override
 	protected void finalize() throws Throwable {
 		// meh, db might not be open at this point
 		// view.deleteView();

@@ -17,6 +17,11 @@ public class AllDocumentsCouchQueryProxy extends CouchQueryProxy {
 	}
 
 	@Override
+	public CouchDesignDocumentProxy designDocument() {
+		return null;
+	}
+
+	@Override
 	public CouchQueryEnumeratorProxy rows() {
 		TDQueryOptions options = constructQueryOptions();
 		Map<String, Object> queryResponse = db.getAllDocs(options);

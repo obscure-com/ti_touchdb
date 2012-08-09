@@ -31,7 +31,7 @@ public class ViewCouchQueryProxy extends CouchQueryProxy {
 		initView(db, name);
 	}
 
-	@Kroll.getProperty(name = "designDocument")
+	@Override
 	public CouchDesignDocumentProxy designDocument() {
 		return ddoc;
 	}

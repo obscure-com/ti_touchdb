@@ -20,6 +20,11 @@ public class DocumentsWithIDsCouchQueryProxy extends CouchQueryProxy {
 	}
 
 	@Override
+	public CouchDesignDocumentProxy designDocument() {
+		return null;
+	}
+
+	@Override
 	public CouchQueryEnumeratorProxy rows() {
 		if (ids == null) return null;
 		Map<String, Object> queryResponse = db.getDocsWithIDs(Arrays.asList(ids), constructQueryOptions());

@@ -1,5 +1,7 @@
 package com.obscure.titouchdb;
 
+import java.util.Arrays;
+
 import org.appcelerator.kroll.KrollFunction;
 import org.appcelerator.kroll.KrollObject;
 import org.appcelerator.kroll.KrollProxy;
@@ -15,13 +17,13 @@ public abstract class CouchQueryProxy extends KrollProxy {
 
 	private Boolean			descending;
 
-	private KrollObject		endKey;
+	private Object			endKey;
 
 	private String			endKeyDocID;
 
 	private Integer			groupLevel;
 
-	private KrollObject[]	keys;
+	private Object[]		keys;
 
 	private Integer			limit;
 
@@ -31,7 +33,7 @@ public abstract class CouchQueryProxy extends KrollProxy {
 
 	private Integer			stale;
 
-	private KrollObject		startKey;
+	private Object			startKey;
 
 	private String			startKeyDocID;
 
@@ -49,8 +51,10 @@ public abstract class CouchQueryProxy extends KrollProxy {
 		if (skip != null) result.setSkip(skip);
 		if (startKey != null) result.setStartKey(startKey);
 
-		// TODO set keys
-
+		if (keys != null && keys.length > 0) {
+			result.setKeys(Arrays.asList(keys));
+		}
+		
 		// not part of this object:
 		// group
 		// inclusive_end
@@ -65,7 +69,7 @@ public abstract class CouchQueryProxy extends KrollProxy {
 	}
 
 	@Kroll.getProperty(name = "endKey")
-	public KrollObject getEndKey() {
+	public Object getEndKey() {
 		return endKey;
 	}
 
@@ -80,7 +84,7 @@ public abstract class CouchQueryProxy extends KrollProxy {
 	}
 
 	@Kroll.getProperty(name = "keys")
-	public KrollObject[] getKeys() {
+	public Object[] getKeys() {
 		return keys;
 	}
 
@@ -100,7 +104,7 @@ public abstract class CouchQueryProxy extends KrollProxy {
 	}
 
 	@Kroll.getProperty(name = "startKey")
-	public KrollObject getStartKey() {
+	public Object getStartKey() {
 		return startKey;
 	}
 
@@ -125,6 +129,9 @@ public abstract class CouchQueryProxy extends KrollProxy {
 
 	@Kroll.method
 	public abstract CouchQueryEnumeratorProxy rows();
+
+	@Kroll.getProperty(name = "designDocument")
+	public abstract CouchDesignDocumentProxy designDocument();
 
 	@Kroll.setProperty(name = "descending")
 	public void setDescending(boolean descending) {
