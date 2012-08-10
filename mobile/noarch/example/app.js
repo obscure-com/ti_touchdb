@@ -37,6 +37,8 @@ window.addEventListener('open', function() {
         label.text = 'test12_createview complete';
         require('test13_runview').run_tests();
         label.text = 'test13_runview complete';
+        require('test13_viewreduce').run_tests();
+        label.text = 'test13_viewreduce complete';
         require('test13_viewcomplexkeys').run_tests();
         label.text = 'test13_viewcomplexkeys complete';
         require('test13_validation').run_tests();
