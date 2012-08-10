@@ -91,8 +91,17 @@ TDMapEmitBlock _emitBlock;
             args[1] = IdToTiValue(_context, values);
             args[2] = IdToTiValue(_context, NUMBOOL(rereduce));
             
-            TiValueRef val = TiObjectCallAsFunction(_context, fn, nil, 1, args, nil);
-            return TiValueToId(_context, val);
+            TiValueRef exception = TiValueMakeUndefined(_context);
+            TiValueRef val = TiObjectCallAsFunction(_context, fn, nil, 3, args, &exception);
+            
+            id result = nil;
+            if (TiValueGetType(_context, exception) != kTITypeUndefined) {
+                NSLog(@"error in reduce function: %@", TiValueToId(_context, exception));
+            }
+            else {
+                result = TiValueToId(_context, val);
+            }
+            return result;
         };
     }
     
@@ -127,7 +136,7 @@ TDMapEmitBlock _emitBlock;
             args[3] = IdToTiValue(_context, secObj);
             
             TiValueRef exception = TiValueMakeUndefined(_context);
-            TiObjectCallAsFunction(_context, fn, nil, 1, args, &exception);
+            TiObjectCallAsFunction(_context, fn, nil, 4, args, &exception);
             
             TiType type = TiValueGetType(_context, exception);
             return (BOOL) (type == kTITypeUndefined);
