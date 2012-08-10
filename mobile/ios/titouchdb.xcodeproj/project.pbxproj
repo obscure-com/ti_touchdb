@@ -66,7 +66,7 @@
 		24DD6CF81134B3F500162E58 /* ComObscureTiTouchDBModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = ComObscureTiTouchDBModule.m; path = Classes/ComObscureTiTouchDBModule.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		24DD6D1B1134B66800162E58 /* titanium.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = titanium.xcconfig; sourceTree = "<group>"; };
 		AACBBE490F95108600F1A2B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		D2AAC07E0554694100DB518D /* libComObscureTiTouchDB.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libComObscureTiTouchDB.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		D2AAC07E0554694100DB518D /* libComObscureTitouchdb.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libComObscureTitouchdb.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA09BDF01534B58B00B9936C /* CouchAttachmentProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CouchAttachmentProxy.h; path = Classes/CouchAttachmentProxy.h; sourceTree = "<group>"; };
 		DA09BDF11534B58B00B9936C /* CouchAttachmentProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CouchAttachmentProxy.m; path = Classes/CouchAttachmentProxy.m; sourceTree = "<group>"; };
 		DA0E41B0152E3083004CAF63 /* CouchDatabaseProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CouchDatabaseProxy.h; path = Classes/CouchDatabaseProxy.h; sourceTree = "<group>"; };
@@ -112,7 +112,7 @@
 		034768DFFF38A50411DB9C8B /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				D2AAC07E0554694100DB518D /* libComObscureTiTouchDB.a */,
+				D2AAC07E0554694100DB518D /* libComObscureTitouchdb.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -217,7 +217,7 @@
 			);
 			name = titouchdb;
 			productName = titouchdb;
-			productReference = D2AAC07E0554694100DB518D /* libComObscureTiTouchDB.a */;
+			productReference = D2AAC07E0554694100DB518D /* libComObscureTitouchdb.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
@@ -311,7 +311,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DSTROOT = /tmp/ComObscureTiTouchDB.dst;
-				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/vendor";
+				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/vendor\"";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -369,7 +369,7 @@
 				);
 				"ARCHS[sdk=iphonesimulator*]" = i386;
 				DSTROOT = /tmp/ComObscureTiTouchDB.dst;
-				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/vendor";
+				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/vendor\"";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
