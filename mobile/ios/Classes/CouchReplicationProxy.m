@@ -48,7 +48,7 @@
     return [NSDictionary dictionaryWithObjectsAndKeys:
             NUMINT(repl.changesProcessed), @"completed",
             NUMINT(repl.changesTotal), @"total",
-            repl.error, @"error",
+            [self errorDict:repl.error], @"error",
             NUMBOOL(repl.running), @"running",
             nil];
 }
