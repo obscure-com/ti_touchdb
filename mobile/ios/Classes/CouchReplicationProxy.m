@@ -44,6 +44,15 @@
             nil];
 }
 
+- (NSDictionary *)toStatusDictionary:(TDReplicator *)repl {
+    return [NSDictionary dictionaryWithObjectsAndKeys:
+            NUMINT(repl.changesProcessed), @"completed",
+            NUMINT(repl.changesTotal), @"total",
+            repl.error, @"error",
+            NUMBOOL(repl.running), @"running",
+            nil];
+}
+
 #pragma mark PROPERTIES
 
 - (id)createTarget {
@@ -131,13 +140,11 @@
 #define kReplicatorStopped @"stopped"
 
 - (void)replicatorProgressChanged:(NSNotification *)n {
-    ENSURE_UI_THREAD_1_ARG(n)
-    [self fireEvent:kReplicatorProgressChanged withObject:[self toStatusDictionary]];
+    [self fireEvent:kReplicatorProgressChanged withObject:[self toStatusDictionary:(TDReplicator *)n.object]];
 }
 
 - (void)replicatorStopped:(NSNotification *)n {
-    ENSURE_UI_THREAD_1_ARG(n)
-    [self fireEvent:kReplicatorStopped withObject:[self toStatusDictionary]];
+    [self fireEvent:kReplicatorStopped withObject:[self toStatusDictionary:(TDReplicator *)n.object]];
 }
 
 @end

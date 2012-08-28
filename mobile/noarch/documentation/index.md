@@ -141,8 +141,8 @@ the provided identifier if it doesn't already exist.  Note that the new document
 
 **untitledDocument**()
 
-Create a new [`document`](#document) object with a generated identifier.  The document's identifier can be
-changed prior to the first write (usually a call to **putProperties**()).
+Create a new [`document`](#document) object with a generated identifier.  The identifier *cannot* be
+changed after creation; use **documentWithID(id)** to create a document that has a specific identifier.
 
 **getAllDocuments**()
 

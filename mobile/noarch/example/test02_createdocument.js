@@ -34,9 +34,8 @@ exports.run_tests = function() {
         assert(rows.rowAtIndex(0).documentID === doc.documentID, "wrong document ID "+rows.rowAtIndex(0).documentID);
 
         // create a named document
-        var named = db.untitledDocument();
+        var named = db.documentWithID('fooglebar');
         named.putProperties({
-          _id: 'fooglebar',
           something: 10
         });
         var namedRefetch = db.documentWithID('fooglebar');

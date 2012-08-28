@@ -6,18 +6,27 @@ function assert(exp, msg) {
     }
 }
 
-function createDocWithProperties(db, props) {
-    var doc = db.untitledDocument();
+function createDocWithProperties(db, props, id) {
+    var doc;
+    if (id) {
+      doc = db.documentWithID(id);
+    }
+    else {
+      doc = db.untitledDocument();
+    }
+    
     assert(doc, "couldn't create doc");
     assert(!doc.currentRevisionID, "new doc should not have currentRevisionID: "+doc.currentRevisionID);
     assert(!doc.currentRevision, "new doc should not have currentRevision: "+doc.currentRevision);
-    assert(!doc.documentID, "new untitled doc should not have documentID: "+doc.documentID);
     
     doc.putProperties(props); // saves the doc!
     
     assert(doc.currentRevisionID, "saved doc should have currentRevisionID");
     assert(doc.currentRevision, "saved doc should have currentRevision");
     assert(doc.documentID, "saved doc should have documentID");
+    if (props._id) {
+      assert(doc.documentID === props._id, "saved doc id ("+doc.documentID+") does not match props._id ("+props._id+")")
+    }
     
     return doc;
 }

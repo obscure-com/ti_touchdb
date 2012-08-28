@@ -50,7 +50,6 @@ exports.run_tests = function() {
         
         // inline attachments
         var inline = {
-          _id: "inline_document_test1",
           "_attachments" :     {
             "image.png" :         {
               "content_type" : "image/png",
@@ -59,7 +58,7 @@ exports.run_tests = function() {
           }
         };
         
-        var inlinedoc = db.untitledDocument();
+        var inlinedoc = db.documentWithID('inline_document_test1');
         inlinedoc.putProperties(inline);
         
         var inlinerefetch = db.documentWithID('inline_document_test1');

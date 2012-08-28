@@ -14,11 +14,11 @@ exports.run_tests = function() {
       // start with one replication at the beginning
       var repl = db.pullFromDatabaseAtURL('http://touchbooks.iriscouch.com/books');
       repl.addEventListener('progress', function(e) {
-        Ti.API.info(JSON.stringify(e));
+        Ti.API.info('progress: '+JSON.stringify(e));
       });
       repl.addEventListener('stopped', function(e) {
-        Ti.API.info(JSON.stringify(e));
-        replicationComplete = true;
+        Ti.API.info('stopped: '+JSON.stringify(e));
+        replicationComplete = (e.completed >= e.total);
       });
       repl.start();
     }
