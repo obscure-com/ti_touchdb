@@ -14,7 +14,8 @@ struct TDQueryOptions;      // declared in TDView.h
 
 
 /** NSNotification posted when a document is updated.
-    The userInfo key "rev" has a TDRevision* as its value. */
+    UserInfo keys: @"rev": the new TDRevision, @"source": NSURL of remote db pulled from,
+    @"winner": new winning TDRevision, _if_ it changed (often same as rev). */
 extern NSString* const TDDatabaseChangeNotification;
 
 /** NSNotification posted when a database is closing. */
@@ -38,7 +39,7 @@ enum {
     kTDIncludeLocalSeq = 16,                // adds '_local_seq' property
     kTDLeaveAttachmentsEncoded = 32,        // i.e. don't decode
     kTDBigAttachmentsFollow = 64,           // i.e. add 'follows' key instead of data for big ones
-    kTDNoBody = 128                         // omit regular doc body properties
+    kTDNoBody = 128,                        // omit regular doc body properties
 };
 
 
@@ -62,6 +63,7 @@ extern const TDChangesOptions kDefaultTDChangesOptions;
     NSString* _path;
     NSString* _name;
     FMDatabase *_fmdb;
+    BOOL _readOnly;
     BOOL _open;
     int _transactionLevel;
     NSMutableDictionary* _views;
@@ -78,6 +80,9 @@ extern const TDChangesOptions kDefaultTDChangesOptions;
 - (BOOL) deleteDatabase: (NSError**)outError;
 
 + (TDDatabase*) createEmptyDBAtPath: (NSString*)path;
+
+/** Should the database file be opened in read-only mode? */
+@property BOOL readOnly;
 
 /** Replaces the database with a copy of another database.
     This is primarily used to install a canned database on first launch of an app, in which case you should first check .exists to avoid replacing the database if it exists already. The canned database would have been copied into your app bundle at build time.
