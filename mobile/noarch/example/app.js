@@ -3,8 +3,12 @@ var window = Ti.UI.createWindow({
   layout: 'vertical',
 	backgroundColor:'white'
 });
-var label = Ti.UI.createLabel();
-window.add(label);
+
+var testname = Ti.UI.createLabel();
+window.add(testname);
+
+var status = Ti.UI.createLabel();
+window.add(status);
 
 var imageView = Ti.UI.createImageView();
 window.add(imageView);
@@ -12,51 +16,50 @@ window.add(imageView);
 window.addEventListener('open', function() {
   Ti.API.info("starting tests");
     try {
-        label.text = 'starting tests';
+        testname.text = 'test01_server';
         require('test01_server').run_tests();    
-        label.text = 'test01_server complete';
+        testname.text = 'test02_createdocument';
         require('test02_createdocument').run_tests();
-        label.text = 'test02_createdocument complete';
+        testname.text = 'test02_createrevisions';
         require('test02_createrevisions').run_tests();
-        label.text = 'test02_createrevisions complete';
+        testname.text = 'test03_savemultipledocuments';
         require('test03_savemultipledocuments').run_tests();
-        label.text = 'test03_savemultipledocuments complete';
+        testname.text = 'test03_savemultipleunsaveddocuments';
         require('test03_savemultipleunsaveddocuments').run_tests();
-        label.text = 'test03_savemultipleunsaveddocuments complete';
+        testname.text = 'test03_deletemultipledocuments';
         require('test03_deletemultipledocuments').run_tests();
-        label.text = 'test03_deletemultipledocuments complete';
+        testname.text = 'test04_deletedocument';
         require('test04_deletedocument').run_tests();
-        label.text = 'test04_deletedocument complete';
+        testname.text = 'test05_alldocuments';
         require('test05_alldocuments').run_tests();
-        label.text = 'test05_alldocuments complete';
+        testname.text = 'test07_history';
         require('test07_history').run_tests();
-        label.text = 'test07_history complete';
+        testname.text = 'test08_attachments';
         require('test08_attachments').run_tests();
-        label.text = 'test08_attachments complete';
+        testname.text = 'test12_createview';
         require('test12_createview').run_tests();
-        label.text = 'test12_createview complete';
+        testname.text = 'test13_runview';
         require('test13_runview').run_tests();
-        label.text = 'test13_runview complete';
+        testname.text = 'test13_viewreduce';
         require('test13_viewreduce').run_tests();
-        label.text = 'test13_viewreduce complete';
+        testname.text = 'test13_viewcomplexkeys';
         require('test13_viewcomplexkeys').run_tests();
-        label.text = 'test13_viewcomplexkeys complete';
+        testname.text = 'test13_validation';
         require('test13_validation').run_tests();
-        label.text = 'test13_validation complete';
+        testname.text = 'test14_runslowview';
         require('test14_runslowview').run_tests();
-        label.text = 'test14_runslowview complete';
+        testname.text = 'test14_viewwithlinkeddocs';
         require('test14_viewwithlinkeddocs').run_tests();
-        label.text = 'test14_viewwithlinkeddocs complete';
+        testname.text = 'test15_uncacheviews';
         require('test15_uncacheviews').run_tests();
-        label.text = 'test15_uncacheviews complete';
+        testname.text = 'test16_viewoptions';
         require('test16_viewoptions').run_tests();
-        label.text = 'test16_viewoptions complete';
+        testname.text = 'test17_replication';
         require('test17_replication').run_tests();
-        label.text = 'test17_replication complete';
-        label.text = "all tests passed! whoopee!";
+        testname.text = "all tests passed! whoopee!";
     }
     catch (e) {
-        label.text = e;
+        status.text = e;
     }
 });
 

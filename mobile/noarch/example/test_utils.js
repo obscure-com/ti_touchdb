@@ -16,16 +16,17 @@ function createDocWithProperties(db, props, id) {
     }
     
     assert(doc, "couldn't create doc");
-    assert(!doc.currentRevisionID, "new doc should not have currentRevisionID: "+doc.currentRevisionID);
-    assert(!doc.currentRevision, "new doc should not have currentRevision: "+doc.currentRevision);
+    // TODO not sure if this is the case any more
+    // assert(!doc.currentRevisionID, "new doc should not have currentRevisionID: "+doc.currentRevisionID);
+    // assert(!doc.currentRevision, "new doc should not have currentRevision: "+doc.currentRevision);
     
     doc.putProperties(props); // saves the doc!
     
-    assert(doc.currentRevisionID, "saved doc should have currentRevisionID");
+    assert(doc.currentRevisionID, "saved doc should have currentRevisionID: "+doc.documentID);
     assert(doc.currentRevision, "saved doc should have currentRevision");
     assert(doc.documentID, "saved doc should have documentID");
-    if (props._id) {
-      assert(doc.documentID === props._id, "saved doc id ("+doc.documentID+") does not match props._id ("+props._id+")")
+    if (id) {
+      assert(doc.documentID === id, "saved doc id ("+doc.documentID+") does not match id ("+id+")")
     }
     
     return doc;

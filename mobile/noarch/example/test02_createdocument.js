@@ -13,7 +13,6 @@ exports.run_tests = function() {
             tag: 1337,
             arrprop: [1,2,3,4]
         };
-
         var doc = createDocWithProperties(db, properties);
         assert(doc.documentID.length > 10, "invalid document ID: "+doc.documentID);
         assert(doc.currentRevisionID.length > 10, "invalid doc revision: "+doc.currentRevisionID);

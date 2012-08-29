@@ -9,6 +9,7 @@ exports.run_tests = function() {
 
     try {
         var docs = [];
+        Ti.API.info("pre docs");
         for (var i=0; i < 5; i++) {
             var props = {
                 testName: 'saveMultipleDocuments',
@@ -17,6 +18,7 @@ exports.run_tests = function() {
             var doc = createDocWithProperties(db, props);
             docs.push(doc);
         }
+        Ti.API.info("got docs");
         
         var revisions = [], revisionProperties = [];
         _.each(docs, function(doc) {

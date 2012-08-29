@@ -3,6 +3,7 @@ package com.obscure.titouchdb;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
@@ -82,8 +83,14 @@ public class CouchDatabaseProxy extends KrollProxy {
 
 	@Kroll.method
 	public CouchDocumentProxy documentWithID(String id) {
-		TDRevision doc = db.getDocumentWithIDAndRev(id, null, Constants.EMPTY_CONTENT_OPTIONS);
-		return doc != null ? new CouchDocumentProxy(db, doc) : null;
+		TDRevision rev = db.getDocumentWithIDAndRev(id, null, Constants.EMPTY_CONTENT_OPTIONS);
+		if (rev == null) {
+			// document does not exist, so create it
+			Map<String,Object> props = new HashMap<String,Object>();
+			props.put("_id", id);
+			rev = new TDRevision(props);
+		}
+		return new CouchDocumentProxy(db, rev);
 	}
 
 	@Kroll.method
