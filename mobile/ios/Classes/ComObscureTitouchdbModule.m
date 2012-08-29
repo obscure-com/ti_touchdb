@@ -25,8 +25,9 @@
 
 @implementation ComObscureTitouchdbModule
 
+@synthesize databaseCache;
+
 CouchTouchDBServer * server;
-NSMutableDictionary * databaseCache;
 
 #pragma mark Internal
 
@@ -54,7 +55,7 @@ NSMutableDictionary * databaseCache;
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"LogRemoteRequest"];
     }
     
-    databaseCache = [NSMutableDictionary dictionaryWithCapacity:10];
+    self.databaseCache = [NSMutableDictionary dictionaryWithCapacity:10];
     
     // listen for notifications
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(processNotification:) name:nil object:nil];
@@ -77,8 +78,6 @@ NSMutableDictionary * databaseCache;
 #pragma mark Cleanup 
 
 -(void)dealloc {
-    [databaseCache release];
-    databaseCache = nil;
 	[super dealloc];
 }
 
@@ -96,9 +95,9 @@ NSMutableDictionary * databaseCache;
 - (void)processNotification:(NSNotification *)notification {
     ENSURE_UI_THREAD_1_ARG(notification);
     
-    if (databaseCache && [notification.name isEqualToString:kCouchDatabaseProxyDeletedNotification]) {
+    if ([notification.name isEqualToString:kCouchDatabaseProxyDeletedNotification]) {
         CouchDatabaseProxy * proxy = notification.object;
-        [databaseCache removeObjectForKey:proxy.cacheID];
+        [self.databaseCache removeObjectForKey:proxy.cacheID];
     }
     else {
         [self fireEvent:notification.name withObject:notification.userInfo];
@@ -140,12 +139,12 @@ NSMutableDictionary * databaseCache;
 }
 
 - (CouchDatabaseProxy *)databaseProxyNamed:(NSString *)name {
-    CouchDatabaseProxy * result = [databaseCache objectForKey:name];
+    CouchDatabaseProxy * result = [self.databaseCache objectForKey:name];
     if (!result) {
         CouchDatabase * db = [server databaseNamed:name];
         result = [CouchDatabaseProxy proxyWith:db];
         result.cacheID = name;
-        [databaseCache setObject:result forKey:result.cacheID];
+        [self.databaseCache setObject:result forKey:result.cacheID];
     }
     return result;
 }
