@@ -32,6 +32,8 @@ window.addEventListener('open', function() {
         require('test04_deletedocument').run_tests();
         testname.text = 'test05_alldocuments';
         require('test05_alldocuments').run_tests();
+        testname.text = 'test05_updatefromalldocs';
+        require('test05_updatefromalldocs').run_tests();
         testname.text = 'test07_history';
         require('test07_history').run_tests();
         testname.text = 'test08_attachments';
