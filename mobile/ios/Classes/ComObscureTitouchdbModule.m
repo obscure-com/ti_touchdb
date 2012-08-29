@@ -19,12 +19,14 @@
 
 
 @interface ComObscureTitouchdbModule (PrivateMethods)
+- (CouchDatabaseProxy *)databaseProxyNamed:(NSString *)name;
 @end
 
 
 @implementation ComObscureTitouchdbModule
 
 CouchTouchDBServer * server;
+NSMutableDictionary * databaseCache;
 
 #pragma mark Internal
 
@@ -52,7 +54,9 @@ CouchTouchDBServer * server;
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"LogRemoteRequest"];
     }
     
-    // listen for TouchDB notifications
+    databaseCache = [NSMutableDictionary dictionaryWithCapacity:10];
+    
+    // listen for notifications
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(processNotification:) name:nil object:nil];
     
 	server = [CouchTouchDBServer sharedInstance];
@@ -66,12 +70,15 @@ CouchTouchDBServer * server;
 }
 
 -(void)shutdown:(id)sender {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 	[super shutdown:sender];
 }
 
 #pragma mark Cleanup 
 
 -(void)dealloc {
+    [databaseCache release];
+    databaseCache = nil;
 	[super dealloc];
 }
 
@@ -88,7 +95,14 @@ CouchTouchDBServer * server;
 
 - (void)processNotification:(NSNotification *)notification {
     ENSURE_UI_THREAD_1_ARG(notification);
-    [self fireEvent:notification.name withObject:notification.userInfo];
+    
+    if (databaseCache && [notification.name isEqualToString:kCouchDatabaseProxyDeletedNotification]) {
+        CouchDatabaseProxy * proxy = notification.object;
+        [databaseCache removeObjectForKey:proxy.cacheID];
+    }
+    else {
+        [self fireEvent:notification.name withObject:notification.userInfo];
+    }
 }
 
 -(void)_listenerAdded:(NSString *)type count:(int)count
@@ -125,12 +139,25 @@ CouchTouchDBServer * server;
     return [server generateUUIDs:count];
 }
 
+- (CouchDatabaseProxy *)databaseProxyNamed:(NSString *)name {
+    CouchDatabaseProxy * result = [databaseCache objectForKey:name];
+    if (!result) {
+        CouchDatabase * db = [server databaseNamed:name];
+        result = [CouchDatabaseProxy proxyWith:db];
+        result.cacheID = name;
+        [databaseCache setObject:result forKey:result.cacheID];
+    }
+    return result;
+}
+
 - (id)getDatabases:(id)args {
     NSArray * dbs = [server getDatabases];
     
     NSMutableArray * result = [NSMutableArray arrayWithCapacity:[dbs count]];
     for (CouchDatabase * db in dbs) {
-        [result addObject:[CouchDatabaseProxy proxyWith:db]];
+        // TODO make sure db name and relative path are the same!
+        CouchDatabaseProxy * proxy = [self databaseProxyNamed:db.relativePath];
+        [result addObject:proxy];
     }
     return result;
 }
@@ -139,8 +166,7 @@ CouchTouchDBServer * server;
     NSString * name;
     ENSURE_ARG_AT_INDEX(name, args, 0, NSString)
     
-    CouchDatabase * db = [server databaseNamed:name];
-    return [CouchDatabaseProxy proxyWith:db];
+    return [self databaseProxyNamed:name];
 }
 
 - (id)activeTasks {    
