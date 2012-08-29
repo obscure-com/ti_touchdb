@@ -35,6 +35,7 @@
 		DA0E41BD152E474E004CAF63 /* CouchDocumentProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = DA0E41BB152E474E004CAF63 /* CouchDocumentProxy.m */; };
 		DA305FCC15B4B5E800DBB89E /* ViewCompiler.h in Headers */ = {isa = PBXBuildFile; fileRef = DA305FCA15B4B5E700DBB89E /* ViewCompiler.h */; };
 		DA305FCD15B4B5E800DBB89E /* ViewCompiler.m in Sources */ = {isa = PBXBuildFile; fileRef = DA305FCB15B4B5E700DBB89E /* ViewCompiler.m */; };
+		DA53C6E215EE8BC40065CA47 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA53C6DF15EE8BAE0065CA47 /* Security.framework */; };
 		DA5837C815B08FF2005CA068 /* TouchDB in Frameworks */ = {isa = PBXBuildFile; fileRef = DA5837C715B08FF2005CA068 /* TouchDB */; };
 		DA5837CA15B08FFB005CA068 /* CouchCocoa in Frameworks */ = {isa = PBXBuildFile; fileRef = DA5837C915B08FFB005CA068 /* CouchCocoa */; };
 		DA5837CC15B09030005CA068 /* ComObscureTitouchdb_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = DA5837CB15B09030005CA068 /* ComObscureTitouchdb_Prefix.pch */; };
@@ -77,6 +78,7 @@
 		DA0E41BB152E474E004CAF63 /* CouchDocumentProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CouchDocumentProxy.m; path = Classes/CouchDocumentProxy.m; sourceTree = "<group>"; };
 		DA305FCA15B4B5E700DBB89E /* ViewCompiler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ViewCompiler.h; path = Classes/ViewCompiler.h; sourceTree = "<group>"; };
 		DA305FCB15B4B5E700DBB89E /* ViewCompiler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ViewCompiler.m; path = Classes/ViewCompiler.m; sourceTree = "<group>"; };
+		DA53C6DF15EE8BAE0065CA47 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		DA5837C715B08FF2005CA068 /* TouchDB */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = TouchDB; path = vendor/TouchDB.framework/TouchDB; sourceTree = "<group>"; };
 		DA5837C915B08FFB005CA068 /* CouchCocoa */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = CouchCocoa; path = vendor/CouchCocoa.framework/CouchCocoa; sourceTree = "<group>"; };
 		DA5837CB15B09030005CA068 /* ComObscureTitouchdb_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComObscureTitouchdb_Prefix.pch; sourceTree = "<group>"; };
@@ -102,6 +104,7 @@
 				DA5837DB15B0943F005CA068 /* TouchDBListener in Frameworks */,
 				DA5837CA15B08FFB005CA068 /* CouchCocoa in Frameworks */,
 				DA5837C815B08FF2005CA068 /* TouchDB in Frameworks */,
+				DA53C6E215EE8BC40065CA47 /* Security.framework in Frameworks */,
 				AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -135,6 +138,7 @@
 				DA5837C915B08FFB005CA068 /* CouchCocoa */,
 				DA5837C715B08FF2005CA068 /* TouchDB */,
 				AACBBE490F95108600F1A2B1 /* Foundation.framework */,
+				DA53C6DF15EE8BAE0065CA47 /* Security.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
