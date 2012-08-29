@@ -11,7 +11,7 @@
 @implementation TiProxy (Errors)
 
 - (NSDictionary *)errorDict:(NSError *)error {
-    return error ? [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInteger:error.code], @"code", error.description, @"description", error.domain, @"domain", nil] : nil;
+    return error ? [NSDictionary dictionaryWithObjectsAndKeys:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInteger:error.code], @"code", error.description, @"description", error.domain, @"domain", nil], @"error", nil] : nil;
 }
 
 @end

@@ -31,7 +31,7 @@ exports.run_tests = function() {
         doc = db.untitledDocument();
         var err = doc.putProperties(props);
         assert(err, "did not return error from putProperties");
-        assert(err.code == 403, "incorrect error code on validation: "+err.code);
+        assert(err.error.code == 403, "incorrect error code on validation: "+err.error.code);
         // assert(err.description == "forbidden: uncool", "incorrect error message on validation: "+err.description);
     }
     catch (e) {
