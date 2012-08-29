@@ -91,7 +91,13 @@
     NSDictionary * props;
     ENSURE_ARG_AT_INDEX(props, args, 0, NSDictionary)
     
-    RESTOperation * op = [self.document putProperties:props];
+    // ensure that the properties contains a current revision
+    NSMutableDictionary * mprops = [NSMutableDictionary dictionaryWithDictionary:props];
+    if (![mprops objectForKey:@"_rev"] && self.document.currentRevisionID) {
+        [mprops setObject:self.document.currentRevisionID forKey:@"_rev"];
+    }
+    
+    RESTOperation * op = [self.document putProperties:mprops];
     if (![op wait]) {
         return [self errorDict:op.error];
     }
