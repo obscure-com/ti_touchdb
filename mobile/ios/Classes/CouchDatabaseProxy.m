@@ -55,6 +55,9 @@
     if (![op wait]) {
         NSAssert(op.error.code == 200 || op.error.code == 404, @"Error deleting db: %@", op.error);
     }
+    else {
+        [[NSNotificationCenter defaultCenter] postNotificationName:kCouchDatabaseProxyDeletedNotification object:self];
+    }
 }
 
 - (void)compact:(id)args {

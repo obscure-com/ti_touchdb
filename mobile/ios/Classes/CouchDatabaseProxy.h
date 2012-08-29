@@ -8,7 +8,10 @@
 
 #import "TiProxy.h"
 
+#define kCouchDatabaseProxyDeletedNotification @"database.deleted"
+
 @interface CouchDatabaseProxy : TiProxy
 @property (nonatomic, strong) CouchDatabase * database;
+@property (nonatomic, strong) NSString * cacheID;
 + (CouchDatabaseProxy *)proxyWith:(CouchDatabase *)db;
 @end

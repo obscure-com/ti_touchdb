@@ -26,14 +26,17 @@ exports.run_tests = function() {
         dbs[i].deleteDatabase();
       }
       Ti.API.warn("removed leftover dbs: "+names.join(','));
-      // assert(false,  "wrong number of databases found: "+names.join(','))
     }
     
     // create a database and check that it is returned
     var db = server.databaseNamed('test01');
     assert(db, "did not new up a database");
     db.create();
-    Ti.API.info(String.format("database %s: %d documents", db.relativePath, db.getDocumentCount()));
+
+    // https://github.com/pegli/ti_touchdb/issues/27
+    var db2 = server.databaseNamed('test01');
+    assert(db2 === db, 'databaseNamed() did not return the same object when called twice with the same name');
+
 
     dbs = server.getDatabases();
     assert(dbs, "getDatabases() returned null again");
@@ -44,4 +47,5 @@ exports.run_tests = function() {
     var dbs1 = server.getDatabases();
     assert(dbs1, "getDatabases() returned null again");
     assert(dbs1.length == 0, "wrong number of databases found: "+dbs.length);
+    
 }
