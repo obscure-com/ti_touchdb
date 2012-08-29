@@ -9,7 +9,9 @@ package com.obscure.titouchdb;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollModule;
@@ -65,6 +67,8 @@ public class TitouchdbModule extends KrollModule {
 
 	private TDViewCompiler		compiler;
 
+	private Map<String, CouchDatabaseProxy>	databaseCache	= new HashMap<String, CouchDatabaseProxy>();
+
 	private TDServer			server;
 
 	public TitouchdbModule() {
@@ -105,9 +109,20 @@ public class TitouchdbModule extends KrollModule {
 
 	@Kroll.method
 	public CouchDatabaseProxy databaseNamed(String name) {
-		TDDatabase db = server.getDatabaseNamed(name);
-		db.open();
-		return db != null ? new CouchDatabaseProxy(db) : null;
+		return databaseProxyNamed(name);
+	}
+
+	private CouchDatabaseProxy databaseProxyNamed(String name) {
+		CouchDatabaseProxy result = databaseCache.get(name);
+		if (result == null) {
+			TDDatabase db = server.getDatabaseNamed(name);
+			if (db != null) {
+				db.open();
+				result = new CouchDatabaseProxy(db);
+				databaseCache.put(name, result);
+			}
+		}
+		return result;
 	}
 
 	@Kroll.method
@@ -123,7 +138,7 @@ public class TitouchdbModule extends KrollModule {
 	public CouchDatabaseProxy[] getDatabases() {
 		List<CouchDatabaseProxy> proxies = new ArrayList<CouchDatabaseProxy>();
 		for (String name : server.allDatabaseNames()) {
-			proxies.add(new CouchDatabaseProxy(server.getDatabaseNamed(name)));
+			proxies.add(databaseProxyNamed(name));
 		}
 		return proxies.toArray(new CouchDatabaseProxy[0]);
 	}
