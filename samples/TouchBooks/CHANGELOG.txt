@@ -1,0 +1,5 @@
+2012-08-30
+Recreated the TouchBooks sample from the Titanium Studio single-window navigation
+app template.  This should make it easier for people to get started because the
+project layout will be familiar.  Also used Tony Lukasavage's form builder library
+from Forging Titanium #10.
