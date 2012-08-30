@@ -3,6 +3,8 @@ function ApplicationWindow() {
 	var MasterView = require('ui/common/MasterView'),
 		DetailView = require('ui/common/DetailView'),
 		NewItemView = require('ui/common/NewItemView');
+	
+	var books = require('lib/books');
 		
 	//create object instance
 	var self = Ti.UI.createWindow({
@@ -21,7 +23,6 @@ function ApplicationWindow() {
 		//create detail view container
 		var detailView = new DetailView();
 		var detailContainerWindow = Ti.UI.createWindow({
-			title:'Product Details',
 			navBarHidden:false,
 			backgroundColor:'#ffffff'
 		});
@@ -32,10 +33,11 @@ function ApplicationWindow() {
 	
 	self.activity.onCreateOptionsMenu = function(e) {
 	  var menu = e.menu;
-	  var menuItem = menu.add({
+	  
+	  var addItem = menu.add({
 	    title: L('ApplicationWindow_addmenuitem')
 	  });
-	  menuItem.addEventListener('click', function(e) {
+	  addItem.addEventListener('click', function(e) {
       //create detail view container
       var newItemView = new NewItemView();
       var newItemContainerWindow = Ti.UI.createWindow({
@@ -45,6 +47,29 @@ function ApplicationWindow() {
       newItemContainerWindow.add(newItemView);
       newItemContainerWindow.open();
 	  });
+	  
+	  var pushItem = menu.add({
+	    title: L('ApplicationWindow_pushtoserver')
+	  });
+	  pushItem.addEventListener('click', function(e) {
+	    books.pushToServer(function(err, result) {
+	      if (!err) {
+	        Ti.App.fireEvent('books:replication_complete');
+	      }
+	    })
+	  });
+
+    var pullItem = menu.add({
+      title: L('ApplicationWindow_pullfromserver')
+    });
+    pullItem.addEventListener('click', function(e) {
+      books.pullFromServer(function(err, result) {
+        if (!err) {
+          Ti.App.fireEvent('books:replication_complete');
+        }
+      })
+    });
+
 	};
 	
 	return self;

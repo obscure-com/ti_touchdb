@@ -13,22 +13,14 @@
  */
 
 var server = require('com.obscure.titouchdb'),
-    db = server.databaseNamed('books'),
-    pull;
-
+    db = server.databaseNamed('books');
+    
 exports.initialize = function(cb) {
   // make sure the db exists
   db.ensureCreated();
   
-  // pull won't work unless the db is around!
-  pull = db.pullFromDatabaseAtURL('http://touchbooks.iriscouch.com/books');
-  pull.addEventListener('progress', function(e) {
-    Ti.API.info(JSON.stringify(e));
-  });
-  pull.addEventListener('stopped', function(e) {
-    cb && cb(null, e);
-  });
-  pull.start();
+  // get the latest changes
+  exports.pullFromServer(cb);
 };
 
 exports.dumpBooks = function(cb) {
@@ -81,3 +73,27 @@ exports.saveBook = function(book_id, properties, cb) {
     cb && cb(null, doc);
   }
 };
+
+var push;
+exports.pushToServer = function(cb) {
+  push = db.pushToDatabaseAtURL('http://touchbooks.iriscouch.com/books');
+  push.addEventListener('progress', function(e) {
+    Ti.API.info(JSON.stringify(e));
+  });
+  push.addEventListener('stopped', function(e) {
+    cb && cb(null, e);
+  });
+  push.start();  
+};
+
+var pull;
+exports.pullFromServer = function(cb) {
+  pull = db.pullFromDatabaseAtURL('http://touchbooks.iriscouch.com/books');
+  pull.addEventListener('progress', function(e) {
+    Ti.API.info(JSON.stringify(e));
+  });
+  pull.addEventListener('stopped', function(e) {
+    cb && cb(null, e);
+  });
+  pull.start();  
+}

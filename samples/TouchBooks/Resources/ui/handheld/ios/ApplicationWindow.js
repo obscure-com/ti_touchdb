@@ -4,6 +4,8 @@ function ApplicationWindow() {
 		DetailView = require('ui/common/DetailView'),
 		NewItemView = require('ui/common/NewItemView');
 		
+	var books = require('lib/books');
+		
 	//create object instance
 	var self = Ti.UI.createWindow({
 		backgroundColor:'#ffffff'
@@ -18,15 +20,33 @@ function ApplicationWindow() {
 	var masterContainerWindow = Ti.UI.createWindow({
 		title:L('MasterWindow_title')
 	});
-	
-	var addButton = Ti.UI.createButton({
-	  systemButton: Ti.UI.iPhone.SystemButton.ADD
-	});
-	addButton.addEventListener('click', function(e) {
-    navGroup.open(newItemContainerWindow);
-	});
-	masterContainerWindow.rightNavButton = addButton;
-	
+		
+  var buttonBar = Ti.UI.createButtonBar({
+    labels: [L('ApplicationWindow_pullbuttontitle'), L('ApplicationWindow_pushbuttontitle'), L('ApplicationWindow_addbuttontitle')],
+    style: Titanium.UI.iPhone.SystemButtonStyle.BAR,
+  });
+  buttonBar.addEventListener('click', function(e) {
+    switch (e.index) {
+      case 0:
+        books.pullFromServer(function(err, result) {
+          if (!err) {
+            Ti.App.fireEvent('books:replication_complete');
+          }
+        });
+        break;        
+      case 1:
+        books.pushToServer(function(err, result) {
+          if (!err) {
+            Ti.App.fireEvent('books:replication_complete');
+          }
+        });
+        break;
+      case 2:
+        navGroup.open(newItemContainerWindow);
+        break;
+    };
+  });
+	masterContainerWindow.rightNavButton = buttonBar;
 	masterContainerWindow.add(masterView);
 	
 	//create detail view container

@@ -2,6 +2,11 @@
 <resources>
   <string name="MasterWindow_title">Books</string>
   <string name="ApplicationWindow_addmenuitem">Add Book</string>
+  <string name="ApplicationWindow_pushtoserver">Push to Server</string>
+  <string name="ApplicationWindow_pullfromserver">Pull from Server</string>
+  <string name="ApplicationWindow_pullbuttontitle">Pull</string>
+  <string name="ApplicationWindow_pushbuttontitle">Push</string>
+  <string name="ApplicationWindow_addbuttontitle">+</string>
   <string name="NewItemWindow_title">New Book</string>
 	<string name="NewItemView_isbn_required">ISBN is required</string>
 </resources>
