@@ -48,6 +48,8 @@ window.addEventListener('open', function() {
         require('test13_viewcomplexkeys').run_tests();
         testname.text = 'test13_validation';
         require('test13_validation').run_tests();
+        testname.text = 'test13_viewupdate';
+        require('test13_viewupdate').run_tests();
         testname.text = 'test14_runslowview';
         require('test14_runslowview').run_tests();
         testname.text = 'test14_viewwithlinkeddocs';
