@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
   <string name="MasterWindow_title">Books</string>
+  <string name="ApplicationWindow_addmenuitem">Add Book</string>
   <string name="NewItemWindow_title">New Book</string>
 	<string name="NewItemView_isbn_required">ISBN is required</string>
 </resources>
