@@ -62,17 +62,27 @@ TDMapEmitBlock _emitBlock;
         return nil;
 
     TDMapBlock result = nil;
-    __block TiObjectRef fn = [self compile:mapSource context:_context];
-    if (fn) {
+//    __block TiObjectRef fn = [self compile:mapSource context:_context];
+//    if (fn) {
         result = ^(NSDictionary* doc, TDMapEmitBlock emit) {
             _emitBlock = emit;
+            
+            // TEMPORARY FIX
+            // It is horribly inefficient to have to re-compile the map function each time,
+            // but I found that when a document is updated and re-mapped, the emit() function
+            // was not being called.  Recompiling the map function is a temporary workaround.
+            TiObjectRef fn = [self compile:mapSource context:_context];
             
             TiValueRef args[1];
             args[0] = IdToTiValue(_context, doc);
             
+            TiValueRef exception = TiValueMakeUndefined(_context);
             TiObjectCallAsFunction(_context, fn, nil, 1, args, nil);
+            if (TiValueGetType(_context, exception) != kTITypeUndefined) {
+                NSLog(@"error in map function: %@", TiValueToId(_context, exception));
+            }
         };
-    }
+//    }
     
     return [[result copy] autorelease];
 }
