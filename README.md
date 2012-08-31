@@ -28,7 +28,11 @@ See the Wiki pages for usage instructions and the samples directory for example 
 
 **0.4-beta**
 
-2012-08-09
+2012-08-30
+
+Brand-spanking new TouchBooks example built with the "Master/Detail" application template
+from Titanium Studio.  The new code should be much easier to understand, and as a bonus
+it includes push and pull replication to an IrisCouch server!
 
 Latest build of the project uses the head of TouchDB-iOS to get a JSON view collation bug
 fix.
@@ -37,7 +41,9 @@ fix.
 
 **0.4-beta**
 
-2012-08-09
+2012-08-30
+
+The new TouchBooks example also works on Android.  It's cool.  Check it out.
 
 Android version uses the latest version to TouchDB-Android.  Replication is working in the
 test case and in TouchBooks, but Marty Schoch, the author of TouchDB-Android, reports that
