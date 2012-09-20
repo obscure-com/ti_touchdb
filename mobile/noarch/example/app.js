@@ -28,6 +28,8 @@ window.addEventListener('open', function() {
         require('test03_savemultipleunsaveddocuments').run_tests();
         testname.text = 'test03_deletemultipledocuments';
         require('test03_deletemultipledocuments').run_tests();
+        testname.text = 'test03_bulk_save';
+        require('test03_bulk_save').run_tests();
         testname.text = 'test04_deletedocument';
         require('test04_deletedocument').run_tests();
         testname.text = 'test05_alldocuments';
