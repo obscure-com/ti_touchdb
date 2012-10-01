@@ -26,7 +26,11 @@ See the Wiki pages for usage instructions and the samples directory for example 
 
 ## Development Status - iOS
 
-**0.4-beta**
+**0.4.1-beta**
+
+2012-10-01
+
+Fixed problem with map and reduce functions being garbage collected by the JS context.
 
 2012-08-30
 
