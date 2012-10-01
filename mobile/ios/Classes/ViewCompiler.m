@@ -62,16 +62,11 @@ TDMapEmitBlock _emitBlock;
         return nil;
 
     TDMapBlock result = nil;
-//    __block TiObjectRef fn = [self compile:mapSource context:_context];
-//    if (fn) {
+    TiObjectRef fn = [self compile:mapSource context:_context];
+    TiValueProtect(_context, fn);
+    if (fn) {
         result = ^(NSDictionary* doc, TDMapEmitBlock emit) {
             _emitBlock = emit;
-            
-            // TEMPORARY FIX
-            // It is horribly inefficient to have to re-compile the map function each time,
-            // but I found that when a document is updated and re-mapped, the emit() function
-            // was not being called.  Recompiling the map function is a temporary workaround.
-            TiObjectRef fn = [self compile:mapSource context:_context];
             
             TiValueRef args[1];
             args[0] = IdToTiValue(_context, doc);
@@ -82,8 +77,8 @@ TDMapEmitBlock _emitBlock;
                 NSLog(@"error in map function: %@", TiValueToId(_context, exception));
             }
         };
-//    }
-    
+    }
+
     return [[result copy] autorelease];
 }
 
@@ -92,7 +87,8 @@ TDMapEmitBlock _emitBlock;
         return nil;
     
     TDReduceBlock result = nil;
-    __block TiObjectRef fn = [self compile:reduceSource context:_context];
+    TiObjectRef fn = [self compile:reduceSource context:_context];
+    TiValueProtect(_context, fn);
     if (fn) {
         result = ^(NSArray * keys, NSArray * values, BOOL rereduce) {
             TiValueRef args[3];
@@ -127,6 +123,7 @@ TDMapEmitBlock _emitBlock;
     
     TDValidationBlock result = nil;
     TiObjectRef fn = [self compile:validationSource context:_context];
+    TiValueProtect(_context, fn);
     NSDictionary * userCtx = [NSDictionary dictionaryWithObjectsAndKeys:
                                       db.name, @"database",
                                       @"touchdb", @"name",
