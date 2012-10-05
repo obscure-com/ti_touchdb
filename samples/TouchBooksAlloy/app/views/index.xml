@@ -6,7 +6,7 @@
           <TabbedBar onClick="changeGrouping">
             <Labels>
               <Label>Author</Label>
-              <Label>Copyright</Label>
+              <Label>Published</Label>
             </Labels>
           </TabbedBar>
         </View>
@@ -17,7 +17,7 @@
   <Window id="main" class="booklist" title="Books" platform="android" onOpen="loadBookList">
     <View id="header">
       <Switch id="authorSwitch" titleOn="Author" titleOff="Author" onClick="changeGrouping"/>
-      <Switch id="copyrightSwitch" titleOn="Copyright" titleOff="Copyright" onClick="changeGrouping"/>
+      <Switch id="publishedSwitch" titleOn="Published" titleOff="Published" onClick="changeGrouping"/>
     </View>
     <TableView id="tableView"/>
   </Window>

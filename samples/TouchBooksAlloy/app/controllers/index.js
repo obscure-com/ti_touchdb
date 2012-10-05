@@ -6,9 +6,9 @@ function loadBookList(e) {
 function changeGrouping(e) {
   if (OS_ANDROID) {
     if (e.source.id === 'authorSwitch') {
-      $.copyrightSwitch.value = !e.source.value;
+      $.publishedSwitch.value = !e.source.value;
     }
-    else if (e.source.id === 'copyrightSwitch') {
+    else if (e.source.id === 'publishedSwitch') {
       $.authorSwitch.value = !e.source.value;
     }
   }
