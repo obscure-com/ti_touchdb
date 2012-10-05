@@ -1,0 +1,11 @@
+{
+	"global": {
+	  "books_db_name": "books"
+	}, 
+	"env:development": {}, 
+	"env:test": {}, 
+	"env:production": {}, 
+	"os:ios": {}, 
+	"os:android": {}, 
+	"dependencies": {}
+}

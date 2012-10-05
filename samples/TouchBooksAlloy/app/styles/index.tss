@@ -1,0 +1,40 @@
+"#main": {
+  backgroundColor: '#000',
+  fullscreen: true
+},
+
+".booklist": {
+  layout: 'vertical'
+},
+
+"#header": {
+  height: '48dp',
+  backgroundColor: 'white',
+},
+
+"TableView": {
+  height: Ti.UI.Fill
+},
+
+"TabbedBar[platform=ios]": {
+  bottom: '6dp',
+  height: Ti.UI.SIZE,
+  width: Ti.UI.SIZE,
+  style: Ti.UI.iPhone.SystemButtonStyle.BAR,
+},
+
+"Switch[platform=android]": {
+  style: Ti.UI.Android.SWITCH_STYLE_TOGGLEBUTTON
+},
+
+"#authorSwitch": {
+  left: '10%',
+  width: '35%',
+},
+
+"#copyrightSwitch": {
+  right: '10%',
+  width: '35%',
+},
+
+
