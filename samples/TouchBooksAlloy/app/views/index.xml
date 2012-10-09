@@ -1,24 +1,8 @@
 <Alloy>
   <Window id="main" platform="ios">
     <NavigationGroup id="nav">
-      <Window class="booklist" title="Books" onOpen="loadBookList">
-        <View id="header">
-          <TabbedBar onClick="changeGrouping">
-            <Labels>
-              <Label>Author</Label>
-              <Label>Published</Label>
-            </Labels>
-          </TabbedBar>
-        </View>
-        <TableView id="tableView"/>
-      </Window>
+      <Require src="book_list"/>
     </NavigationGroup>
   </Window>
-  <Window id="main" class="booklist" title="Books" platform="android" onOpen="loadBookList">
-    <View id="header">
-      <Switch id="authorSwitch" titleOn="Author" titleOff="Author" onClick="changeGrouping"/>
-      <Switch id="publishedSwitch" titleOn="Published" titleOff="Published" onClick="changeGrouping"/>
-    </View>
-    <TableView id="tableView"/>
-  </Window>
+  <Require id="main" src="book_list" platform="android"/>
 </Alloy>

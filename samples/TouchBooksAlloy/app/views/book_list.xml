@@ -1,0 +1,17 @@
+<Alloy>
+  <Window class="booklist" title="Books" onOpen="loadBookList">
+    <View id="header" platform="ios">
+      <TabbedBar onClick="changeGrouping">
+        <Labels>
+          <Label>Author</Label>
+          <Label>Published</Label>
+        </Labels>
+      </TabbedBar>
+    </View>
+    <View id="header" platform="android">
+      <Switch id="authorSwitch" titleOn="Author" titleOff="Author" onClick="changeGrouping"/>
+      <Switch id="publishedSwitch" titleOn="Published" titleOff="Published" onClick="changeGrouping"/>
+    </View>
+    <TableView id="tableView"/>
+  </Window>
+</Alloy>
