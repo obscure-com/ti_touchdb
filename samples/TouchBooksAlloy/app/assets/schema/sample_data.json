@@ -1,15 +1,15 @@
 {
   "docs": [
-    {"isbn":"006102063X","title":"Moving Pictures","author":"Terry Pratchett","published":[1990]},
-    {"isbn":"0199291152","title":"The Selfish Gene","author":"Richard Dawkins","published":[1976]},
-    {"isbn":"038567452X","title":"Notes from a Big Country","author":"Bill Bryson","published":[1998]},
-    {"isbn":"0387727736","title":"Machine Translation","author":"Yorick Wilks","published":[2009]},
-    {"isbn":"0393339807","title":"The Inimitable Jeeves","author":"P. G. Wodehouse","published":[1923,5,17]},
-    {"isbn":"0552773557","title":"Stark","author":"Ben Elton","published":[1989]},
-    {"isbn":"0552999954","title":"High Society","author":"Ben Elton","published":[2002]},
-    {"isbn":"1407035533","title":"Strata","author":"Terry Pratchett","published":[1981]},
-    {"isbn":"1409095630","title":"Down Under","author":"Bill Bryson","published":[2000]},
-    {"isbn":"1604500700","title":"Psmith in the City","author":"P. G. Wodehouse","published":[1910,9,23]},
-    {"isbn":"9780596155896","title":"CouchDB: The Definitive Guide","author":"J. Chris Anderson","published":[2010]}
+    {"isbn":"006102063X","title":"Moving Pictures","author":"Terry Pratchett","published":[1990],"modelname":"book"},
+    {"isbn":"0199291152","title":"The Selfish Gene","author":"Richard Dawkins","published":[1976],"modelname":"book"},
+    {"isbn":"038567452X","title":"Notes from a Big Country","author":"Bill Bryson","published":[1998],"modelname":"book"},
+    {"isbn":"0387727736","title":"Machine Translation","author":"Yorick Wilks","published":[2009],"modelname":"book"},
+    {"isbn":"0393339807","title":"The Inimitable Jeeves","author":"P. G. Wodehouse","published":[1923,5,17],"modelname":"book"},
+    {"isbn":"0552773557","title":"Stark","author":"Ben Elton","published":[1989],"modelname":"book"},
+    {"isbn":"0552999954","title":"High Society","author":"Ben Elton","published":[2002],"modelname":"book"},
+    {"isbn":"1407035533","title":"Strata","author":"Terry Pratchett","published":[1981],"modelname":"book"},
+    {"isbn":"1409095630","title":"Down Under","author":"Bill Bryson","published":[2000],"modelname":"book"},
+    {"isbn":"1604500700","title":"Psmith in the City","author":"P. G. Wodehouse","published":[1910,9,23],"modelname":"book"},
+    {"isbn":"9780596155896","title":"CouchDB: The Definitive Guide","author":"J. Chris Anderson","published":[2010],"modelname":"book"}
   ]
 }
