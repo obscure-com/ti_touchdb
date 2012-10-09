@@ -5,14 +5,14 @@ books.on('fetch', function(e) {
 });
 
 $.tableView.refresh = function(collection) {
-  var self = this;
-  self.setData([]);
+  var data = [];
   collection.each(function(book) {
     var row = Ti.UI.createTableViewRow({
       title: book.get('title')
     });
-    self.appendRow(row);
+    data.push(row);
   });
+  this.setData(data);
 };
 
 function loadBookList(e) {
@@ -28,5 +28,4 @@ function changeGrouping(e) {
       $.authorSwitch.value = !e.source.value;
     }
   }
-  alert($.tableView.data.length);
 }
