@@ -17,12 +17,24 @@
 - (id)initWithCouchPersistentReplication:(CouchPersistentReplication *)rep {
     if (self = [super init]) {
         self.replication = rep;
+
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(replicatorProgressChanged:) name:TDReplicatorProgressChangedNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(replicatorStopped:) name:TDReplicatorStoppedNotification object:nil];
     }
     return self;
 }
 
 + (CouchPersistentReplicationProxy *)proxyWith:(CouchPersistentReplication *)rep {
     return rep ? [[[CouchPersistentReplicationProxy alloc] initWithCouchPersistentReplication:rep] autorelease] : nil;
+}
+
+- (NSDictionary *)toStatusDictionary:(TDReplicator *)repl {
+    return [NSDictionary dictionaryWithObjectsAndKeys:
+            NUMINT(repl.changesProcessed), @"completed",
+            NUMINT(repl.changesTotal), @"total",
+            [self errorDict:repl.error], @"error",
+            NUMBOOL(repl.running), @"running",
+            nil];
 }
 
 /* TODO
@@ -107,6 +119,19 @@
 
 - (id)mode {
     return [NSNumber numberWithInt:self.replication.mode];
+}
+
+#pragma mark EVENTS
+
+#define kReplicatorProgressChanged @"progress"
+#define kReplicatorStopped @"stopped"
+
+- (void)replicatorProgressChanged:(NSNotification *)n {
+    [self fireEvent:kReplicatorProgressChanged withObject:[self toStatusDictionary:(TDReplicator *)n.object]];
+}
+
+- (void)replicatorStopped:(NSNotification *)n {
+    [self fireEvent:kReplicatorStopped withObject:[self toStatusDictionary:(TDReplicator *)n.object]];
 }
 
 @end
