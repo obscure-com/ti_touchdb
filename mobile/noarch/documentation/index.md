@@ -227,8 +227,8 @@ object.  The returned object can be customized prior to the start of replication
 * exclusively (boolean): if true, any existing replications with this URL will be removed
 
 Convenience function for setting up two-way replication with a remote database specified by the provided
-URL.  Returns a two-element array consisting of the pull [`replication`](#replication) object and the
-push [`replication`](#replication) object or null on failure.
+URL.  Returns an object with a keys named "push" and "pull" whose values are the push [`replication`](#replication)
+object and the pull [`replication`](#replication) object, respectively, or null on failure.
 
 **replicationFromDatabaseAtURL**(url)
 

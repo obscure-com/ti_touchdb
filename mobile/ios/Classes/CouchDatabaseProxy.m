@@ -223,7 +223,10 @@
     NSURL * url = [NSURL URLWithString:urlstr];
     NSArray * reps = [self.database replicateWithURL:url exclusively:[exclusively boolValue]];
     
-    return [NSArray arrayWithObjects:[CouchReplicationProxy proxyWith:[reps objectAtIndex:0]], [CouchReplicationProxy proxyWith:[reps objectAtIndex:1]], nil];
+    return [NSDictionary dictionaryWithObjectsAndKeys:
+            [CouchReplicationProxy proxyWith:[reps objectAtIndex:0]], @"pull",
+            [CouchReplicationProxy proxyWith:[reps objectAtIndex:1]], @"push",
+            nil];
 }
 
 - (id)replicationFromDatabaseAtURL:(id)args {
