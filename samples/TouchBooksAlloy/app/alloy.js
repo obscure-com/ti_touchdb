@@ -7,42 +7,27 @@ var server = require('com.obscure.titouchdb'),
 
 db.ensureCreated();
 
-// load up JSON documents in the "schema" directory
-var schemadoc = db.documentWithID('schema');
-var applied = schemadoc ? schemadoc.properties.applied || [] : [];
+// create views
+var ddoc = db.designDocumentWithName('books');
+ddoc.defineView('by_author', 'function(doc) { if (doc.author) { emit(doc.author, null); } }');
+ddoc.defineView('by_published', 'function(doc) { if (doc.published && doc.published.length > 0) { emit(doc.published[0], null); } }');
+ddoc.saveChanges();
 
-var schemadir = Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory, 'schema');
-if (schemadir.exists()) {
-  var dirty = false;
-  
-  var fns = schemadir.getDirectoryListing();
-  _.each(fns, function(fn) {
-    var f = Ti.Filesystem.getFile(schemadir.resolve(), fn);
-    var contents = f.exists() ? f.read().text : null;
-    var hash = contents ? Ti.Utils.md5HexDigest(contents) : null;
-    if (hash && applied.indexOf(hash) === -1) {        
-      var json = JSON.parse(contents);
-      // get the existing revision if the doc already exists
-      _.each(json.docs, function(doc) {
-        if (doc._id) {
-          var existing = db.documentWithID(doc._id);
-          if (existing.currentRevisionID) {
-            doc._rev = existing.currentRevisionID;
-          }
-        }
-      });
-      db.putChanges(json.docs);
-      applied.push(hash);
-      dirty = true;
-    }
-  });
-  
-  if (dirty) {
-    schemadoc.putProperties({
-      applied: applied
-    });
+// replication filter function
+db.registerFilter('books_only', 'function(doc, req) { return doc.modelname === "book"; }');
+
+// push to server
+var repls = db.replicateWithURL('http://touchbooks.iriscouch.com/touchbooksalloy', true);
+repls.push.continuous = true;
+repls.push.filter = 'books_only';
+repls.push.restart();
+
+// pull from server
+repls.pull.continuous = true;
+repls.pull.addEventListener('progress', function(e) {
+  if (e.completed > this.completed || 0) {
+    Ti.App.fireEvent('books:update_from_server');
+    this.completed = e.completed;
   }
-} 
-else {
-  Ti.API.error('Schema directory ' + schemadir.resolve() + ' does not exist');
-}
+});
+repls.pull.restart();
