@@ -156,6 +156,54 @@ TDMapEmitBlock _emitBlock;
     return [[result copy] autorelease];
 }
 
+#pragma mark -
+#pragma mark TDFilterBlock compiler
+
+- (TDFilterBlock) compileFilterFunction:(NSString *)filterSource language:(NSString *)language database:(TDDatabase *)db {
+    if (![@"javascript" isEqualToString:language])
+        return nil;
+    
+    TDFilterBlock result = nil;
+    TiObjectRef fn = [self compile:filterSource context:_context];
+    TiValueProtect(_context, fn);
+    NSDictionary * userCtx = [NSDictionary dictionaryWithObjectsAndKeys:
+                              db.name, @"database",
+                              @"touchdb", @"name",
+                              [NSArray array], @"roles",
+                              nil];
+    NSDictionary * secObj = [NSDictionary dictionary];
+    
+    if (fn && TiObjectIsFunction(_context, fn)) {
+        result = ^(TDRevision* revision, NSDictionary* params) {
+            TiValueRef args[2];
+            args[0] = IdToTiValue(_context, revision.properties);
+            args[1] = IdToTiValue(_context, params);
+            
+            TiValueRef exception = TiValueMakeUndefined(_context);
+            TiValueRef returnVal = TiObjectCallAsFunction(_context, fn, nil, 2, args, &exception);
+            
+            if (TiValueGetType(_context, exception) != kTITypeUndefined) {
+                NSLog(@"error in filter function: %@", TiValueToId(_context, exception));
+            }
+
+            if (TiValueGetType(_context, returnVal) == kTITypeUndefined) {
+                NSLog(@"no return value in filter function");
+                return NO;
+            }
+            
+            id r = TiValueToId(_context, returnVal);
+            return [r boolValue];
+        };
+    }
+    else {
+        NSLog(@"could not compile filter function");
+    }
+    
+    return [[result copy] autorelease];
+    
+}
+
+
 
 #pragma mark -
 #pragma mark Function Compiler

@@ -62,6 +62,8 @@ window.addEventListener('open', function() {
         require('test16_viewoptions').run_tests();
         testname.text = 'test17_replication';
         require('test17_replication').run_tests();
+        testname.text = 'test18_filters';
+        require('test18_filters').run_tests();
         testname.text = "all tests passed! whoopee!";
     }
     catch (e) {

@@ -246,6 +246,15 @@ Set up a persistent replication from this database to a source database and retu
 [`persistent replication`](#persistent replication) object.  If the persistent replication already exists,
 the configuration is unchanged.  The returned object can be customized prior to the start of replication.
 
+**registerFilter**(name, code)
+
+* name (string): the name of the filter function to register
+* code (string): the JavaScript code that implements the filter function
+
+Register a named filter function in the database for use with filtered replication.  The filter is not
+persistent and needs to be registered each time the app is run.  Use the registered filter name in the
+`filter` property of the [`persistent replication`](#persistent replication).
+
 <a name="document"/>
 ## Document
 

@@ -14,6 +14,7 @@
 #import "CouchReplicationProxy.h"
 #import "CouchRevisionProxy.h"
 #import "TiMacroFixups.h"
+#import "ViewCompiler.h"
 
 @implementation CouchDatabaseProxy
 
@@ -182,6 +183,22 @@
     NSString * name;
     ENSURE_ARG_AT_INDEX(name, args, 0, NSString)    
     return [CouchDesignDocumentProxy proxyWith:[self.database designDocumentWithName:name]];
+}
+
+- (void)registerFilter:(id)args {
+    NSString * name;
+    NSString * function;
+    
+    ENSURE_ARG_AT_INDEX(name, args, 0, NSString)
+    ENSURE_ARG_OR_NIL_AT_INDEX(function, args, 1, NSString)
+
+    // drop down into TouchDB to register a filter function
+    CouchTouchDBServer * server = (CouchTouchDBServer *) self.database.server;
+    [server tellTDDatabaseNamed:self.database.relativePath to:^(TDDatabase * db) {
+        ViewCompiler * viewCompiler = (ViewCompiler *) [TDView compiler];
+        TDFilterBlock filter = [viewCompiler compileFilterFunction:function language:@"javascript" database:db];
+        [db defineFilter:name asBlock:filter];
+    }];
 }
 
 #pragma mark CHANGE TRACKING:

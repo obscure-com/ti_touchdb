@@ -12,4 +12,5 @@
 
 @interface ViewCompiler : NSObject <TDViewCompiler>
 - (TDValidationBlock) compileValidationFunction:(NSString *)validationSource language:(NSString *)language database:(TDDatabase *)db;
+- (TDFilterBlock) compileFilterFunction:(NSString *)filterSource language:(NSString *)language database:(TDDatabase *)db;
 @end
