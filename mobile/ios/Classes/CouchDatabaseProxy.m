@@ -224,8 +224,8 @@
     NSArray * reps = [self.database replicateWithURL:url exclusively:[exclusively boolValue]];
     
     return [NSDictionary dictionaryWithObjectsAndKeys:
-            [CouchReplicationProxy proxyWith:[reps objectAtIndex:0]], @"pull",
-            [CouchReplicationProxy proxyWith:[reps objectAtIndex:1]], @"push",
+            [CouchPersistentReplicationProxy proxyWith:[reps objectAtIndex:0]], @"pull",
+            [CouchPersistentReplicationProxy proxyWith:[reps objectAtIndex:1]], @"push",
             nil];
 }
 
