@@ -16,18 +16,12 @@ ddoc.saveChanges();
 // replication filter function
 db.registerFilter('books_only', 'function(doc, req) { return doc.modelname === "book"; }');
 
-// push to server
-var repls = db.replicateWithURL('http://touchbooks.iriscouch.com/touchbooksalloy', true);
-repls.push.continuous = true;
-repls.push.filter = 'books_only';
-repls.push.restart();
-
-// pull from server
-repls.pull.continuous = true;
-repls.pull.addEventListener('progress', function(e) {
+var pull = db.replicationFromDatabaseAtURL(Alloy.CFG.remote_couchdb_server);
+pull.continuous = true;
+pull.addEventListener('progress', function(e) {
   if (e.completed > this.completed || 0) {
     Ti.App.fireEvent('books:update_from_server');
     this.completed = e.completed;
   }
 });
-repls.pull.restart();
+pull.restart();
