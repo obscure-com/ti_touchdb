@@ -48,7 +48,7 @@
     <modules>
         <module platform="android" version="1.0">ti.physicalSizeCategory</module>
         <module platform="iphone" version="0.5">com.obscure.titouchdb</module>
-        <module platform="android" version="0.4">com.obscure.titouchdb</module>
+        <module platform="android" version="0.5">com.obscure.titouchdb</module>
     </modules>
     <plugins>
         <plugin version="1.0">ti.alloy</plugin>
