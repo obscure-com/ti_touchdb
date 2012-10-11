@@ -7,7 +7,7 @@
 	<iphone>
 	</iphone>
 	<android xmlns:android="http://schemas.android.com/apk/res/android">
-	  <uses-sdk android:minSdkVersion="8"/>
+	  <uses-sdk android:minSdkVersion="13"/>
 	</android>
 	<mobileweb>
 	</mobileweb>
