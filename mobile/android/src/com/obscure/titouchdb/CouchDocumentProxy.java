@@ -144,9 +144,12 @@ public class CouchDocumentProxy extends KrollProxy {
 			result = rev.getProperties();
 		}
 		else {
-			result = new HashMap<String, Object>();
-			result.put("code", status.getCode());
-			result.put("description", status.toString());
+			HashMap<String,Object> error = new HashMap<String,Object>();
+			error.put("code", status.getCode());
+			error.put("description", status.toString());
+
+          result = new HashMap<String, Object>();
+          result.put("error", error);
 		}
 		return result;
 	}
