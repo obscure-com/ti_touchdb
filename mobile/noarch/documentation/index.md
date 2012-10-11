@@ -693,7 +693,10 @@ database is modified?  Default is false.
 **filter**
 
 string, read/write.  Path of an optional filter function to run on the source server.  Only documents for
-which the function returns true are replicated. The path looks like "designdocname/filtername".
+which the function returns true are replicated.  If the filter is running on a CouchDB instance, the value
+of this property looks like "designdocname/filtername".  If the filter is running in TouchDB and was 
+registered using `registerFilter()`, then the property should just contain the name used to register the
+filter.
 
 **filterParams**
 
