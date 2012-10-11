@@ -37,6 +37,10 @@ $.tableView.refresh = function(collection) {
   this.setData(data);
 };
 
+Ti.App.addEventListener('books:update_from_server', function(e) {
+  loadBookList();
+});
+
 function loadBookList() {
   books.fetch({ view: currentView });
 }
