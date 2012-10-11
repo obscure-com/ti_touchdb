@@ -137,6 +137,7 @@ module.exports.beforeModelCreate = function(config) {
 module.exports.afterModelCreate = function(Model) {
   Model = Model || {};
   
+  Model.prototype.idAttribute = '_id'; // true for all TouchDB documents
   Model.prototype.config.Model = Model; // needed for fetch operations to initialize the collection from persistent store
   
   return Model;
