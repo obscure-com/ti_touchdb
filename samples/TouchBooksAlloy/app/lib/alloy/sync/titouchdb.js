@@ -103,9 +103,10 @@ function Sync(model, method, options) {
       }
       else {
         // object
-        var obj = db.documentWithID(model.get('_id'))
+        var obj = db.documentWithID(model.id)
         model.set(obj.properties);
         model.id = obj.documentID;
+        model.trigger('fetch');
       }
       break;
 
