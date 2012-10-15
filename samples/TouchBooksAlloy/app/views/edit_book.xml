@@ -9,6 +9,7 @@
       <TextField class="value" id="author"/>
       <Label class="label">Published</Label>
       <Picker id="published"/>
+      <Button id="save" onClick="saveChanges">Save</Button>
     </ScrollView>
   </Window>
 </Alloy>

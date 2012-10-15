@@ -35,4 +35,24 @@
 "#published": {
   top: "6dp",
   type: Ti.UI.PICKER_TYPE_DATE  
+},
+
+"#save": {
+  left: "2%",
+  right: "2%",
+  top: "6dp",
+  height: "32dp",
+  color: 'white',
+  borderRadius: 8,
+  font: {
+    fontWeight: "bold"
+  }
+},
+
+"#save[platform=ios]": {
+  style: Ti.UI.iPhone.SystemButtonStyle.PLAIN,
+  backgroundGradient: {
+    type: 'linear',
+    colors:[{color:'#0f0',position:0.0},{color:'#0c0',position:0.50},{color:'#090',position:1.0}]
+  },
 }
