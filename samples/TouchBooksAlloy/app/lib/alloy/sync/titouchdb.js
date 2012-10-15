@@ -66,6 +66,7 @@ function Sync(model, method, options) {
         props.modelname = model.config.adapter.modelname;
         var doc = db.untitledDocument();
         doc.putProperties(props);
+        model.trigger('create');
         break;
 
     case 'read':
@@ -113,6 +114,7 @@ function Sync(model, method, options) {
     case 'update':
       var doc = db.documentWithID(model.id);
       doc.putProperties(model.toJSON());
+      model.trigger('update');
       break;
     
     case 'delete':
@@ -120,6 +122,7 @@ function Sync(model, method, options) {
         var doc = db.documentWithID(model.id);
         doc.deleteDocument();
         model.id = null;
+        model.trigger('destroy');
       }
       break;
   }  
