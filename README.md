@@ -26,7 +26,11 @@ See the Wiki pages for usage instructions and the samples directory for example 
 
 ## Development Status - iOS
 
-**0.4.1-beta**
+**0.5-beta**
+
+2012-10-11
+
+Added support for filters; new tutorial code under samples
 
 2012-10-01
 
@@ -43,7 +47,12 @@ fix.
 
 ## Development Status - Android
 
-**0.4-beta**
+**0.5-beta**
+
+2012-10-11
+
+Faked the persistent replication classes for API compatibility with iOS by wrapping TDReplicator;
+will update when TouchDB-Android has persistent replication.
 
 2012-08-30
 
