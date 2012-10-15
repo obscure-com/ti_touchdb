@@ -47,6 +47,10 @@ Ti.App.addEventListener('books:update_from_server', function(e) {
   loadBookList();
 });
 
+Ti.App.addEventListener('books:book_changed', function(e) {
+  loadBookList();
+});
+
 function loadBookList() {
   books.fetch({ view: currentView });
 }
