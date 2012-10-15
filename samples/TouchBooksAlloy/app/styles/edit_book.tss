@@ -1,0 +1,38 @@
+"Window": {
+  backgroundColor: "white",
+  fullscreen: true,
+},
+
+"ScrollView": {
+  layout: "vertical"
+},
+
+"TextField": {
+  height: Ti.UI.SIZE,
+  borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED
+},
+
+"Label": {
+  height: Ti.UI.SIZE
+},
+
+".label": {
+  left: "2%",
+  right: "2%",
+  top: "10dp",
+  textAlign: 'left',
+  font: {
+    fontWeight: "bold"
+  }
+},
+
+".value": {
+  left: "2%",
+  right: "2%",
+  top: "6dp",
+},
+
+"#published": {
+  top: "6dp",
+  type: Ti.UI.PICKER_TYPE_DATE  
+}

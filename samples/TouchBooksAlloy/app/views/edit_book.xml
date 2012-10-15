@@ -1,0 +1,14 @@
+<Alloy>
+  <Window id="win">
+    <ScrollView>
+      <Label class="label">ISBN</Label>
+      <Label class="value" id="isbn"/>
+      <Label class="label">Title</Label>
+      <TextField class="value" id="title"/>
+      <Label class="label">Author</Label>
+      <TextField class="value" id="author"/>
+      <Label class="label">Published</Label>
+      <Picker id="published"/>
+    </ScrollView>
+  </Window>
+</Alloy>
