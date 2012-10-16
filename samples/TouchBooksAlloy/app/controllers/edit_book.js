@@ -18,10 +18,6 @@ book.on('update', function() {
   Ti.App.fireEvent('books:book_changed', { book_id: book.id });
 });
 
-book.on('create', function() {
-  Ti.App.fireEvent('books:book_changed', { book_id: book.id });
-});
-
 exports.set_book_id = function(id) {
   book.id = id;
   book.fetch();
