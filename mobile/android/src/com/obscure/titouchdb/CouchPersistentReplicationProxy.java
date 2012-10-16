@@ -92,7 +92,7 @@ public class CouchPersistentReplicationProxy extends KrollProxy implements Obser
     @Kroll.getProperty(name = "status")
     public int getStatus() {
         // TODO real status
-        if (isCompleted()) {
+        if (getCompleted() == getTotal()) {
             return TitouchdbModule.REPLICATION_STATE_COMPLETED;
         }
         else {
@@ -111,8 +111,8 @@ public class CouchPersistentReplicationProxy extends KrollProxy implements Obser
     }
 
     @Kroll.getProperty(name = "completed")
-    public boolean isCompleted() {
-        return repl.getChangesProcessed() != 0 && repl.getChangesProcessed() == repl.getChangesTotal();
+    public int getCompleted() {
+        return repl.getChangesProcessed();
     }
 
     @Kroll.getProperty(name = "continuous")

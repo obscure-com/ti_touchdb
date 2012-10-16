@@ -796,7 +796,7 @@ number, read-only.  The current state of the replication.  One of `server.REPLIC
 
 **completed**
 
-boolean, read-only.  True if the replication is complete.
+number, read-only.  The number of changes that have been completed.
 
 **total**
 
