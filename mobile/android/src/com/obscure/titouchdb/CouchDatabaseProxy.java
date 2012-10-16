@@ -227,8 +227,10 @@ public class CouchDatabaseProxy extends KrollProxy {
 
     @Kroll.method
     public CouchPersistentReplicationProxy replicationToDatabaseAtURL(String url) {
-        // TODO
-        return null;
+        /*
+         * TODO this isn't really a persistent replication!
+         */
+        return new CouchPersistentReplicationProxy(db, constructReplicator(url, true, true));
     }
 
     @Kroll.method
