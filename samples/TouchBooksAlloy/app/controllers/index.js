@@ -7,7 +7,10 @@ else if (OS_ANDROID) {
 
 Ti.App.addEventListener('books:edit_book', function(e) {
   var editBookController = Alloy.createController("edit_book");
-  editBookController.set_book_id(e.book_id);
+  if (e.book_id) {
+    editBookController.set_book_id(e.book_id);
+  }
+  
   if (OS_IOS) {
     $.nav.open(editBookController.getView());
   }
@@ -15,4 +18,3 @@ Ti.App.addEventListener('books:edit_book', function(e) {
     editBookController.getView().open();
   }
 });
-

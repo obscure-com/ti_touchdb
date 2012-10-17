@@ -8,6 +8,10 @@
   backgroundColor: 'white',
 },
 
+"#header[platform=android]": {
+  layout: "horizontal"
+},
+
 "TableView": {
   height: Ti.UI.Fill
 },
@@ -20,17 +24,10 @@
 },
 
 "Switch[platform=android]": {
+  left: '10dp',
   style: Ti.UI.Android.SWITCH_STYLE_TOGGLEBUTTON
 },
 
-"#authorSwitch": {
-  left: '10%',
-  width: '35%',
-},
-
-"#publishedSwitch": {
-  right: '10%',
-  width: '35%',
-},
-
-
+"#addButton": {
+  left: '32dp'
+}

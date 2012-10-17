@@ -1,5 +1,5 @@
 <Alloy>
-  <Window class="booklist" title="Books" onOpen="loadBookList">
+  <Window id="win" class="booklist" title="Books" onOpen="loadBookList">
     <View id="header" platform="ios">
       <TabbedBar index="0" onClick="changeGrouping">
         <Labels>
@@ -11,6 +11,7 @@
     <View id="header" platform="android">
       <Switch id="authorSwitch" titleOn="Author" titleOff="Author" value="true" onClick="changeGrouping"/>
       <Switch id="publishedSwitch" titleOn="Published" titleOff="Published" onClick="changeGrouping"/>
+      <Button id="addButton" onClick="addBook">Add</Button>
     </View>
     <TableView id="tableView"/>
   </Window>
