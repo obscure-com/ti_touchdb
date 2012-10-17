@@ -82,3 +82,15 @@ function changeGrouping(e) {
   }
   loadBookList();
 }
+
+function addBook(e) {
+  Ti.App.fireEvent('books:edit_book');
+}
+
+if (OS_IOS) {
+  var addButton = Ti.UI.createButton({
+    systemButton: Ti.UI.iPhone.SystemButton.ADD
+  });
+  addButton.addEventListener('click', addBook);
+  $.win.rightNavButton = addButton;
+}
