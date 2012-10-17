@@ -41,8 +41,10 @@
   left: "2%",
   right: "2%",
   top: "6dp",
+  bottom: "20dp",
   height: "32dp",
   color: 'white',
+  backgroundColor: '#0c0',
   borderRadius: 8,
   font: {
     fontWeight: "bold"
