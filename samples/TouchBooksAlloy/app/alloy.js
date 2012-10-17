@@ -16,9 +16,13 @@ ddoc.saveChanges();
 var pull = db.replicationFromDatabaseAtURL(Alloy.CFG.remote_couchdb_server);
 pull.continuous = true;
 pull.addEventListener('progress', function(e) {
-  if (e.completed > this.completed || 0) {
+  if (e.completed > (this.completed || 0)) {
     Ti.App.fireEvent('books:update_from_server');
     this.completed = e.completed;
   }
 });
 pull.restart();
+
+var push = db.replicationToDatabaseAtURL(Alloy.CFG.remote_couchdb_server);
+push.continuous = true;
+push.restart();
