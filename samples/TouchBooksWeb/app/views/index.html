@@ -1,0 +1,12 @@
+<header id="header">
+  <h1>TouchBooks</h1>
+</header>
+<article id="article"></article>
+
+<script type="text/javascript" charset="utf-8">
+  var exports = this;
+  jQuery(function(){
+    var App = require("app/index");
+    exports.app = new App({el: $("#article")});      
+  });
+</script>

@@ -1,0 +1,33 @@
+{
+  "name": "TouchBooksWeb",
+  "version": "0.0.1",
+  "description": "web-based interface to TouchBooksAlloy app data",
+  "load": "app/couch/setup",
+  "modules": ["app"],
+  "handlebars": {
+    "templates": "app/views"
+  },
+  "attachments": ["public"],
+  "duality": {
+    "base_template": "base.html"
+  },
+  "coffee-script": {
+    "modules": ["app"]
+  },
+  "stylus": {
+    "compile": ["css/index.styl","css/mixin.styl","css/theme.styl"]
+  },
+  "dependencies": {
+    "modules": null,
+    "settings": null,
+    "attachments": null,
+    "properties": null,
+    "coffee-script-precompiler": null,
+    "stylus-precompiler": null,
+    "duality": null,
+    "handlebars": null,
+    "handlebars-helpers": null,
+    "duality-handlebars": null,
+    "spine-adapter": null
+  }
+}
