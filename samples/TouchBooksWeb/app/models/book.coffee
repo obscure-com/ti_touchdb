@@ -1,10 +1,12 @@
 Spine = require 'spine/core'
 require 'spine-adapter/couch-ajax'
+require 'spine-adapter/couch-changes'
 
 class Book extends Spine.Model
   @configure 'Book', '_id', 'title', 'author', 'published'
   
   @extend Spine.Model.CouchAjax
+  @extend Spine.Model.CouchChanges()
   
   @filter: (query) ->
     return @all() unless query

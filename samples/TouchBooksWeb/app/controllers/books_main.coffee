@@ -11,6 +11,9 @@ class Show extends Spine.Controller
   constructor: ->
     super
     @active @change
+    
+    Book.bind 'change', (newRecord) =>
+      @render()
   
   render: ->
     @html handlebars.templates['show.html'](@item)
