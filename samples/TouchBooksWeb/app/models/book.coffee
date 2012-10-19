@@ -2,7 +2,7 @@ Spine = require 'spine/core'
 require 'spine-adapter/couch-ajax'
 
 class Book extends Spine.Model
-  @configure 'Book', 'title', 'author', 'published'
+  @configure 'Book', '_id', 'title', 'author', 'published'
   
   @extend Spine.Model.CouchAjax
   

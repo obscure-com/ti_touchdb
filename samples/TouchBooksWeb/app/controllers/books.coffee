@@ -14,7 +14,7 @@ class Books extends Spine.Controller
     @main = new Main
     
     @routes
-      '/books/:id/create': (params) ->
+      '/books/create': (params) ->
         @sidebar.active(params)
         @main.create.active(params)
       '/books/:id/edit': (params) ->

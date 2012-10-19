@@ -42,7 +42,7 @@ class Sidebar extends Spine.Controller
     @navigate '/books', item.id
   
   create: ->
-    @navigate '/books', item.id, 'create'
+    @navigate '/books', 'create'
 
 module.exports = Sidebar
   
