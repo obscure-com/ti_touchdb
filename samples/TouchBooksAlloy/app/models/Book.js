@@ -8,7 +8,8 @@ exports.definition = {
       views: ["by_author", "by_published"],
       view_options: {
         prefetch: true
-      }
+      },
+      modelname: 'book'
     }
   },
 
