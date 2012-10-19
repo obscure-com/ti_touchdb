@@ -19,10 +19,10 @@ class Books extends Spine.Controller
         @main.create.active(params)
       '/books/:id/edit': (params) ->
         @sidebar.active(params)
-        @main.show.active(params)
+        @main.edit.active(params)
       '/books/:id': (params) ->
         @sidebar.active(params)
-        @main.active(params)
+        @main.show.active(params)
     
     @append @sidebar, @main
     
