@@ -5,6 +5,6 @@ $.title.text = book.get('title');
 
 $.tableViewRow.addEventListener('click', function(e) {
   Ti.App.fireEvent('books:edit_book', {
-	  book_id: book._id
+	  book_id: book.id
   });
 });
