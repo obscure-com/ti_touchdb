@@ -1,6 +1,5 @@
 "TableViewRow": {
   height: Ti.UI.SIZE,
-  layout: "horizontal"
 },
 
 "#cover": {
@@ -14,11 +13,11 @@
 
 "#title": {
   top: "8dp",
-  left: "8dp",
+  left: "64dp",
   bottom: "8dp",
   right: "8dp",
   textAlign: "left",
-  width: Ti.UI.FILL,
+  width: Ti.UI.SIZE,
   height: Ti.UI.SIZE,
   font: {
     fontSize: "18dp",
