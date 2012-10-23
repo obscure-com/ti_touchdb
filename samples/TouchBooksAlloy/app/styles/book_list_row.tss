@@ -7,8 +7,7 @@
   left: "8dp",
   bottom: "8dp",
   width: '48dp',
-  height: Ti.UI.SIZE,
-  image: "/images/text_page.png",
+  height: Ti.UI.SIZE
 },
 
 "#title": {
