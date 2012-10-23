@@ -2,8 +2,8 @@ var book = arguments && arguments[0] || {};
 
 $.title.text = book.get('title');
 
-// TODO book attachment to cover view
-$.cover.image = "/images/text_page.png";
+var cover = book.get('cover') || '/images/text_page.png'; 
+$.cover.image = cover;
 
 $.tableViewRow.addEventListener('click', function(e) {
   Ti.App.fireEvent('books:edit_book', {
