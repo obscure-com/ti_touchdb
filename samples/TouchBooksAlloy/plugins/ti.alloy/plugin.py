@@ -43,6 +43,7 @@ def compile(config):
                     "/usr/bin/"+binary
                 ]
                 
+                binaryPath = None
                 try:
                     binaryPath = check_output(["which",binary], stderr=subprocess.STDOUT).strip()
                     print "[DEBUG] %s installed at '%s'" % (binary,binaryPath)
