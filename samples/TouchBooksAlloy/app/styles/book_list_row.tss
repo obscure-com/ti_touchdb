@@ -1,0 +1,27 @@
+"TableViewRow": {
+  height: Ti.UI.SIZE,
+  layout: "horizontal"
+},
+
+"#cover": {
+  top: "8dp",
+  left: "8dp",
+  bottom: "8dp",
+  width: '48dp',
+  height: Ti.UI.SIZE,
+  image: "/images/text_page.png",
+},
+
+"#title": {
+  top: "8dp",
+  left: "8dp",
+  bottom: "8dp",
+  right: "8dp",
+  textAlign: "left",
+  width: Ti.UI.FILL,
+  height: Ti.UI.SIZE,
+  font: {
+    fontSize: "18dp",
+    fontWeight: "bold"
+  }
+}
