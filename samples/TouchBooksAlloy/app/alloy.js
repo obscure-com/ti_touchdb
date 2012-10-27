@@ -26,3 +26,9 @@ pull.restart();
 var push = db.replicationToDatabaseAtURL(Alloy.CFG.remote_couchdb_server);
 push.continuous = true;
 push.restart();
+
+// restart replication on app resume
+Ti.App.addEventListener('resume', function() {
+	push.restart();
+	pull.restart();
+});

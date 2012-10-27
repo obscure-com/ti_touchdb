@@ -1,0 +1,25 @@
+"TableViewRow": {
+  height: Ti.UI.SIZE,
+},
+
+"#cover": {
+  top: "8dp",
+  left: "8dp",
+  bottom: "8dp",
+  width: '48dp',
+  height: Ti.UI.SIZE
+},
+
+"#title": {
+  top: "8dp",
+  left: "64dp",
+  bottom: "8dp",
+  right: "8dp",
+  textAlign: "left",
+  width: Ti.UI.SIZE,
+  height: Ti.UI.SIZE,
+  font: {
+    fontSize: "18dp",
+    fontWeight: "bold"
+  }
+}

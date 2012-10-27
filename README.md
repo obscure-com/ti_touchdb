@@ -16,7 +16,7 @@ See the Wiki pages for usage instructions and the samples directory for example 
 ## Requirements
 
 * Titanium SDK 2.1.0 or later
-* Xcode 4.3 or later to build
+* Xcode 4.5 or later
 * Runtime requirement is iOS 5+
 
 ## License

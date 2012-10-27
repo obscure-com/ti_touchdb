@@ -27,16 +27,8 @@ $.tableView.refresh = function(collection) {
       });
     }
     
-    var row = Ti.UI.createTableViewRow({
-      book_id: book.id,
-      title: book.get('title')
-    });
-    row.addEventListener('click', function(e) {
-      Ti.App.fireEvent('books:edit_book', {
-    	  book_id: e.source.book_id
-      });
-    });
-    section.add(row);
+    var row = Alloy.createController('book_list_row', book);
+    section.add(row.getView());
   });
   data.push(section); // last section
   

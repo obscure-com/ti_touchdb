@@ -1,0 +1,6 @@
+<Alloy>
+	<TableViewRow id="tableViewRow" className="bookListRow">
+		<ImageView id="cover"/>
+		<Label id="title"/>
+	</TableViewRow>
+</Alloy>
