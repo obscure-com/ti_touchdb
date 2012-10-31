@@ -13,6 +13,8 @@ ddoc.defineView('by_author', 'function(doc) { if (doc.author) { emit(doc.author,
 ddoc.defineView('by_published', 'function(doc) { if (doc.published && doc.published.length > 0) { emit(doc.published[0], null); } }');
 ddoc.saveChanges();
 
+db.registerFilter('books_only', 'function(doc,req) { return doc.modelname === "book"; }');
+
 var pull = db.replicationFromDatabaseAtURL(Alloy.CFG.remote_couchdb_server);
 pull.continuous = true;
 pull.addEventListener('progress', function(e) {
@@ -25,6 +27,7 @@ pull.restart();
 
 var push = db.replicationToDatabaseAtURL(Alloy.CFG.remote_couchdb_server);
 push.continuous = true;
+push.filter = 'books_only';
 push.restart();
 
 // restart replication on app resume
