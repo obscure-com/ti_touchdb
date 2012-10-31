@@ -7,7 +7,7 @@
   left: "8dp",
   bottom: "8dp",
   width: '48dp',
-  height: Ti.UI.SIZE
+  height: '72dp'
 },
 
 "#title": {
