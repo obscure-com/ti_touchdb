@@ -7,7 +7,7 @@ var server = require('com.obscure.titouchdb'),
 
 db.ensureCreated();
 
-db.registerFilter('books_only', 'function(doc, req) { return doc.modelname === "book";}')
+db.registerFilter('books_only', 'function(doc,req) { return doc.modelname === "book"; }');
 
 var pull = db.replicationFromDatabaseAtURL(Alloy.CFG.remote_couchdb_server);
 pull.continuous = true;
@@ -22,9 +22,6 @@ pull.restart();
 var push = db.replicationToDatabaseAtURL(Alloy.CFG.remote_couchdb_server);
 push.continuous = true;
 push.filter = 'books_only';
-push.addEventListener('progress', function(e) {
-  Ti.API.info("push: "+JSON.stringify(e));
-});
 push.restart();
 
 // restart replication on app resume
