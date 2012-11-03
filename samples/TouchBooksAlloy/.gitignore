@@ -1,0 +1,5 @@
+.*
+Resources
+build.log
+modules/android/com.obscure.titouchdb
+modules/iphone/com.obscure.titouchdb
