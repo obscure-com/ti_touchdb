@@ -5,7 +5,10 @@ exports.definition = {
       type: "titouchdb",
       dbname: "books",
       collection_name: "books",
-      views: ["by_author", "by_published"],
+      views: [
+        { name: "by_author", map: "function(doc) { if (doc.author) { emit(doc.author, null); } }" },
+        { name: "by_published", map: "function(doc) { if (doc.published && doc.published.length > 0) { emit(doc.published[0], null); } }" }
+      ],
       view_options: {
         prefetch: true
       },

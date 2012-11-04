@@ -53,6 +53,16 @@ function InitAdapter(config) {
   
   db = server.databaseNamed(config.adapter.dbname);
   db.ensureCreated();
+
+  // register views
+  var ddoc = db.designDocumentWithName(config.adapter.collection_name);
+  _.each(config.adapter.views, function(view) {
+    ddoc.defineView(view.name, view.map, view.reduce);
+    Ti.API.info("defined "+view.name);
+  });
+
+  ddoc.saveChanges();
+
   return {};
 }
 
@@ -112,10 +122,10 @@ function Sync(model, method, options) {
       break;
 
     case 'update':
-      var doc = db.documentWithID(model.id);
       var props = model.toJSON();
       props.modelname = model.config.adapter.modelname;
-      doc.putProperties(props);
+      var doc = db.documentWithID(model.id);
+      doc.putProperties(model.toJSON());
       model.trigger('update');
       break;
     
