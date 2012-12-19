@@ -87,8 +87,8 @@
     NSString * username;
     NSArray * roles;
     
-    ENSURE_ARG_OR_NIL_AT_INDEX(username, args, 0, NSString)
-    ENSURE_ARG_OR_NIL_AT_INDEX(roles, args, 1, NSArray)
+    ENSURE_ARG_OR_NULL_AT_INDEX(username, args, 0, NSString)
+    ENSURE_ARG_OR_NULL_AT_INDEX(roles, args, 1, NSArray)
     
     [self.replication actAsUser:username withRoles:roles];
 }

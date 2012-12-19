@@ -101,7 +101,7 @@
     NSString * contentType;
     
     ENSURE_ARG_AT_INDEX(name, args, 0, NSString)
-    ENSURE_ARG_OR_NIL_AT_INDEX(contentType, args, 1, NSString)
+    ENSURE_ARG_OR_NULL_AT_INDEX(contentType, args, 1, NSString)
     
     if (!contentType) contentType = @"application/octet-stream";
     return [CouchAttachmentProxy proxyWith:[self.revision createAttachmentWithName:name type:contentType]];

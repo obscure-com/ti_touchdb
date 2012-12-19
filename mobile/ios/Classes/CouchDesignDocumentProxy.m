@@ -8,7 +8,7 @@
 
 #import "CouchDesignDocumentProxy.h"
 #import "CouchQueryProxy.h"
-#import <TouchDB/TDDatabase+Insertion.h>
+#import "TDDatabase+Insertion.h"
 #import "ViewCompiler.h"
 #import "TiMacroFixups.h"
 
@@ -106,8 +106,8 @@ bool validationChanged = NO;
     NSString * reduceFunction;
     
     ENSURE_ARG_AT_INDEX(name, args, 0, NSString)
-    ENSURE_ARG_OR_NIL_AT_INDEX(mapFunction, args, 1, NSString)
-    ENSURE_ARG_OR_NIL_AT_INDEX(reduceFunction, args, 2, NSString)
+    ENSURE_ARG_OR_NULL_AT_INDEX(mapFunction, args, 1, NSString)
+    ENSURE_ARG_OR_NULL_AT_INDEX(reduceFunction, args, 2, NSString)
     
     [self.designDocument defineViewNamed:name map:mapFunction reduce:reduceFunction];
 }

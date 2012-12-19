@@ -123,7 +123,7 @@
 // async query
 - (void)start:(id)args {
     KrollCallback * cb;
-    ENSURE_ARG_OR_NIL_AT_INDEX(cb, args, 0, KrollCallback);
+    ENSURE_ARG_OR_NULL_AT_INDEX(cb, args, 0, KrollCallback);
     
     RESTOperation * op = [self.query start];
     if (cb) {

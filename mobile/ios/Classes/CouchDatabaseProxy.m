@@ -98,7 +98,7 @@
     NSArray * props;
     NSArray * revproxies;
     ENSURE_ARG_AT_INDEX(props, args, 0, NSArray)
-    ENSURE_ARG_OR_NIL_AT_INDEX(revproxies, args, 1, NSArray)
+    ENSURE_ARG_OR_NULL_AT_INDEX(revproxies, args, 1, NSArray)
     
     if (revproxies) {
         NSMutableArray * revs = [NSMutableArray arrayWithCapacity:[revproxies count]];
@@ -168,8 +168,8 @@
     NSString * language;
     
     ENSURE_ARG_AT_INDEX(map, args, 0, NSString)
-    ENSURE_ARG_OR_NIL_AT_INDEX(reduce, args, 1, NSString)
-    ENSURE_ARG_OR_NIL_AT_INDEX(language, args, 2, NSString)
+    ENSURE_ARG_OR_NULL_AT_INDEX(reduce, args, 1, NSString)
+    ENSURE_ARG_OR_NULL_AT_INDEX(language, args, 2, NSString)
 
     if (reduce) {
         return [CouchQueryProxy proxyWith:[self.database slowQueryWithMap:map reduce:reduce language:language]];
@@ -190,7 +190,7 @@
     NSString * function;
     
     ENSURE_ARG_AT_INDEX(name, args, 0, NSString)
-    ENSURE_ARG_OR_NIL_AT_INDEX(function, args, 1, NSString)
+    ENSURE_ARG_OR_NULL_AT_INDEX(function, args, 1, NSString)
 
     // drop down into TouchDB to register a filter function
     CouchTouchDBServer * server = (CouchTouchDBServer *) self.database.server;
@@ -235,7 +235,7 @@
     NSString * urlstr;
     NSNumber * exclusively;
     ENSURE_ARG_AT_INDEX(urlstr, args, 0, NSString)
-    ENSURE_ARG_OR_NIL_AT_INDEX(exclusively, args, 1, NSNumber)
+    ENSURE_ARG_OR_NULL_AT_INDEX(exclusively, args, 1, NSNumber)
     
     NSURL * url = [NSURL URLWithString:urlstr];
     NSArray * reps = [self.database replicateWithURL:url exclusively:[exclusively boolValue]];
