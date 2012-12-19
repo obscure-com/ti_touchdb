@@ -16,8 +16,13 @@ window.add(imageView);
 window.addEventListener('open', function() {
   Ti.API.info("starting tests");
     try {
+      testname.text = '001_module';
+      require('001_module').run_tests();
+      testname.text = '002_databaseManager';
+      require('002_databaseManager').run_tests();
+      /*
         testname.text = 'test01_server';
-        require('test01_server').run_tests();    
+        require('test01_server').run_tests();
         testname.text = 'test02_createdocument';
         require('test02_createdocument').run_tests();
         testname.text = 'test02_createrevisions';
@@ -64,6 +69,7 @@ window.addEventListener('open', function() {
         require('test17_replication').run_tests();
         testname.text = 'test18_filters';
         require('test18_filters').run_tests();
+        */
         testname.text = "all tests passed! whoopee!";
     }
     catch (e) {

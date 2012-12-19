@@ -22,6 +22,7 @@ OTHER_LDFLAGS=$(inherited) -framework Security
 // How to add a compiler define:
 //
 // OTHER_CFLAGS=$(inherited) -DFOO=1
+OTHER_CFLAGS=$(inherited) -fobjc-arc
 //
 //
 // IMPORTANT NOTE: always use $(inherited) in your overrides
