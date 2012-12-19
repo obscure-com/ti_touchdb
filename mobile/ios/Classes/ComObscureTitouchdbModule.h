@@ -10,5 +10,4 @@
 #import "TiModule.h"
 
 @interface ComObscureTitouchdbModule : TiModule
-@property (nonatomic, strong) NSMutableDictionary * databaseCache;
 @end

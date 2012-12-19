@@ -12,22 +12,13 @@
 #import "TiBase.h"
 #import "TiHost.h"
 #import "TiUtils.h"
-#import "CouchDatabaseProxy.h"
-#import "CouchPersistentReplicationProxy.h"
-#import "ViewCompiler.h"
+#import "TouchDB.h"
 #import "TiMacroFixups.h"
+#import "TDDatabaseManagerProxy.h"
 
-
-@interface ComObscureTitouchdbModule (PrivateMethods)
-- (CouchDatabaseProxy *)databaseProxyNamed:(NSString *)name;
-@end
-
+#pragma mark Global Functions
 
 @implementation ComObscureTitouchdbModule
-
-@synthesize databaseCache;
-
-CouchTouchDBServer * server;
 
 #pragma mark Internal
 
@@ -46,7 +37,6 @@ CouchTouchDBServer * server;
 
     // set up logging
     if (NO) {
-        gCouchLogLevel = 10;
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"Log"];
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"LogTDRouter"];
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"LogTDURLProtocol"];
@@ -55,23 +45,24 @@ CouchTouchDBServer * server;
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"LogRemoteRequest"];
     }
     
-    self.databaseCache = [NSMutableDictionary dictionaryWithCapacity:10];
-    
     // listen for notifications
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(processNotification:) name:nil object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(processNotification:) name:nil object:nil];
     
-	server = [CouchTouchDBServer sharedInstance];
-    NSAssert(!server.error, @"Error initializing TouchDB: %@", server.error);
-    
+    /*
     // TODO check error
     ViewCompiler * viewCompiler = [[ViewCompiler alloc] init];
     [TDView setCompiler:viewCompiler];
+     */
 
-	NSLog(@"[INFO] %@ loaded",self);
+	NSLog(@"[INFO] %@ loaded", self);
+    
+    if (__has_feature(objc_arc)) {
+        NSLog(@"[INFO] ARC is enabled");
+    }
 }
 
 -(void)shutdown:(id)sender {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+//    [[NSNotificationCenter defaultCenter] removeObserver:self];
 	[super shutdown:sender];
 }
 
@@ -92,6 +83,13 @@ CouchTouchDBServer * server;
 
 #pragma mark Listener Notifications
 
+#pragma mark TDDatabaseManager
+
+- (id)databaseManager {
+    return [TDDatabaseManagerProxy sharedInstance];
+}
+
+/*
 - (void)processNotification:(NSNotification *)notification {
     ENSURE_UI_THREAD_1_ARG(notification);
     
@@ -104,32 +102,14 @@ CouchTouchDBServer * server;
     }
 }
 
--(void)_listenerAdded:(NSString *)type count:(int)count
-{
-	if (count == 1 && [type isEqualToString:@"my_event"])
-	{
-		// the first (of potentially many) listener is being added 
-		// for event named 'my_event'
-	}
-}
-
--(void)_listenerRemoved:(NSString *)type count:(int)count
-{
-	if (count == 0 && [type isEqualToString:@"my_event"])
-	{
-		// the last listener called for event named 'my_event' has
-		// been removed, we can optionally clean up any resources
-		// since no body is listening at this point for that event
-	}
-}
-
-
 #pragma mark -
-#pragma mark CouchServer
+#pragma mark TDDatabaseManager
 
 - (id)getVersion:(id)args {
-    return [server getVersion:nil];
+    return TDVersionString();
 }
+
+
 
 - (id)generateUUIDs:(id)args {
     NSUInteger count;
@@ -187,22 +167,18 @@ CouchTouchDBServer * server;
     }
     return result;
 }
+ */
 
 #pragma mark -
 #pragma mark Constants
 
-MAKE_SYSTEM_PROP(REPLICATION_STATE_IDLE, kReplicationIdle)
-MAKE_SYSTEM_PROP(REPLICATION_STATE_TRIGGERED, kReplicationTriggered)
-MAKE_SYSTEM_PROP(REPLICATION_STATE_COMPLETED, kReplicationCompleted)
-MAKE_SYSTEM_PROP(REPLICATION_STATE_ERROR, kReplicationError)
+MAKE_SYSTEM_PROP(REPLICATION_MODE_STOPPED, kTDReplicationStopped)
+MAKE_SYSTEM_PROP(REPLICATION_MODE_OFFLINE, kTDReplicationOffline)
+MAKE_SYSTEM_PROP(REPLICATION_MODE_IDLE, kTDReplicationIdle)
+MAKE_SYSTEM_PROP(REPLICATION_MODE_ACTIVE, kTDReplicationActive)
 
-MAKE_SYSTEM_PROP(REPLICATION_MODE_STOPPED, kCouchReplicationStopped)
-MAKE_SYSTEM_PROP(REPLICATION_MODE_OFFLINE, kCouchReplicationOffline)
-MAKE_SYSTEM_PROP(REPLICATION_MODE_IDLE, kCouchReplicationIdle)
-MAKE_SYSTEM_PROP(REPLICATION_MODE_ACTIVE, kCouchReplicationActive)
-
-MAKE_SYSTEM_PROP(STALE_QUERY_NEVER, kCouchStaleNever)
-MAKE_SYSTEM_PROP(STALE_QUERY_OK, kCouchStaleOK)
-MAKE_SYSTEM_PROP(STALE_QUERY_UPDATE_AFTER, kCouchStaleUpdateAfter)
+MAKE_SYSTEM_PROP(STALE_QUERY_NEVER, kTDStaleNever)
+MAKE_SYSTEM_PROP(STALE_QUERY_OK, kTDStaleOK)
+MAKE_SYSTEM_PROP(STALE_QUERY_UPDATE_AFTER, kTDStaleUpdateAfter)
 
 @end
