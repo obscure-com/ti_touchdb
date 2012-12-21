@@ -142,6 +142,8 @@ extern NSString* const kTDDatabaseChangeNotification;
     else {
         [self.database defineValidation:name asBlock:nil];
     }
+    
+    return nil;
 }
 
 - (id)defineFilter:(id)args {
@@ -157,6 +159,8 @@ extern NSString* const kTDDatabaseChangeNotification;
     else {
         [self.database defineFilter:name asBlock:nil];
     }
+    
+    return nil;
 }
 
 #pragma mark Replication
