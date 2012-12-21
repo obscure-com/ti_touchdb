@@ -17,8 +17,6 @@
 #import "TDRevisionProxy.h"
 
 @interface TDBridge ()
-@property (nonatomic, strong) KrollContext * localContext;
-@property (nonatomic, strong) KrollCallback * emitCallback;
 @end
 
 @implementation TDBridge
@@ -48,18 +46,11 @@ TDMapEmitBlock _emitBlock;
         kTiStringGetTime = TiStringCreateWithUTF8CString("getTime");
         kTiStringLength = TiStringCreateWithUTF8CString("length");
 		kTiStringNewObject = TiStringCreateWithUTF8CString("new Object()");
-        
-        self.localContext = [[KrollContext alloc] init];
-        [self.localContext start];
-
-        TiValueRef invoker = TiObjectMakeFunctionWithCallback(_localContext.context, nil, EmitCallback);
-        self.emitCallback = [[KrollCallback alloc] initWithCallback:invoker thisObject:TiContextGetGlobalObject(self.localContext.context) context:self.localContext];
     }
     return self;
 }
 
 - (void)dealloc {
-    [self.localContext stop];
     [super dealloc];
 }
 
@@ -67,10 +58,15 @@ TDMapEmitBlock _emitBlock;
 #pragma mark Public API
 
 - (TDMapBlock)mapBlockForCallback:(KrollCallback *)callback {
+    TiStringRef invokerName = TiStringCreateWithCFString((CFStringRef) @"emit");
+    TiObjectRef invoker = TiObjectMakeFunctionWithCallback(callback.context.context, invokerName, &EmitCallback);
+    KrollCallback * emitCallback = [[KrollCallback alloc] initWithCallback:invoker thisObject:nil context:callback.context];
+    TiStringRelease(invokerName);
+    
     TDMapBlock result = ^(NSDictionary* doc, void (^emit)(id key, id value)) {
         @synchronized(self) {
             _emitBlock = emit;
-            [callback call:[NSArray arrayWithObjects:doc, self.emitCallback, nil] thisObject:nil];
+            [callback call:[NSArray arrayWithObjects:doc, emitCallback, nil] thisObject:nil];
         }
     };
     return [[result copy] autorelease];
@@ -141,6 +137,7 @@ TDMapEmitBlock _emitBlock;
 
 #pragma mark Bindings
 
+/*
 - (void)bindCallback:(TiObjectCallAsFunctionCallback)fn name:(NSString*)name context:(TiContextRef)context; {
 	// create the invoker bridge
 	TiStringRef invokerFnName = TiStringCreateWithCFString((CFStringRef) name);
@@ -154,6 +151,7 @@ TDMapEmitBlock _emitBlock;
 	}
 	TiStringRelease(invokerFnName);
 }
+*/
 
 static TiValueRef ThrowException (TiContextRef ctx, NSString *message, TiValueRef *exception) {
 	TiStringRef jsString = TiStringCreateWithCFString((CFStringRef)message);

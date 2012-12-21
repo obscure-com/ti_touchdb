@@ -20,6 +20,10 @@ window.addEventListener('open', function() {
       require('001_module').run_tests();
       testname.text = '002_databaseManager';
       require('002_databaseManager').run_tests();
+      testname.text = '003_database';
+      require('003_database').run_tests();
+      testname.text = '004_database_query';
+      require('004_database_query').run_tests();
       /*
         testname.text = 'test01_server';
         require('test01_server').run_tests();
