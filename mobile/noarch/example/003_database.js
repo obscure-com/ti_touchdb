@@ -22,17 +22,19 @@ exports.run_tests = function() {
     // docs aren't saved until a call to putProperties
     assert(a.documentCount === 0, "should have zero docs at this point: "+a.documentCount);
     
-    doc1.putProperties({
+    var rev1 = doc1.putProperties({
       testName: 'testCreateDocument',
       tag: 1337
     });
+    assert(rev1 !== null, 'putProperties should have returned a revision for doc1');
     assert(doc1.currentRevisionID !== null, 'calling putProperties should have created a revision');
     assert(a.documentCount === 1, "should have one doc at this point: "+a.documentCount);
     
-    doc2.putProperties({
+    var rev2 = doc2.putProperties({
       testName: 'testCreateDocument',
       tag: 4567
     });
+    assert(rev2 !== null, 'putProperties should have returned a revision for doc2');
     assert(doc2.currentRevisionID !== null, 'calling putProperties should have created a revision');
     assert(a.documentCount === 2, "should have two docs at this point: "+a.documentCount);
     

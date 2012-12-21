@@ -7,6 +7,7 @@ exports.run_tests = function() {
   var db = touchdb.databaseManager.createDatabaseNamed('test004');
   try {
     createDocuments(db, 10);
+    assert(db.documentCount === 10, 'incorrect number of documents in the database: '+db.documentCount);
     
     var q1 = db.slowQueryWithMap(function(doc, emit) {
       if (doc.sequence % 2 == 0) {
