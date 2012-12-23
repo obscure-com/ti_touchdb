@@ -3,6 +3,14 @@ Ti.include('test_utils.js')
 var _ = require('underscore'),
     touchdb = require('com.obscure.titouchdb');
 
+function required(rev, field) {
+  if (!rev.properties[field]) {
+    Ti.API.warn('invalid doc; field "'+field'" is required');
+    return false;
+  }
+  return true;
+}
+
 exports.run_tests = function() {
   var db = touchdb.databaseManager.createDatabaseNamed('test005');
   try {
@@ -34,6 +42,31 @@ exports.run_tests = function() {
     });
     assert(rev3 != null, 'putProperties should have returned a revision for newly-valid doc');
     assert(!rev3.error, 'rev3 is an error: '+JSON.stringify(rev3));
+    
+    // remove validation
+    var doc3 = db.untitledDocument();
+    var rev3 = doc3.putProperties({
+      x: 12.4
+    });
+    assert(rev3.error, 'rev3 should be an error object');
+    
+    db.defineValidation('require_tag');
+    
+    var rev4 = doc3.putProperties({
+      x: 12.4
+    });
+    assert(!rev4.error, 'rev4 should not be an error object after validation was removed');
+    assert(rev4.revisionID !== null, 'rev4 should have a revision ID');
+    
+    /*
+    // validation with external calls?  craziness!
+    db.defineValidation('external_fn_test', function(rev, context) {
+      require(rev, 'foo');
+      require(rev, 'bar');
+    });
+    */
+    
+    
     
     db.deleteDatabase();
   }
