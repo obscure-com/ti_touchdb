@@ -12,10 +12,19 @@
 #import "TDAttachmentProxy.h"
 
 @interface TDRevisionProxyBase ()
+{
+    @package
+    NSError * lastError;
+}
 @property (nonatomic, strong) TDRevision * revision;
 @end
 
 @implementation TDRevisionProxyBase
+
+- (void)dealloc {
+    RELEASE_TO_NIL(lastError)
+    [super dealloc];
+}
 
 - (id)isDeleted {
     return NUMBOOL(self.revision.isDeleted);
@@ -36,6 +45,9 @@
 - (id)propertyForKey:(id)args {
     NSString * key;
     ENSURE_ARG_AT_INDEX(key, args, 0, NSString)
+    
+    RELEASE_TO_NIL(lastError)
+    
     return [self.revision.properties objectForKey:key];
 }
 
@@ -47,6 +59,8 @@
     NSString * name;
     ENSURE_ARG_AT_INDEX(name, args, 0, NSString)
     
+    RELEASE_TO_NIL(lastError)
+    
     TDAttachment * attachment = [self.revision attachmentNamed:name];
     return attachment ? [[TDAttachmentProxy alloc] initWithTDAttachment:attachment] : nil;
 }
@@ -57,6 +71,10 @@
         [result addObject:[[TDAttachmentProxy alloc] initWithTDAttachment:att]];
     }
     return result;
+}
+
+- (id)error {
+    return lastError ? [self errorDict:lastError] : nil;
 }
 
 @end
@@ -76,6 +94,8 @@
 }
 
 - (id)newRevision:(id)args {
+    RELEASE_TO_NIL(lastError)
+    
     TDNewRevision * rev = [self.revision newRevision];
     return rev ? [[TDNewRevisionProxy alloc] initWithTDNewRevision:rev] : nil;
 }
@@ -84,15 +104,21 @@
     NSDictionary * props;
     ENSURE_ARG_AT_INDEX(props, args, 0, NSDictionary)
     
-    NSError * error = nil;
-    TDRevision * rev = [self.revision putProperties:props error:&error];
-    return error ? [self errorDict:error] : [[TDRevisionProxy alloc] initWithTDRevision:rev];
+    RELEASE_TO_NIL(lastError)
+    
+    TDRevision * rev = [self.revision putProperties:props error:&lastError];
+    [lastError retain];
+    
+    return rev ? [[TDRevisionProxy alloc] initWithTDRevision:rev] : nil;
 }
 
 - (id)deleteDocument:(id)args {
-    NSError * error;
-    TDRevision * rev = [self.revision deleteDocument:&error];
-    return error ? [self errorDict:error] : [[TDRevisionProxy alloc] initWithTDRevision:rev];
+    RELEASE_TO_NIL(lastError)
+    
+    TDRevision * rev = [self.revision deleteDocument:&lastError];
+    [lastError retain];
+    
+    return rev ? [[TDRevisionProxy alloc] initWithTDRevision:rev] : nil;
 }
 
 @end
@@ -128,9 +154,12 @@
 }
 
 - (id)save:(id)args {
-    NSError * error = nil;
-    TDRevision * rev = [self.revision save:&error];
-    return error ? [self errorDict:error] : [[TDRevisionProxy alloc] initWithTDRevision:rev];
+    RELEASE_TO_NIL(lastError)
+
+    TDRevision * rev = [self.revision save:&lastError];
+    [lastError retain];
+    
+    return rev ? [[TDRevisionProxy alloc] initWithTDRevision:rev] : nil;
 }
 
 - (void)addAttachment:(id)args {
@@ -141,6 +170,8 @@
     ENSURE_ARG_AT_INDEX(contentType, args, 0, NSString)
     ENSURE_ARG_AT_INDEX(content, args, 0, TiBlob)
     
+    RELEASE_TO_NIL(lastError)
+
     TDAttachment * attachment = [[TDAttachment alloc] initWithContentType:contentType body:content.data];
     [self.revision addAttachment:attachment named:name];
 }
@@ -148,6 +179,8 @@
 - (void)removeAttachment:(id)args {
     NSString * name;
     ENSURE_ARG_AT_INDEX(name, args, 0, NSString)
+
+    RELEASE_TO_NIL(lastError)
 
     [self.revision removeAttachmentNamed:name];
 }

@@ -16,11 +16,20 @@
 
 @implementation TDAttachmentProxy
 
+{
+    NSError * lastError;
+}
+
 - (id)initWithTDAttachment:(TDAttachment *)attachment {
     if (self = [super init]) {
         self.attachment = attachment;
     }
     return self;
+}
+
+- (void)dealloc {
+    RELEASE_TO_NIL(lastError)
+    [super dealloc];
 }
 
 - (id)name {
@@ -53,9 +62,16 @@
     ENSURE_ARG_AT_INDEX(body, args, 0, TiBlob)
     ENSURE_ARG_OR_NULL_AT_INDEX(contentType, args, 1, NSString)
     
-    NSError * error = nil;
-    TDAttachment * att = [self.attachment updateBody:body.data contentType:contentType error:&error];
-    return error ? [self errorDict:error] : [[TDAttachmentProxy alloc] initWithTDAttachment:att];
+    RELEASE_TO_NIL(lastError)
+
+    TDAttachment * att = [self.attachment updateBody:body.data contentType:contentType error:&lastError];
+    [lastError retain];
+    
+    return att ? [[TDAttachmentProxy alloc] initWithTDAttachment:att] : nil;
+}
+
+- (id)error {
+    return lastError ? [self errorDict:lastError] : nil;
 }
 
 @end
