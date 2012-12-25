@@ -20,6 +20,11 @@
 
 @implementation TDDatabaseManagerProxy
 
+{
+    NSError * lastError;
+}
+
+
 + (TDDatabaseManagerProxy *)sharedInstance {
     static TDDatabaseManagerProxy * sInstance;
     static dispatch_once_t onceToken;
@@ -33,10 +38,15 @@
     if (self = [super init]) {
         self.databaseManager = [TDDatabaseManager sharedInstance];
         self.databaseProxyCache = [NSMutableDictionary dictionary];
+        lastError = nil;
     }
     return self;
 }
 
+- (void)dealloc {
+    RELEASE_TO_NIL(lastError)
+    [super dealloc];
+}
 
 #pragma mark Public API
 
@@ -48,6 +58,8 @@
     NSString * name;
     ENSURE_ARG_AT_INDEX(name, args, 0, NSString);
     
+    RELEASE_TO_NIL(lastError)
+
     TDDatabaseProxy * result = nil;
     result = [self.databaseProxyCache objectForKey:name];
     if (!result) {
@@ -69,22 +81,19 @@
     NSString * name;
     ENSURE_ARG_AT_INDEX(name, args, 0, NSString);
 
+    RELEASE_TO_NIL(lastError)
+
     TDDatabaseProxy * result = [self.databaseProxyCache objectForKey:name];
     if (!result) {
-        NSError * error = nil;
-        TDDatabase * db = [self.databaseManager createDatabaseNamed:name error:&error];
-        
+        TDDatabase * db = [self.databaseManager createDatabaseNamed:name error:&lastError];
         if (!db) {
-            error = [NSError errorWithDomain:@"TouchDB" code:kTDDatabaseCreationError userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"could not create database '%@'", name] forKey:NSLocalizedDescriptionKey]];
+            lastError = [NSError errorWithDomain:@"TouchDB" code:kTDDatabaseCreationError userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"could not create database '%@'", name] forKey:NSLocalizedDescriptionKey]];
+            [lastError retain];
+            return nil;
         }
         
-        if (error) {
-            return [self errorDict:error];
-        }
-        else {
-            result = [[TDDatabaseProxy alloc] initWithTDDatabase:db];
-            [self.databaseProxyCache setObject:result forKey:name];
-        }
+        result = [[TDDatabaseProxy alloc] initWithTDDatabase:db];
+        [self.databaseProxyCache setObject:result forKey:name];
     }
     return result;
 }
@@ -93,8 +102,14 @@
  An array of the names of all existing databases.
  */
 - (NSArray *)allDatabaseNames {
+    RELEASE_TO_NIL(lastError)
+
     NSArray * result = self.databaseManager.allDatabaseNames;
     return result ? result : [NSArray array];
+}
+
+- (id)error {
+    return lastError ? [self errorDict:lastError] : nil;
 }
 
 @end

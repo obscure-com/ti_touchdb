@@ -16,7 +16,6 @@ window.add(imageView);
 window.addEventListener('open', function() {
   Ti.API.info("starting tests");
     try {
-      /*
       testname.text = '001_module';
       require('001_module').run_tests();
       testname.text = '002_databaseManager';
@@ -25,7 +24,6 @@ window.addEventListener('open', function() {
       require('003_database').run_tests();
       testname.text = '004_database_query';
       require('004_database_query').run_tests();
-      */
       testname.text = '005_database_validation';
       require('005_database_validation').run_tests();
       /*

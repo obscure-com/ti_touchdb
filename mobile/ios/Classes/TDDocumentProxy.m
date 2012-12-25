@@ -16,11 +16,24 @@
 
 @implementation TDDocumentProxy
 
+{
+    NSError * lastError;
+}
+
 - (id)initWithTDDocument:(TDDocument *)document {
     if (self = [super init]) {
         self.document = document;
     }
     return self;
+}
+
+- (void)dealloc {
+    RELEASE_TO_NIL(lastError)
+    [super dealloc];
+}
+
+- (id)error {
+    return lastError ? [self errorDict:lastError] : nil;
 }
 
 - (id)documentID {
@@ -36,15 +49,17 @@
 }
 
 - (id)deleteDocument:(id)args {
-    NSError * error = nil;
-    [self.document deleteDocument:&error];
-    return [self errorDict:error];
+    RELEASE_TO_NIL(lastError)
+    BOOL result = [self.document deleteDocument:&lastError];
+    [lastError retain];
+    return NUMBOOL(result);
 }
 
 - (id)purgeDocument:(id)args {
-    NSError * error = nil;
-    [self.document purgeDocument:&error];
-    return [self errorDict:error];
+    RELEASE_TO_NIL(lastError)
+    BOOL result = [self.document purgeDocument:&lastError];
+    [lastError retain];
+    return NUMBOOL(result);
 }
 
 #pragma mark REVISIONS:
@@ -67,6 +82,8 @@
     NSString * revID;
     ENSURE_ARG_AT_INDEX(revID, args, 0, NSString)
     
+    RELEASE_TO_NIL(lastError)
+
     TDRevision * revision = [self.document revisionWithID:revID];
     if (revision) {
         return [[TDRevisionProxy alloc] initWithTDRevision:revision];
@@ -77,10 +94,12 @@
 }
 
 - (id)getRevisionHistory:(id)args {
-    NSError * error = nil;
-    NSArray * revs = [self.document getRevisionHistory:&error];
+    RELEASE_TO_NIL(lastError)
+
+    NSArray * revs = [self.document getRevisionHistory:&lastError];
+    [lastError retain];
     
-    if (error) return [self errorDict:error];
+    if (lastError) return nil;
     
     NSMutableArray * result = [NSMutableArray arrayWithCapacity:[revs count]];
     for (TDRevision * rev in revs) {
@@ -90,10 +109,12 @@
 }
 
 - (id)getLeafRevisions:(id)args {
-    NSError * error = nil;
-    NSArray * revs = [self.document getLeafRevisions:&error];
+    RELEASE_TO_NIL(lastError)
+
+    NSArray * revs = [self.document getLeafRevisions:&lastError];
+    [lastError retain];
     
-    if (error) return [self errorDict:error];
+    if (lastError) return nil;
     
     NSMutableArray * result = [NSMutableArray arrayWithCapacity:[revs count]];
     for (TDRevision * rev in revs) {
@@ -103,6 +124,8 @@
 }
 
 - (id)newRevision:(id)args {
+    RELEASE_TO_NIL(lastError)
+
     TDNewRevision * rev = [self.document newRevision];
     return rev ? [[TDNewRevisionProxy alloc] initWithTDNewRevision:rev] : nil;
 }
@@ -119,6 +142,8 @@
     NSString * key;
     ENSURE_ARG_AT_INDEX(key, args, 0, NSString)
     
+    RELEASE_TO_NIL(lastError)
+
     return [self.document propertyForKey:key];
 }
 
@@ -126,16 +151,11 @@
     NSDictionary * props;
     ENSURE_ARG_AT_INDEX(props, args, 0, NSDictionary)
     
-    NSError * error = nil;
-    TDRevision * rev = [self.document putProperties:props error:&error];
-    
-    if (error) {
-        return [self errorDict:error];
-    }
-    else {
-        return [[TDRevisionProxy alloc] initWithTDRevision:rev];
-    }
-    
+    RELEASE_TO_NIL(lastError)
+
+    TDRevision * rev = [self.document putProperties:props error:&lastError];
+    [lastError retain];
+    return rev ? [[TDRevisionProxy alloc] initWithTDRevision:rev] : nil;
 }
 
 #pragma mark Change Notifications

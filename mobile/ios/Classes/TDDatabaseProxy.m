@@ -21,6 +21,10 @@
 
 @implementation TDDatabaseProxy
 
+{
+    NSError * lastError;
+}
+
 extern NSString* const kTDDatabaseChangeNotification;
 
 - (id)initWithTDDatabase:(TDDatabase *)database {
@@ -52,14 +56,17 @@ extern NSString* const kTDDatabaseChangeNotification;
 #pragma mark Public API
 
 - (id)deleteDatabase:(id)args {
-    NSError * error = nil;
-    [self.database deleteDatabase:&error];
-    return [self errorDict:error];
+    RELEASE_TO_NIL(lastError)
+
+    BOOL result = [self.database deleteDatabase:&lastError];
+    return NUMBOOL(result);
 }
 
 - (id)documentWithID:(id)args {
     NSString * docID;
     ENSURE_ARG_OR_NULL_AT_INDEX(docID, args, 0, NSString);
+    
+    RELEASE_TO_NIL(lastError)
     
     if (!docID) {
         return [self untitledDocument:nil];
@@ -77,7 +84,13 @@ extern NSString* const kTDDatabaseChangeNotification;
     return proxy;
 }
 
+- (id)error {
+    return lastError ? [self errorDict:lastError] : nil;
+}
+
 - (id)untitledDocument:(id)args {
+    RELEASE_TO_NIL(lastError)
+    
     TDDocument * doc = [self.database untitledDocument];
     TDDocumentProxy * proxy = [[TDDocumentProxy alloc] initWithTDDocument:doc];
     [self.documentProxyCache setObject:proxy forKey:doc.documentID];
@@ -88,10 +101,14 @@ extern NSString* const kTDDatabaseChangeNotification;
     NSString * docID;
     ENSURE_ARG_OR_NULL_AT_INDEX(docID, args, 0, NSString);
 
+    RELEASE_TO_NIL(lastError)
+    
     return [self.documentProxyCache objectForKey:docID];
 }
 
 - (void)clearDocumentCache:(id)args {
+    RELEASE_TO_NIL(lastError)
+    
     [self.documentProxyCache removeAllObjects];
     [self.database clearDocumentCache];
 }
@@ -99,6 +116,8 @@ extern NSString* const kTDDatabaseChangeNotification;
 #pragma mark Queries and Views
 
 - (id)queryAllDocuments:(id)args {
+    RELEASE_TO_NIL(lastError)
+    
     TDQuery * query = [self.database queryAllDocuments];
     return [[TDQueryProxy alloc] initWithTDQuery:query];
 }
@@ -106,6 +125,8 @@ extern NSString* const kTDDatabaseChangeNotification;
 - (id)slowQueryWithMap:(id)args {
     KrollCallback * callback;
     ENSURE_ARG_AT_INDEX(callback, args, 0, KrollCallback);
+    
+    RELEASE_TO_NIL(lastError)
     
     TDMapBlock map = [[TDBridge sharedInstance] mapBlockForCallback:callback];
     TDQuery * query = [self.database slowQueryWithMap:map];
@@ -116,11 +137,15 @@ extern NSString* const kTDDatabaseChangeNotification;
     NSString * name;
     ENSURE_ARG_AT_INDEX(name, args, 0, NSString);
     
+    RELEASE_TO_NIL(lastError)
+    
     TDView * view = [self.database viewNamed:name];
     return [[TDViewProxy alloc] initWithTDView:view];
 }
 
 - (id)allViews {
+    RELEASE_TO_NIL(lastError)
+    
     NSArray * views = [self.database allViews];
     NSMutableArray * result = [NSMutableArray arrayWithCapacity:[views count]];
     for (TDView * view in views) {
@@ -134,6 +159,8 @@ extern NSString* const kTDDatabaseChangeNotification;
     KrollCallback * callback;
     ENSURE_ARG_AT_INDEX(name, args, 0, NSString);
     ENSURE_ARG_OR_NULL_AT_INDEX(callback, args, 1, KrollCallback);
+    
+    RELEASE_TO_NIL(lastError)
     
     if (callback) {
         TDValidationBlock validation = [[TDBridge sharedInstance] validationBlockForCallback:callback];
@@ -152,6 +179,8 @@ extern NSString* const kTDDatabaseChangeNotification;
     ENSURE_ARG_AT_INDEX(name, args, 0, NSString);
     ENSURE_ARG_OR_NULL_AT_INDEX(callback, args, 1, KrollCallback);
     
+    RELEASE_TO_NIL(lastError)
+    
     if (callback) {
         TDFilterBlock filter = [[TDBridge sharedInstance] filterBlockForCallback:callback];
         [self.database defineFilter:name asBlock:filter];
@@ -169,6 +198,8 @@ extern NSString* const kTDDatabaseChangeNotification;
     NSString * urlstr;
     ENSURE_ARG_AT_INDEX(urlstr, args, 0, NSString);
     
+    RELEASE_TO_NIL(lastError)
+    
     NSURL * url = [NSURL URLWithString:urlstr];
     TDReplication * replication = [self.database pushToURL:url];
     return [[TDReplicationProxy alloc] initWithTDReplication:replication];
@@ -177,6 +208,8 @@ extern NSString* const kTDDatabaseChangeNotification;
 - (id)pullFromURL:(id)args {
     NSString * urlstr;
     ENSURE_ARG_AT_INDEX(urlstr, args, 0, NSString);
+    
+    RELEASE_TO_NIL(lastError)
     
     NSURL * url = [NSURL URLWithString:urlstr];
     TDReplication * replication = [self.database pullFromURL:url];
@@ -188,6 +221,8 @@ extern NSString* const kTDDatabaseChangeNotification;
     NSNumber * exclusive;
     ENSURE_ARG_AT_INDEX(urlstr, args, 0, NSString);
     ENSURE_ARG_OR_NULL_AT_INDEX(exclusive, args, 1, NSNumber);
+    
+    RELEASE_TO_NIL(lastError)
     
     NSURL * url = [NSURL URLWithString:urlstr];
     NSArray * repls = [self.database replicateWithURL:url exclusively:[exclusive boolValue]];
