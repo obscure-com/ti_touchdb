@@ -52,7 +52,8 @@
 }
 
 - (id)attachmentNames {
-    return self.revision.attachmentNames;
+    NSArray * result = self.revision.attachmentNames;
+    return result ? result : [NSArray array];
 }
 
 - (id)attachmentNamed:(id)args {
@@ -153,6 +154,16 @@
     return self.revision.parentRevisionID;
 }
 
+- (void)setPropertyForKey:(id)args {
+    NSString * name;
+    NSObject * value;
+    
+    ENSURE_ARG_AT_INDEX(name, args, 0, NSString)
+    ENSURE_ARG_OR_NULL_AT_INDEX(value, args, 1, NSObject)
+    
+    self.revision[name] = value;
+}
+
 - (id)save:(id)args {
     RELEASE_TO_NIL(lastError)
 
@@ -167,8 +178,8 @@
     NSString * contentType;
     TiBlob * content;
     ENSURE_ARG_AT_INDEX(name, args, 0, NSString)
-    ENSURE_ARG_AT_INDEX(contentType, args, 0, NSString)
-    ENSURE_ARG_AT_INDEX(content, args, 0, TiBlob)
+    ENSURE_ARG_AT_INDEX(contentType, args, 1, NSString)
+    ENSURE_ARG_AT_INDEX(content, args, 2, TiBlob)
     
     RELEASE_TO_NIL(lastError)
 

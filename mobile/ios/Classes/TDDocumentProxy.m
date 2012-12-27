@@ -130,6 +130,8 @@
     return rev ? [[TDNewRevisionProxy alloc] initWithTDNewRevision:rev] : nil;
 }
 
+#pragma mark Document Properties
+
 - (id)properties {
     return self.document.properties;
 }

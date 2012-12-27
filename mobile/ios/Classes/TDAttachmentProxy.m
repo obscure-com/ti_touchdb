@@ -59,7 +59,7 @@
 - (id)updateBody:(id)args {
     TiBlob * body;
     NSString * contentType;
-    ENSURE_ARG_AT_INDEX(body, args, 0, TiBlob)
+    ENSURE_ARG_OR_NULL_AT_INDEX(body, args, 0, TiBlob)
     ENSURE_ARG_OR_NULL_AT_INDEX(contentType, args, 1, NSString)
     
     RELEASE_TO_NIL(lastError)
