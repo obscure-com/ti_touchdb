@@ -26,6 +26,12 @@ window.addEventListener('open', function() {
       require('004_database_query').run_tests();
       testname.text = '005_database_validation';
       require('005_database_validation').run_tests();
+      testname.text = '006_document';
+      require('006_document').run_tests();
+      testname.text = '007_revisions';
+      require('007_revisions').run_tests();
+      testname.text = '008_attachments';
+      require('008_attachments').run_tests();
       /*
         testname.text = 'test01_server';
         require('test01_server').run_tests();
