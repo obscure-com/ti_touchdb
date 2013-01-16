@@ -47,7 +47,7 @@
 
 - (id)setMap:(id)args {
     KrollCallback * map;
-    NSString * version;
+    NSString * version = nil;
     ENSURE_ARG_OR_NULL_AT_INDEX(map, args, 0, KrollCallback)
     
     TDMapBlock mapblock = map ? [[TDBridge sharedInstance] mapBlockForCallback:map] : nil;

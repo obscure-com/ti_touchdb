@@ -139,6 +139,7 @@
 #pragma mark Public API
 
 - (id)rows:(id)args {
+    NSLog(@"startKey is %@, endKey is %@", self.query.startKey, self.query.endKey);
     TDQueryEnumerator * e = [self.query rows];
     return e ? [[TDQueryEnumeratorProxy alloc] initWithTDQueryEnumerator:e] : nil;
 }

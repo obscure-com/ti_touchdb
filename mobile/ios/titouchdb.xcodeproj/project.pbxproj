@@ -62,6 +62,27 @@
 			remoteGlobalIDString = D2AAC07D0554694100DB518D;
 			remoteInfo = titouchdb;
 		};
+		DA240C8C16A7239000A7F599 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DAF6E6751680F9E4003217C3 /* TouchDB.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 270B3DFB1489359000E0A926;
+			remoteInfo = TouchDBTests;
+		};
+		DA240C8E16A7239000A7F599 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DAF6E6751680F9E4003217C3 /* TouchDB.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8DD76F6C0486A84900D96B5E;
+			remoteInfo = Tests;
+		};
+		DA240C9016A7239000A7F599 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DAF6E6751680F9E4003217C3 /* TouchDB.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 27B0B7B61492B83B00A817AD;
+			remoteInfo = TouchDBiOSTests;
+		};
 		DAF6E68A1680F9E5003217C3 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = DAF6E6751680F9E4003217C3 /* TouchDB.xcodeproj */;
@@ -307,14 +328,17 @@
 			isa = PBXGroup;
 			children = (
 				DAF6E68B1680F9E5003217C3 /* TouchDB.framework */,
-				DAF6E68D1680F9E5003217C3 /* TouchDB.framework */,
-				DAF6E68F1680F9E5003217C3 /* libTouchDB.a */,
+				DAF6E6971680F9E5003217C3 /* TouchDBListener-Mac.framework */,
+				DA240C8D16A7239000A7F599 /* TouchDBTests.octest */,
 				DAF6E6911680F9E5003217C3 /* TouchDB Demo.app */,
+				DA240C8F16A7239000A7F599 /* TouchDB */,
+				DAF6E68F1680F9E5003217C3 /* libTouchDB.a */,
+				DA240C9116A7239000A7F599 /* TouchDBiOSTests.octest */,
+				DAF6E68D1680F9E5003217C3 /* TouchDB.framework */,
 				DAF6E6931680F9E5003217C3 /* Grocery Sync.app */,
 				DAF6E6951680F9E5003217C3 /* TouchDB Empty App.app */,
-				DAF6E6971680F9E5003217C3 /* TouchDBListener-Mac.framework */,
-				DAF6E6991680F9E5003217C3 /* TouchDBListener.framework */,
 				DAF6E69B1680F9E5003217C3 /* libTouchDBListener.a */,
+				DAF6E6991680F9E5003217C3 /* TouchDBListener.framework */,
 				DAF6E69D1680F9E5003217C3 /* TouchServ */,
 			);
 			name = Products;
@@ -400,6 +424,27 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		DA240C8D16A7239000A7F599 /* TouchDBTests.octest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = TouchDBTests.octest;
+			remoteRef = DA240C8C16A7239000A7F599 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		DA240C8F16A7239000A7F599 /* TouchDB */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = TouchDB;
+			remoteRef = DA240C8E16A7239000A7F599 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		DA240C9116A7239000A7F599 /* TouchDBiOSTests.octest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = TouchDBiOSTests.octest;
+			remoteRef = DA240C9016A7239000A7F599 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		DAF6E68B1680F9E5003217C3 /* TouchDB.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -431,7 +476,7 @@
 		DAF6E6931680F9E5003217C3 /* Grocery Sync.app */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.application;
-			path = "Grocery Sync.app";
+			path = "TouchDB Demo.app";
 			remoteRef = DAF6E6921680F9E5003217C3 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
@@ -445,7 +490,7 @@
 		DAF6E6971680F9E5003217C3 /* TouchDBListener-Mac.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			path = "TouchDBListener-Mac.framework";
+			path = TouchDBListener.framework;
 			remoteRef = DAF6E6961680F9E5003217C3 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
