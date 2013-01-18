@@ -12,13 +12,18 @@ exports.run_tests = function() {
     assert(view, 'db.viewNamed() returned null');
     assert(view.name === 'vu', 'returned incorrect view name: '+view.name);
     
+    // String.format("%02d", i) outputs '00' every time??!?!
+    function genname(str, n) {
+      return str + (n < 10 ? '0' + n : n);
+    }
+    
     view.setMap(function(doc, emit) {
       emit(doc.name, doc.i);
     }, '1');
 
     for (i=0; i < 50; i++) {
       createDocWithProperties(db, {
-        name: String.format('test%02d', i),
+        name: genname('test', i),
         i: i
       });
     }
@@ -30,7 +35,7 @@ exports.run_tests = function() {
 
       for (i=0; i < 50; i++) {
         var row = rows.rowAtIndex(i);
-        assert(row.key === String.format('test%02d', i), 'incorrect row key: '+row.key+", should be "+String.format('test%02d', i));
+        assert(row.key === genname('test', i), 'incorrect row key: '+row.key+", should be "+genname('test', i));
         assert(row.value === i, 'incorrect row value: '+row.value);
       }
     })();
@@ -44,7 +49,7 @@ exports.run_tests = function() {
       assert(rows.count === 10, 'incorrect number of rows returned (limit): '+rows.count);
       for (var i=0; i < 10; i++) {
         var row = rows.rowAtIndex(i);
-        assert(row.key === String.format('test%02d', i+query.skip), 'incorrect row key: '+row.key+", should be "+String.format('test%02d', i+query.skip));
+        assert(row.key === genname('test', i+query.skip), 'incorrect row key: '+row.key+", should be "+genname('test', i+query.skip));
         assert(row.value === i+query.skip, 'incorrect row value: '+row.value);
       }
     })();
@@ -57,7 +62,7 @@ exports.run_tests = function() {
       assert(rows.count === 7, 'incorrect number of rows returned (startkey): '+rows.count);
       for (var i=0; i < 7; i++) {
         var row = rows.rowAtIndex(i);
-        assert(row.key === String.format('test%02d', i+22), 'incorrect row key: '+row.key+", should be "+String.format('test%02d', i+22));
+        assert(row.key === genname('test', i+22), 'incorrect row key: '+row.key+", should be "+genname('test', i+22));
         assert(row.value === i+22, 'incorrect row value: '+row.value);
       }
       
