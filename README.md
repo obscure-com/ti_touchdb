@@ -28,6 +28,13 @@ See the Wiki pages for usage instructions and the samples directory for example 
 
 **0.5-beta**
 
+2013-01-18
+
+TouchDB-iOS has a new branch named `public-api` which removes the need for CouchCocoa
+and changes all of the calls to in-process rather than deferred/HTTP.  I've created a
+public-api branch in this repo where I will be converting the module to use the updated
+library calls.
+
 2012-10-11
 
 Added support for filters; new tutorial code under samples
