@@ -35,6 +35,8 @@
 		DA4919441676B78B00ECCB83 /* TDReplicationProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = DA4919421676B78A00ECCB83 /* TDReplicationProxy.h */; };
 		DA53C6E215EE8BC40065CA47 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA53C6DF15EE8BAE0065CA47 /* Security.framework */; };
 		DA5837CC15B09030005CA068 /* ComObscureTitouchdb_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = DA5837CB15B09030005CA068 /* ComObscureTitouchdb_Prefix.pch */; };
+		DA763AB816B1EEC800B11A6A /* TDDatabase+NotificationPriorityFix.h in Headers */ = {isa = PBXBuildFile; fileRef = DA763AB616B1EEC800B11A6A /* TDDatabase+NotificationPriorityFix.h */; };
+		DA763AB916B1EEC800B11A6A /* TDDatabase+NotificationPriorityFix.m in Sources */ = {isa = PBXBuildFile; fileRef = DA763AB716B1EEC800B11A6A /* TDDatabase+NotificationPriorityFix.m */; };
 		DAA3688A167F9BB6004A514D /* TiProxy+Errors.m in Sources */ = {isa = PBXBuildFile; fileRef = DAE72A36152E66C800622013 /* TiProxy+Errors.m */; };
 		DAA3688B167F9BB6004A514D /* TDDatabaseManagerProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = DA4919231676776A00ECCB83 /* TDDatabaseManagerProxy.m */; };
 		DAA3688C167F9BB6004A514D /* TDDatabaseProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = DA491927167679B700ECCB83 /* TDDatabaseProxy.m */; };
@@ -175,6 +177,8 @@
 		DA4919431676B78A00ECCB83 /* TDReplicationProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TDReplicationProxy.m; path = Classes/TDReplicationProxy.m; sourceTree = "<group>"; };
 		DA53C6DF15EE8BAE0065CA47 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		DA5837CB15B09030005CA068 /* ComObscureTitouchdb_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComObscureTitouchdb_Prefix.pch; sourceTree = "<group>"; };
+		DA763AB616B1EEC800B11A6A /* TDDatabase+NotificationPriorityFix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "TDDatabase+NotificationPriorityFix.h"; path = "Classes/TDDatabase+NotificationPriorityFix.h"; sourceTree = "<group>"; };
+		DA763AB716B1EEC800B11A6A /* TDDatabase+NotificationPriorityFix.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "TDDatabase+NotificationPriorityFix.m"; path = "Classes/TDDatabase+NotificationPriorityFix.m"; sourceTree = "<group>"; };
 		DA91DD4D15D2C131006414F2 /* TiMacroFixups.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TiMacroFixups.h; sourceTree = "<group>"; };
 		DABFA05016779B4100A58019 /* TDAttachmentProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TDAttachmentProxy.h; path = Classes/TDAttachmentProxy.h; sourceTree = "<group>"; };
 		DABFA05116779B4100A58019 /* TDAttachmentProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TDAttachmentProxy.m; path = Classes/TDAttachmentProxy.m; sourceTree = "<group>"; };
@@ -290,6 +294,8 @@
 				DA4919431676B78A00ECCB83 /* TDReplicationProxy.m */,
 				DABFA05016779B4100A58019 /* TDAttachmentProxy.h */,
 				DABFA05116779B4100A58019 /* TDAttachmentProxy.m */,
+				DA763AB616B1EEC800B11A6A /* TDDatabase+NotificationPriorityFix.h */,
+				DA763AB716B1EEC800B11A6A /* TDDatabase+NotificationPriorityFix.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -310,9 +316,9 @@
 				DAF6E68D1680F9E5003217C3 /* TouchDB.framework */,
 				DAF6E68F1680F9E5003217C3 /* libTouchDB.a */,
 				DAF6E6911680F9E5003217C3 /* TouchDB Demo.app */,
-				DAF6E6931680F9E5003217C3 /* TouchDB Demo.app */,
+				DAF6E6931680F9E5003217C3 /* Grocery Sync.app */,
 				DAF6E6951680F9E5003217C3 /* TouchDB Empty App.app */,
-				DAF6E6971680F9E5003217C3 /* TouchDBListener.framework */,
+				DAF6E6971680F9E5003217C3 /* TouchDBListener-Mac.framework */,
 				DAF6E6991680F9E5003217C3 /* TouchDBListener.framework */,
 				DAF6E69B1680F9E5003217C3 /* libTouchDBListener.a */,
 				DAF6E69D1680F9E5003217C3 /* TouchServ */,
@@ -339,6 +345,7 @@
 				DA4919401676B32800ECCB83 /* TDRevisionProxy.h in Headers */,
 				DA4919441676B78B00ECCB83 /* TDReplicationProxy.h in Headers */,
 				DABFA05216779B4200A58019 /* TDAttachmentProxy.h in Headers */,
+				DA763AB816B1EEC800B11A6A /* TDDatabase+NotificationPriorityFix.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -428,7 +435,7 @@
 			remoteRef = DAF6E6901680F9E5003217C3 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		DAF6E6931680F9E5003217C3 /* TouchDB Demo.app */ = {
+		DAF6E6931680F9E5003217C3 /* Grocery Sync.app */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.application;
 			path = "Grocery Sync.app";
@@ -442,7 +449,7 @@
 			remoteRef = DAF6E6941680F9E5003217C3 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		DAF6E6971680F9E5003217C3 /* TouchDBListener.framework */ = {
+		DAF6E6971680F9E5003217C3 /* TouchDBListener-Mac.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = "TouchDBListener-Mac.framework";
@@ -504,6 +511,7 @@
 				DAA36892167F9BB6004A514D /* TDReplicationProxy.m in Sources */,
 				DAA36893167F9BB6004A514D /* TDAttachmentProxy.m in Sources */,
 				24DD6CFA1134B3F500162E58 /* ComObscureTiTouchDBModule.m in Sources */,
+				DA763AB916B1EEC800B11A6A /* TDDatabase+NotificationPriorityFix.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
