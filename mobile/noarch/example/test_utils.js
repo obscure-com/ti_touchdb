@@ -6,6 +6,11 @@ function assert(exp, msg) {
     }
 }
 
+function wait(ms) {
+  var start = +(new Date());
+  while (new Date() - start < ms);
+}
+
 function createDocWithProperties(db, props, id) {
     var doc;
     if (id) {

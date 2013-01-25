@@ -34,6 +34,8 @@ window.addEventListener('open', function() {
       require('008_attachments').run_tests();
       testname.text = '009_views';
       require('009_views').run_tests();
+      testname.text = '010_change_tracking';
+      require('010_change_tracking').run_tests();
       /*
         testname.text = 'test01_server';
         require('test01_server').run_tests();
