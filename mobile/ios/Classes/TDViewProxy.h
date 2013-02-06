@@ -7,8 +7,7 @@
 //
 
 #import "TiProxy.h"
-#import "TouchDB.h"
 
 @interface TDViewProxy : TiProxy
-- (id)initWithTDView:(TDView *)view;
+- (id)initWithCBLView:(CBLView *)view;
 @end

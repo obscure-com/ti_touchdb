@@ -23,11 +23,11 @@ out = nil; \
 } \
 } \
 
-// TouchDB
-#import "TDJSON.h"
+// CouchbaseLite
+#import "CouchbaseLite.h"
 
 #import "CollectionUtils.h"
 #import "Logging.h"
 #import "Test.h"
 
-static double TouchDBVersionNumber = 0.7; // TouchDB_vers.c not generated for module?
+//static double CouchbaseLiteVersionNumber = 0.7; // TouchDB_vers.c not generated for module?

@@ -7,8 +7,7 @@
 //
 
 #import "TiProxy.h"
-#import "TouchDB.h"
 
 @interface TDReplicationProxy : TiProxy
-- (id)initWithTDReplication:(TDReplication *)replication;
+- (id)initWithCBLReplication:(CBLReplication *)replication;
 @end

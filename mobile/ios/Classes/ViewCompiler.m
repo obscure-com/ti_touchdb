@@ -31,7 +31,7 @@ static TiValueRef IdToTiValue(TiContextRef jsContext, id obj);
 
 // private members
 TiGlobalContextRef _context;
-TDMapEmitBlock _emitBlock;
+CBLMapEmitBlock _emitBlock;
 
 #pragma mark Lifecycle
 
@@ -55,17 +55,17 @@ TDMapEmitBlock _emitBlock;
 }
 
 #pragma mark -
-#pragma mark TDViewCompiler
+#pragma mark CBLViewCompiler
 
-- (TDMapBlock)compileMapFunction:(NSString*)mapSource language:(NSString*)language {
+- (CBLMapBlock)compileMapFunction:(NSString*)mapSource language:(NSString*)language {
     if (![@"javascript" isEqualToString:language])
         return nil;
 
-    TDMapBlock result = nil;
+    CBLMapBlock result = nil;
     TiObjectRef fn = [self compile:mapSource context:_context];
     TiValueProtect(_context, fn);
     if (fn) {
-        result = ^(NSDictionary* doc, TDMapEmitBlock emit) {
+        result = ^(NSDictionary* doc, CBLMapEmitBlock emit) {
             _emitBlock = emit;
             
             TiValueRef args[1];
@@ -82,11 +82,11 @@ TDMapEmitBlock _emitBlock;
     return [[result copy] autorelease];
 }
 
-- (TDReduceBlock)compileReduceFunction:(NSString *)reduceSource language:(NSString *)language {
+- (CBLReduceBlock)compileReduceFunction:(NSString *)reduceSource language:(NSString *)language {
     if (![@"javascript" isEqualToString:language])
         return nil;
     
-    TDReduceBlock result = nil;
+    CBLReduceBlock result = nil;
     TiObjectRef fn = [self compile:reduceSource context:_context];
     TiValueProtect(_context, fn);
     if (fn) {
@@ -115,13 +115,13 @@ TDMapEmitBlock _emitBlock;
 }
 
 #pragma mark -
-#pragma mark TDValidationBlock compiler
+#pragma mark CBLValidationBlock compiler
 
-- (TDValidationBlock)compileValidationFunction:(NSString *)validationSource language:(NSString *)language database:(TDDatabase *)db {
+- (CBLValidationBlock)compileValidationFunction:(NSString *)validationSource language:(NSString *)language database:(CBLDatabase *)db {
     if (![@"javascript" isEqualToString:language])
         return nil;
     
-    TDValidationBlock result = nil;
+    CBLValidationBlock result = nil;
     TiObjectRef fn = [self compile:validationSource context:_context];
     TiValueProtect(_context, fn);
     NSDictionary * userCtx = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -132,7 +132,7 @@ TDMapEmitBlock _emitBlock;
     NSDictionary * secObj = [NSDictionary dictionary];
     
     if (fn && TiObjectIsFunction(_context, fn)) {
-        result = ^(TDRevision* newRevision, id<TDValidationContext> context) {
+        result = ^(CBLRevision* newRevision, id<CBLValidationContext> context) {
             NSDictionary * oldDoc = [context currentRevision].properties;
             NSDictionary * newDoc = newRevision.properties;
             
@@ -157,13 +157,13 @@ TDMapEmitBlock _emitBlock;
 }
 
 #pragma mark -
-#pragma mark TDFilterBlock compiler
+#pragma mark CBLFilterBlock compiler
 
-- (TDFilterBlock) compileFilterFunction:(NSString *)filterSource language:(NSString *)language database:(TDDatabase *)db {
+- (CBLFilterBlock) compileFilterFunction:(NSString *)filterSource language:(NSString *)language database:(CBLDatabase *)db {
     if (![@"javascript" isEqualToString:language])
         return nil;
     
-    TDFilterBlock result = nil;
+    CBLFilterBlock result = nil;
     TiObjectRef fn = [self compile:filterSource context:_context];
     TiValueProtect(_context, fn);
     NSDictionary * userCtx = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -174,7 +174,7 @@ TDMapEmitBlock _emitBlock;
     NSDictionary * secObj = [NSDictionary dictionary];
     
     if (fn && TiObjectIsFunction(_context, fn)) {
-        result = ^(TDRevision* revision, NSDictionary* params) {
+        result = ^(CBLRevision* revision, NSDictionary* params) {
             TiValueRef args[2];
             args[0] = IdToTiValue(_context, revision.properties);
             args[1] = IdToTiValue(_context, params);

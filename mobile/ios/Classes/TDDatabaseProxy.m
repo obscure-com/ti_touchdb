@@ -15,7 +15,7 @@
 #import "TDBridge.h"
 
 @interface TDDatabaseProxy ()
-@property (nonatomic, strong) TDDatabase * database;
+@property (nonatomic, strong) CBLDatabase * database;
 @property (nonatomic, strong) NSMutableDictionary * documentProxyCache;
 @end
 
@@ -25,9 +25,9 @@
     NSError * lastError;
 }
 
-extern NSString* const kTDDatabaseChangeNotification;
+extern NSString* const kCBLDatabaseChangeNotification;
 
-- (id)initWithTDDatabase:(TDDatabase *)database {
+- (id)initWithCBLDatabase:(CBLDatabase *)database {
     if (self = [super init]) {
         self.database = database;
         self.documentProxyCache = [NSMutableDictionary dictionary];
@@ -74,11 +74,11 @@ extern NSString* const kTDDatabaseChangeNotification;
     
     TDDocumentProxy * proxy = [self.documentProxyCache objectForKey:docID];
     if (!proxy) {
-        TDDocument * doc = [self.database documentWithID:docID];
+        CBLDocument * doc = [self.database documentWithID:docID];
         if (!doc) {
             return nil;
         }
-        proxy = [[TDDocumentProxy alloc] initWithTDDocument:doc];
+        proxy = [[TDDocumentProxy alloc] initWithCBLDocument:doc];
         [self.documentProxyCache setObject:proxy forKey:docID];
     }
     return proxy;
@@ -91,8 +91,8 @@ extern NSString* const kTDDatabaseChangeNotification;
 - (id)untitledDocument:(id)args {
     RELEASE_TO_NIL(lastError)
     
-    TDDocument * doc = [self.database untitledDocument];
-    TDDocumentProxy * proxy = [[TDDocumentProxy alloc] initWithTDDocument:doc];
+    CBLDocument * doc = [self.database untitledDocument];
+    TDDocumentProxy * proxy = [[TDDocumentProxy alloc] initWithCBLDocument:doc];
     [self.documentProxyCache setObject:proxy forKey:doc.documentID];
     return proxy;
 }
@@ -118,8 +118,8 @@ extern NSString* const kTDDatabaseChangeNotification;
 - (id)queryAllDocuments:(id)args {
     RELEASE_TO_NIL(lastError)
     
-    TDQuery * query = [self.database queryAllDocuments];
-    return [[TDQueryProxy alloc] initWithTDQuery:query];
+    CBLQuery * query = [self.database queryAllDocuments];
+    return [[TDQueryProxy alloc] initWithCBLQuery:query];
 }
 
 - (id)slowQueryWithMap:(id)args {
@@ -128,9 +128,9 @@ extern NSString* const kTDDatabaseChangeNotification;
     
     RELEASE_TO_NIL(lastError)
     
-    TDMapBlock map = [[TDBridge sharedInstance] mapBlockForCallback:callback];
-    TDQuery * query = [self.database slowQueryWithMap:map];
-    return [[TDQueryProxy alloc] initWithTDQuery:query];
+    CBLMapBlock map = [[TDBridge sharedInstance] mapBlockForCallback:callback];
+    CBLQuery * query = [self.database slowQueryWithMap:map];
+    return [[TDQueryProxy alloc] initWithCBLQuery:query];
 }
 
 - (id)viewNamed:(id)args {
@@ -139,8 +139,8 @@ extern NSString* const kTDDatabaseChangeNotification;
     
     RELEASE_TO_NIL(lastError)
     
-    TDView * view = [self.database viewNamed:name];
-    return [[TDViewProxy alloc] initWithTDView:view];
+    CBLView * view = [self.database viewNamed:name];
+    return [[TDViewProxy alloc] initWithCBLView:view];
 }
 
 - (id)allViews {
@@ -148,8 +148,8 @@ extern NSString* const kTDDatabaseChangeNotification;
     
     NSArray * views = [self.database allViews];
     NSMutableArray * result = [NSMutableArray arrayWithCapacity:[views count]];
-    for (TDView * view in views) {
-        [result addObject:[[TDViewProxy alloc] initWithTDView:view]];
+    for (CBLView * view in views) {
+        [result addObject:[[TDViewProxy alloc] initWithCBLView:view]];
     }
     return result;
 }
@@ -163,7 +163,7 @@ extern NSString* const kTDDatabaseChangeNotification;
     RELEASE_TO_NIL(lastError)
     
     if (callback) {
-        TDValidationBlock validation = [[TDBridge sharedInstance] validationBlockForCallback:callback];
+        CBLValidationBlock validation = [[TDBridge sharedInstance] validationBlockForCallback:callback];
         [self.database defineValidation:name asBlock:validation];
     }
     else {
@@ -182,7 +182,7 @@ extern NSString* const kTDDatabaseChangeNotification;
     RELEASE_TO_NIL(lastError)
     
     if (callback) {
-        TDFilterBlock filter = [[TDBridge sharedInstance] filterBlockForCallback:callback];
+        CBLFilterBlock filter = [[TDBridge sharedInstance] filterBlockForCallback:callback];
         [self.database defineFilter:name asBlock:filter];
     }
     else {
@@ -201,8 +201,8 @@ extern NSString* const kTDDatabaseChangeNotification;
     RELEASE_TO_NIL(lastError)
     
     NSURL * url = [NSURL URLWithString:urlstr];
-    TDReplication * replication = [self.database pushToURL:url];
-    return [[TDReplicationProxy alloc] initWithTDReplication:replication];
+    CBLReplication * replication = [self.database pushToURL:url];
+    return [[TDReplicationProxy alloc] initWithCBLReplication:replication];
 }
 
 - (id)pullFromURL:(id)args {
@@ -212,8 +212,8 @@ extern NSString* const kTDDatabaseChangeNotification;
     RELEASE_TO_NIL(lastError)
     
     NSURL * url = [NSURL URLWithString:urlstr];
-    TDReplication * replication = [self.database pullFromURL:url];
-    return [[TDReplicationProxy alloc] initWithTDReplication:replication];
+    CBLReplication * replication = [self.database pullFromURL:url];
+    return [[TDReplicationProxy alloc] initWithCBLReplication:replication];
 }
 
 - (id)replicateWithURL:(id)args {
@@ -228,8 +228,8 @@ extern NSString* const kTDDatabaseChangeNotification;
     NSArray * repls = [self.database replicateWithURL:url exclusively:[exclusive boolValue]];
     
     NSMutableArray * result = [NSMutableArray arrayWithCapacity:[repls count]];
-    for (TDReplication * repl in repls) {
-        [result addObject:[[TDReplicationProxy alloc] initWithTDReplication:repl]];
+    for (CBLReplication * repl in repls) {
+        [result addObject:[[TDReplicationProxy alloc] initWithCBLReplication:repl]];
     }
     return result;
 }
@@ -244,13 +244,13 @@ extern NSString* const kTDDatabaseChangeNotification;
 
 - (void)_listenerAdded:(NSString*)type count:(int)count {
     if ([kDatabaseChangedEventName isEqualToString:type] && count == 0) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(databaseChanged:) name:kTDDatabaseChangeNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(databaseChanged:) name:kCBLDatabaseChangeNotification object:nil];
     }
 }
 
 - (void)_listenerRemoved:(NSString*)type count:(int)count {
     if ([kDatabaseChangedEventName isEqualToString:type] && count == 0) {
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:kTDDatabaseChangeNotification object:nil];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:kCBLDatabaseChangeNotification object:nil];
     }
 }
 

@@ -11,7 +11,7 @@
 #import "TDRevisionProxy.h"
 
 @interface TDDocumentProxy ()
-@property (nonatomic, strong) TDDocument * document;
+@property (nonatomic, strong) CBLDocument * document;
 @end
 
 @implementation TDDocumentProxy
@@ -20,7 +20,7 @@
     NSError * lastError;
 }
 
-- (id)initWithTDDocument:(TDDocument *)document {
+- (id)initWithCBLDocument:(CBLDocument *)document {
     if (self = [super init]) {
         self.document = document;
     }
@@ -69,9 +69,9 @@
 }
 
 - (id)currentRevision {
-    TDRevision * revision = [self.document currentRevision];
+    CBLRevision * revision = [self.document currentRevision];
     if (revision) {
-        return [[TDRevisionProxy alloc] initWithTDRevision:revision];
+        return [[TDRevisionProxy alloc] initWithCBLRevision:revision];
     }
     else {
         return nil;
@@ -84,9 +84,9 @@
     
     RELEASE_TO_NIL(lastError)
 
-    TDRevision * revision = [self.document revisionWithID:revID];
+    CBLRevision * revision = [self.document revisionWithID:revID];
     if (revision) {
-        return [[TDRevisionProxy alloc] initWithTDRevision:revision];
+        return [[TDRevisionProxy alloc] initWithCBLRevision:revision];
     }
     else {
         return nil;
@@ -102,8 +102,8 @@
     if (lastError) return nil;
     
     NSMutableArray * result = [NSMutableArray arrayWithCapacity:[revs count]];
-    for (TDRevision * rev in revs) {
-        [result addObject:[[TDRevisionProxy alloc] initWithTDRevision:rev]];
+    for (CBLRevision * rev in revs) {
+        [result addObject:[[TDRevisionProxy alloc] initWithCBLRevision:rev]];
     }
     return result;
 }
@@ -117,8 +117,8 @@
     if (lastError) return nil;
     
     NSMutableArray * result = [NSMutableArray arrayWithCapacity:[revs count]];
-    for (TDRevision * rev in revs) {
-        [result addObject:[[TDRevisionProxy alloc] initWithTDRevision:rev]];
+    for (CBLRevision * rev in revs) {
+        [result addObject:[[TDRevisionProxy alloc] initWithCBLRevision:rev]];
     }
     return result;
 }
@@ -126,8 +126,8 @@
 - (id)newRevision:(id)args {
     RELEASE_TO_NIL(lastError)
 
-    TDNewRevision * rev = [self.document newRevision];
-    return rev ? [[TDNewRevisionProxy alloc] initWithTDNewRevision:rev] : nil;
+    CBLNewRevision * rev = [self.document newRevision];
+    return rev ? [[CBLNewRevisionProxy alloc] initWithCBLNewRevision:rev] : nil;
 }
 
 #pragma mark Document Properties
@@ -155,9 +155,9 @@
     
     RELEASE_TO_NIL(lastError)
 
-    TDRevision * rev = [self.document putProperties:props error:&lastError];
+    CBLRevision * rev = [self.document putProperties:props error:&lastError];
     [lastError retain];
-    return rev ? [[TDRevisionProxy alloc] initWithTDRevision:rev] : nil;
+    return rev ? [[TDRevisionProxy alloc] initWithCBLRevision:rev] : nil;
 }
 
 #pragma mark Change Notifications
@@ -170,13 +170,13 @@
 
 - (void)_listenerAdded:(NSString*)type count:(int)count {
     if ([kDocumentChangedEventName isEqualToString:type] && count == 0) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(documentChanged:) name:kTDDocumentChangeNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(documentChanged:) name:kCBLDocumentChangeNotification object:nil];
     }
 }
 
 - (void)_listenerRemoved:(NSString*)type count:(int)count {
     if ([kDocumentChangedEventName isEqualToString:type] && count == 0) {
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:kTDDocumentChangeNotification object:nil];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:kCBLDocumentChangeNotification object:nil];
     }
 }
 

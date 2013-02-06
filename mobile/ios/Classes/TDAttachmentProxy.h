@@ -7,8 +7,7 @@
 //
 
 #import "TiProxy.h"
-#import "TouchDB.h"
 
 @interface TDAttachmentProxy : TiProxy
-- (id)initWithTDAttachment:(TDAttachment *)attachment;
+- (id)initWithCBLAttachment:(CBLAttachment *)attachment;
 @end

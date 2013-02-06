@@ -11,12 +11,12 @@
 #import "TDQueryProxy.h"
 
 @interface TDViewProxy ()
-@property (nonatomic, strong) TDView * view;
+@property (nonatomic, strong) CBLView * view;
 @end
 
 @implementation TDViewProxy
 
-- (id)initWithTDView:(TDView *)view {
+- (id)initWithCBLView:(CBLView *)view {
     if (self = [super init]) {
         self.view = view;
     }
@@ -34,8 +34,8 @@
     ENSURE_ARG_OR_NULL_AT_INDEX(map, args, 0, KrollCallback)
     ENSURE_ARG_OR_NULL_AT_INDEX(reduce, args, 1, KrollCallback)
 
-    TDMapBlock mapblock = map ? [[TDBridge sharedInstance] mapBlockForCallback:map] : nil;
-    TDReduceBlock reduceblock = reduce ? [[TDBridge sharedInstance] reduceBlockForCallback:reduce] : nil;
+    CBLMapBlock mapblock = map ? [[TDBridge sharedInstance] mapBlockForCallback:map] : nil;
+    CBLReduceBlock reduceblock = reduce ? [[TDBridge sharedInstance] reduceBlockForCallback:reduce] : nil;
 
     if (mapblock) {
         ENSURE_ARG_AT_INDEX(version, args, 2, NSString)
@@ -50,7 +50,7 @@
     NSString * version = nil;
     ENSURE_ARG_OR_NULL_AT_INDEX(map, args, 0, KrollCallback)
     
-    TDMapBlock mapblock = map ? [[TDBridge sharedInstance] mapBlockForCallback:map] : nil;
+    CBLMapBlock mapblock = map ? [[TDBridge sharedInstance] mapBlockForCallback:map] : nil;
     
     if (mapblock) {
         ENSURE_ARG_AT_INDEX(version, args, 1, NSString)
@@ -61,8 +61,8 @@
 }
 
 - (id)query:(id)args {
-    TDQuery * query = [self.view query];
-    return query ? [[TDQueryProxy alloc] initWithTDQuery:query] : nil;
+    CBLQuery * query = [self.view query];
+    return query ? [[TDQueryProxy alloc] initWithCBLQuery:query] : nil;
 }
 
 @end

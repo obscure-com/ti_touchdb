@@ -34,9 +34,7 @@ exports.run_tests = function() {
     assert(body.mimeType === refetch.contentType, "mismatched content types: "+body.mimeType);
     assert(body.text === 'This is a test attachment!', 'incorrect attachment body text: '+body.text);
     
-    refetch.updateBody(null);
-    
-    var rev3 = doc.currentRevision;
+    var rev3 = refetch.updateBody(null);
     assert(rev3.attachmentNames.length == 0, "expected no attachments following delete: "+rev3.attachmentNames.join(','));
     
     var missing = rev3.attachmentNamed('index.html');

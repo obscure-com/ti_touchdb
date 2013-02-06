@@ -1,5 +1,5 @@
 //
-//  TDBridge.m
+//  CBLBridge.m
 //  titouchdb
 //
 //  Created by Paul Mietz Egli on 12/10/12.
@@ -29,7 +29,7 @@ static id TiValueToId(TiContextRef jsContext, TiValueRef v);
 static TiValueRef IdToTiValue(TiContextRef jsContext, id obj);
 
 // private members
-TDMapEmitBlock _emitBlock;
+CBLMapEmitBlock _emitBlock;
 
 + (TDBridge *)sharedInstance {
     static TDBridge * sInstance;
@@ -57,13 +57,13 @@ TDMapEmitBlock _emitBlock;
 #pragma mark -
 #pragma mark Public API
 
-- (TDMapBlock)mapBlockForCallback:(KrollCallback *)callback {
+- (CBLMapBlock)mapBlockForCallback:(KrollCallback *)callback {
     TiStringRef invokerName = TiStringCreateWithCFString((CFStringRef) @"emit");
     TiObjectRef invoker = TiObjectMakeFunctionWithCallback(callback.context.context, invokerName, &EmitCallback);
     KrollCallback * emitCallback = [[KrollCallback alloc] initWithCallback:invoker thisObject:nil context:callback.context];
     TiStringRelease(invokerName);
     
-    TDMapBlock result = ^(NSDictionary* doc, void (^emit)(id key, id value)) {
+    CBLMapBlock result = ^(NSDictionary* doc, void (^emit)(id key, id value)) {
         @synchronized(self) {
             _emitBlock = emit;
             [callback call:[NSArray arrayWithObjects:doc, emitCallback, nil] thisObject:nil];
@@ -72,17 +72,17 @@ TDMapEmitBlock _emitBlock;
     return [[result copy] autorelease];
 }
 
-- (TDReduceBlock)reduceBlockForCallback:(KrollCallback *)callback {
-    TDReduceBlock result = ^(NSArray* keys, NSArray* values, BOOL rereduce) {
+- (CBLReduceBlock)reduceBlockForCallback:(KrollCallback *)callback {
+    CBLReduceBlock result = ^(NSArray* keys, NSArray* values, BOOL rereduce) {
         id result = [callback call:[NSArray arrayWithObjects:keys, values, NUMBOOL(rereduce), nil] thisObject:nil];
         return result;
     };
     return [[result copy] autorelease];
 }
 
-- (TDValidationBlock)validationBlockForCallback:(KrollCallback *)callback {
-    TDValidationBlock result = ^(TDRevision* newRevision, id<TDValidationContext> context) {
-        TDRevisionProxy * revisionProxy = [[TDRevisionProxy alloc] initWithTDRevision:newRevision];
+- (CBLValidationBlock)validationBlockForCallback:(KrollCallback *)callback {
+    CBLValidationBlock result = ^(CBLRevision* newRevision, id<CBLValidationContext> context) {
+        TDRevisionProxy * revisionProxy = [[TDRevisionProxy alloc] initWithCBLRevision:newRevision];
         id contextProxy = [NSNull null]; // TODO
         id result = [callback call:[NSArray arrayWithObjects:revisionProxy, contextProxy, nil] thisObject:nil];
         return [result boolValue];
@@ -91,9 +91,9 @@ TDMapEmitBlock _emitBlock;
     return [[result copy] autorelease];
 }
 
-- (TDFilterBlock)filterBlockForCallback:(KrollCallback *)callback {
-    TDFilterBlock result = ^(TDRevision* revision, NSDictionary* params) {
-        TDRevisionProxy * revisionProxy = [[TDRevisionProxy alloc] initWithTDRevision:revision];
+- (CBLFilterBlock)filterBlockForCallback:(KrollCallback *)callback {
+    CBLFilterBlock result = ^(CBLRevision* revision, NSDictionary* params) {
+        TDRevisionProxy * revisionProxy = [[TDRevisionProxy alloc] initWithCBLRevision:revision];
         id result = [callback call:[NSArray arrayWithObjects:revisionProxy, params, nil] thisObject:nil];
         return [result boolValue];
     };

@@ -12,7 +12,6 @@
 #import "TiBase.h"
 #import "TiHost.h"
 #import "TiUtils.h"
-#import "TouchDB.h"
 #import "TiMacroFixups.h"
 #import "TDDatabaseManagerProxy.h"
 
@@ -38,8 +37,8 @@
     // set up logging
     if (NO) {
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"Log"];
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"LogTDRouter"];
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"LogTDURLProtocol"];
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"LogCBLRouter"];
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"LogCBLURLProtocol"];
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"LogSync"];
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"LogSyncVerbose"];
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"LogRemoteRequest"];
@@ -51,7 +50,7 @@
     /*
     // TODO check error
     ViewCompiler * viewCompiler = [[ViewCompiler alloc] init];
-    [TDView setCompiler:viewCompiler];
+    [CBLView setCompiler:viewCompiler];
      */
 
 	NSLog(@"[INFO] %@ loaded", self);
@@ -83,7 +82,7 @@
 
 #pragma mark Listener Notifications
 
-#pragma mark TDDatabaseManager
+#pragma mark CBLDatabaseManager
 
 - (id)databaseManager {
     return [TDDatabaseManagerProxy sharedInstance];
@@ -103,10 +102,10 @@
 }
 
 #pragma mark -
-#pragma mark TDDatabaseManager
+#pragma mark CBLDatabaseManager
 
 - (id)getVersion:(id)args {
-    return TDVersionString();
+    return CBLVersionString();
 }
 
 
@@ -172,13 +171,13 @@
 #pragma mark -
 #pragma mark Constants
 
-MAKE_SYSTEM_PROP(REPLICATION_MODE_STOPPED, kTDReplicationStopped)
-MAKE_SYSTEM_PROP(REPLICATION_MODE_OFFLINE, kTDReplicationOffline)
-MAKE_SYSTEM_PROP(REPLICATION_MODE_IDLE, kTDReplicationIdle)
-MAKE_SYSTEM_PROP(REPLICATION_MODE_ACTIVE, kTDReplicationActive)
+MAKE_SYSTEM_PROP(REPLICATION_MODE_STOPPED, kCBLReplicationStopped)
+MAKE_SYSTEM_PROP(REPLICATION_MODE_OFFLINE, kCBLReplicationOffline)
+MAKE_SYSTEM_PROP(REPLICATION_MODE_IDLE, kCBLReplicationIdle)
+MAKE_SYSTEM_PROP(REPLICATION_MODE_ACTIVE, kCBLReplicationActive)
 
-MAKE_SYSTEM_PROP(STALE_QUERY_NEVER, kTDStaleNever)
-MAKE_SYSTEM_PROP(STALE_QUERY_OK, kTDStaleOK)
-MAKE_SYSTEM_PROP(STALE_QUERY_UPDATE_AFTER, kTDStaleUpdateAfter)
+MAKE_SYSTEM_PROP(STALE_QUERY_NEVER, kCBLStaleNever)
+MAKE_SYSTEM_PROP(STALE_QUERY_OK, kCBLStaleOK)
+MAKE_SYSTEM_PROP(STALE_QUERY_UPDATE_AFTER, kCBLStaleUpdateAfter)
 
 @end

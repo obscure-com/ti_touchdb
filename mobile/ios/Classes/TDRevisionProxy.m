@@ -16,7 +16,7 @@
     @package
     NSError * lastError;
 }
-@property (nonatomic, strong) TDRevision * revision;
+@property (nonatomic, strong) CBLRevision * revision;
 @end
 
 @implementation TDRevisionProxyBase
@@ -62,14 +62,14 @@
     
     RELEASE_TO_NIL(lastError)
     
-    TDAttachment * attachment = [self.revision attachmentNamed:name];
-    return attachment ? [[TDAttachmentProxy alloc] initWithTDAttachment:attachment] : nil;
+    CBLAttachment * attachment = [self.revision attachmentNamed:name];
+    return attachment ? [[TDAttachmentProxy alloc] initWithCBLAttachment:attachment] : nil;
 }
 
 - (id)attachments {
     NSMutableArray * result = [NSMutableArray array];
-    for (TDAttachment * att in self.revision.attachments) {
-        [result addObject:[[TDAttachmentProxy alloc] initWithTDAttachment:att]];
+    for (CBLAttachment * att in self.revision.attachments) {
+        [result addObject:[[TDAttachmentProxy alloc] initWithCBLAttachment:att]];
     }
     return result;
 }
@@ -83,7 +83,7 @@
 
 @implementation TDRevisionProxy
 
-- (id)initWithTDRevision:(TDRevision *)revision {
+- (id)initWithCBLRevision:(CBLRevision *)revision {
     if (self = [super init]) {
         self.revision = revision;
     }
@@ -97,8 +97,8 @@
 - (id)newRevision:(id)args {
     RELEASE_TO_NIL(lastError)
     
-    TDNewRevision * rev = [self.revision newRevision];
-    return rev ? [[TDNewRevisionProxy alloc] initWithTDNewRevision:rev] : nil;
+    CBLNewRevision * rev = [self.revision newRevision];
+    return rev ? [[CBLNewRevisionProxy alloc] initWithCBLNewRevision:rev] : nil;
 }
 
 - (id)putProperties:(id)args {
@@ -107,30 +107,30 @@
     
     RELEASE_TO_NIL(lastError)
     
-    TDRevision * rev = [self.revision putProperties:props error:&lastError];
+    CBLRevision * rev = [self.revision putProperties:props error:&lastError];
     [lastError retain];
     
-    return rev ? [[TDRevisionProxy alloc] initWithTDRevision:rev] : nil;
+    return rev ? [[TDRevisionProxy alloc] initWithCBLRevision:rev] : nil;
 }
 
 - (id)deleteDocument:(id)args {
     RELEASE_TO_NIL(lastError)
     
-    TDRevision * rev = [self.revision deleteDocument:&lastError];
+    CBLRevision * rev = [self.revision deleteDocument:&lastError];
     [lastError retain];
     
-    return rev ? [[TDRevisionProxy alloc] initWithTDRevision:rev] : nil;
+    return rev ? [[TDRevisionProxy alloc] initWithCBLRevision:rev] : nil;
 }
 
 @end
 
-@interface TDNewRevisionProxy ()
-@property (nonatomic, strong) TDNewRevision * revision;
+@interface CBLNewRevisionProxy ()
+@property (nonatomic, strong) CBLNewRevision * revision;
 @end
 
-@implementation TDNewRevisionProxy
+@implementation CBLNewRevisionProxy
 
-- (id)initWithTDNewRevision:(TDNewRevision *)revision {
+- (id)initWithCBLNewRevision:(CBLNewRevision *)revision {
     if (self = [super init]) {
         self.revision = revision;
     }
@@ -146,8 +146,8 @@
 }
 
 - (id)parentRevision {
-    TDRevision * rev = self.revision.parentRevision;
-    return rev ? [[TDRevisionProxy alloc] initWithTDRevision:rev] : nil;
+    CBLRevision * rev = self.revision.parentRevision;
+    return rev ? [[TDRevisionProxy alloc] initWithCBLRevision:rev] : nil;
 }
 
 - (id)parentRevisionID {
@@ -167,10 +167,10 @@
 - (id)save:(id)args {
     RELEASE_TO_NIL(lastError)
 
-    TDRevision * rev = [self.revision save:&lastError];
+    CBLRevision * rev = [self.revision save:&lastError];
     [lastError retain];
     
-    return rev ? [[TDRevisionProxy alloc] initWithTDRevision:rev] : nil;
+    return rev ? [[TDRevisionProxy alloc] initWithCBLRevision:rev] : nil;
 }
 
 - (void)addAttachment:(id)args {
@@ -183,7 +183,7 @@
     
     RELEASE_TO_NIL(lastError)
 
-    TDAttachment * attachment = [[TDAttachment alloc] initWithContentType:contentType body:content.data];
+    CBLAttachment * attachment = [[CBLAttachment alloc] initWithContentType:contentType body:content.data];
     [self.revision addAttachment:attachment named:name];
 }
 

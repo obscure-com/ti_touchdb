@@ -10,12 +10,12 @@
 #import "TiProxy+Errors.h"
 
 @interface TDReplicationProxy ()
-@property (nonatomic, strong) TDReplication * replication;
+@property (nonatomic, strong) CBLReplication * replication;
 @end
 
 @implementation TDReplicationProxy
 
-- (id)initWithTDReplication:(TDReplication *)replication {
+- (id)initWithCBLReplication:(CBLReplication *)replication {
     if (self = [super init]) {
         self.replication = replication;
     }
@@ -132,13 +132,13 @@
 
 - (void)_listenerAdded:(NSString*)type count:(int)count {
     if ([kReplicationChangedEventName isEqualToString:type] && count == 0) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(replicationChanged:) name:kTDReplicationChangeNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(replicationChanged:) name:kCBLReplicationChangeNotification object:nil];
     }
 }
 
 - (void)_listenerRemoved:(NSString*)type count:(int)count {
     if ([kReplicationChangedEventName isEqualToString:type] && count == 0) {
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:kTDReplicationChangeNotification object:nil];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:kCBLReplicationChangeNotification object:nil];
     }
 }
 

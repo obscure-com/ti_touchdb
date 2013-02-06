@@ -7,8 +7,7 @@
 //
 
 #import "TiProxy.h"
-#import "TouchDB.h"
 
 @interface TDQueryProxy : TiProxy
-- (id)initWithTDQuery:(TDQuery *)query;
+- (id)initWithCBLQuery:(CBLQuery *)query;
 @end

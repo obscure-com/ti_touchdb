@@ -11,23 +11,23 @@
 #import "TDDocumentProxy.h"
 
 @interface TDQueryProxy ()
-@property (nonatomic, strong) TDQuery * query;
+@property (nonatomic, strong) CBLQuery * query;
 @end
 
-@interface TDQueryEnumeratorProxy : TiProxy
-@property (nonatomic, strong) TDQueryEnumerator * enumerator;
-- (id)initWithTDQueryEnumerator:(TDQueryEnumerator *)e;
+@interface CBLQueryEnumeratorProxy : TiProxy
+@property (nonatomic, strong) CBLQueryEnumerator * enumerator;
+- (id)initWithCBLQueryEnumerator:(CBLQueryEnumerator *)e;
 @end
 
-@interface TDQueryRowProxy : TiProxy
-@property (nonatomic, strong) TDQueryRow * row;
-- (id)initWithTDQueryRow:(TDQueryRow *)row;
+@interface CBLQueryRowProxy : TiProxy
+@property (nonatomic, strong) CBLQueryRow * row;
+- (id)initWithCBLQueryRow:(CBLQueryRow *)row;
 @end
 
 
 @implementation TDQueryProxy
 
-- (id)initWithTDQuery:(TDQuery *)query {
+- (id)initWithCBLQuery:(CBLQuery *)query {
     if (self = [super init]) {
         self.query = query;
     }
@@ -139,22 +139,22 @@
 #pragma mark Public API
 
 - (id)rows:(id)args {
-    TDQueryEnumerator * e = [self.query rows];
-    return e ? [[TDQueryEnumeratorProxy alloc] initWithTDQueryEnumerator:e] : nil;
+    CBLQueryEnumerator * e = [self.query rows];
+    return e ? [[CBLQueryEnumeratorProxy alloc] initWithCBLQueryEnumerator:e] : nil;
 }
 
 - (id)rowsIfChanged:(id)args {
-    TDQueryEnumerator * e = [self.query rowsIfChanged];
-    return e ? [[TDQueryEnumeratorProxy alloc] initWithTDQueryEnumerator:e] : nil;
+    CBLQueryEnumerator * e = [self.query rowsIfChanged];
+    return e ? [[CBLQueryEnumeratorProxy alloc] initWithCBLQueryEnumerator:e] : nil;
 }
 
 @end
 
 
 
-@implementation TDQueryEnumeratorProxy
+@implementation CBLQueryEnumeratorProxy
 
-- (id)initWithTDQueryEnumerator:(TDQueryEnumerator *)e {
+- (id)initWithCBLQueryEnumerator:(CBLQueryEnumerator *)e {
     if (self = [super init]) {
         self.enumerator = e;
     }
@@ -170,24 +170,24 @@
 }
 
 - (id)nextRow:(id)args {
-    TDQueryRow * row = [self.enumerator nextRow];
-    return row ? [[TDQueryRowProxy alloc] initWithTDQueryRow:row] : nil;
+    CBLQueryRow * row = [self.enumerator nextRow];
+    return row ? [[CBLQueryRowProxy alloc] initWithCBLQueryRow:row] : nil;
 }
 
 - (id)rowAtIndex:(id)args {
     NSNumber * index;
     ENSURE_ARG_AT_INDEX(index, args, 0, NSNumber)
     
-    TDQueryRow * row = [self.enumerator rowAtIndex:[index unsignedIntValue]];
-    return row ? [[TDQueryRowProxy alloc] initWithTDQueryRow:row] : nil;
+    CBLQueryRow * row = [self.enumerator rowAtIndex:[index unsignedIntValue]];
+    return row ? [[CBLQueryRowProxy alloc] initWithCBLQueryRow:row] : nil;
 }
 
 @end
 
 
-@implementation TDQueryRowProxy
+@implementation CBLQueryRowProxy
 
-- (id)initWithTDQueryRow:(TDQueryRow *)row {
+- (id)initWithCBLQueryRow:(CBLQueryRow *)row {
     if (self = [super init]) {
         self.row = row;
     }
@@ -215,7 +215,7 @@
 }
 
 - (id)document {
-    return self.row.document ? [[TDDocumentProxy alloc] initWithTDDocument:self.row.document] : nil;
+    return self.row.document ? [[TDDocumentProxy alloc] initWithCBLDocument:self.row.document] : nil;
 }
 
 - (id)documentProperties {

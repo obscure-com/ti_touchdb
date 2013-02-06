@@ -7,10 +7,10 @@
 //
 
 #import "TiProxy.h"
-#import "TouchDB.h"
+#import "CouchbaseLite.h"
 
 @class TDRevisionProxy;
 
 @interface TDDocumentProxy : TiProxy
-- (id)initWithTDDocument:(TDDocument *)document;
+- (id)initWithCBLDocument:(CBLDocument *)document;
 @end

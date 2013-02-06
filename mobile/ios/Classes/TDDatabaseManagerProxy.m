@@ -7,14 +7,14 @@
 //
 
 #import "TDDatabaseManagerProxy.h"
-#import "TDDatabaseManager.h"
+#import "CBLManager.h"
 #import "TiProxy+Errors.h"
 #import "TDDatabaseProxy.h"
 
-#define kTDDatabaseCreationError 100
+#define kCBLDatabaseCreationError 100
 
 @interface TDDatabaseManagerProxy ()
-@property (nonatomic, strong) TDDatabaseManager * databaseManager;
+@property (nonatomic, strong) CBLManager * databaseManager;
 @property (nonatomic, strong) NSMutableDictionary * databaseProxyCache;
 @end
 
@@ -36,7 +36,7 @@
 
 - (id)init {
     if (self = [super init]) {
-        self.databaseManager = [TDDatabaseManager sharedInstance];
+        self.databaseManager = [CBLManager sharedInstance];
         self.databaseProxyCache = [NSMutableDictionary dictionary];
         lastError = nil;
     }
@@ -63,9 +63,9 @@
     TDDatabaseProxy * result = nil;
     result = [self.databaseProxyCache objectForKey:name];
     if (!result) {
-        TDDatabase * db = [self.databaseManager databaseNamed:name];
+        CBLDatabase * db = [self.databaseManager databaseNamed:name];
         if (db) {
-            result = [[TDDatabaseProxy alloc] initWithTDDatabase:db];
+            result = [[TDDatabaseProxy alloc] initWithCBLDatabase:db];
             [self.databaseProxyCache setObject:result forKey:name];
         }
     }
@@ -85,14 +85,14 @@
 
     TDDatabaseProxy * result = [self.databaseProxyCache objectForKey:name];
     if (!result) {
-        TDDatabase * db = [self.databaseManager createDatabaseNamed:name error:&lastError];
+        CBLDatabase * db = [self.databaseManager createDatabaseNamed:name error:&lastError];
         if (!db) {
-            lastError = [NSError errorWithDomain:@"TouchDB" code:kTDDatabaseCreationError userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"could not create database '%@'", name] forKey:NSLocalizedDescriptionKey]];
+            lastError = [NSError errorWithDomain:@"TouchDB" code:kCBLDatabaseCreationError userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"could not create database '%@'", name] forKey:NSLocalizedDescriptionKey]];
             [lastError retain];
             return nil;
         }
         
-        result = [[TDDatabaseProxy alloc] initWithTDDatabase:db];
+        result = [[TDDatabaseProxy alloc] initWithCBLDatabase:db];
         [self.databaseProxyCache setObject:result forKey:name];
     }
     return result;

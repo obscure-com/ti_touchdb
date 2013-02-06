@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface ViewCompiler : NSObject <TDViewCompiler>
-- (TDValidationBlock) compileValidationFunction:(NSString *)validationSource language:(NSString *)language database:(TDDatabase *)db;
-- (TDFilterBlock) compileFilterFunction:(NSString *)filterSource language:(NSString *)language database:(TDDatabase *)db;
+@interface ViewCompiler : NSObject <CBLViewCompiler>
+- (CBLValidationBlock) compileValidationFunction:(NSString *)validationSource language:(NSString *)language database:(CBLDatabase *)db;
+- (CBLFilterBlock) compileFilterFunction:(NSString *)filterSource language:(NSString *)language database:(CBLDatabase *)db;
 @end

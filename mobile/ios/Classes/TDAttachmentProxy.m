@@ -7,11 +7,12 @@
 //
 
 #import "TDAttachmentProxy.h"
+#import "TDRevisionProxy.h"
 #import "TiProxy+Errors.h"
 #import "TiBlob.h"
 
 @interface TDAttachmentProxy ()
-@property (nonatomic, strong) TDAttachment * attachment;
+@property (nonatomic, strong) CBLAttachment * attachment;
 @end
 
 @implementation TDAttachmentProxy
@@ -20,7 +21,7 @@
     NSError * lastError;
 }
 
-- (id)initWithTDAttachment:(TDAttachment *)attachment {
+- (id)initWithCBLAttachment:(CBLAttachment *)attachment {
     if (self = [super init]) {
         self.attachment = attachment;
     }
@@ -64,10 +65,10 @@
     
     RELEASE_TO_NIL(lastError)
 
-    TDAttachment * att = [self.attachment updateBody:body.data contentType:contentType error:&lastError];
+    CBLRevision * rev = [self.attachment updateBody:body.data contentType:contentType error:&lastError];
     [lastError retain];
     
-    return att ? [[TDAttachmentProxy alloc] initWithTDAttachment:att] : nil;
+    return rev ? [[TDRevisionProxy alloc] initWithCBLRevision:rev] : nil;
 }
 
 - (id)error {

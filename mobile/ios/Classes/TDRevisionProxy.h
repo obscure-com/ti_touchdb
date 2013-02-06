@@ -7,16 +7,15 @@
 //
 
 #import "TiProxy.h"
-#import "TouchDB.h"
 
 @interface TDRevisionProxyBase : TiProxy
 @end
 
 @interface TDRevisionProxy : TDRevisionProxyBase
-- (id)initWithTDRevision:(TDRevision *)revision;
+- (id)initWithCBLRevision:(CBLRevision *)revision;
 @end
 
 
-@interface TDNewRevisionProxy : TDRevisionProxyBase
-- (id)initWithTDNewRevision:(TDNewRevision *)revision;
+@interface CBLNewRevisionProxy : TDRevisionProxyBase
+- (id)initWithCBLNewRevision:(CBLNewRevision *)revision;
 @end
