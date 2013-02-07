@@ -16,6 +16,7 @@ window.add(imageView);
 window.addEventListener('open', function() {
   Ti.API.info("starting tests");
     try {
+      /*
       testname.text = '001_module';
       require('001_module').run_tests();
       testname.text = '002_databaseManager';
@@ -36,6 +37,15 @@ window.addEventListener('open', function() {
       require('009_views').run_tests();
       testname.text = '010_change_tracking';
       require('010_change_tracking').run_tests();
+      testname.text = '011_update_in_query';
+      require('011_update_in_query').run_tests();
+      testname.text = '012_history';
+      require('012_history').run_tests();
+      */
+      testname.text = '013_view_linked_docs';
+      require('013_view_linked_docs').run_tests();
+
+
       /*
         testname.text = 'test01_server';
         require('test01_server').run_tests();

@@ -43,6 +43,7 @@ exports.run_tests = function() {
     assert(doc3 !== null, 'documentWithID() returned null for existing ID');
     assert(doc1 === doc3, 'original and reselected doc should be the same object');
     
+    // all documents query
     a.clearDocumentCache();
     var query = a.queryAllDocuments();
     assert(query !== null, "all docs query should not be null");
