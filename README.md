@@ -28,6 +28,19 @@ See the Wiki pages for usage instructions and the samples directory for example 
 
 **0.5-beta**
 
+2013-02-06
+
+Lots of changes in the TouchDB-iOS world!  Jens has been working on a
+[new, in-process API](https://github.com/couchbaselabs/TouchDB-iOS/wiki/API-Transition)
+that replaces the HTTP listener plus CouchCocoa system that was previously the recommended way
+of using TouchDB.  The "public API" branch in the TouchDB repo where this work has been done
+will be the basis for the 1.5 release of TouchDB.  In addition, TouchDB 1.5 will be
+[renamed to Couchbase Lite](https://groups.google.com/forum/?fromgroups=#!topic/mobile-couchbase/vaB8H1dlagA).
+The code has already been moved to [new Github repo](https://github.com/couchbase/couchbase-lite-ios)
+and its internal names have been modified to reflect the branding change.  The *public-api*
+branch of this project is where I have been working to integrate these API changes.  When
+Couchbase Lite 1.5 goes beta, I will be merging public-api to master.
+
 2012-10-11
 
 Added support for filters; new tutorial code under samples
