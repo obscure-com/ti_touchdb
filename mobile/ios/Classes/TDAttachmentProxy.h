@@ -9,5 +9,5 @@
 #import "TiProxy.h"
 
 @interface TDAttachmentProxy : TiProxy
-- (id)initWithCBLAttachment:(CBLAttachment *)attachment;
+- (id)initWithExecutionContext:(id<TiEvaluator>)context CBLAttachment:(CBLAttachment *)attachment;
 @end

@@ -27,8 +27,8 @@
 
 extern NSString* const kCBLDatabaseChangeNotification;
 
-- (id)initWithCBLDatabase:(CBLDatabase *)database {
-    if (self = [super init]) {
+- (id)initWithExecutionContext:(id<TiEvaluator>)context CBLDatabase:(CBLDatabase *)database {
+    if (self = [super _initWithPageContext:context]) {
         self.database = database;
         self.documentProxyCache = [NSMutableDictionary dictionary];
     }
@@ -78,7 +78,7 @@ extern NSString* const kCBLDatabaseChangeNotification;
         if (!doc) {
             return nil;
         }
-        proxy = [[TDDocumentProxy alloc] initWithCBLDocument:doc];
+        proxy = [[TDDocumentProxy alloc] initWithExecutionContext:[self executionContext] CBLDocument:doc];
         [self.documentProxyCache setObject:proxy forKey:docID];
     }
     return proxy;
@@ -92,7 +92,7 @@ extern NSString* const kCBLDatabaseChangeNotification;
     RELEASE_TO_NIL(lastError)
     
     CBLDocument * doc = [self.database untitledDocument];
-    TDDocumentProxy * proxy = [[TDDocumentProxy alloc] initWithCBLDocument:doc];
+    TDDocumentProxy * proxy = [[TDDocumentProxy alloc] initWithExecutionContext:[self executionContext] CBLDocument:doc];
     [self.documentProxyCache setObject:proxy forKey:doc.documentID];
     return proxy;
 }
@@ -119,7 +119,7 @@ extern NSString* const kCBLDatabaseChangeNotification;
     RELEASE_TO_NIL(lastError)
     
     CBLQuery * query = [self.database queryAllDocuments];
-    return [[TDQueryProxy alloc] initWithCBLQuery:query];
+    return [[TDQueryProxy alloc] initWithExecutionContext:[self executionContext] CBLQuery:query];
 }
 
 - (id)slowQueryWithMap:(id)args {
@@ -128,9 +128,9 @@ extern NSString* const kCBLDatabaseChangeNotification;
     
     RELEASE_TO_NIL(lastError)
     
-    CBLMapBlock map = [[TDBridge sharedInstance] mapBlockForCallback:callback];
+    CBLMapBlock map = [[TDBridge sharedInstance] mapBlockForCallback:callback inExecutionContext:[self executionContext]];
     CBLQuery * query = [self.database slowQueryWithMap:map];
-    return [[TDQueryProxy alloc] initWithCBLQuery:query];
+    return [[TDQueryProxy alloc] initWithExecutionContext:[self executionContext] CBLQuery:query];
 }
 
 - (id)viewNamed:(id)args {
@@ -140,7 +140,7 @@ extern NSString* const kCBLDatabaseChangeNotification;
     RELEASE_TO_NIL(lastError)
     
     CBLView * view = [self.database viewNamed:name];
-    return [[TDViewProxy alloc] initWithCBLView:view];
+    return [[TDViewProxy alloc] initWithExecutionContext:[self executionContext] CBLView:view];
 }
 
 - (id)allViews {
@@ -149,7 +149,7 @@ extern NSString* const kCBLDatabaseChangeNotification;
     NSArray * views = [self.database allViews];
     NSMutableArray * result = [NSMutableArray arrayWithCapacity:[views count]];
     for (CBLView * view in views) {
-        [result addObject:[[TDViewProxy alloc] initWithCBLView:view]];
+        [result addObject:[[TDViewProxy alloc] initWithExecutionContext:[self executionContext] CBLView:view]];
     }
     return result;
 }
@@ -163,7 +163,7 @@ extern NSString* const kCBLDatabaseChangeNotification;
     RELEASE_TO_NIL(lastError)
     
     if (callback) {
-        CBLValidationBlock validation = [[TDBridge sharedInstance] validationBlockForCallback:callback];
+        CBLValidationBlock validation = [[TDBridge sharedInstance] validationBlockForCallback:callback inExecutionContext:[self executionContext]];
         [self.database defineValidation:name asBlock:validation];
     }
     else {
@@ -182,7 +182,7 @@ extern NSString* const kCBLDatabaseChangeNotification;
     RELEASE_TO_NIL(lastError)
     
     if (callback) {
-        CBLFilterBlock filter = [[TDBridge sharedInstance] filterBlockForCallback:callback];
+        CBLFilterBlock filter = [[TDBridge sharedInstance] filterBlockForCallback:callback inExecutionContext:[self executionContext]];
         [self.database defineFilter:name asBlock:filter];
     }
     else {
@@ -202,7 +202,7 @@ extern NSString* const kCBLDatabaseChangeNotification;
     
     NSURL * url = [NSURL URLWithString:urlstr];
     CBLReplication * replication = [self.database pushToURL:url];
-    return [[TDReplicationProxy alloc] initWithCBLReplication:replication];
+    return [[TDReplicationProxy alloc] initWithExecutionContext:[self executionContext] CBLReplication:replication];
 }
 
 - (id)pullFromURL:(id)args {
@@ -213,7 +213,7 @@ extern NSString* const kCBLDatabaseChangeNotification;
     
     NSURL * url = [NSURL URLWithString:urlstr];
     CBLReplication * replication = [self.database pullFromURL:url];
-    return [[TDReplicationProxy alloc] initWithCBLReplication:replication];
+    return [[TDReplicationProxy alloc] initWithExecutionContext:[self executionContext] CBLReplication:replication];
 }
 
 - (id)replicateWithURL:(id)args {
@@ -229,7 +229,7 @@ extern NSString* const kCBLDatabaseChangeNotification;
     
     NSMutableArray * result = [NSMutableArray arrayWithCapacity:[repls count]];
     for (CBLReplication * repl in repls) {
-        [result addObject:[[TDReplicationProxy alloc] initWithCBLReplication:repl]];
+        [result addObject:[[TDReplicationProxy alloc] initWithExecutionContext:[self executionContext] CBLReplication:repl]];
     }
     return result;
 }

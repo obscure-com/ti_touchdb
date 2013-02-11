@@ -57,7 +57,7 @@ CBLMapEmitBlock _emitBlock;
 #pragma mark -
 #pragma mark Public API
 
-- (CBLMapBlock)mapBlockForCallback:(KrollCallback *)callback {
+- (CBLMapBlock)mapBlockForCallback:(KrollCallback *)callback inExecutionContext:(id<TiEvaluator>)context {
     TiStringRef invokerName = TiStringCreateWithCFString((CFStringRef) @"emit");
     TiObjectRef invoker = TiObjectMakeFunctionWithCallback(callback.context.context, invokerName, &EmitCallback);
     KrollCallback * emitCallback = [[KrollCallback alloc] initWithCallback:invoker thisObject:nil context:callback.context];
@@ -72,7 +72,7 @@ CBLMapEmitBlock _emitBlock;
     return [[result copy] autorelease];
 }
 
-- (CBLReduceBlock)reduceBlockForCallback:(KrollCallback *)callback {
+- (CBLReduceBlock)reduceBlockForCallback:(KrollCallback *)callback inExecutionContext:(id<TiEvaluator>)context {
     CBLReduceBlock result = ^(NSArray* keys, NSArray* values, BOOL rereduce) {
         id result = [callback call:[NSArray arrayWithObjects:keys, values, NUMBOOL(rereduce), nil] thisObject:nil];
         return result;
@@ -80,9 +80,9 @@ CBLMapEmitBlock _emitBlock;
     return [[result copy] autorelease];
 }
 
-- (CBLValidationBlock)validationBlockForCallback:(KrollCallback *)callback {
-    CBLValidationBlock result = ^(CBLRevision* newRevision, id<CBLValidationContext> context) {
-        TDRevisionProxy * revisionProxy = [[TDRevisionProxy alloc] initWithCBLRevision:newRevision];
+- (CBLValidationBlock)validationBlockForCallback:(KrollCallback *)callback inExecutionContext:(id<TiEvaluator>)context {
+    CBLValidationBlock result = ^(CBLRevision* newRevision, id<CBLValidationContext> validationContext) {
+        TDRevisionProxy * revisionProxy = [[TDRevisionProxy alloc] initWithExecutionContext:context CBLRevision:newRevision];
         id contextProxy = [NSNull null]; // TODO
         id result = [callback call:[NSArray arrayWithObjects:revisionProxy, contextProxy, nil] thisObject:nil];
         return [result boolValue];
@@ -91,9 +91,9 @@ CBLMapEmitBlock _emitBlock;
     return [[result copy] autorelease];
 }
 
-- (CBLFilterBlock)filterBlockForCallback:(KrollCallback *)callback {
+- (CBLFilterBlock)filterBlockForCallback:(KrollCallback *)callback inExecutionContext:(id<TiEvaluator>)context {
     CBLFilterBlock result = ^(CBLRevision* revision, NSDictionary* params) {
-        TDRevisionProxy * revisionProxy = [[TDRevisionProxy alloc] initWithCBLRevision:revision];
+        TDRevisionProxy * revisionProxy = [[TDRevisionProxy alloc] initWithExecutionContext:context CBLRevision:revision];
         id result = [callback call:[NSArray arrayWithObjects:revisionProxy, params, nil] thisObject:nil];
         return [result boolValue];
     };

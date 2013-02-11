@@ -9,11 +9,12 @@
 #import <Foundation/Foundation.h>
 
 @class KrollCallback;
+@protocol TiEvaluator;
 
 @interface TDBridge : NSObject
 + (TDBridge *)sharedInstance;
-- (CBLMapBlock)mapBlockForCallback:(KrollCallback *)callback;
-- (CBLReduceBlock)reduceBlockForCallback:(KrollCallback *)callback;
-- (CBLValidationBlock)validationBlockForCallback:(KrollCallback *)callback;
-- (CBLFilterBlock)filterBlockForCallback:(KrollCallback *)callback;
+- (CBLMapBlock)mapBlockForCallback:(KrollCallback *)callback inExecutionContext:(id<TiEvaluator>)context;
+- (CBLReduceBlock)reduceBlockForCallback:(KrollCallback *)callback inExecutionContext:(id<TiEvaluator>)context;
+- (CBLValidationBlock)validationBlockForCallback:(KrollCallback *)callback inExecutionContext:(id<TiEvaluator>)context;
+- (CBLFilterBlock)filterBlockForCallback:(KrollCallback *)callback inExecutionContext:(id<TiEvaluator>)context;
 @end

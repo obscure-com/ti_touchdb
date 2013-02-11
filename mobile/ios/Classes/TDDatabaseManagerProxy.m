@@ -24,18 +24,8 @@
     NSError * lastError;
 }
 
-
-+ (TDDatabaseManagerProxy *)sharedInstance {
-    static TDDatabaseManagerProxy * sInstance;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        sInstance = [[self alloc] init];
-    });
-    return sInstance;
-}
-
-- (id)init {
-    if (self = [super init]) {
+- (id)initWithExecutionContext:(id<TiEvaluator>)context {
+    if (self = [super _initWithPageContext:context]) {
         self.databaseManager = [CBLManager sharedInstance];
         self.databaseProxyCache = [NSMutableDictionary dictionary];
         lastError = nil;
@@ -65,7 +55,7 @@
     if (!result) {
         CBLDatabase * db = [self.databaseManager databaseNamed:name];
         if (db) {
-            result = [[TDDatabaseProxy alloc] initWithCBLDatabase:db];
+            result = [[TDDatabaseProxy alloc] initWithExecutionContext:[self executionContext] CBLDatabase:db];
             [self.databaseProxyCache setObject:result forKey:name];
         }
     }
@@ -92,7 +82,7 @@
             return nil;
         }
         
-        result = [[TDDatabaseProxy alloc] initWithCBLDatabase:db];
+        result = [[TDDatabaseProxy alloc] initWithExecutionContext:[self executionContext] CBLDatabase:db];
         [self.databaseProxyCache setObject:result forKey:name];
     }
     return result;

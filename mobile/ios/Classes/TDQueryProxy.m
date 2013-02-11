@@ -27,8 +27,8 @@
 
 @implementation TDQueryProxy
 
-- (id)initWithCBLQuery:(CBLQuery *)query {
-    if (self = [super init]) {
+- (id)initWithExecutionContext:(id<TiEvaluator>)context CBLQuery:(CBLQuery *)query {
+    if (self = [super _initWithPageContext:context]) {
         self.query = query;
     }
     return self;
@@ -215,7 +215,7 @@
 }
 
 - (id)document {
-    return self.row.document ? [[TDDocumentProxy alloc] initWithCBLDocument:self.row.document] : nil;
+    return self.row.document ? [[TDDocumentProxy alloc] initWithExecutionContext:[self executionContext] CBLDocument:self.row.document] : nil;
 }
 
 - (id)documentProperties {

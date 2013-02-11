@@ -63,13 +63,13 @@
     RELEASE_TO_NIL(lastError)
     
     CBLAttachment * attachment = [self.revision attachmentNamed:name];
-    return attachment ? [[TDAttachmentProxy alloc] initWithCBLAttachment:attachment] : nil;
+    return attachment ? [[TDAttachmentProxy alloc] initWithExecutionContext:[self executionContext] CBLAttachment:attachment] : nil;
 }
 
 - (id)attachments {
     NSMutableArray * result = [NSMutableArray array];
     for (CBLAttachment * att in self.revision.attachments) {
-        [result addObject:[[TDAttachmentProxy alloc] initWithCBLAttachment:att]];
+        [result addObject:[[TDAttachmentProxy alloc] initWithExecutionContext:[self executionContext] CBLAttachment:att]];
     }
     return result;
 }
@@ -83,8 +83,8 @@
 
 @implementation TDRevisionProxy
 
-- (id)initWithCBLRevision:(CBLRevision *)revision {
-    if (self = [super init]) {
+- (id)initWithExecutionContext:(id<TiEvaluator>)context CBLRevision:(CBLRevision *)revision {
+    if (self = [super _initWithPageContext:context]) {
         self.revision = revision;
     }
     return self;
@@ -98,7 +98,7 @@
     RELEASE_TO_NIL(lastError)
     
     CBLNewRevision * rev = [self.revision newRevision];
-    return rev ? [[CBLNewRevisionProxy alloc] initWithCBLNewRevision:rev] : nil;
+    return rev ? [[CBLNewRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLNewRevision:rev] : nil;
 }
 
 - (id)putProperties:(id)args {
@@ -110,7 +110,7 @@
     CBLRevision * rev = [self.revision putProperties:props error:&lastError];
     [lastError retain];
     
-    return rev ? [[TDRevisionProxy alloc] initWithCBLRevision:rev] : nil;
+    return rev ? [[TDRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLRevision:rev] : nil;
 }
 
 - (id)deleteDocument:(id)args {
@@ -119,7 +119,7 @@
     CBLRevision * rev = [self.revision deleteDocument:&lastError];
     [lastError retain];
     
-    return rev ? [[TDRevisionProxy alloc] initWithCBLRevision:rev] : nil;
+    return rev ? [[TDRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLRevision:rev] : nil;
 }
 
 @end
@@ -130,8 +130,8 @@
 
 @implementation CBLNewRevisionProxy
 
-- (id)initWithCBLNewRevision:(CBLNewRevision *)revision {
-    if (self = [super init]) {
+- (id)initWithExecutionContext:(id<TiEvaluator>)context CBLNewRevision:(CBLNewRevision *)revision {
+    if (self = [super _initWithPageContext:context]) {
         self.revision = revision;
     }
     return self;
@@ -147,7 +147,7 @@
 
 - (id)parentRevision {
     CBLRevision * rev = self.revision.parentRevision;
-    return rev ? [[TDRevisionProxy alloc] initWithCBLRevision:rev] : nil;
+    return rev ? [[TDRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLRevision:rev] : nil;
 }
 
 - (id)parentRevisionID {
@@ -170,7 +170,7 @@
     CBLRevision * rev = [self.revision save:&lastError];
     [lastError retain];
     
-    return rev ? [[TDRevisionProxy alloc] initWithCBLRevision:rev] : nil;
+    return rev ? [[TDRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLRevision:rev] : nil;
 }
 
 - (void)addAttachment:(id)args {

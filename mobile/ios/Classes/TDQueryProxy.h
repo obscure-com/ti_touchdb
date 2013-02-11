@@ -9,5 +9,5 @@
 #import "TiProxy.h"
 
 @interface TDQueryProxy : TiProxy
-- (id)initWithCBLQuery:(CBLQuery *)query;
+- (id)initWithExecutionContext:(id<TiEvaluator>)context CBLQuery:(CBLQuery *)query;
 @end

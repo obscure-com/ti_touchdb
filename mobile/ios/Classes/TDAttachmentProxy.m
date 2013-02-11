@@ -21,8 +21,8 @@
     NSError * lastError;
 }
 
-- (id)initWithCBLAttachment:(CBLAttachment *)attachment {
-    if (self = [super init]) {
+- (id)initWithExecutionContext:(id<TiEvaluator>)context CBLAttachment:(CBLAttachment *)attachment {
+    if (self = [super _initWithPageContext:context]) {
         self.attachment = attachment;
     }
     return self;
@@ -68,7 +68,7 @@
     CBLRevision * rev = [self.attachment updateBody:body.data contentType:contentType error:&lastError];
     [lastError retain];
     
-    return rev ? [[TDRevisionProxy alloc] initWithCBLRevision:rev] : nil;
+    return rev ? [[TDRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLRevision:rev] : nil;
 }
 
 - (id)error {

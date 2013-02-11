@@ -15,9 +15,11 @@
 
 @implementation TDReplicationProxy
 
-- (id)initWithCBLReplication:(CBLReplication *)replication {
-    if (self = [super init]) {
+- (id)initWithExecutionContext:(id<TiEvaluator>)context CBLReplication:(CBLReplication *)replication {
+    if (self = [super _initWithPageContext:context]) {
         self.replication = replication;
+
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(replicationChanged:) name:kCBLReplicationChangeNotification object:replication];
     }
     return self;
 }
@@ -94,11 +96,13 @@
 
 #pragma mark Replication Status
 
-- (id)start:(id)args {
+- (void)start:(id)args {
+    ENSURE_UI_THREAD_1_ARG(args)
     [self.replication start];
 }
 
-- (id)stop:(id)args {
+- (void)stop:(id)args {
+    ENSURE_UI_THREAD_1_ARG(args)
     [self.replication stop];
 }
 
@@ -127,20 +131,11 @@
 #define kReplicationChangedEventName @"change"
 
 - (void)replicationChanged:(NSNotification *)notification {
-    [self fireEvent:kReplicationChangedEventName withObject:notification.userInfo];
-}
-
-- (void)_listenerAdded:(NSString*)type count:(int)count {
-    if ([kReplicationChangedEventName isEqualToString:type] && count == 0) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(replicationChanged:) name:kCBLReplicationChangeNotification object:nil];
+    if ([self _hasListeners:kReplicationChangedEventName]) {
+        TiThreadPerformOnMainThread(^{
+            [self fireEvent:kReplicationChangedEventName withObject:nil];
+        }, YES);
     }
 }
-
-- (void)_listenerRemoved:(NSString*)type count:(int)count {
-    if ([kReplicationChangedEventName isEqualToString:type] && count == 0) {
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:kCBLReplicationChangeNotification object:nil];
-    }
-}
-
 
 @end

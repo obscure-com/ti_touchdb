@@ -9,5 +9,5 @@
 #import "TiProxy.h"
 
 @interface TDReplicationProxy : TiProxy
-- (id)initWithCBLReplication:(CBLReplication *)replication;
+- (id)initWithExecutionContext:(id<TiEvaluator>)context CBLReplication:(CBLReplication *)replication;
 @end

@@ -9,5 +9,5 @@
 #import "TiProxy.h"
 
 @interface TDViewProxy : TiProxy
-- (id)initWithCBLView:(CBLView *)view;
+- (id)initWithExecutionContext:(id<TiEvaluator>)context CBLView:(CBLView *)view;
 @end

@@ -12,10 +12,10 @@
 @end
 
 @interface TDRevisionProxy : TDRevisionProxyBase
-- (id)initWithCBLRevision:(CBLRevision *)revision;
+- (id)initWithExecutionContext:(id<TiEvaluator>)context CBLRevision:(CBLRevision *)revision;
 @end
 
 
 @interface CBLNewRevisionProxy : TDRevisionProxyBase
-- (id)initWithCBLNewRevision:(CBLNewRevision *)revision;
+- (id)initWithExecutionContext:(id<TiEvaluator>)context CBLNewRevision:(CBLNewRevision *)revision;
 @end

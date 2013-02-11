@@ -20,8 +20,8 @@
     NSError * lastError;
 }
 
-- (id)initWithCBLDocument:(CBLDocument *)document {
-    if (self = [super init]) {
+- (id)initWithExecutionContext:(id<TiEvaluator>)context CBLDocument:(CBLDocument *)document {
+    if (self = [super _initWithPageContext:context]) {
         self.document = document;
     }
     return self;
@@ -71,7 +71,7 @@
 - (id)currentRevision {
     CBLRevision * revision = [self.document currentRevision];
     if (revision) {
-        return [[TDRevisionProxy alloc] initWithCBLRevision:revision];
+        return [[TDRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLRevision:revision];
     }
     else {
         return nil;
@@ -86,7 +86,7 @@
 
     CBLRevision * revision = [self.document revisionWithID:revID];
     if (revision) {
-        return [[TDRevisionProxy alloc] initWithCBLRevision:revision];
+        return [[TDRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLRevision:revision];
     }
     else {
         return nil;
@@ -103,7 +103,7 @@
     
     NSMutableArray * result = [NSMutableArray arrayWithCapacity:[revs count]];
     for (CBLRevision * rev in revs) {
-        [result addObject:[[TDRevisionProxy alloc] initWithCBLRevision:rev]];
+        [result addObject:[[TDRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLRevision:rev]];
     }
     return result;
 }
@@ -118,7 +118,7 @@
     
     NSMutableArray * result = [NSMutableArray arrayWithCapacity:[revs count]];
     for (CBLRevision * rev in revs) {
-        [result addObject:[[TDRevisionProxy alloc] initWithCBLRevision:rev]];
+        [result addObject:[[TDRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLRevision:rev]];
     }
     return result;
 }
@@ -127,7 +127,7 @@
     RELEASE_TO_NIL(lastError)
 
     CBLNewRevision * rev = [self.document newRevision];
-    return rev ? [[CBLNewRevisionProxy alloc] initWithCBLNewRevision:rev] : nil;
+    return rev ? [[CBLNewRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLNewRevision:rev] : nil;
 }
 
 #pragma mark Document Properties
@@ -157,7 +157,7 @@
 
     CBLRevision * rev = [self.document putProperties:props error:&lastError];
     [lastError retain];
-    return rev ? [[TDRevisionProxy alloc] initWithCBLRevision:rev] : nil;
+    return rev ? [[TDRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLRevision:rev] : nil;
 }
 
 #pragma mark Change Notifications

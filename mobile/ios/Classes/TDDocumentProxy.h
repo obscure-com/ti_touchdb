@@ -12,5 +12,5 @@
 @class TDRevisionProxy;
 
 @interface TDDocumentProxy : TiProxy
-- (id)initWithCBLDocument:(CBLDocument *)document;
+- (id)initWithExecutionContext:(id<TiEvaluator>)context CBLDocument:(CBLDocument *)document;
 @end

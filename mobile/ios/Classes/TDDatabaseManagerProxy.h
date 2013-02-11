@@ -10,5 +10,5 @@
 
 @interface TDDatabaseManagerProxy : TiProxy
 @property (readonly) NSArray * allDatabaseNames;
-+ (TDDatabaseManagerProxy *)sharedInstance;
+- (id)initWithExecutionContext:(id<TiEvaluator>)context;
 @end

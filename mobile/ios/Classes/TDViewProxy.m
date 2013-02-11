@@ -16,8 +16,8 @@
 
 @implementation TDViewProxy
 
-- (id)initWithCBLView:(CBLView *)view {
-    if (self = [super init]) {
+- (id)initWithExecutionContext:(id<TiEvaluator>)context CBLView:(CBLView *)view {
+    if (self = [super _initWithPageContext:context]) {
         self.view = view;
     }
     return self;
@@ -34,8 +34,8 @@
     ENSURE_ARG_OR_NULL_AT_INDEX(map, args, 0, KrollCallback)
     ENSURE_ARG_OR_NULL_AT_INDEX(reduce, args, 1, KrollCallback)
 
-    CBLMapBlock mapblock = map ? [[TDBridge sharedInstance] mapBlockForCallback:map] : nil;
-    CBLReduceBlock reduceblock = reduce ? [[TDBridge sharedInstance] reduceBlockForCallback:reduce] : nil;
+    CBLMapBlock mapblock = map ? [[TDBridge sharedInstance] mapBlockForCallback:map inExecutionContext:[self executionContext]] : nil;
+    CBLReduceBlock reduceblock = reduce ? [[TDBridge sharedInstance] reduceBlockForCallback:reduce inExecutionContext:[self executionContext]] : nil;
 
     if (mapblock) {
         ENSURE_ARG_AT_INDEX(version, args, 2, NSString)
@@ -50,7 +50,7 @@
     NSString * version = nil;
     ENSURE_ARG_OR_NULL_AT_INDEX(map, args, 0, KrollCallback)
     
-    CBLMapBlock mapblock = map ? [[TDBridge sharedInstance] mapBlockForCallback:map] : nil;
+    CBLMapBlock mapblock = map ? [[TDBridge sharedInstance] mapBlockForCallback:map inExecutionContext:[self executionContext]] : nil;
     
     if (mapblock) {
         ENSURE_ARG_AT_INDEX(version, args, 1, NSString)
@@ -62,7 +62,7 @@
 
 - (id)query:(id)args {
     CBLQuery * query = [self.view query];
-    return query ? [[TDQueryProxy alloc] initWithCBLQuery:query] : nil;
+    return query ? [[TDQueryProxy alloc] initWithExecutionContext:[self executionContext] CBLQuery:query] : nil;
 }
 
 @end
