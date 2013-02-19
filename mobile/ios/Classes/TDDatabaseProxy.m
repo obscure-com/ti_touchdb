@@ -143,17 +143,6 @@ extern NSString* const kCBLDatabaseChangeNotification;
     return [[TDViewProxy alloc] initWithExecutionContext:[self executionContext] CBLView:view];
 }
 
-- (id)allViews {
-    RELEASE_TO_NIL(lastError)
-    
-    NSArray * views = [self.database allViews];
-    NSMutableArray * result = [NSMutableArray arrayWithCapacity:[views count]];
-    for (CBLView * view in views) {
-        [result addObject:[[TDViewProxy alloc] initWithExecutionContext:[self executionContext] CBLView:view]];
-    }
-    return result;
-}
-
 - (id)defineValidation:(id)args {
     NSString * name;
     KrollCallback * callback;
