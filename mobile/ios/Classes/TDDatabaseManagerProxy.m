@@ -53,7 +53,7 @@
     TDDatabaseProxy * result = nil;
     result = [self.databaseProxyCache objectForKey:name];
     if (!result) {
-        CBLDatabase * db = [self.databaseManager databaseNamed:name];
+        CBLDatabase * db = [self.databaseManager databaseNamed:name error:nil];
         if (db) {
             result = [[TDDatabaseProxy alloc] initWithExecutionContext:[self executionContext] CBLDatabase:db];
             [self.databaseProxyCache setObject:result forKey:name];
