@@ -133,7 +133,7 @@
 - (void)replicationChanged:(NSNotification *)notification {
     if ([self _hasListeners:kReplicationChangedEventName]) {
         TiThreadPerformOnMainThread(^{
-            [self fireEvent:kReplicationChangedEventName withObject:nil];
+            [self fireEvent:kReplicationChangedEventName withObject:nil propagate:YES];
         }, YES);
     }
 }
