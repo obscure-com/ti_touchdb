@@ -82,9 +82,9 @@ CBLMapEmitBlock _emitBlock;
 
 - (CBLValidationBlock)validationBlockForCallback:(KrollCallback *)callback inExecutionContext:(id<TiEvaluator>)context {
     CBLValidationBlock result = ^(CBLRevision* newRevision, id<CBLValidationContext> validationContext) {
-        // suspect that the validation callback also barfs when passed a proxy object; see filterBlockForCallback:inExecutionContext:
+        TDRevisionProxy * revisionProxy = [[TDRevisionProxy alloc] initWithExecutionContext:context CBLRevision:newRevision];
         id contextDoc = [NSNull null]; // TODO
-        id result = [callback call:[NSArray arrayWithObjects:newRevision.properties, contextDoc, nil] thisObject:nil];
+        id result = [callback call:[NSArray arrayWithObjects:revisionProxy, contextDoc, nil] thisObject:nil];
         return [result boolValue];
     };
     
