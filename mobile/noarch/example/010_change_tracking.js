@@ -7,25 +7,30 @@ exports.run_tests = function() {
   var mgr = touchdb.databaseManager;
   var db = mgr.createDatabaseNamed('test010');
   
+  var changes = 0, checkCount = 20;
   try {
-    var changes = 0;
-
     db.addEventListener('change', function(e) {
-      Ti.API.info(JSON.stringify(e));
       ++changes;
     });
 
     createDocuments(db, 3);
-    
-    wait(2000);
-    
-    // database change events not currently working
-    // assert(changes > 0, 'no changes detected');
-
-    db.deleteDatabase();
   }
   catch (e) {
     db.deleteDatabase();
     throw e;
   }
+
+  var interval = setInterval(function() {
+    if (changes > 0) {
+      Ti.API.info("change notification done!  changes = "+changes);
+      clearInterval(interval);
+      db.deleteDatabase();
+    }
+    else if (checkCount-- < 0) {
+      clearInterval(interval);
+      db.deleteDatabase();
+      throw new Error("timed out waiting for change notifications");
+    }
+  }, 2000);
+
 }

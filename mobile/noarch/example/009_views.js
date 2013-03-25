@@ -78,7 +78,7 @@ exports.run_tests = function() {
       assert(view.name === 'complexView', 'returned incorrect view name: '+view.name);
 
       view.setMap(function(doc, emit) {
-        emit([doc.name, doc.i % 3], doc.i);
+        emit([doc.name, doc.i % 3], null);
       }, '1');
       
       var rows = view.query().rows();
@@ -90,7 +90,7 @@ exports.run_tests = function() {
         assert(_.isArray(row.key), 'row key is not an array: '+row.key);
         assert(row.key0 === genname('test', i), 'incorrect row key0 at row '+i+': '+row.key0+", should be "+genname('test', i));
         assert(row.key1 === i % 3, 'incorrect row key1 at row '+i+': '+row.key1+", should be "+(i % 3));
-        assert(row.value === i, 'incorrect row value: '+row.value);
+        assert(row.value === null, 'incorrect row value: '+row.value);
       }
     })();
     

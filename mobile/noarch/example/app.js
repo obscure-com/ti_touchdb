@@ -4,6 +4,11 @@ var window = Ti.UI.createWindow({
   backgroundColor: 'white'
 });
 
+// turn on logging
+Ti.App.Properties.setBool("Log", true);
+Ti.App.Properties.setBool("LogSync", true);
+// Ti.App.Properties.setBool("LogSyncVerbose", true);
+
 var testname = Ti.UI.createLabel();
 window.add(testname);
 
@@ -42,6 +47,10 @@ window.addEventListener('open', function() {
     require('012_history').run_tests();
     testname.text = '013_view_linked_docs';
     require('013_view_linked_docs').run_tests();
+    testname.text = '014_replication';
+    require('014_replication').run_tests();
+    testname.text = '015_filtered_replication';
+    require('015_filtered_replication').run_tests();
     testname.text = "all tests passed! whoopee!";
   }
   catch (e) {
