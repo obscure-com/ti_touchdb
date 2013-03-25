@@ -82,9 +82,9 @@ CBLMapEmitBlock _emitBlock;
 
 - (CBLValidationBlock)validationBlockForCallback:(KrollCallback *)callback inExecutionContext:(id<TiEvaluator>)context {
     CBLValidationBlock result = ^(CBLRevision* newRevision, id<CBLValidationContext> validationContext) {
-        TDRevisionProxy * revisionProxy = [[TDRevisionProxy alloc] initWithExecutionContext:context CBLRevision:newRevision];
-        id contextProxy = [NSNull null]; // TODO
-        id result = [callback call:[NSArray arrayWithObjects:revisionProxy, contextProxy, nil] thisObject:nil];
+        // suspect that the validation callback also barfs when passed a proxy object; see filterBlockForCallback:inExecutionContext:
+        id contextDoc = [NSNull null]; // TODO
+        id result = [callback call:[NSArray arrayWithObjects:newRevision.properties, contextDoc, nil] thisObject:nil];
         return [result boolValue];
     };
     
@@ -93,8 +93,8 @@ CBLMapEmitBlock _emitBlock;
 
 - (CBLFilterBlock)filterBlockForCallback:(KrollCallback *)callback inExecutionContext:(id<TiEvaluator>)context {
     CBLFilterBlock result = ^(CBLRevision* revision, NSDictionary* params) {
-        TDRevisionProxy * revisionProxy = [[TDRevisionProxy alloc] initWithExecutionContext:context CBLRevision:revision];
-        id result = [callback call:[NSArray arrayWithObjects:revisionProxy, params, nil] thisObject:nil];
+        // had trouble passing a proxy to a callback, but the document dictionary was fine.
+        id result = [callback call:[NSArray arrayWithObjects:revision.properties, params, nil] thisObject:nil];
         return [result boolValue];
     };
     
