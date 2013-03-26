@@ -3,7 +3,7 @@
  */
 
 var _ = require('alloy/underscore'),
-    server = require('com.obscure.titouchdb'),
+    manager = require('com.obscure.titouchdb').databaseManager,
     db,
     modelname;
 
@@ -13,13 +13,13 @@ var _ = require('alloy/underscore'),
  * @param {Object} name
  * @param {Object} options
  */
-function query_view(db, design_doc, name, options) {
+function query_view(db, name, options) {
   var opts = options || {};
   
-  var ddoc = db.designDocumentWithName(design_doc);
-  var query = ddoc.queryViewNamed(name);
+  var view = db.viewNamed(name);
+  var query = view ? view.query() : null;
   if (!query) {
-    var err = String.format('invalid view name: %s/%s', design_doc, name);
+    var err = String.format('invalid view name: %s', name);
     Ti.API.warn(err);
     if (opts.error) {
       opts.error(null, err);
@@ -51,23 +51,20 @@ function InitAdapter(config) {
     Ti.API.error('Missing required adapter configuration property: collection_name');
   }
   
-  db = server.databaseNamed(config.adapter.dbname);
-  db.ensureCreated();
-
+  db = manager.createDatabaseNamed(config.adapter.dbname);
+  
   // register views
-  var ddoc = db.designDocumentWithName(config.adapter.collection_name);
   _.each(config.adapter.views, function(view) {
-    ddoc.defineView(view.name, view.map, view.reduce);
+    var v = db.viewNamed(view.name);
+    v.setMapAndReduce(view.map, view.reduce, view.version || '1');
     Ti.API.info("defined "+view.name);
   });
-
-  ddoc.saveChanges();
 
   return {};
 }
 
 
-function Sync(model, method, options) {
+function Sync(method, model, options) {
   var opts = options || {};
   
   switch (method) {
@@ -84,12 +81,11 @@ function Sync(model, method, options) {
         var collection = model; // just to clear things up 
         
         // collection
-        var ddoc = collection.config.adapter.collection_name;
         var view = opts.view || collection.config.adapter.views[0];
         
         // add default view options from model
         opts = _.defaults(opts, collection.config.adapter.view_options);
-        var query = query_view(db, ddoc, view, opts);
+        var query = query_view(db, view, opts);
         if (!query) {
           break;
         }

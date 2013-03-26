@@ -3,29 +3,28 @@
  */
 
 var server = require('com.obscure.titouchdb'),
-    db = server.databaseNamed(Alloy.CFG.books_db_name);
+    db = server.databaseManager.createDatabaseNamed(Alloy.CFG.books_db_name);
 
-db.ensureCreated();
+db.defineFilter('books_only', function(doc,req) {
+  return doc.modelname === "book";
+});
 
-db.registerFilter('books_only', 'function(doc,req) { return doc.modelname === "book"; }');
-
-var pull = db.replicationFromDatabaseAtURL(Alloy.CFG.remote_couchdb_server);
+var pull = db.pullFromURL(Alloy.CFG.remote_couchdb_server);
 pull.continuous = true;
-pull.addEventListener('progress', function(e) {
-  if (e.completed > (this.completed || 0)) {
+pull.addEventListener('change', function(e) {
+  if (e.total > 0 && e.completed === e.total) {
     Ti.App.fireEvent('books:update_from_server');
-    this.completed = e.completed;
   }
 });
-pull.restart();
+pull.start();
 
-var push = db.replicationToDatabaseAtURL(Alloy.CFG.remote_couchdb_server);
+var push = db.pushToURL(Alloy.CFG.remote_couchdb_server);
 push.continuous = true;
 push.filter = 'books_only';
-push.restart();
+push.start();
 
 // restart replication on app resume
 Ti.App.addEventListener('resume', function() {
-	push.restart();
-	pull.restart();
+	push.start();
+	pull.start();
 });
