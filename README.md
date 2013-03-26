@@ -9,6 +9,9 @@ database suitable for embedding into mobile apps.
 Because the Titanium runtime already contains a JavaScript interpreter, TiTouchDB can run standard JavaScript
 map and reduce functions directly from design documents, just like Apache CouchDB.
 
+Join the #couchbaselite channel on irc.freenode.net to ask talk about all the mobile CouchDB solutions,
+including TiTouchDB.
+
 ## Using the Module
 
 See the Wiki pages for usage instructions and the samples directory for example apps.
