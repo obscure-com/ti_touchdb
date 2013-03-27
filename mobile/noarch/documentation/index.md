@@ -679,6 +679,10 @@ index = 0 will fetch the entire key.  If the index is out of range, returns null
 <a name="replication"/>
 ## Replication
 
+Replicating data to and from a CouchDB database is an asynchronous process.  When you create a `replication`
+object, you must ensure that it stays in scope the entire time it is running.  The easiest way to do this
+is to declare your replication variable _outside_ of any event handlers or functions.
+
 ### Properties
 
 **createTarget**
