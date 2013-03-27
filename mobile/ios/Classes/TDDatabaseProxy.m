@@ -232,13 +232,13 @@ extern NSString* const kCBLDatabaseChangeNotification;
 }
 
 - (void)_listenerAdded:(NSString*)type count:(int)count {
-    if ([kDatabaseChangedEventName isEqualToString:type] && count == 0) {
+    if ([kDatabaseChangedEventName isEqualToString:type] && count == 1) {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(databaseChanged:) name:kCBLDatabaseChangeNotification object:nil];
     }
 }
 
 - (void)_listenerRemoved:(NSString*)type count:(int)count {
-    if ([kDatabaseChangedEventName isEqualToString:type] && count == 0) {
+    if ([kDatabaseChangedEventName isEqualToString:type] && count < 1) {
         [[NSNotificationCenter defaultCenter] removeObserver:self name:kCBLDatabaseChangeNotification object:nil];
     }
 }
