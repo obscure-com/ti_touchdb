@@ -12,7 +12,7 @@ exports.run_tests = function() {
     return rev.type === 'book';
   });
   
-  var checkCount = 20;
+  var checkCount = 20, push, lastmode = -1, pushComplete;
   
   try {
     createDocWithProperties(db, {
@@ -31,7 +31,13 @@ exports.run_tests = function() {
       title: 'National Geographic'
     }, "9781426203862");
     
-    var push = db.pushToURL('http://touchbooks.iriscouch.com/test015');
+    push = db.pushToURL('http://touchbooks.iriscouch.com/test015');
+    push.addEventListener('change', function(e) {
+      if (lastmode == 3 && push.mode == 0) {
+        pushComplete = true;
+      }
+      lastmode = push.mode;
+    })
     push.filter = 'books_only';
     push.start();
   }
@@ -42,7 +48,7 @@ exports.run_tests = function() {
   
   // TODO maybe launch replication in a timeout and block on the check?
   var interval = setInterval(function() {
-    if (push.completed) {
+    if (pushComplete) {
       Ti.API.info("replication done!");
       clearInterval(interval);
       db.deleteDatabase();
