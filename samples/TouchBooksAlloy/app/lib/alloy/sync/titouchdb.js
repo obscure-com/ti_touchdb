@@ -47,10 +47,6 @@ function InitAdapter(config) {
     Ti.API.error('Missing required adapter configuration property: dbname');
   }
   
-  if (!_.isString(config.adapter.collection_name) || config.adapter.collection_name.length < 1) {
-    Ti.API.error('Missing required adapter configuration property: collection_name');
-  }
-  
   db = manager.createDatabaseNamed(config.adapter.dbname);
   
   // register views
