@@ -207,6 +207,12 @@
     return [NSNumber numberWithBool:[self.database tracksChanges]];
 }
 
+- (void)setTracksChanges:(id)args {
+    NSNumber * tracksChanges;
+    ENSURE_ARG_AT_INDEX(tracksChanges, args, 0, NSNumber);
+    [self.database setTracksChanges:[tracksChanges boolValue]];
+}
+
 - (id)lastSequenceNumber:(id)args {
     return [NSNumber numberWithUnsignedInteger:[self.database lastSequenceNumber]];
 }
