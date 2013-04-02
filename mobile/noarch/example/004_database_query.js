@@ -26,6 +26,18 @@ exports.run_tests = function() {
       assert(row.key == i*2, 'incorrect key for row '+i+': '+row.key);
     }
     
+    // queryAllDocuments
+    var q2 = db.queryAllDocuments();
+    assert(q2 != null, 'queryAllDocuments returned null');
+    
+    var r2 = q2.rows();
+    assert(r2 != null, 'q2.rows() returned null');
+    assert(r2.count == 10, 'r2 returned an incorrect number of documents: 10 != '+r2.count);
+    for (i=0; i < r2.count; i++) {
+      var row = r2.rowAtIndex(i);
+      assert(row != null, 'mising rowAtIndex('+i+')');
+    }
+    
     db.deleteDatabase();
   }
   catch (e) {
