@@ -55,6 +55,13 @@ extern NSString* const kCBLDatabaseChangeNotification;
 
 #pragma mark Public API
 
+- (id)compact:(id)args {
+    RELEASE_TO_NIL(lastError)
+
+    BOOL result = [self.database compact:&lastError];
+    return NUMBOOL(result);
+}
+
 - (id)deleteDatabase:(id)args {
     RELEASE_TO_NIL(lastError)
 
