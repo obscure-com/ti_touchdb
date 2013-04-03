@@ -19,9 +19,13 @@
                   error.domain, @"domain",
                   error.localizedDescription, @"description",
                   nil];
+        /*
+        // who knows what evil lurks in the hearts of error.userInfo?
+        // whatever it is, it can't be serialized to javascript...
         if (error.userInfo) {
             [result setObject:error.userInfo forKey:@"userInfo"];
         }
+        */
     }
     else {
         result = [NSMutableDictionary dictionaryWithObject:NUMBOOL(NO) forKey:@"error"];

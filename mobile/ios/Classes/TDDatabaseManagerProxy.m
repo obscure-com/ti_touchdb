@@ -88,6 +88,26 @@
     return result;
 }
 
+/** Replaces or installs a database from a file.
+ This is primarily used to install a canned database on first launch of an app, in which case you should first check .exists to avoid replacing the database if it exists already. The canned database would have been copied into your app bundle at build time.
+ @return  YES if the database was copied, NO if an error occurred. */
+- (id)installDatabase:(id)args {
+    NSString * name;
+    NSString * pathToDatabase;
+    NSString * pathToAttachments;
+    
+    ENSURE_ARG_AT_INDEX(name, args, 0, NSString)
+    ENSURE_ARG_AT_INDEX(pathToDatabase, args, 1, NSString)
+    ENSURE_ARG_AT_INDEX(pathToAttachments, args, 2, NSString)
+    
+    RELEASE_TO_NIL(lastError)
+    
+    BOOL result = [self.databaseManager replaceDatabaseNamed:name withDatabaseFile:pathToDatabase withAttachments:pathToAttachments error:&lastError];
+    [lastError retain];
+    
+    return NUMBOOL(result);
+}
+
 /**
  An array of the names of all existing databases.
  */
