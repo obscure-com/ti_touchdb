@@ -14,7 +14,7 @@ exports.run_tests = function() {
     assert(allnames.length == 0, 'allDatabaseNames should return empty array: '+allnames.length);
 
     var nonexistantdb = mgr.databaseNamed('test002');
-    assert(!mgr.error, 'unexpected database manager error: nonexistant test002');
+    assert(!mgr.error, 'unexpected database manager error: nonexistant test002 '+JSON.stringify(mgr.error));
     assert(!nonexistantdb, 'databaseManager.databaseNamed() returned a nonexistant database');
   
     var newdb = mgr.createDatabaseNamed('test002');
@@ -40,6 +40,21 @@ exports.run_tests = function() {
     var invaliddb = mgr.createDatabaseNamed('_REpL1Cati0n');
     assert(mgr.error, 'missing error field');
     assert(!invaliddb, 'failed to return error when creating a database with an invalid name');
+    
+    // install database
+    var basedir = Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory, 'assets', 'CouchbaseLite').path;
+    var dbfile = [basedir, 'elements.touchdb'].join(Ti.Filesystem.separator);
+    var attdir = [basedir, 'elements attachments'].join(Ti.Filesystem.separator);
+    var installresult = mgr.installDatabase('elements', dbfile, attdir);
+    assert(installresult, 'install failed: '+mgr.error);
+    var eldb = mgr.databaseNamed('elements');
+    assert(eldb, 'could not open elements database after install');
+    eldb.deleteDatabase();
+    
+    // install failure
+    installresult = mgr.installDatabase('failure', '/foo/bar/baz', '/bing/bang/boom');
+    assert(!installresult, 'failed install returned true');
+    assert(mgr.error, 'no error object on failed install');
   }
   catch (e) {
       throw e;

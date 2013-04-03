@@ -54,6 +54,7 @@ window.addEventListener('open', function() {
     testname.text = "all tests passed! whoopee!";
   }
   catch (e) {
+    Ti.API.error(JSON.stringify(e));
     status.text = e;
   }
 });

@@ -51,6 +51,10 @@ exports.run_tests = function() {
     var rows = query.rows();
     assert(rows !== null, "all docs query rows returned null");
     assert(rows.count === 2, "incorrect number of rows returned by all docs query: "+rows.count);
+
+    // compact
+    var compacted = a.compact();
+    assert(a, "compact failed");
     
     a.deleteDatabase();
   }
