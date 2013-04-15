@@ -15,7 +15,7 @@ including TiTouchDB.
 ## Roadmap
 
 If you are starting a new iOS-only project based on this module, please consider using the `public-api` branch
-instead of master.  That branch is based on [Couchbase Lite](https://github.com/couchbaselabs/couchbase-lite-ios),
+instead of master.  That branch is based on [Couchbase Lite](https://github.com/couchbase/couchbase-lite-ios),
 the latest and greatest mobile CouchDB library from Couchbase.  I'm basically waiting for Couchbase Lite to
 release, after which I will merge `public-api` into master and everything will be based on that library.
 
