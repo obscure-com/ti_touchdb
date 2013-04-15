@@ -9,8 +9,15 @@ database suitable for embedding into mobile apps.
 Because the Titanium runtime already contains a JavaScript interpreter, TiTouchDB can run standard JavaScript
 map and reduce functions directly from design documents, just like Apache CouchDB.
 
-Join the #couchbaselite channel on irc.freenode.net to ask talk about all the mobile CouchDB solutions,
+Join the #couchbasemobile channel on irc.freenode.net to ask talk about all the mobile CouchDB solutions,
 including TiTouchDB.
+
+## Roadmap
+
+If you are starting a new iOS-only project based on this module, please consider using the `public-api` branch
+instead of master.  That branch is based on [Couchbase Lite](https://github.com/couchbaselabs/couchbase-lite-ios),
+the latest and greatest mobile CouchDB library from Couchbase.  I'm basically waiting for Couchbase Lite to
+release, after which I will merge `public-api` into master and everything will be based on that library.
 
 ## Using the Module
 
