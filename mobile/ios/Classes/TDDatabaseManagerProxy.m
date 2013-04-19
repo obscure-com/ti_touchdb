@@ -118,6 +118,13 @@
     return result ? result : [NSArray array];
 }
 
+/**
+ * internal server URL
+ */
+- (id)internalURL {
+    return self.databaseManager.internalURL;
+}
+
 - (id)error {
     return lastError ? [self errorDict:lastError] : nil;
 }

@@ -97,12 +97,10 @@
 #pragma mark Replication Status
 
 - (void)start:(id)args {
-    ENSURE_UI_THREAD_1_ARG(args)
     [self.replication start];
 }
 
 - (void)stop:(id)args {
-    ENSURE_UI_THREAD_1_ARG(args)
     [self.replication stop];
 }
 

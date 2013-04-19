@@ -230,6 +230,10 @@ extern NSString* const kCBLDatabaseChangeNotification;
     return result;
 }
 
+- (id)internalURL {
+    return self.database.internalURL;
+}
+
 #pragma mark Change Notifications
 
 #define kDatabaseChangedEventName @"change"

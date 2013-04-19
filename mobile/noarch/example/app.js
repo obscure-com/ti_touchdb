@@ -7,7 +7,7 @@ var window = Ti.UI.createWindow({
 // turn on logging
 Ti.App.Properties.setBool("Log", true);
 Ti.App.Properties.setBool("LogSync", true);
-// Ti.App.Properties.setBool("LogSyncVerbose", true);
+Ti.App.Properties.setBool("LogSyncVerbose", true);
 
 var testname = Ti.UI.createLabel();
 window.add(testname);
@@ -51,6 +51,8 @@ window.addEventListener('open', function() {
     require('014_replication').run_tests();
     testname.text = '015_filtered_replication';
     require('015_filtered_replication').run_tests();
+    testname.text = '016_internal_replication';
+    require('016_internal_replication').run_tests();
     testname.text = "all tests passed! whoopee!";
   }
   catch (e) {

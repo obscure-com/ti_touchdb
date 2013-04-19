@@ -50,6 +50,7 @@
 		DAE20E3216C2CE2800A7D137 /* CBLDatabase+NotificationPriorityFix.h in Headers */ = {isa = PBXBuildFile; fileRef = DAE20E3016C2CE2800A7D137 /* CBLDatabase+NotificationPriorityFix.h */; };
 		DAE20E3316C2CE2800A7D137 /* CBLDatabase+NotificationPriorityFix.m in Sources */ = {isa = PBXBuildFile; fileRef = DAE20E3116C2CE2800A7D137 /* CBLDatabase+NotificationPriorityFix.m */; };
 		DAE72A37152E66C900622013 /* TiProxy+Errors.h in Headers */ = {isa = PBXBuildFile; fileRef = DAE72A35152E66C800622013 /* TiProxy+Errors.h */; };
+		DAEC46AB1721ABC600479C1F /* libCouchbaseLiteListener.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DAE20E2A16C2C9D700A7D137 /* libCouchbaseLiteListener.a */; };
 		DAF6E66E1680F84D003217C3 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAF6E66D1680F84D003217C3 /* CFNetwork.framework */; };
 		DAF6E6701680F854003217C3 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAF6E66F1680F854003217C3 /* SystemConfiguration.framework */; };
 		DAF6E6721680F85B003217C3 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DAF6E6711680F85B003217C3 /* libz.dylib */; };
@@ -141,6 +142,13 @@
 			remoteGlobalIDString = 27B0B7A81492B83B00A817AD;
 			remoteInfo = "CBL iOS library";
 		};
+		DAEC46AC1721B06D00479C1F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DAE20E0B16C2C9D600A7D137 /* CouchbaseLite.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = DA023B2614BCA94C008184BB;
+			remoteInfo = "Listener iOS Library";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -188,6 +196,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DAEC46AB1721ABC600479C1F /* libCouchbaseLiteListener.a in Frameworks */,
 				DAE20E2F16C2C9F700A7D137 /* libCouchbaseLite.a in Frameworks */,
 				DAF6E6741680F862003217C3 /* libsqlite3.dylib in Frameworks */,
 				DAF6E6721680F85B003217C3 /* libz.dylib in Frameworks */,
@@ -331,6 +340,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				DAEC46AD1721B06D00479C1F /* PBXTargetDependency */,
 				DAE20E2E16C2C9F200A7D137 /* PBXTargetDependency */,
 			);
 			name = titouchdb;
@@ -495,6 +505,11 @@
 			isa = PBXTargetDependency;
 			name = "CBL iOS library";
 			targetProxy = DAE20E2D16C2C9F200A7D137 /* PBXContainerItemProxy */;
+		};
+		DAEC46AD1721B06D00479C1F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "Listener iOS Library";
+			targetProxy = DAEC46AC1721B06D00479C1F /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
