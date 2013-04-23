@@ -9,6 +9,9 @@
 #import "TDReplicationProxy.h"
 #import "TiProxy+Errors.h"
 
+extern NSString * CBL_ReplicatorProgressChangedNotification;
+extern NSString * CBL_ReplicatorStoppedNotification;
+
 @interface TDReplicationProxy ()
 @property (nonatomic, strong) CBLReplication * replication;
 @end
@@ -20,6 +23,9 @@
         self.replication = replication;
 
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(replicationChanged:) name:kCBLReplicationChangeNotification object:replication];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(replicationChanged:) name:CBL_ReplicatorProgressChangedNotification object:replication];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(replicationChanged:) name:CBL_ReplicatorStoppedNotification object:replication];
+        
     }
     return self;
 }
@@ -97,10 +103,12 @@
 #pragma mark Replication Status
 
 - (void)start:(id)args {
+    ENSURE_UI_THREAD_1_ARG(args)
     [self.replication start];
 }
 
 - (void)stop:(id)args {
+    ENSURE_UI_THREAD_1_ARG(args)
     [self.replication stop];
 }
 
