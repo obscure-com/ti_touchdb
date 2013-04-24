@@ -13,16 +13,13 @@ exports.run_tests = function() {
   var pullDone = false, pushDone = false, checkCount = 20;
   
   try {
-    Ti.API.info("starting replication test");
+    createDocuments(db_source, 20);
 
-    var dt = new Date();
-    createDocWithProperties(db_source, {
-      testname: 'internal_replication',
-      timestamp: dt.getTime() / 1000,
-    });
+    Ti.API.info("created 20 docs");
     
     var pull = db_target.pullFromURL(db_source.internalURL);
     pull.addEventListener('change', function(e) {
+      Ti.API.info("internal replication: pull change: "+JSON.stringify(e));
       assert(!pull.error.error, "replication error: "+JSON.stringify(pull.error));
       pullTotal = pull.total > pullTotal ? pull.total : pullTotal;
       pullCompleted = pull.completed > pullCompleted ? pull.completed : pullCompleted;
