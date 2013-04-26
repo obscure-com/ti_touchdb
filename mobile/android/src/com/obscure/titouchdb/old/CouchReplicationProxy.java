@@ -1,4 +1,4 @@
-package com.obscure.titouchdb;
+package com.obscure.titouchdb.old;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,9 +12,9 @@ import org.appcelerator.kroll.common.CurrentActivityListener;
 import org.appcelerator.titanium.util.TiUIHelper;
 
 import android.app.Activity;
-import android.util.Log;
 
 import com.couchbase.touchdb.replicator.TDReplicator;
+import com.obscure.titouchdb.TitouchdbModule;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)
 public class CouchReplicationProxy extends KrollProxy implements Observer {
@@ -67,12 +67,15 @@ public class CouchReplicationProxy extends KrollProxy implements Observer {
 	@Kroll.getProperty(name = "status")
 	public int getStatus() {
 		// TODO real status
+	    return 0;
+	    /*
 		if (isCompleted()) {
 			return TitouchdbModule.REPLICATION_STATE_COMPLETED;
 		}
 		else {
 			return TitouchdbModule.REPLICATION_STATE_IDLE;
 		}
+		*/
 	}
 
 	@Kroll.getProperty(name = "total")

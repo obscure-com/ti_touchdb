@@ -1,4 +1,4 @@
-package com.obscure.titouchdb;
+package com.obscure.titouchdb.old;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,8 +11,7 @@ import android.util.Log;
 import com.couchbase.touchdb.TDBody;
 import com.couchbase.touchdb.TDDatabase;
 import com.couchbase.touchdb.TDRevision;
-import com.couchbase.touchdb.TDValidationBlock;
-import com.obscure.titouchdb.js.JavascriptValidationCompiler;
+import com.obscure.titouchdb.TitouchdbModule;
 
 @SuppressWarnings("unchecked")
 @Kroll.proxy(parentModule = TitouchdbModule.class)
@@ -29,8 +28,6 @@ public class CouchDesignDocumentProxy extends CouchDocumentProxy {
 	private boolean								includeLocalSequence	= false;
 
 	private boolean								changedValidation		= false;
-
-	private JavascriptValidationCompiler		validationCompiler		= new JavascriptValidationCompiler();
 
 	private String								ddocName;
 
@@ -169,8 +166,8 @@ public class CouchDesignDocumentProxy extends CouchDocumentProxy {
 		
 		String validationFunction = (String) docGet("validate_doc_update");
 		if (validationFunction != null && changedValidation) {
-			TDValidationBlock validationBlock = validationCompiler.compileValidationFunction(db, validationFunction, language());
-			db.defineValidation(ddocName, validationBlock);
+//			TDValidationBlock validationBlock = validationCompiler.compileValidationFunction(db, validationFunction, language());
+//			db.defineValidation(ddocName, validationBlock);
 			changedValidation = false;
 		}
 	}

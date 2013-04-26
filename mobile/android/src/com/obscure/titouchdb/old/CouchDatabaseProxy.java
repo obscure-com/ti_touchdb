@@ -1,4 +1,4 @@
-package com.obscure.titouchdb;
+package com.obscure.titouchdb.old;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -16,6 +16,7 @@ import com.couchbase.touchdb.TDDatabase;
 import com.couchbase.touchdb.TDRevision;
 import com.couchbase.touchdb.TDStatus;
 import com.couchbase.touchdb.replicator.TDReplicator;
+import com.obscure.titouchdb.TitouchdbModule;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)
 public class CouchDatabaseProxy extends KrollProxy {

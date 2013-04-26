@@ -1,4 +1,4 @@
-package com.obscure.titouchdb;
+package com.obscure.titouchdb.old;
 
 import java.util.Map;
 
@@ -7,7 +7,7 @@ import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 
 import com.couchbase.touchdb.TDDatabase;
-import com.obscure.titouchdb.js.TypeConverter;
+import com.obscure.titouchdb.TitouchdbModule;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)
 public class CouchQueryRowProxy extends KrollProxy {
@@ -72,7 +72,7 @@ public class CouchQueryRowProxy extends KrollProxy {
 	 */
 	@Kroll.getProperty(name = "documentProperties")
 	public KrollDict documentProperties() {
-		return (KrollDict) TypeConverter.toJSObject(documentProperties);
+		return null;// (KrollDict) TypeConverter.toJSObject(documentProperties);
 	}
 
 	/**
@@ -85,7 +85,7 @@ public class CouchQueryRowProxy extends KrollProxy {
 
 	@Kroll.getProperty(name = "key")
 	public Object key() {
-		return TypeConverter.toJSObject(key);
+		return null;// TypeConverter.toJSObject(key);
 	}
 
 	/**
@@ -104,7 +104,7 @@ public class CouchQueryRowProxy extends KrollProxy {
 		else if (index == 0) {
 			obj = key;
 		}
-		return TypeConverter.toJSObject(obj);
+		return null;//TypeConverter.toJSObject(obj);
 	}
 
 	/**
@@ -122,7 +122,7 @@ public class CouchQueryRowProxy extends KrollProxy {
 
 	@Kroll.getProperty(name = "value")
 	public Object value() {
-		return TypeConverter.toJSObject(value);
+		return null;//TypeConverter.toJSObject(value);
 	}
 
 }

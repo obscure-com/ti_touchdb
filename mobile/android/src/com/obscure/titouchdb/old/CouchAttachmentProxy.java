@@ -1,4 +1,4 @@
-package com.obscure.titouchdb;
+package com.obscure.titouchdb.old;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -14,6 +14,7 @@ import android.util.Log;
 
 import com.couchbase.touchdb.TDAttachment;
 import com.couchbase.touchdb.TDRevision;
+import com.obscure.titouchdb.TitouchdbModule;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)
 public class CouchAttachmentProxy extends KrollProxy {

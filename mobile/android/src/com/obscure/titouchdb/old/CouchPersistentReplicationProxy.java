@@ -1,4 +1,4 @@
-package com.obscure.titouchdb;
+package com.obscure.titouchdb.old;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,6 +11,7 @@ import org.appcelerator.kroll.annotations.Kroll;
 
 import com.couchbase.touchdb.TDDatabase;
 import com.couchbase.touchdb.replicator.TDReplicator;
+import com.obscure.titouchdb.TitouchdbModule;
 
 /**
  * TODO this isn't really a persistent replication -- it just fakes it using a
@@ -92,12 +93,15 @@ public class CouchPersistentReplicationProxy extends KrollProxy implements Obser
     @Kroll.getProperty(name = "status")
     public int getStatus() {
         // TODO real status
+        return 0;
+        /*
         if (getCompleted() == getTotal()) {
             return TitouchdbModule.REPLICATION_STATE_COMPLETED;
         }
         else {
             return TitouchdbModule.REPLICATION_STATE_IDLE;
         }
+        */
     }
 
     @Kroll.getProperty(name = "target")

@@ -1,4 +1,4 @@
-package com.obscure.titouchdb;
+package com.obscure.titouchdb.old;
 
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +13,7 @@ import com.couchbase.touchdb.TDStatus;
 import com.couchbase.touchdb.TDView;
 import com.couchbase.touchdb.TDViewMapBlock;
 import com.couchbase.touchdb.TDViewReduceBlock;
+import com.obscure.titouchdb.TitouchdbModule;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)
 public class SlowQueryCouchQueryProxy extends CouchQueryProxy {

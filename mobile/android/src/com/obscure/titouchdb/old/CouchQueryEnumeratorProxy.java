@@ -1,4 +1,4 @@
-package com.obscure.titouchdb;
+package com.obscure.titouchdb.old;
 
 import java.util.Iterator;
 import java.util.List;
@@ -8,6 +8,7 @@ import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 
 import com.couchbase.touchdb.TDDatabase;
+import com.obscure.titouchdb.TitouchdbModule;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)
 public class CouchQueryEnumeratorProxy extends KrollProxy implements Iterator<CouchQueryRowProxy> {

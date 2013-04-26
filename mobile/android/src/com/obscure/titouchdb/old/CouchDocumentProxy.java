@@ -1,4 +1,4 @@
-package com.obscure.titouchdb;
+package com.obscure.titouchdb.old;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,7 +17,7 @@ import com.couchbase.touchdb.TDDatabase;
 import com.couchbase.touchdb.TDRevision;
 import com.couchbase.touchdb.TDRevisionList;
 import com.couchbase.touchdb.TDStatus;
-import com.obscure.titouchdb.js.TypeConverter;
+import com.obscure.titouchdb.TitouchdbModule;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)
 public class CouchDocumentProxy extends KrollProxy {
@@ -113,7 +113,8 @@ public class CouchDocumentProxy extends KrollProxy {
 	@Kroll.getProperty(name = "properties")
 	public KrollDict properties() {
 		if (currentRevision != null && currentRevision.getProperties() != null) {
-			return (KrollDict) TypeConverter.toJSObject(currentRevision.getProperties());
+//			return (KrollDict) TypeConverter.toJSObject(currentRevision.getProperties());
+		    return null;
 		}
 		else {
 			return new KrollDict();
@@ -125,7 +126,8 @@ public class CouchDocumentProxy extends KrollProxy {
 	@Kroll.method
 	public KrollDict putProperties(KrollDict props) {
 		Map<String, Object> result = putPropertiesForRevisionID(currentRevision != null ? currentRevision.getRevId() : null, props);
-		return (KrollDict) TypeConverter.toJSObject(result);
+//		return (KrollDict) TypeConverter.toJSObject(result);
+		return null;
 	}
 
 	protected Map<String, Object> putPropertiesForRevisionID(String revid, KrollDict props) {
@@ -200,7 +202,7 @@ public class CouchDocumentProxy extends KrollProxy {
 		KrollDict props = this.properties();
 		for (String key : props.keySet()) {
 			if (!key.startsWith("_")) {
-				result.put(key, TypeConverter.toJSObject(props.get(key)));
+//				result.put(key, TypeConverter.toJSObject(props.get(key)));
 			}
 		}
 		return result;
