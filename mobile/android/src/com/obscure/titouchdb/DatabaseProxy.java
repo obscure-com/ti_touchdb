@@ -1,116 +1,139 @@
 package com.obscure.titouchdb;
 
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollFunction;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
-import org.appcelerator.titanium.TiContext;
 
+import android.util.Log;
+
+import com.couchbase.touchdb.TDDatabase;
+import com.couchbase.touchdb.TDStatus;
+
+@Kroll.proxy(parentModule = TitouchdbModule.class)
 public class DatabaseProxy extends KrollProxy {
-    
-    private KrollDict lastError;
 
-    public DatabaseProxy(TiContext tiContext) {
-        super(tiContext);
-        // TODO create native object
+    private static final String        LCAT               = "DatabaseProxy";
+
+    private KrollDict                  lastError;
+
+    private TDDatabase                 database           = null;
+
+    private Map<String, DocumentProxy> documentProxyCache = new HashMap<String, DocumentProxy>();
+
+    public DatabaseProxy(TDDatabase database) {
+        assert database != null;
+        this.database = database;
     }
 
-    @Kroll.getProperty(name="name")
+    @Kroll.getProperty(name = "name")
     public String getName() {
-        return null;
+        return database.getName();
     }
-    
-    @Kroll.getProperty(name="lastSequenceNumber")
+
+    @Kroll.getProperty(name = "lastSequenceNumber")
     public Long getLastSequenceNumber() {
-        return null;
+        return database.getLastSequence();
     }
-    
-    @Kroll.getProperty(name="documentCount")
-    public Long getDocumentCount() {
-        return null;
+
+    @Kroll.getProperty(name = "documentCount")
+    public Integer getDocumentCount() {
+        return database.getDocumentCount();
     }
-    
+
     @Kroll.method
     public boolean compact() {
-        return false;
+        TDStatus status = database.compact();
+        return status != null && status.isSuccessful();
     }
-    
+
     @Kroll.method
     public boolean deleteDatabase() {
-        return false;
+        return database.deleteDatabase();
     }
-    
+
     @Kroll.method
-    public DocumentProxy documentWithID(String docid) {
-        return null;
+    public DocumentProxy documentWithID(@Kroll.argument(optional=true) String docid) {
+        if (docid == null || docid.length() < 1) {
+            docid = TDDatabase.generateDocumentId();
+        }
+
+        DocumentProxy result = documentProxyCache.get(docid);
+        if (result == null) {
+            result = new DocumentProxy(this.database, docid);
+            documentProxyCache.put(docid, result);
+        }
+        return result;
     }
-    
-    @Kroll.getProperty(name="lastError")
+
+    @Kroll.getProperty(name = "lastError")
     public KrollDict getLastError() {
         return this.lastError;
     }
-    
+
     @Kroll.method
     public DocumentProxy untitledDocument() {
-        return null;
+        return documentWithID(TDDatabase.generateDocumentId());
     }
-    
+
     @Kroll.method
     public DocumentProxy cachedDocumentWithID(String docid) {
-        return null;
+        return this.documentWithID(docid);
     }
-    
+
     @Kroll.method
     public void clearDocumentCache() {
-        
+        // noop on android
     }
-    
+
     @Kroll.method
     public QueryProxy queryAllDocuments() {
-        return null;
+        return new QueryProxy(this.database, null);
     }
-    
+
     @Kroll.method
     public QueryProxy slowQueryWithMap(KrollFunction map) {
         return null;
     }
-    
+
     @Kroll.method
-    public TDViewProxy viewNamed(String name) {
+    public ViewProxy viewNamed(String name) {
         return null;
     }
-    
+
     @Kroll.method
     public void defineValidation(String name, KrollFunction validation) {
-        
+
     }
-    
+
     @Kroll.method
     public void defineFilter(String name, KrollFunction filter) {
-        
+
     }
-    
+
     @Kroll.method
-    public TDReplicationProxy pushToURL(String url) {
+    public ReplicationProxy pushToURL(String url) {
         return null;
     }
-    
+
     @Kroll.method
-    public TDReplicationProxy pullFromURL(String url) {
+    public ReplicationProxy pullFromURL(String url) {
         return null;
     }
-    
+
     @Kroll.method
-    public TDReplicationProxy[] replicateWithURL(String url) {
+    public ReplicationProxy[] replicateWithURL(String url) {
         return null;
     }
-    
-    @Kroll.getProperty(name="internalURL")
+
+    @Kroll.getProperty(name = "internalURL")
     public URL getInternalURL() {
         return null;
     }
-    
+
     // TODO change notifications
 }

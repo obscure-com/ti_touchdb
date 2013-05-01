@@ -2,13 +2,16 @@ package com.obscure.titouchdb;
 
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.annotations.Kroll;
-import org.appcelerator.titanium.TiContext;
 
+import com.couchbase.touchdb.TDRevision;
+
+@Kroll.proxy(parentModule=TitouchdbModule.class)
 public class RevisionProxy extends AbstractRevisionProxy {
 
-    public RevisionProxy(TiContext tiContext) {
-        super(tiContext);
-        // TODO Auto-generated constructor stub
+    private TDRevision revision;
+
+    public RevisionProxy(TDRevision rev) {
+        this.revision = rev;
     }
 
     @Kroll.getProperty(name="propertiesAreLoaded")

@@ -8,6 +8,7 @@ import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.titanium.TiBlob;
 import org.appcelerator.titanium.TiContext;
 
+@Kroll.proxy(parentModule=TitouchdbModule.class)
 public class AttachmentProxy extends KrollProxy {
 
     private KrollDict lastError = null;

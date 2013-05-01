@@ -4,18 +4,12 @@ import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollObject;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
-import org.appcelerator.titanium.TiContext;
 
-public class AbstractRevisionProxy extends KrollProxy {
+@Kroll.proxy(creatableInModule=TitouchdbModule.class)
+public abstract class AbstractRevisionProxy extends KrollProxy {
 
     protected KrollDict lastError = null;
     
-    public AbstractRevisionProxy(TiContext tiContext) {
-        super(tiContext);
-        // TODO Auto-generated constructor stub
-    }
-
-
     @Kroll.getProperty(name="isDeleted")
     public boolean isDeleted() {
         return false;

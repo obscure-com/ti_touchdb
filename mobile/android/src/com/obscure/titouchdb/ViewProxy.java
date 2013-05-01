@@ -5,9 +5,10 @@ import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.titanium.TiContext;
 
-public class TDViewProxy extends KrollProxy {
+@Kroll.proxy(parentModule=TitouchdbModule.class)
+public class ViewProxy extends KrollProxy {
 
-    public TDViewProxy(TiContext tiContext) {
+    public ViewProxy(TiContext tiContext) {
         super(tiContext);
         // TODO Auto-generated constructor stub
     }

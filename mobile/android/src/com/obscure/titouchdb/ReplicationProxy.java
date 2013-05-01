@@ -7,11 +7,12 @@ import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.titanium.TiContext;
 
-public class TDReplicationProxy extends KrollProxy {
+@Kroll.proxy(parentModule=TitouchdbModule.class)
+public class ReplicationProxy extends KrollProxy {
 
     private KrollDict lastError = null;
     
-    public TDReplicationProxy(TiContext tiContext) {
+    public ReplicationProxy(TiContext tiContext) {
         super(tiContext);
         // TODO Auto-generated constructor stub
     }

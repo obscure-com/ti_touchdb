@@ -5,12 +5,8 @@ import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.titanium.TiBlob;
 import org.appcelerator.titanium.TiContext;
 
+@Kroll.proxy(parentModule=TitouchdbModule.class)
 public class NewRevisionProxy extends AbstractRevisionProxy {
-
-    public NewRevisionProxy(TiContext tiContext) {
-        super(tiContext);
-        // TODO Auto-generated constructor stub
-    }
 
     @Kroll.setProperty(name="isDeleted")
     public void setIsDeleted(boolean isDeleted) {
