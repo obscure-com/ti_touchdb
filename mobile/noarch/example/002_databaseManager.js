@@ -11,7 +11,7 @@ exports.run_tests = function() {
     var allnames = mgr.allDatabaseNames;
     assert(!mgr.error, 'unexpected database manager error: allDatabaseNames');
     assert(allnames, 'allDatabaseNames should not return null');
-    assert(allnames.length == 0, 'allDatabaseNames should return empty array: '+allnames.length);
+    assert(allnames.length == 0, 'allDatabaseNames should return empty array: '+allnames);
 
     var nonexistantdb = mgr.databaseNamed('test002');
     assert(!mgr.error, 'unexpected database manager error: nonexistant test002 '+JSON.stringify(mgr.error));
@@ -38,23 +38,25 @@ exports.run_tests = function() {
 
     // database with invalid characters
     var invaliddb = mgr.createDatabaseNamed('_REpL1Cati0n');
-    assert(mgr.error, 'missing error field');
     assert(!invaliddb, 'failed to return error when creating a database with an invalid name');
-    
-    // install database
-    var basedir = Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory, 'assets', 'CouchbaseLite').path;
-    var dbfile = [basedir, 'elements.touchdb'].join(Ti.Filesystem.separator);
-    var attdir = [basedir, 'elements attachments'].join(Ti.Filesystem.separator);
-    var installresult = mgr.installDatabase('elements', dbfile, attdir);
-    assert(installresult, 'install failed: '+mgr.error);
-    var eldb = mgr.databaseNamed('elements');
-    assert(eldb, 'could not open elements database after install');
-    eldb.deleteDatabase();
-    
-    // install failure
-    installresult = mgr.installDatabase('failure', '/foo/bar/baz', '/bing/bang/boom');
-    assert(!installresult, 'failed install returned true');
-    assert(mgr.error, 'no error object on failed install');
+    assert(mgr.error, 'missing error field');
+
+    if (Ti.Platform.osname === 'iphone' || Ti.Platform.osname === 'ipad') {
+      // install database
+      var basedir = Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory, 'assets', 'CouchbaseLite').path;
+      var dbfile = [basedir, 'elements.touchdb'].join(Ti.Filesystem.separator);
+      var attdir = [basedir, 'elements attachments'].join(Ti.Filesystem.separator);
+      var installresult = mgr.installDatabase('elements', dbfile, attdir);
+      assert(installresult, 'install failed: '+mgr.error);
+      var eldb = mgr.databaseNamed('elements');
+      assert(eldb, 'could not open elements database after install');
+      eldb.deleteDatabase();
+      
+      // install failure
+      installresult = mgr.installDatabase('failure', '/foo/bar/baz', '/bing/bang/boom');
+      assert(!installresult, 'failed install returned true');
+      assert(mgr.error, 'no error object on failed install');
+    }
   }
   catch (e) {
       throw e;
