@@ -17,6 +17,7 @@
 #import "TDRevisionProxy.h"
 
 @interface TDBridge ()
+- (void)bindCallback:(TiObjectCallAsFunctionCallback)fn name:(NSString*)name context:(TiContextRef)context;
 @end
 
 @implementation TDBridge
@@ -58,15 +59,12 @@ CBLMapEmitBlock _emitBlock;
 #pragma mark Public API
 
 - (CBLMapBlock)mapBlockForCallback:(KrollCallback *)callback inExecutionContext:(id<TiEvaluator>)context {
-    TiStringRef invokerName = TiStringCreateWithCFString((CFStringRef) @"emit");
-    TiObjectRef invoker = TiObjectMakeFunctionWithCallback(callback.context.context, invokerName, &EmitCallback);
-    KrollCallback * emitCallback = [[KrollCallback alloc] initWithCallback:invoker thisObject:nil context:callback.context];
-    TiStringRelease(invokerName);
+    [self bindCallback:&EmitCallback name:@"emit" context:[context krollContext].context];
     
     CBLMapBlock result = ^(NSDictionary* doc, void (^emit)(id key, id value)) {
         @synchronized(self) {
             _emitBlock = emit;
-            [callback call:[NSArray arrayWithObjects:doc, emitCallback, nil] thisObject:nil];
+            [callback call:[NSArray arrayWithObjects:doc, nil] thisObject:nil];
         }
     };
     return [[result copy] autorelease];
@@ -137,8 +135,7 @@ CBLMapEmitBlock _emitBlock;
 
 #pragma mark Bindings
 
-/*
-- (void)bindCallback:(TiObjectCallAsFunctionCallback)fn name:(NSString*)name context:(TiContextRef)context; {
+- (void)bindCallback:(TiObjectCallAsFunctionCallback)fn name:(NSString*)name context:(TiContextRef)context {
 	// create the invoker bridge
 	TiStringRef invokerFnName = TiStringCreateWithCFString((CFStringRef) name);
 	TiValueRef invoker = TiObjectMakeFunctionWithCallback(context, invokerFnName, fn);
@@ -151,7 +148,6 @@ CBLMapEmitBlock _emitBlock;
 	}
 	TiStringRelease(invokerFnName);
 }
-*/
 
 static TiValueRef ThrowException (TiContextRef ctx, NSString *message, TiValueRef *exception) {
 	TiStringRef jsString = TiStringCreateWithCFString((CFStringRef)message);
@@ -161,7 +157,6 @@ static TiValueRef ThrowException (TiContextRef ctx, NSString *message, TiValueRe
 }
 
 static TiValueRef EmitCallback(TiContextRef jsContext, TiObjectRef jsFunction, TiObjectRef jsThis, size_t argCount, const TiValueRef args[], TiValueRef* exception) {
-    
 	if (argCount!=2) {
 		return ThrowException(jsContext, @"invalid number of arguments", exception);
 	}

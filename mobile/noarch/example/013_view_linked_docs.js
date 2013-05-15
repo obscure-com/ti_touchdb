@@ -20,7 +20,7 @@ exports.run_tests = function() {
         lastDocID = doc.documentID;
     });
 
-    var query = db.slowQueryWithMap(function(doc, emit) {
+    var query = db.slowQueryWithMap(function(doc) {
       emit(doc.sequence, { _id: doc.prev });
     });
     assert(query, "slowQueryWithMap returned null");

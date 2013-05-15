@@ -9,7 +9,7 @@ exports.run_tests = function() {
     createDocuments(db, 10);
     assert(db.documentCount === 10, 'incorrect number of documents in the database: '+db.documentCount);
     
-    var q1 = db.slowQueryWithMap(function(doc, emit) {
+    var q1 = db.slowQueryWithMap(function(doc) {
       if (doc.sequence % 2 == 0) {
         emit(doc.sequence, null);
       }

@@ -25,7 +25,7 @@ exports.run_tests = function() {
       assert(view, 'db.viewNamed() returned null');
       assert(view.name === 'vu', 'returned incorrect view name: '+view.name);
 
-      view.setMap(function(doc, emit) {
+      view.setMap(function(doc) {
         emit(doc.name, doc.i);
       }, '1');
 
@@ -77,7 +77,7 @@ exports.run_tests = function() {
       assert(view, 'db.viewNamed() returned null');
       assert(view.name === 'complexView', 'returned incorrect view name: '+view.name);
 
-      view.setMap(function(doc, emit) {
+      view.setMap(function(doc) {
         emit([doc.name, doc.i % 3], null);
       }, '1');
       
@@ -99,7 +99,7 @@ exports.run_tests = function() {
       var view = db.viewNamed('reducedView');
 
       view.setMapAndReduce(
-        function(doc, emit) {
+        function(doc) {
           emit("foo", 1);
         },
         function(keys, values, rereduce) {
