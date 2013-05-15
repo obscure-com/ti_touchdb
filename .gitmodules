@@ -4,3 +4,6 @@
 [submodule "mobile/ios/vendor/couchbase-lite-ios"]
 	path = mobile/ios/vendor/couchbase-lite-ios
 	url = https://github.com/pegli/couchbase-lite-ios.git
+[submodule "mobile/android/vendor/couchbase-lite-android"]
+	path = mobile/android/vendor/couchbase-lite-android
+	url = https://github.com/pegli/couchbase-lite-android.git
