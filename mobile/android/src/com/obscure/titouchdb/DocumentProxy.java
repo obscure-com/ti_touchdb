@@ -10,11 +10,10 @@ import org.appcelerator.kroll.annotations.Kroll;
 
 import android.util.Log;
 
-import com.couchbase.touchdb.TDDatabase;
-import com.couchbase.touchdb.TDDatabase.TDContentOptions;
-import com.couchbase.touchdb.TDRevision;
-import com.couchbase.touchdb.TDRevisionList;
-import com.couchbase.touchdb.TDStatus;
+import com.couchbase.cblite.CBLDatabase;
+import com.couchbase.cblite.CBLDatabase.TDContentOptions;
+import com.couchbase.cblite.CBLRevision;
+import com.couchbase.cblite.CBLStatus;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)
 public class DocumentProxy extends KrollProxy {
@@ -23,14 +22,14 @@ public class DocumentProxy extends KrollProxy {
 
     private KrollDict           lastError = null;
 
-    private TDDatabase          database;
+    private CBLDatabase         database;
 
     private String              docid;
 
-    public DocumentProxy(TDDatabase database, String docid) {
+    public DocumentProxy(CBLDatabase database, String docid) {
         assert database != null;
         assert docid != null;
-        
+
         this.database = database;
         this.docid = docid;
     }
@@ -68,21 +67,21 @@ public class DocumentProxy extends KrollProxy {
         return true;
     }
 
-    private TDRevision getCurrentTDRevision() {
-        TDRevision result = database.getDocumentWithIDAndRev(this.docid, null, EnumSet.of(TDContentOptions.TDNoBody));
-        Log.i(LCAT, "current TDRevision: "+result);
+    private CBLRevision getCurrentCBLRevision() {
+        CBLRevision result = database.getDocumentWithIDAndRev(this.docid, null, EnumSet.of(TDContentOptions.TDNoBody));
+        Log.i(LCAT, "current CBLRevision: " + result);
         return result;
     }
 
     @Kroll.getProperty(name = "currentRevisionID")
     public String getCurrentRevisionID() {
-        TDRevision rev = getCurrentTDRevision();
+        CBLRevision rev = getCurrentCBLRevision();
         return rev != null ? rev.getRevId() : null;
     }
 
     @Kroll.getProperty(name = "currentRevision")
     public RevisionProxy getCurrentRevision() {
-        TDRevision rev = getCurrentTDRevision();
+        CBLRevision rev = getCurrentCBLRevision();
         return rev != null ? new RevisionProxy(rev) : null;
     }
 
@@ -140,18 +139,18 @@ public class DocumentProxy extends KrollProxy {
             prevRevId = (String) properties.get("_rev");
             properties.remove("_rev");
         }
-        
-        TDRevision tostore = new TDRevision(this.docid, null, false);
+
+        CBLRevision tostore = new CBLRevision(this.docid, null, false);
         tostore.setProperties(properties);
 
-        TDStatus resultStatus = new TDStatus();
-        TDRevision rev = this.database.putRevision(tostore, prevRevId, false, resultStatus);
+        CBLStatus resultStatus = new CBLStatus();
+        CBLRevision rev = this.database.putRevision(tostore, prevRevId, false, resultStatus);
         if (rev == null) {
-            this.lastError = TitouchdbModule.convertTDStatusToErrorDict(resultStatus);
-            Log.w(LCAT, "putRevision failed: "+resultStatus.getCode());
+            this.lastError = TitouchdbModule.convertCBLStatusToErrorDict(resultStatus);
+            Log.w(LCAT, "putRevision failed: " + resultStatus.getCode());
             return null;
         }
-        
+
         return new RevisionProxy(rev);
     }
 

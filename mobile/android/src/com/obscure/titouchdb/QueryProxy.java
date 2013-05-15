@@ -10,8 +10,8 @@ import org.appcelerator.kroll.annotations.Kroll;
 
 import android.util.Log;
 
-import com.couchbase.touchdb.TDDatabase;
-import com.couchbase.touchdb.TDQueryOptions;
+import com.couchbase.cblite.CBLDatabase;
+import com.couchbase.cblite.CBLQueryOptions;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)
 public class QueryProxy extends KrollProxy {
@@ -22,13 +22,13 @@ public class QueryProxy extends KrollProxy {
 
     private KrollDict             lastError;
 
-    private TDDatabase            database;
+    private CBLDatabase           database;
 
     private String                view;
 
-    private TDQueryOptions        queryOptions       = new TDQueryOptions();
+    private CBLQueryOptions       queryOptions       = new CBLQueryOptions();
 
-    public QueryProxy(TDDatabase database, String view) {
+    public QueryProxy(CBLDatabase database, String view) {
         assert database != null;
 
         this.database = database;
@@ -163,7 +163,6 @@ public class QueryProxy extends KrollProxy {
         if (view == null) {
             // _all_docs
             rows = (List<Map<String, Object>>) database.getAllDocs(this.queryOptions).get("rows");
-            Log.i(LCAT, "_all_rows: " + rows);
         }
         else {
             // TODO

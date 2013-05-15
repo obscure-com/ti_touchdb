@@ -9,10 +9,8 @@ import org.appcelerator.kroll.KrollFunction;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 
-import android.util.Log;
-
-import com.couchbase.touchdb.TDDatabase;
-import com.couchbase.touchdb.TDStatus;
+import com.couchbase.cblite.CBLDatabase;
+import com.couchbase.cblite.CBLStatus;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)
 public class DatabaseProxy extends KrollProxy {
@@ -21,11 +19,11 @@ public class DatabaseProxy extends KrollProxy {
 
     private KrollDict                  lastError;
 
-    private TDDatabase                 database           = null;
+    private CBLDatabase                database           = null;
 
     private Map<String, DocumentProxy> documentProxyCache = new HashMap<String, DocumentProxy>();
 
-    public DatabaseProxy(TDDatabase database) {
+    public DatabaseProxy(CBLDatabase database) {
         assert database != null;
         this.database = database;
     }
@@ -47,7 +45,7 @@ public class DatabaseProxy extends KrollProxy {
 
     @Kroll.method
     public boolean compact() {
-        TDStatus status = database.compact();
+        CBLStatus status = database.compact();
         return status != null && status.isSuccessful();
     }
 
@@ -57,9 +55,9 @@ public class DatabaseProxy extends KrollProxy {
     }
 
     @Kroll.method
-    public DocumentProxy documentWithID(@Kroll.argument(optional=true) String docid) {
+    public DocumentProxy documentWithID(@Kroll.argument(optional = true) String docid) {
         if (docid == null || docid.length() < 1) {
-            docid = TDDatabase.generateDocumentId();
+            docid = CBLDatabase.generateDocumentId();
         }
 
         DocumentProxy result = documentProxyCache.get(docid);
@@ -77,7 +75,7 @@ public class DatabaseProxy extends KrollProxy {
 
     @Kroll.method
     public DocumentProxy untitledDocument() {
-        return documentWithID(TDDatabase.generateDocumentId());
+        return documentWithID(CBLDatabase.generateDocumentId());
     }
 
     @Kroll.method
