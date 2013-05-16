@@ -12,6 +12,8 @@ import android.util.Log;
 
 import com.couchbase.cblite.CBLDatabase;
 import com.couchbase.cblite.CBLQueryOptions;
+import com.couchbase.cblite.CBLStatus;
+import com.couchbase.cblite.CBLView;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)
 public class QueryProxy extends KrollProxy {
@@ -165,7 +167,21 @@ public class QueryProxy extends KrollProxy {
             rows = (List<Map<String, Object>>) database.getAllDocs(this.queryOptions).get("rows");
         }
         else {
-            // TODO
+            CBLView v = database.getExistingViewNamed(view);
+            
+            CBLStatus status = v.updateIndex();
+            if (status == null || !status.isSuccessful()) {
+                Log.e(LCAT, "Error updating view: " + view);
+                return null;
+            }
+            
+            status = new CBLStatus();
+            rows = v.queryWithOptions(this.queryOptions, status);
+            
+            if (status == null || !status.isSuccessful()) {
+                Log.e(LCAT, "Error getting rows from view: " + view);
+                return null;
+            }
         }
 
         return new QueryEnumeratorProxy(rows);

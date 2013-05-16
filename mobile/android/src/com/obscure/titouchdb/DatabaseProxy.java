@@ -11,6 +11,7 @@ import org.appcelerator.kroll.annotations.Kroll;
 
 import com.couchbase.cblite.CBLDatabase;
 import com.couchbase.cblite.CBLStatus;
+import com.couchbase.cblite.CBLView;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)
 public class DatabaseProxy extends KrollProxy {
@@ -93,9 +94,21 @@ public class DatabaseProxy extends KrollProxy {
         return new QueryProxy(this.database, null);
     }
 
+    private CBLView makeAnonymousView() {
+        for (int i=0; true; i++) {
+            String name = String.format("$anon$%s", i);
+            if (database.getExistingViewNamed(name) == null) {
+                return database.getViewNamed(name);
+            }
+        }
+        // TODO what happens to all of these anonymous views?
+    }
+    
     @Kroll.method
     public QueryProxy slowQueryWithMap(KrollFunction map) {
-        return null;
+        CBLView view = makeAnonymousView();
+        view.setMapReduceBlocks(new KrollViewMapBlock(map), null, "1");
+        return new QueryProxy(this.database, view.getName());
     }
 
     @Kroll.method
