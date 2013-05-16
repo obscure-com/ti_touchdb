@@ -33,6 +33,9 @@ public class QueryEnumeratorProxy extends KrollProxy {
 
     @Kroll.method
     public QueryRowProxy rowAtIndex(int index) {
-        return null;
+        if (index < 0 || index > rows.size()) {
+            return null;
+        }
+        return new QueryRowProxy(rows.get(index));
     }
 }
