@@ -1,1 +1,1 @@
-../vendor/TouchDB-Android/TouchDB-Android/jni/sqlite3.h
+../vendor/couchbase-lite-android/Couchbase-Lite-Android/jni/sqlite3.h

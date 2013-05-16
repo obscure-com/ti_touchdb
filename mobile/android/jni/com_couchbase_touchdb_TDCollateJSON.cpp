@@ -1,1 +1,1 @@
-../vendor/TouchDB-Android/TouchDB-Android/jni/com_couchbase_touchdb_TDCollateJSON.cpp
+../vendor/couchbase-lite-android/Couchbase-Lite-Android/jni/com_couchbase_touchdb_TDCollateJSON.cpp
