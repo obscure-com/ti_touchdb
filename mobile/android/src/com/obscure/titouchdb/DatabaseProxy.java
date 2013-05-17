@@ -11,6 +11,7 @@ import org.appcelerator.kroll.annotations.Kroll;
 
 import com.couchbase.cblite.CBLDatabase;
 import com.couchbase.cblite.CBLStatus;
+import com.couchbase.cblite.CBLValidationBlock;
 import com.couchbase.cblite.CBLView;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)
@@ -117,13 +118,17 @@ public class DatabaseProxy extends KrollProxy {
     }
 
     @Kroll.method
-    public void defineValidation(String name, KrollFunction validation) {
-
+    public void defineValidation(String name, @Kroll.argument(optional = true) KrollFunction validation) {
+        CBLValidationBlock block = null;
+        if (validation != null) {
+            block = new KrollValidationBlock(this, validation);
+        }
+        database.defineValidation(name, block);
     }
 
     @Kroll.method
-    public void defineFilter(String name, KrollFunction filter) {
-
+    public void defineFilter(String name, @Kroll.argument(optional = true) KrollFunction filter) {
+        database.defineFilter(name, filter != null ? new KrollFilterBlock(filter) : null);
     }
 
     @Kroll.method

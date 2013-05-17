@@ -50,6 +50,8 @@ public class TitouchdbModule extends KrollModule {
     public static final int                   STALE_QUERY_UPDATE_AFTER = 0;
 
     static {
+        System.loadLibrary("function-utils");
+        
         codeToMessage.put(CBLStatus.BAD_JSON, "Invalid JSON");
         codeToMessage.put(CBLStatus.BAD_REQUEST, "bad_request");
         codeToMessage.put(CBLStatus.CONFLICT, "conflict");
@@ -95,4 +97,6 @@ public class TitouchdbModule extends KrollModule {
         super.initActivity(activity);
         this.databaseManagerProxy = new DatabaseManagerProxy(activity);
     }
+    
+    public static native void registerGlobalFunction(Object target, String name, String signature);
 }

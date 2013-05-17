@@ -82,7 +82,7 @@ public class DocumentProxy extends KrollProxy {
     @Kroll.getProperty(name = "currentRevision")
     public RevisionProxy getCurrentRevision() {
         CBLRevision rev = getCurrentCBLRevision();
-        return rev != null ? new RevisionProxy(rev) : null;
+        return rev != null ? new RevisionProxy(this, rev) : null;
     }
 
     @Kroll.method
@@ -151,7 +151,7 @@ public class DocumentProxy extends KrollProxy {
             return null;
         }
 
-        return new RevisionProxy(rev);
+        return new RevisionProxy(this, rev);
     }
 
     // TODO document changes

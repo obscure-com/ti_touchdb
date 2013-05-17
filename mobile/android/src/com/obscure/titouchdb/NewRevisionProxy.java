@@ -5,8 +5,16 @@ import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.titanium.TiBlob;
 import org.appcelerator.titanium.TiContext;
 
+import com.couchbase.cblite.CBLDatabase;
+import com.couchbase.cblite.CBLRevision;
+
 @Kroll.proxy(parentModule=TitouchdbModule.class)
-public class NewRevisionProxy extends AbstractRevisionProxy {
+public class NewRevisionProxy extends BaseRevisionProxy {
+
+    public NewRevisionProxy(DocumentProxy document, CBLRevision rev) {
+        super(document, rev);
+        assert document != null;
+    }
 
     @Kroll.setProperty(name="isDeleted")
     public void setIsDeleted(boolean isDeleted) {

@@ -14,10 +14,6 @@ public class KrollViewMapBlock extends KrollProxy implements CBLViewMapBlock {
 
     private static final String LCAT = "KrollViewMapBlock";
 
-    static {
-        System.loadLibrary("emit-utils");
-    }
-
     private CBLViewMapEmitBlock emitter;
     
     private KrollFunction       map;
@@ -25,7 +21,7 @@ public class KrollViewMapBlock extends KrollProxy implements CBLViewMapBlock {
     public KrollViewMapBlock(KrollFunction map) {
         assert map != null;
         this.map = map;
-        registerGlobalFunction("emit", "(Ljava/lang/Object;Ljava/lang/Object;)V");
+        TitouchdbModule.registerGlobalFunction(this, "emit", "(Ljava/lang/Object;Ljava/lang/Object;)V");
     }
 
     public void emit(Object key, Object value) {
@@ -37,6 +33,4 @@ public class KrollViewMapBlock extends KrollProxy implements CBLViewMapBlock {
         this.emitter = emitter;
         map.call(this.getKrollObject(), new Object[] { document });
     }
-
-    private native long registerGlobalFunction(String name, String signature);
 }
