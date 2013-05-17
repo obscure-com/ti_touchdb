@@ -7,7 +7,7 @@
         <target device="android">true</target>
         <target device="blackberry">false</target>
     </deployment-targets>
-    <sdk-version>2.1.1.GA</sdk-version>
+    <sdk-version>3.0.0.GA</sdk-version>
     <id>com.obscure.TouchBooks</id>
     <name>TouchBooks</name>
     <version>1.0</version>
@@ -49,7 +49,7 @@
         <theme>default</theme>
     </mobileweb>
     <modules>
-        <module platform="iphone" version="0.4">com.obscure.titouchdb</module>
-        <module platform="android" version="0.4">com.obscure.titouchdb</module>
+        <module platform="iphone" version="0.7">com.obscure.titouchdb</module>
+        <!-- <module platform="android" version="0.4">com.obscure.titouchdb</module> -->
     </modules>
 </ti:app>

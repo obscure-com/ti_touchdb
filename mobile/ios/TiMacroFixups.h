@@ -12,7 +12,7 @@
 //
 //
 
-#define ENSURE_ARG_OR_NIL_AT_INDEX(out,args,index,type) \
+#define ENSURE_ARG_OR_NULL_AT_INDEX(out,args,index,type) \
 if (args==nil || args==[NSNull null]) \
 { \
 out = nil; \

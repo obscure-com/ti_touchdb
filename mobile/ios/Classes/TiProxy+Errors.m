@@ -11,7 +11,26 @@
 @implementation TiProxy (Errors)
 
 - (NSDictionary *)errorDict:(NSError *)error {
-    return error ? [NSDictionary dictionaryWithObjectsAndKeys:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInteger:error.code], @"code", error.description, @"description", error.domain, @"domain", nil], @"error", nil] : nil;
+    NSMutableDictionary * result = nil;
+    if (error) {
+        result = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                  NUMBOOL(YES), @"error",
+                  NUMINT(error.code), @"code",
+                  error.domain, @"domain",
+                  error.localizedDescription, @"description",
+                  nil];
+        /*
+        // who knows what evil lurks in the hearts of error.userInfo?
+        // whatever it is, it can't be serialized to javascript...
+        if (error.userInfo) {
+            [result setObject:error.userInfo forKey:@"userInfo"];
+        }
+        */
+    }
+    else {
+        result = [NSMutableDictionary dictionaryWithObject:NUMBOOL(NO) forKey:@"error"];
+    }
+    return result;
 }
 
 @end

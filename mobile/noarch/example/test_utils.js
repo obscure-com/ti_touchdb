@@ -6,6 +6,11 @@ function assert(exp, msg) {
     }
 }
 
+function wait(ms) {
+  var start = +(new Date());
+  while (new Date() - start < ms);
+}
+
 function createDocWithProperties(db, props, id) {
     var doc;
     if (id) {
@@ -14,15 +19,12 @@ function createDocWithProperties(db, props, id) {
     else {
       doc = db.untitledDocument();
     }
-    
     assert(doc, "couldn't create doc");
-    // TODO not sure if this is the case any more
-    // assert(!doc.currentRevisionID, "new doc should not have currentRevisionID: "+doc.currentRevisionID);
-    // assert(!doc.currentRevision, "new doc should not have currentRevision: "+doc.currentRevision);
     
-    doc.putProperties(props); // saves the doc!
-    
-    assert(doc.currentRevisionID, "saved doc should have currentRevisionID: "+doc.documentID);
+    var rev = doc.putProperties(props); // saves the doc!
+    assert(rev, 'putProperties did not return a revision');
+    assert(!doc.error, 'putProperties resulted in an error');
+    assert(doc.currentRevisionID, "saved doc should have currentRevisionID: "+doc.currentRevisionID);
     assert(doc.currentRevision, "saved doc should have currentRevision");
     assert(doc.documentID, "saved doc should have documentID");
     if (id) {

@@ -12,12 +12,18 @@
  * async version in the future.
  */
 
-var server = require('com.obscure.titouchdb'),
-    db = server.databaseNamed('books');
+var manager = require('com.obscure.titouchdb').databaseManager,
+    db = manager.createDatabaseNamed('books'),
+    views = {};
     
 exports.initialize = function(cb) {
-  // make sure the db exists
-  db.ensureCreated();
+  // register views
+  views.by_author = db.viewNamed('by_author');
+  views.by_author.setMap(function(doc, emit) {
+    if (doc.author) {
+      emit([doc.author, doc.title || ''], null);
+    }
+  }, '1');
   
   // get the latest changes
   exports.pullFromServer(cb);
@@ -37,13 +43,7 @@ exports.dumpBooks = function(cb) {
 
 
 exports.fetchBooksByAuthor = function(cb) {
-  var ddoc = db.designDocumentWithName('books');
-  if (!ddoc) {
-    cb && cb({ error: 'missing design document' }, []);
-    return;
-  }
-  
-  var query = ddoc.queryViewNamed('by_author');
+  var query = views.by_author.query();
   if (!query) {
     cb && cb({ error: 'missing view' }, []);
     return;
@@ -76,7 +76,7 @@ exports.saveBook = function(book_id, properties, cb) {
 
 var push;
 exports.pushToServer = function(cb) {
-  push = db.pushToDatabaseAtURL('http://touchbooks.iriscouch.com/books');
+  push = db.pushToURL('http://touchbooks.iriscouch.com/books');
   push.addEventListener('progress', function(e) {
     Ti.API.info(JSON.stringify(e));
   });
@@ -88,7 +88,7 @@ exports.pushToServer = function(cb) {
 
 var pull;
 exports.pullFromServer = function(cb) {
-  pull = db.pullFromDatabaseAtURL('http://touchbooks.iriscouch.com/books');
+  pull = db.pullFromURL('http://touchbooks.iriscouch.com/books');
   pull.addEventListener('progress', function(e) {
     Ti.API.info(JSON.stringify(e));
   });

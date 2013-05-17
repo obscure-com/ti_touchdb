@@ -3,14 +3,9 @@
 # Appcelerator Titanium Module Packager
 #
 #
-import os, sys, glob, string, shutil
+import os, subprocess, sys, glob, string
 import zipfile
 from datetime import date
-
-try:
-	import json
-except:
-	import simplejson as json
 
 cwd = os.path.abspath(os.path.dirname(sys._getframe(0).f_code.co_filename))
 os.chdir(cwd)
@@ -37,8 +32,8 @@ def replace_vars(config,token):
 		token = token.replace('$(%s)' % key, config[key])
 		idx = token.find('$(')
 	return token
-		
-		
+
+
 def read_ti_xcconfig():
 	contents = open(os.path.join(cwd,'titanium.xcconfig')).read()
 	config = {}
@@ -57,9 +52,7 @@ def generate_doc(config):
 	if not os.path.exists(docdir):
 		print "Couldn't find documentation file at: %s" % docdir
 		return None
-	sdk = find_sdk(config)
-	support_dir = os.path.join(sdk,'module','support')
-	sys.path.append(support_dir)
+
 	try:
 		import markdown2 as markdown
 	except ImportError:
@@ -73,70 +66,58 @@ def generate_doc(config):
 		documentation.append({file:html});
 	return documentation
 
-def link_common_dirs(sourcePath, targetPath):
-	target = os.path.relpath(targetPath)
-	source = os.path.relpath(sourcePath)
-
-	if not os.path.exists(target):
-		os.symlink(source, targetPath)
-	elif os.path.exists(target) and not os.path.islink(target):
-		if os.path.isdir(target):
-			shutil.rmtree(target)
-		else:
-			os.remove(target)
-		os.symlink(source, targetPath)
-	else:
-		pass
-
 def compile_js(manifest,config):
-	js_file = os.path.join(cwd,'assets','com.obscure.TiTouchDB.js')
+	js_file = os.path.join(cwd,'assets','foo.module.js')
 	if not os.path.exists(js_file): return
-	
-	sdk = find_sdk(config)
-	iphone_dir = os.path.join(sdk,'iphone')
-	sys.path.insert(0,iphone_dir)
+
 	from compiler import Compiler
-	
-	path = os.path.basename(js_file)
+	try:
+		import json
+	except:
+		import simplejson as json
+
 	compiler = Compiler(cwd, manifest['moduleid'], manifest['name'], 'commonjs')
-	metadata = compiler.make_function_from_file(path,js_file)
-	
+	root_asset, module_assets = compiler.compile_module()
+
+	root_asset_content = """
+%s
+
+	return filterDataInRange([NSData dataWithBytesNoCopy:data length:sizeof(data) freeWhenDone:NO], ranges[0]);
+""" % root_asset
+
+	module_asset_content = """
+%s
+
+	NSNumber *index = [map objectForKey:path];
+	if (index == nil) {
+		return nil;
+	}
+	return filterDataInRange([NSData dataWithBytesNoCopy:data length:sizeof(data) freeWhenDone:NO], ranges[index.integerValue]);
+""" % module_assets
+
+	from tools import splice_code
+
+	assets_router = os.path.join(cwd,'Classes','FooModuleModuleAssets.m')
+	splice_code(assets_router, 'asset', root_asset_content)
+	splice_code(assets_router, 'resolve_asset', module_asset_content)
+
+	# Generate the exports after crawling all of the available JS source
 	exports = open('metadata.json','w')
 	json.dump({'exports':compiler.exports }, exports)
 	exports.close()
 
-	method = metadata['method']
-	eq = path.replace('.','_')
-	method = '  return %s;' % method
-	
-	f = os.path.join(cwd,'Classes','ComObscureTiTouchDBModuleAssets.m')
-	c = open(f).read()
-	idx = c.find('return ')
-	before = c[0:idx]
-	after = """
-}
-
-@end
-	"""
-	newc = before + method + after
-	
-	if newc!=c:
-		x = open(f,'w')
-		x.write(newc)
-		x.close()
-		
 def die(msg):
 	print msg
 	sys.exit(1)
 
 def warn(msg):
-	print "[WARN] %s" % msg	
+	print "[WARN] %s" % msg
 
 def validate_license():
 	c = open(os.path.join(cwd,'LICENSE')).read()
 	if c.find(module_license_default)!=-1:
 		warn('please update the LICENSE file with your license text before distributing')
-			
+
 def validate_manifest():
 	path = os.path.join(cwd,'manifest')
 	f = open(path)
@@ -149,26 +130,27 @@ def validate_manifest():
 		key,value = line.split(':')
 		manifest[key.strip()]=value.strip()
 	for key in required_module_keys:
-		if not manifest.has_key(key): die("missing required manifest key '%s'" % key)	
+		if not manifest.has_key(key): die("missing required manifest key '%s'" % key)
 		if module_defaults.has_key(key):
 			defvalue = module_defaults[key]
 			curvalue = manifest[key]
 			if curvalue==defvalue: warn("please update the manifest key: '%s' to a non-default value" % key)
 	return manifest,path
 
-ignoreFiles = ['.DS_Store','.gitignore','libTitanium.a','titanium.jar','README','com.obscure.TiTouchDB.js']
+ignoreFiles = ['.DS_Store','.gitignore','libTitanium.a','titanium.jar','README']
 ignoreDirs = ['.DS_Store','.svn','.git','CVSROOT']
 
 def zip_dir(zf,dir,basepath,ignore=[]):
 	for root, dirs, files in os.walk(dir):
 		for name in ignoreDirs:
 			if name in dirs:
-				dirs.remove(name)	# don't visit ignored directories			  
+				dirs.remove(name)	# don't visit ignored directories
 		for file in files:
 			if file in ignoreFiles: continue
 			e = os.path.splitext(file)
-			if len(e)==2 and e[1]=='.pyc':continue
-			from_ = os.path.join(root, file)	
+			if len(e) == 2 and e[1] == '.pyc': continue
+			if len(e) == 2 and e[1] == '.js': continue
+			from_ = os.path.join(root, file)
 			to_ = from_.replace(dir, basepath, 1)
 			zf.write(from_, to_)
 
@@ -180,6 +162,9 @@ def glob_libfiles():
 	return files
 
 def build_module(manifest,config):
+	from tools import ensure_dev_path
+	ensure_dev_path()
+
 	rc = os.system("xcodebuild -sdk iphoneos -configuration Release")
 	if rc != 0:
 		die("xcodebuild failed")
@@ -191,9 +176,9 @@ def build_module(manifest,config):
 	libpaths = ''
 	for libfile in glob_libfiles():
 		libpaths+='%s ' % libfile
-		
+
 	os.system("lipo %s -create -output build/lib%s.a" %(libpaths,moduleid))
-	
+
 def package_module(manifest,mf,config):
 	name = manifest['name'].lower()
 	moduleid = manifest['moduleid'].lower()
@@ -220,14 +205,17 @@ def package_module(manifest,mf,config):
 	if os.path.exists(exports_file):
 		zf.write(exports_file, '%s/%s' % (modulepath, exports_file))
 	zf.close()
-	
+
 
 if __name__ == '__main__':
 	manifest,mf = validate_manifest()
 	validate_license()
 	config = read_ti_xcconfig()
-	link_common_dirs('../noarch/example','example')
-	link_common_dirs('../noarch/documentation','documentation')
+
+	sdk = find_sdk(config)
+	sys.path.insert(0,os.path.join(sdk,'iphone'))
+	sys.path.append(os.path.join(sdk, "common"))
+
 	compile_js(manifest,config)
 	build_module(manifest,config)
 	package_module(manifest,mf,config)

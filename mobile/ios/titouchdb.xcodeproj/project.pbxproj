@@ -25,31 +25,36 @@
 		24DD6CF91134B3F500162E58 /* ComObscureTiTouchDBModule.h in Headers */ = {isa = PBXBuildFile; fileRef = 24DD6CF71134B3F500162E58 /* ComObscureTiTouchDBModule.h */; };
 		24DD6CFA1134B3F500162E58 /* ComObscureTiTouchDBModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 24DD6CF81134B3F500162E58 /* ComObscureTiTouchDBModule.m */; };
 		AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
-		DA09BDF21534B58B00B9936C /* CouchAttachmentProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = DA09BDF01534B58B00B9936C /* CouchAttachmentProxy.h */; };
-		DA09BDF31534B58B00B9936C /* CouchAttachmentProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = DA09BDF11534B58B00B9936C /* CouchAttachmentProxy.m */; };
-		DA0E41B2152E3083004CAF63 /* CouchDatabaseProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = DA0E41B0152E3083004CAF63 /* CouchDatabaseProxy.h */; };
-		DA0E41B3152E3083004CAF63 /* CouchDatabaseProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = DA0E41B1152E3083004CAF63 /* CouchDatabaseProxy.m */; };
-		DA0E41B6152E329B004CAF63 /* CouchPersistentReplicationProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = DA0E41B4152E329B004CAF63 /* CouchPersistentReplicationProxy.h */; };
-		DA0E41B7152E329B004CAF63 /* CouchPersistentReplicationProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = DA0E41B5152E329B004CAF63 /* CouchPersistentReplicationProxy.m */; };
-		DA0E41BC152E474E004CAF63 /* CouchDocumentProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = DA0E41BA152E474E004CAF63 /* CouchDocumentProxy.h */; };
-		DA0E41BD152E474E004CAF63 /* CouchDocumentProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = DA0E41BB152E474E004CAF63 /* CouchDocumentProxy.m */; };
-		DA305FCC15B4B5E800DBB89E /* ViewCompiler.h in Headers */ = {isa = PBXBuildFile; fileRef = DA305FCA15B4B5E700DBB89E /* ViewCompiler.h */; };
-		DA305FCD15B4B5E800DBB89E /* ViewCompiler.m in Sources */ = {isa = PBXBuildFile; fileRef = DA305FCB15B4B5E700DBB89E /* ViewCompiler.m */; };
+		DA4919241676776A00ECCB83 /* TDDatabaseManagerProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = DA4919221676776A00ECCB83 /* TDDatabaseManagerProxy.h */; };
+		DA491928167679B700ECCB83 /* TDDatabaseProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = DA491926167679B700ECCB83 /* TDDatabaseProxy.h */; };
+		DA49192C16768CB000ECCB83 /* TDDocumentProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = DA49192A16768CB000ECCB83 /* TDDocumentProxy.h */; };
+		DA49193016768D6C00ECCB83 /* TDQueryProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = DA49192E16768D6C00ECCB83 /* TDQueryProxy.h */; };
+		DA4919341676A2D200ECCB83 /* TDBridge.h in Headers */ = {isa = PBXBuildFile; fileRef = DA4919321676A2D200ECCB83 /* TDBridge.h */; };
+		DA49193C1676ADF100ECCB83 /* TDViewProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = DA49193A1676ADF100ECCB83 /* TDViewProxy.h */; };
+		DA4919401676B32800ECCB83 /* TDRevisionProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = DA49193E1676B32800ECCB83 /* TDRevisionProxy.h */; };
+		DA4919441676B78B00ECCB83 /* TDReplicationProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = DA4919421676B78A00ECCB83 /* TDReplicationProxy.h */; };
 		DA53C6E215EE8BC40065CA47 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA53C6DF15EE8BAE0065CA47 /* Security.framework */; };
-		DA5837C815B08FF2005CA068 /* TouchDB in Frameworks */ = {isa = PBXBuildFile; fileRef = DA5837C715B08FF2005CA068 /* TouchDB */; };
-		DA5837CA15B08FFB005CA068 /* CouchCocoa in Frameworks */ = {isa = PBXBuildFile; fileRef = DA5837C915B08FFB005CA068 /* CouchCocoa */; };
 		DA5837CC15B09030005CA068 /* ComObscureTitouchdb_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = DA5837CB15B09030005CA068 /* ComObscureTitouchdb_Prefix.pch */; };
-		DA5837DB15B0943F005CA068 /* TouchDBListener in Frameworks */ = {isa = PBXBuildFile; fileRef = DA5837DA15B0943F005CA068 /* TouchDBListener */; };
-		DAE72A22152E4BBF00622013 /* CouchQueryProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = DAE72A20152E4BBF00622013 /* CouchQueryProxy.h */; };
-		DAE72A23152E4BBF00622013 /* CouchQueryProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = DAE72A21152E4BBF00622013 /* CouchQueryProxy.m */; };
-		DAE72A27152E4E7F00622013 /* CouchRevisionProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = DAE72A25152E4E7F00622013 /* CouchRevisionProxy.h */; };
-		DAE72A28152E4E7F00622013 /* CouchRevisionProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = DAE72A26152E4E7F00622013 /* CouchRevisionProxy.m */; };
-		DAE72A2B152E518300622013 /* CouchDesignDocumentProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = DAE72A29152E518300622013 /* CouchDesignDocumentProxy.h */; };
-		DAE72A2C152E518300622013 /* CouchDesignDocumentProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = DAE72A2A152E518300622013 /* CouchDesignDocumentProxy.m */; };
-		DAE72A2F152E550400622013 /* CouchReplicationProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = DAE72A2D152E550400622013 /* CouchReplicationProxy.h */; };
-		DAE72A30152E550400622013 /* CouchReplicationProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = DAE72A2E152E550400622013 /* CouchReplicationProxy.m */; };
+		DAA3688A167F9BB6004A514D /* TiProxy+Errors.m in Sources */ = {isa = PBXBuildFile; fileRef = DAE72A36152E66C800622013 /* TiProxy+Errors.m */; };
+		DAA3688B167F9BB6004A514D /* TDDatabaseManagerProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = DA4919231676776A00ECCB83 /* TDDatabaseManagerProxy.m */; };
+		DAA3688C167F9BB6004A514D /* TDDatabaseProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = DA491927167679B700ECCB83 /* TDDatabaseProxy.m */; };
+		DAA3688D167F9BB6004A514D /* TDDocumentProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = DA49192B16768CB000ECCB83 /* TDDocumentProxy.m */; };
+		DAA3688E167F9BB6004A514D /* TDQueryProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = DA49192F16768D6C00ECCB83 /* TDQueryProxy.m */; };
+		DAA3688F167F9BB6004A514D /* TDBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = DA4919331676A2D200ECCB83 /* TDBridge.m */; };
+		DAA36890167F9BB6004A514D /* TDViewProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = DA49193B1676ADF100ECCB83 /* TDViewProxy.m */; };
+		DAA36891167F9BB6004A514D /* TDRevisionProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = DA49193F1676B32800ECCB83 /* TDRevisionProxy.m */; };
+		DAA36892167F9BB6004A514D /* TDReplicationProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = DA4919431676B78A00ECCB83 /* TDReplicationProxy.m */; };
+		DAA36893167F9BB6004A514D /* TDAttachmentProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = DABFA05116779B4100A58019 /* TDAttachmentProxy.m */; };
+		DABFA05216779B4200A58019 /* TDAttachmentProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = DABFA05016779B4100A58019 /* TDAttachmentProxy.h */; };
+		DAE20E2F16C2C9F700A7D137 /* libCouchbaseLite.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DAE20E1E16C2C9D700A7D137 /* libCouchbaseLite.a */; };
+		DAE20E3216C2CE2800A7D137 /* CBLDatabase+NotificationPriorityFix.h in Headers */ = {isa = PBXBuildFile; fileRef = DAE20E3016C2CE2800A7D137 /* CBLDatabase+NotificationPriorityFix.h */; };
+		DAE20E3316C2CE2800A7D137 /* CBLDatabase+NotificationPriorityFix.m in Sources */ = {isa = PBXBuildFile; fileRef = DAE20E3116C2CE2800A7D137 /* CBLDatabase+NotificationPriorityFix.m */; };
 		DAE72A37152E66C900622013 /* TiProxy+Errors.h in Headers */ = {isa = PBXBuildFile; fileRef = DAE72A35152E66C800622013 /* TiProxy+Errors.h */; };
-		DAE72A38152E66C900622013 /* TiProxy+Errors.m in Sources */ = {isa = PBXBuildFile; fileRef = DAE72A36152E66C800622013 /* TiProxy+Errors.m */; };
+		DAEC46AB1721ABC600479C1F /* libCouchbaseLiteListener.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DAE20E2A16C2C9D700A7D137 /* libCouchbaseLiteListener.a */; };
+		DAF6E66E1680F84D003217C3 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAF6E66D1680F84D003217C3 /* CFNetwork.framework */; };
+		DAF6E6701680F854003217C3 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAF6E66F1680F854003217C3 /* SystemConfiguration.framework */; };
+		DAF6E6721680F85B003217C3 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DAF6E6711680F85B003217C3 /* libz.dylib */; };
+		DAF6E6741680F862003217C3 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DAF6E6731680F862003217C3 /* libsqlite3.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,6 +65,90 @@
 			remoteGlobalIDString = D2AAC07D0554694100DB518D;
 			remoteInfo = titouchdb;
 		};
+		DAE20E1916C2C9D700A7D137 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DAE20E0B16C2C9D600A7D137 /* CouchbaseLite.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 270B3DEA1489359000E0A926;
+			remoteInfo = "CBL Mac";
+		};
+		DAE20E1B16C2C9D700A7D137 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DAE20E0B16C2C9D600A7D137 /* CouchbaseLite.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 27B0B7E71492BB6B00A817AD;
+			remoteInfo = "CBL iOS";
+		};
+		DAE20E1D16C2C9D700A7D137 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DAE20E0B16C2C9D600A7D137 /* CouchbaseLite.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 27B0B7A91492B83B00A817AD;
+			remoteInfo = "CBL iOS library";
+		};
+		DAE20E1F16C2C9D700A7D137 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DAE20E0B16C2C9D600A7D137 /* CouchbaseLite.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 27C70694148864BA00F0F099;
+			remoteInfo = "CBL Mac Demo";
+		};
+		DAE20E2116C2C9D700A7D137 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DAE20E0B16C2C9D600A7D137 /* CouchbaseLite.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 27B0B80B1492C16300A817AD;
+			remoteInfo = "Grocery Sync iOS Demo";
+		};
+		DAE20E2316C2C9D700A7D137 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DAE20E0B16C2C9D600A7D137 /* CouchbaseLite.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 27731F2A1495CFEF00815D67;
+			remoteInfo = "CBL iOS Empty App";
+		};
+		DAE20E2516C2C9D700A7D137 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DAE20E0B16C2C9D600A7D137 /* CouchbaseLite.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 275315D514ACF0A10065964D;
+			remoteInfo = "CBL Listener Mac";
+		};
+		DAE20E2716C2C9D700A7D137 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DAE20E0B16C2C9D600A7D137 /* CouchbaseLite.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = DA147C3614BCAC3B0052DA4D;
+			remoteInfo = "CBL Listener iOS";
+		};
+		DAE20E2916C2C9D700A7D137 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DAE20E0B16C2C9D600A7D137 /* CouchbaseLite.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = DA023B6414BCA94C008184BB;
+			remoteInfo = "Listener iOS Library";
+		};
+		DAE20E2B16C2C9D700A7D137 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DAE20E0B16C2C9D600A7D137 /* CouchbaseLite.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 270FE0C814C5008C005FF647;
+			remoteInfo = TouchServ;
+		};
+		DAE20E2D16C2C9F200A7D137 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DAE20E0B16C2C9D600A7D137 /* CouchbaseLite.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 27B0B7A81492B83B00A817AD;
+			remoteInfo = "CBL iOS library";
+		};
+		DAEC46AC1721B06D00479C1F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DAE20E0B16C2C9D600A7D137 /* CouchbaseLite.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = DA023B2614BCA94C008184BB;
+			remoteInfo = "Listener iOS Library";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -68,32 +157,38 @@
 		24DD6D1B1134B66800162E58 /* titanium.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = titanium.xcconfig; sourceTree = "<group>"; };
 		AACBBE490F95108600F1A2B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D2AAC07E0554694100DB518D /* libComObscureTitouchdb.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libComObscureTitouchdb.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		DA09BDF01534B58B00B9936C /* CouchAttachmentProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CouchAttachmentProxy.h; path = Classes/CouchAttachmentProxy.h; sourceTree = "<group>"; };
-		DA09BDF11534B58B00B9936C /* CouchAttachmentProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CouchAttachmentProxy.m; path = Classes/CouchAttachmentProxy.m; sourceTree = "<group>"; };
-		DA0E41B0152E3083004CAF63 /* CouchDatabaseProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CouchDatabaseProxy.h; path = Classes/CouchDatabaseProxy.h; sourceTree = "<group>"; };
-		DA0E41B1152E3083004CAF63 /* CouchDatabaseProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CouchDatabaseProxy.m; path = Classes/CouchDatabaseProxy.m; sourceTree = "<group>"; };
-		DA0E41B4152E329B004CAF63 /* CouchPersistentReplicationProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CouchPersistentReplicationProxy.h; path = Classes/CouchPersistentReplicationProxy.h; sourceTree = "<group>"; };
-		DA0E41B5152E329B004CAF63 /* CouchPersistentReplicationProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CouchPersistentReplicationProxy.m; path = Classes/CouchPersistentReplicationProxy.m; sourceTree = "<group>"; };
-		DA0E41BA152E474E004CAF63 /* CouchDocumentProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CouchDocumentProxy.h; path = Classes/CouchDocumentProxy.h; sourceTree = "<group>"; };
-		DA0E41BB152E474E004CAF63 /* CouchDocumentProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CouchDocumentProxy.m; path = Classes/CouchDocumentProxy.m; sourceTree = "<group>"; };
 		DA305FCA15B4B5E700DBB89E /* ViewCompiler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ViewCompiler.h; path = Classes/ViewCompiler.h; sourceTree = "<group>"; };
 		DA305FCB15B4B5E700DBB89E /* ViewCompiler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ViewCompiler.m; path = Classes/ViewCompiler.m; sourceTree = "<group>"; };
+		DA4919221676776A00ECCB83 /* TDDatabaseManagerProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TDDatabaseManagerProxy.h; path = Classes/TDDatabaseManagerProxy.h; sourceTree = "<group>"; };
+		DA4919231676776A00ECCB83 /* TDDatabaseManagerProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TDDatabaseManagerProxy.m; path = Classes/TDDatabaseManagerProxy.m; sourceTree = "<group>"; };
+		DA491926167679B700ECCB83 /* TDDatabaseProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TDDatabaseProxy.h; path = Classes/TDDatabaseProxy.h; sourceTree = "<group>"; };
+		DA491927167679B700ECCB83 /* TDDatabaseProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TDDatabaseProxy.m; path = Classes/TDDatabaseProxy.m; sourceTree = "<group>"; };
+		DA49192A16768CB000ECCB83 /* TDDocumentProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TDDocumentProxy.h; path = Classes/TDDocumentProxy.h; sourceTree = "<group>"; };
+		DA49192B16768CB000ECCB83 /* TDDocumentProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TDDocumentProxy.m; path = Classes/TDDocumentProxy.m; sourceTree = "<group>"; };
+		DA49192E16768D6C00ECCB83 /* TDQueryProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TDQueryProxy.h; path = Classes/TDQueryProxy.h; sourceTree = "<group>"; };
+		DA49192F16768D6C00ECCB83 /* TDQueryProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TDQueryProxy.m; path = Classes/TDQueryProxy.m; sourceTree = "<group>"; };
+		DA4919321676A2D200ECCB83 /* TDBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TDBridge.h; path = Classes/TDBridge.h; sourceTree = "<group>"; };
+		DA4919331676A2D200ECCB83 /* TDBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TDBridge.m; path = Classes/TDBridge.m; sourceTree = "<group>"; };
+		DA49193A1676ADF100ECCB83 /* TDViewProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TDViewProxy.h; path = Classes/TDViewProxy.h; sourceTree = "<group>"; };
+		DA49193B1676ADF100ECCB83 /* TDViewProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TDViewProxy.m; path = Classes/TDViewProxy.m; sourceTree = "<group>"; };
+		DA49193E1676B32800ECCB83 /* TDRevisionProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TDRevisionProxy.h; path = Classes/TDRevisionProxy.h; sourceTree = "<group>"; };
+		DA49193F1676B32800ECCB83 /* TDRevisionProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TDRevisionProxy.m; path = Classes/TDRevisionProxy.m; sourceTree = "<group>"; };
+		DA4919421676B78A00ECCB83 /* TDReplicationProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TDReplicationProxy.h; path = Classes/TDReplicationProxy.h; sourceTree = "<group>"; };
+		DA4919431676B78A00ECCB83 /* TDReplicationProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TDReplicationProxy.m; path = Classes/TDReplicationProxy.m; sourceTree = "<group>"; };
 		DA53C6DF15EE8BAE0065CA47 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
-		DA5837C715B08FF2005CA068 /* TouchDB */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = TouchDB; path = vendor/TouchDB.framework/TouchDB; sourceTree = "<group>"; };
-		DA5837C915B08FFB005CA068 /* CouchCocoa */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = CouchCocoa; path = vendor/CouchCocoa.framework/CouchCocoa; sourceTree = "<group>"; };
-		DA5837CB15B09030005CA068 /* ComObscureTitouchdb_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComObscureTitouchdb_Prefix.pch; sourceTree = "<group>"; };
-		DA5837DA15B0943F005CA068 /* TouchDBListener */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = TouchDBListener; path = vendor/TouchDBListener.framework/TouchDBListener; sourceTree = "<group>"; };
+		DA5837CB15B09030005CA068 /* ComObscureTitouchdb_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ComObscureTitouchdb_Prefix.pch; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		DA91DD4D15D2C131006414F2 /* TiMacroFixups.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TiMacroFixups.h; sourceTree = "<group>"; };
-		DAE72A20152E4BBF00622013 /* CouchQueryProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CouchQueryProxy.h; path = Classes/CouchQueryProxy.h; sourceTree = "<group>"; };
-		DAE72A21152E4BBF00622013 /* CouchQueryProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CouchQueryProxy.m; path = Classes/CouchQueryProxy.m; sourceTree = "<group>"; };
-		DAE72A25152E4E7F00622013 /* CouchRevisionProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CouchRevisionProxy.h; path = Classes/CouchRevisionProxy.h; sourceTree = "<group>"; };
-		DAE72A26152E4E7F00622013 /* CouchRevisionProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CouchRevisionProxy.m; path = Classes/CouchRevisionProxy.m; sourceTree = "<group>"; };
-		DAE72A29152E518300622013 /* CouchDesignDocumentProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CouchDesignDocumentProxy.h; path = Classes/CouchDesignDocumentProxy.h; sourceTree = "<group>"; };
-		DAE72A2A152E518300622013 /* CouchDesignDocumentProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CouchDesignDocumentProxy.m; path = Classes/CouchDesignDocumentProxy.m; sourceTree = "<group>"; };
-		DAE72A2D152E550400622013 /* CouchReplicationProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CouchReplicationProxy.h; path = Classes/CouchReplicationProxy.h; sourceTree = "<group>"; };
-		DAE72A2E152E550400622013 /* CouchReplicationProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CouchReplicationProxy.m; path = Classes/CouchReplicationProxy.m; sourceTree = "<group>"; };
+		DABFA05016779B4100A58019 /* TDAttachmentProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TDAttachmentProxy.h; path = Classes/TDAttachmentProxy.h; sourceTree = "<group>"; };
+		DABFA05116779B4100A58019 /* TDAttachmentProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TDAttachmentProxy.m; path = Classes/TDAttachmentProxy.m; sourceTree = "<group>"; };
+		DAE20E0B16C2C9D600A7D137 /* CouchbaseLite.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CouchbaseLite.xcodeproj; path = "vendor/couchbase-lite-ios/CouchbaseLite.xcodeproj"; sourceTree = "<group>"; };
+		DAE20E3016C2CE2800A7D137 /* CBLDatabase+NotificationPriorityFix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "CBLDatabase+NotificationPriorityFix.h"; path = "Classes/CBLDatabase+NotificationPriorityFix.h"; sourceTree = "<group>"; };
+		DAE20E3116C2CE2800A7D137 /* CBLDatabase+NotificationPriorityFix.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "CBLDatabase+NotificationPriorityFix.m"; path = "Classes/CBLDatabase+NotificationPriorityFix.m"; sourceTree = "<group>"; };
 		DAE72A35152E66C800622013 /* TiProxy+Errors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "TiProxy+Errors.h"; path = "Classes/TiProxy+Errors.h"; sourceTree = "<group>"; };
 		DAE72A36152E66C800622013 /* TiProxy+Errors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "TiProxy+Errors.m"; path = "Classes/TiProxy+Errors.m"; sourceTree = "<group>"; };
+		DAF6E66D1680F84D003217C3 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		DAF6E66F1680F854003217C3 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		DAF6E6711680F85B003217C3 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		DAF6E6731680F862003217C3 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,9 +196,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DA5837DB15B0943F005CA068 /* TouchDBListener in Frameworks */,
-				DA5837CA15B08FFB005CA068 /* CouchCocoa in Frameworks */,
-				DA5837C815B08FF2005CA068 /* TouchDB in Frameworks */,
+				DAEC46AB1721ABC600479C1F /* libCouchbaseLiteListener.a in Frameworks */,
+				DAE20E2F16C2C9F700A7D137 /* libCouchbaseLite.a in Frameworks */,
+				DAF6E6741680F862003217C3 /* libsqlite3.dylib in Frameworks */,
+				DAF6E6721680F85B003217C3 /* libz.dylib in Frameworks */,
+				DAF6E6701680F854003217C3 /* SystemConfiguration.framework in Frameworks */,
+				DAF6E66E1680F84D003217C3 /* CFNetwork.framework in Frameworks */,
 				DA53C6E215EE8BC40065CA47 /* Security.framework in Frameworks */,
 				AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */,
 			);
@@ -123,6 +221,7 @@
 		0867D691FE84028FC02AAC07 /* titouchdb */ = {
 			isa = PBXGroup;
 			children = (
+				DAE20E0B16C2C9D600A7D137 /* CouchbaseLite.xcodeproj */,
 				08FB77AEFE84172EC02AAC07 /* Classes */,
 				32C88DFF0371C24200C91783 /* Other Sources */,
 				0867D69AFE84028FC02AAC07 /* Frameworks */,
@@ -134,9 +233,10 @@
 		0867D69AFE84028FC02AAC07 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				DA5837DA15B0943F005CA068 /* TouchDBListener */,
-				DA5837C915B08FFB005CA068 /* CouchCocoa */,
-				DA5837C715B08FF2005CA068 /* TouchDB */,
+				DAF6E6731680F862003217C3 /* libsqlite3.dylib */,
+				DAF6E6711680F85B003217C3 /* libz.dylib */,
+				DAF6E66F1680F854003217C3 /* SystemConfiguration.framework */,
+				DAF6E66D1680F84D003217C3 /* CFNetwork.framework */,
 				AACBBE490F95108600F1A2B1 /* Foundation.framework */,
 				DA53C6DF15EE8BAE0065CA47 /* Security.framework */,
 			);
@@ -148,27 +248,31 @@
 			children = (
 				24DD6CF71134B3F500162E58 /* ComObscureTiTouchDBModule.h */,
 				24DD6CF81134B3F500162E58 /* ComObscureTiTouchDBModule.m */,
-				DA0E41B0152E3083004CAF63 /* CouchDatabaseProxy.h */,
-				DA0E41B1152E3083004CAF63 /* CouchDatabaseProxy.m */,
-				DA0E41B4152E329B004CAF63 /* CouchPersistentReplicationProxy.h */,
-				DA0E41B5152E329B004CAF63 /* CouchPersistentReplicationProxy.m */,
-				DA0E41BA152E474E004CAF63 /* CouchDocumentProxy.h */,
-				DA0E41BB152E474E004CAF63 /* CouchDocumentProxy.m */,
-				DAE72A20152E4BBF00622013 /* CouchQueryProxy.h */,
-				DAE72A21152E4BBF00622013 /* CouchQueryProxy.m */,
-				DAE72A25152E4E7F00622013 /* CouchRevisionProxy.h */,
-				DAE72A26152E4E7F00622013 /* CouchRevisionProxy.m */,
-				DAE72A29152E518300622013 /* CouchDesignDocumentProxy.h */,
-				DAE72A2A152E518300622013 /* CouchDesignDocumentProxy.m */,
-				DAE72A2D152E550400622013 /* CouchReplicationProxy.h */,
-				DAE72A2E152E550400622013 /* CouchReplicationProxy.m */,
 				DAE72A35152E66C800622013 /* TiProxy+Errors.h */,
 				DAE72A36152E66C800622013 /* TiProxy+Errors.m */,
-				DA09BDF01534B58B00B9936C /* CouchAttachmentProxy.h */,
-				DA09BDF11534B58B00B9936C /* CouchAttachmentProxy.m */,
 				DA305FCA15B4B5E700DBB89E /* ViewCompiler.h */,
 				DA305FCB15B4B5E700DBB89E /* ViewCompiler.m */,
 				DA91DD4D15D2C131006414F2 /* TiMacroFixups.h */,
+				DA4919221676776A00ECCB83 /* TDDatabaseManagerProxy.h */,
+				DA4919231676776A00ECCB83 /* TDDatabaseManagerProxy.m */,
+				DA491926167679B700ECCB83 /* TDDatabaseProxy.h */,
+				DA491927167679B700ECCB83 /* TDDatabaseProxy.m */,
+				DA49192A16768CB000ECCB83 /* TDDocumentProxy.h */,
+				DA49192B16768CB000ECCB83 /* TDDocumentProxy.m */,
+				DA49192E16768D6C00ECCB83 /* TDQueryProxy.h */,
+				DA49192F16768D6C00ECCB83 /* TDQueryProxy.m */,
+				DA4919321676A2D200ECCB83 /* TDBridge.h */,
+				DA4919331676A2D200ECCB83 /* TDBridge.m */,
+				DA49193A1676ADF100ECCB83 /* TDViewProxy.h */,
+				DA49193B1676ADF100ECCB83 /* TDViewProxy.m */,
+				DA49193E1676B32800ECCB83 /* TDRevisionProxy.h */,
+				DA49193F1676B32800ECCB83 /* TDRevisionProxy.m */,
+				DA4919421676B78A00ECCB83 /* TDReplicationProxy.h */,
+				DA4919431676B78A00ECCB83 /* TDReplicationProxy.m */,
+				DABFA05016779B4100A58019 /* TDAttachmentProxy.h */,
+				DABFA05116779B4100A58019 /* TDAttachmentProxy.m */,
+				DAE20E3016C2CE2800A7D137 /* CBLDatabase+NotificationPriorityFix.h */,
+				DAE20E3116C2CE2800A7D137 /* CBLDatabase+NotificationPriorityFix.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -182,6 +286,23 @@
 			name = "Other Sources";
 			sourceTree = "<group>";
 		};
+		DAE20E0C16C2C9D600A7D137 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				DAE20E1A16C2C9D700A7D137 /* CouchbaseLite.framework */,
+				DAE20E1C16C2C9D700A7D137 /* CouchbaseLite.framework */,
+				DAE20E1E16C2C9D700A7D137 /* libCouchbaseLite.a */,
+				DAE20E2016C2C9D700A7D137 /* Couchbase Lite Demo.app */,
+				DAE20E2216C2C9D700A7D137 /* Grocery Sync.app */,
+				DAE20E2416C2C9D700A7D137 /* Couchbase Lite Empty App.app */,
+				DAE20E2616C2C9D700A7D137 /* CouchbaseLiteListener.framework */,
+				DAE20E2816C2C9D700A7D137 /* CouchbaseLiteListener.framework */,
+				DAE20E2A16C2C9D700A7D137 /* libCouchbaseLiteListener.a */,
+				DAE20E2C16C2C9D700A7D137 /* TouchServ */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -190,17 +311,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				24DD6CF91134B3F500162E58 /* ComObscureTiTouchDBModule.h in Headers */,
-				DA0E41B2152E3083004CAF63 /* CouchDatabaseProxy.h in Headers */,
-				DA0E41B6152E329B004CAF63 /* CouchPersistentReplicationProxy.h in Headers */,
-				DA0E41BC152E474E004CAF63 /* CouchDocumentProxy.h in Headers */,
-				DAE72A22152E4BBF00622013 /* CouchQueryProxy.h in Headers */,
-				DAE72A27152E4E7F00622013 /* CouchRevisionProxy.h in Headers */,
-				DAE72A2B152E518300622013 /* CouchDesignDocumentProxy.h in Headers */,
-				DAE72A2F152E550400622013 /* CouchReplicationProxy.h in Headers */,
 				DAE72A37152E66C900622013 /* TiProxy+Errors.h in Headers */,
-				DA09BDF21534B58B00B9936C /* CouchAttachmentProxy.h in Headers */,
 				DA5837CC15B09030005CA068 /* ComObscureTitouchdb_Prefix.pch in Headers */,
-				DA305FCC15B4B5E800DBB89E /* ViewCompiler.h in Headers */,
+				DA4919241676776A00ECCB83 /* TDDatabaseManagerProxy.h in Headers */,
+				DA491928167679B700ECCB83 /* TDDatabaseProxy.h in Headers */,
+				DA49192C16768CB000ECCB83 /* TDDocumentProxy.h in Headers */,
+				DA49193016768D6C00ECCB83 /* TDQueryProxy.h in Headers */,
+				DA4919341676A2D200ECCB83 /* TDBridge.h in Headers */,
+				DA49193C1676ADF100ECCB83 /* TDViewProxy.h in Headers */,
+				DA4919401676B32800ECCB83 /* TDRevisionProxy.h in Headers */,
+				DA4919441676B78B00ECCB83 /* TDReplicationProxy.h in Headers */,
+				DABFA05216779B4200A58019 /* TDAttachmentProxy.h in Headers */,
+				DAE20E3216C2CE2800A7D137 /* CBLDatabase+NotificationPriorityFix.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -218,6 +340,8 @@
 			buildRules = (
 			);
 			dependencies = (
+				DAEC46AD1721B06D00479C1F /* PBXTargetDependency */,
+				DAE20E2E16C2C9F200A7D137 /* PBXTargetDependency */,
 			);
 			name = titouchdb;
 			productName = titouchdb;
@@ -241,10 +365,17 @@
 				Japanese,
 				French,
 				German,
+				en,
 			);
 			mainGroup = 0867D691FE84028FC02AAC07 /* titouchdb */;
 			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = DAE20E0C16C2C9D600A7D137 /* Products */;
+					ProjectRef = DAE20E0B16C2C9D600A7D137 /* CouchbaseLite.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				D2AAC07D0554694100DB518D /* titouchdb */,
@@ -252,6 +383,79 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		DAE20E1A16C2C9D700A7D137 /* CouchbaseLite.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = CouchbaseLite.framework;
+			remoteRef = DAE20E1916C2C9D700A7D137 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		DAE20E1C16C2C9D700A7D137 /* CouchbaseLite.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = CouchbaseLite.framework;
+			remoteRef = DAE20E1B16C2C9D700A7D137 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		DAE20E1E16C2C9D700A7D137 /* libCouchbaseLite.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libCouchbaseLite.a;
+			remoteRef = DAE20E1D16C2C9D700A7D137 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		DAE20E2016C2C9D700A7D137 /* Couchbase Lite Demo.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = "Couchbase Lite Demo.app";
+			remoteRef = DAE20E1F16C2C9D700A7D137 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		DAE20E2216C2C9D700A7D137 /* Grocery Sync.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = "Grocery Sync.app";
+			remoteRef = DAE20E2116C2C9D700A7D137 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		DAE20E2416C2C9D700A7D137 /* Couchbase Lite Empty App.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = "Couchbase Lite Empty App.app";
+			remoteRef = DAE20E2316C2C9D700A7D137 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		DAE20E2616C2C9D700A7D137 /* CouchbaseLiteListener.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = CouchbaseLiteListener.framework;
+			remoteRef = DAE20E2516C2C9D700A7D137 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		DAE20E2816C2C9D700A7D137 /* CouchbaseLiteListener.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = CouchbaseLiteListener.framework;
+			remoteRef = DAE20E2716C2C9D700A7D137 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		DAE20E2A16C2C9D700A7D137 /* libCouchbaseLiteListener.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libCouchbaseLiteListener.a;
+			remoteRef = DAE20E2916C2C9D700A7D137 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		DAE20E2C16C2C9D700A7D137 /* TouchServ */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = TouchServ;
+			remoteRef = DAE20E2B16C2C9D700A7D137 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXShellScriptBuildPhase section */
 		24416B8011C4CA220047AFDD /* ShellScript */ = {
@@ -274,17 +478,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DAA3688A167F9BB6004A514D /* TiProxy+Errors.m in Sources */,
+				DAA3688B167F9BB6004A514D /* TDDatabaseManagerProxy.m in Sources */,
+				DAA3688C167F9BB6004A514D /* TDDatabaseProxy.m in Sources */,
+				DAA3688D167F9BB6004A514D /* TDDocumentProxy.m in Sources */,
+				DAA3688E167F9BB6004A514D /* TDQueryProxy.m in Sources */,
+				DAA3688F167F9BB6004A514D /* TDBridge.m in Sources */,
+				DAA36890167F9BB6004A514D /* TDViewProxy.m in Sources */,
+				DAA36891167F9BB6004A514D /* TDRevisionProxy.m in Sources */,
+				DAA36892167F9BB6004A514D /* TDReplicationProxy.m in Sources */,
+				DAA36893167F9BB6004A514D /* TDAttachmentProxy.m in Sources */,
 				24DD6CFA1134B3F500162E58 /* ComObscureTiTouchDBModule.m in Sources */,
-				DA0E41B3152E3083004CAF63 /* CouchDatabaseProxy.m in Sources */,
-				DA0E41B7152E329B004CAF63 /* CouchPersistentReplicationProxy.m in Sources */,
-				DA0E41BD152E474E004CAF63 /* CouchDocumentProxy.m in Sources */,
-				DAE72A23152E4BBF00622013 /* CouchQueryProxy.m in Sources */,
-				DAE72A28152E4E7F00622013 /* CouchRevisionProxy.m in Sources */,
-				DAE72A2C152E518300622013 /* CouchDesignDocumentProxy.m in Sources */,
-				DAE72A30152E550400622013 /* CouchReplicationProxy.m in Sources */,
-				DAE72A38152E66C900622013 /* TiProxy+Errors.m in Sources */,
-				DA09BDF31534B58B00B9936C /* CouchAttachmentProxy.m in Sources */,
-				DA305FCD15B4B5E800DBB89E /* ViewCompiler.m in Sources */,
+				DAE20E3316C2CE2800A7D137 /* CBLDatabase+NotificationPriorityFix.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -296,6 +501,16 @@
 			target = D2AAC07D0554694100DB518D /* titouchdb */;
 			targetProxy = 24416B8411C4CA280047AFDD /* PBXContainerItemProxy */;
 		};
+		DAE20E2E16C2C9F200A7D137 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "CBL iOS library";
+			targetProxy = DAE20E2D16C2C9F200A7D137 /* PBXContainerItemProxy */;
+		};
+		DAEC46AD1721B06D00479C1F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "Listener iOS Library";
+			targetProxy = DAEC46AC1721B06D00479C1F /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
@@ -303,27 +518,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 24DD6D1B1134B66800162E58 /* titanium.xcconfig */;
 			buildSettings = {
-				ARCHS = (
-					armv6,
-					armv7,
-				);
-				"ARCHS[sdk=iphoneos*]" = (
-					armv6,
-					armv7,
-				);
-				"ARCHS[sdk=iphonesimulator*]" = i386;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CLANG_ENABLE_OBJC_ARC = NO;
 				DSTROOT = /tmp/ComObscureTiTouchDB.dst;
-				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/vendor\"";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ComObscureTiTouchDB_Prefix.pch;
-				GCC_PREPROCESSOR_DEFINITIONS = "TI_VERSION=$(TI_VERSION)";
 				GCC_THUMB_SUPPORT = NO;
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
-				GCC_VERSION = "";
 				GCC_WARN_ABOUT_RETURN_TYPE = NO;
 				GCC_WARN_MISSING_PARENTHESES = NO;
 				GCC_WARN_SHADOW = NO;
@@ -335,26 +537,13 @@
 				HEADER_SEARCH_PATHS = (
 					"$(TITANIUM_BASE_SDK)",
 					"$(TITANIUM_BASE_SDK2)",
-					vendor/TouchDB/Headers,
-					vendor/CouchCocoa/Headers,
-					vendor/TouchDBListener/Headers,
+					"$(SRCROOT)/vendor/couchbase-lite-ios/**",
 				);
 				INSTALL_PATH = /usr/local/lib;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/vendor/TouchDB.framework\"",
-					"\"$(SRCROOT)/vendor/CouchCocoa.framework\"",
-					"\"$(SRCROOT)/vendor/TouchDBListener.framework\"",
-				);
 				OTHER_CFLAGS = (
 					"-DDEBUG",
 					"-DTI_POST_1_2",
 				);
-				OTHER_LDFLAGS = "-ObjC";
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
-				RUN_CLANG_STATIC_ANALYZER = NO;
-				SDKROOT = iphoneos;
 			};
 			name = Debug;
 		};
@@ -362,26 +551,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 24DD6D1B1134B66800162E58 /* titanium.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = (
-					armv6,
-					armv7,
-				);
-				"ARCHS[sdk=iphoneos*]" = (
-					armv6,
-					armv7,
-				);
-				"ARCHS[sdk=iphonesimulator*]" = i386;
+				CLANG_ENABLE_OBJC_ARC = NO;
 				DSTROOT = /tmp/ComObscureTiTouchDB.dst;
-				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/vendor\"";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ComObscureTiTouchDB_Prefix.pch;
-				GCC_PREPROCESSOR_DEFINITIONS = "TI_VERSION=$(TI_VERSION)";
 				GCC_THUMB_SUPPORT = NO;
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
-				GCC_VERSION = "";
 				GCC_WARN_ABOUT_RETURN_TYPE = NO;
 				GCC_WARN_MISSING_PARENTHESES = NO;
 				GCC_WARN_SHADOW = NO;
@@ -393,22 +570,10 @@
 				HEADER_SEARCH_PATHS = (
 					"$(TITANIUM_BASE_SDK)",
 					"$(TITANIUM_BASE_SDK2)",
-					vendor/TouchDB/Headers,
-					vendor/CouchCocoa/Headers,
-					vendor/TouchDBListener/Headers,
+					"$(SRCROOT)/vendor/couchbase-lite-ios/**",
 				);
 				INSTALL_PATH = /usr/local/lib;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/vendor/TouchDB.framework\"",
-					"\"$(SRCROOT)/vendor/CouchCocoa.framework\"",
-					"\"$(SRCROOT)/vendor/TouchDBListener.framework\"",
-				);
 				OTHER_CFLAGS = "-DTI_POST_1_2";
-				OTHER_LDFLAGS = "-ObjC";
-				RUN_CLANG_STATIC_ANALYZER = NO;
-				SDKROOT = iphoneos;
 			};
 			name = Release;
 		};
@@ -416,23 +581,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 24DD6D1B1134B66800162E58 /* titanium.xcconfig */;
 			buildSettings = {
-				ARCHS = (
-					armv6,
-					armv7,
-				);
-				"ARCHS[sdk=iphoneos*]" = (
-					armv6,
-					armv7,
-				);
-				"ARCHS[sdk=iphonesimulator*]" = i386;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DSTROOT = /tmp/ComObscureTiTouchDB.dst;
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ComObscureTiTouchDB_Prefix.pch;
-				GCC_PREPROCESSOR_DEFINITIONS = "TI_VERSION=$(TI_VERSION)";
 				GCC_THUMB_SUPPORT = NO;
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				GCC_VERSION = "";
@@ -450,16 +603,7 @@
 					"-DDEBUG",
 					"-DTI_POST_1_2",
 				);
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-framework",
-					TouchDBListener,
-					"-framework",
-					TouchDB,
-				);
 				PRODUCT_NAME = ComObscureTitouchdb;
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				RUN_CLANG_STATIC_ANALYZER = NO;
 				SDKROOT = iphoneos;
 			};
@@ -470,21 +614,11 @@
 			baseConfigurationReference = 24DD6D1B1134B66800162E58 /* titanium.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = (
-					armv6,
-					armv7,
-				);
-				"ARCHS[sdk=iphoneos*]" = (
-					armv6,
-					armv7,
-				);
-				"ARCHS[sdk=iphonesimulator*]" = i386;
 				DSTROOT = /tmp/ComObscureTiTouchDB.dst;
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ComObscureTiTouchDB_Prefix.pch;
-				GCC_PREPROCESSOR_DEFINITIONS = "TI_VERSION=$(TI_VERSION)";
 				GCC_THUMB_SUPPORT = NO;
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				GCC_VERSION = "";
@@ -499,13 +633,6 @@
 				INSTALL_PATH = /usr/local/lib;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DTI_POST_1_2";
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-framework",
-					TouchDBListener,
-					"-framework",
-					TouchDB,
-				);
 				PRODUCT_NAME = ComObscureTitouchdb;
 				RUN_CLANG_STATIC_ANALYZER = NO;
 				SDKROOT = iphoneos;

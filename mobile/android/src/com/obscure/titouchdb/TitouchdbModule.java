@@ -7,155 +7,96 @@
  */
 package com.obscure.titouchdb;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollModule;
 import org.appcelerator.kroll.annotations.Kroll;
-import org.appcelerator.titanium.TiContext;
 
+import android.app.Activity;
 import android.util.Log;
 
-import com.couchbase.touchdb.TDDatabase;
-import com.couchbase.touchdb.TDMisc;
-import com.couchbase.touchdb.TDServer;
-import com.couchbase.touchdb.TDView;
-import com.couchbase.touchdb.TDViewCompiler;
-import com.couchbase.touchdb.TouchDBVersion;
-import com.couchbase.touchdb.javascript.TDJavaScriptViewCompiler;
+import com.couchbase.cblite.CBLStatus;
+import com.couchbase.cblite.CBLView;
+import com.couchbase.cblite.CBLViewCompiler;
 
 @Kroll.module(name = "Titouchdb", id = "com.obscure.titouchdb")
 public class TitouchdbModule extends KrollModule {
-	public static final String	LCAT						= "TiTouchDB";
 
-	@Kroll.constant
-	public static final int		REPLICATION_MODE_ACTIVE		= 3;
+    private static final Map<Integer, String> codeToMessage            = new HashMap<Integer, String>();
 
-	@Kroll.constant
-	public static final int		REPLICATION_MODE_IDLE		= 2;
+    public static final String                LCAT                     = "TiTouchDB";
 
-	@Kroll.constant
-	public static final int		REPLICATION_MODE_OFFLINE	= 1;
+    @Kroll.constant
+    public static final int                   REPLICATION_MODE_ACTIVE  = 0;
 
-	@Kroll.constant
-	public static final int		REPLICATION_MODE_STOPPED	= 0;
+    @Kroll.constant
+    public static final int                   REPLICATION_MODE_IDLE    = 0;
 
-	@Kroll.constant
-	public static final int		REPLICATION_STATE_COMPLETED	= 2;
+    @Kroll.constant
+    public static final int                   REPLICATION_MODE_OFFLINE = 0;
 
-	@Kroll.constant
-	public static final int		REPLICATION_STATE_ERROR		= 3;
+    @Kroll.constant
+    public static final int                   REPLICATION_MODE_STOPPED = 0;
 
-	@Kroll.constant
-	public static final int		REPLICATION_STATE_IDLE		= 0;
+    @Kroll.constant
+    public static final int                   STALE_QUERY_NEVER        = 0;
 
-	@Kroll.constant
-	public static final int		REPLICATION_STATE_TRIGGERED	= 1;
+    @Kroll.constant
+    public static final int                   STALE_QUERY_OK           = 0;
 
-	@Kroll.constant
-	public static final int		STALE_QUERY_NEVER			= 0;
+    @Kroll.constant
+    public static final int                   STALE_QUERY_UPDATE_AFTER = 0;
 
-	@Kroll.constant
-	public static final int		STALE_QUERY_OK				= 1;
+    static {
+        System.loadLibrary("function-utils");
+        
+        codeToMessage.put(CBLStatus.BAD_JSON, "Invalid JSON");
+        codeToMessage.put(CBLStatus.BAD_REQUEST, "bad_request");
+        codeToMessage.put(CBLStatus.CONFLICT, "conflict");
+        codeToMessage.put(CBLStatus.CREATED, "created");
+        codeToMessage.put(CBLStatus.DB_ERROR, "Database error!");
+        codeToMessage.put(CBLStatus.FORBIDDEN, "forbidden");
+        codeToMessage.put(CBLStatus.INTERNAL_SERVER_ERROR, "Internal error");
+        codeToMessage.put(CBLStatus.METHOD_NOT_ALLOWED, "method_not_allowed");
+        codeToMessage.put(CBLStatus.NOT_ACCEPTABLE, "not_acceptable");
+        codeToMessage.put(CBLStatus.NOT_FOUND, "not_found");
+        codeToMessage.put(CBLStatus.NOT_MODIFIED, "not_modified");
+        codeToMessage.put(CBLStatus.OK, "ok");
+        codeToMessage.put(CBLStatus.PRECONDITION_FAILED, "precondition_failed");
+        codeToMessage.put(CBLStatus.UNKNOWN, "unknown");
+    }
 
-	@Kroll.constant
-	public static final int		STALE_QUERY_UPDATE_AFTER	= 2;
+    protected static KrollDict convertCBLStatusToErrorDict(CBLStatus status) {
+        return generateErrorDict(status.getCode(), "TiTouchDB", codeToMessage.get(status.getCode()));
+    }
 
-	private TDViewCompiler		compiler;
+    protected static KrollDict generateErrorDict(int code, String domain, String message) {
+        KrollDict result = new KrollDict();
+        result.put("error", true);
+        result.put("code", code);
+        result.put("domain", domain);
+        result.put("description", message);
+        return result;
+    }
 
-	private Map<String, CouchDatabaseProxy>	databaseCache	= new HashMap<String, CouchDatabaseProxy>();
+    private DatabaseManagerProxy databaseManagerProxy;
 
-	private TDServer			server;
+    public TitouchdbModule() {
+        Log.i(LCAT, this.toString() + " loaded");
+    }
 
-	public TitouchdbModule() {
-		Log.i(LCAT, "no-arg constructor");
-	}
+    @Kroll.getProperty(name = "databaseManager")
+    public DatabaseManagerProxy getDatabaseManager() {
+        return this.databaseManagerProxy;
+    }
 
-	public TitouchdbModule(String name) {
-		super(name);
-		Log.i(LCAT, "one-arg constructor: " + name);
-	}
-
-	public TitouchdbModule(TiContext tiContext) {
-		super(tiContext);
-
-		String path = tiContext.getActivity().getFilesDir().getAbsolutePath();
-		try {
-			server = new TDServer(path);
-		}
-		catch (IOException e) {
-			Log.e(LCAT, "Unable to create TDServer");
-		}
-
-		compiler = new TDJavaScriptViewCompiler();
-		TDView.setCompiler(compiler);
-
-		Log.i(LCAT, this.toString() + " loaded");
-	}
-
-	@Kroll.getProperty(name = "activeTasks")
-	public KrollDict[] activeTasks() {
-		return null;
-	}
-
-	@Kroll.getProperty(name = "activityPollingInterval")
-	public int activityPollingInterval() {
-		return 0;
-	}
-
-	@Kroll.method
-	public CouchDatabaseProxy databaseNamed(String name) {
-		return databaseProxyNamed(name);
-	}
-
-	private CouchDatabaseProxy databaseProxyNamed(String name) {
-		CouchDatabaseProxy result = databaseCache.get(name);
-		if (result == null) {
-			TDDatabase db = server.getDatabaseNamed(name);
-			if (db != null) {
-				db.open();
-				result = new CouchDatabaseProxy(db);
-				databaseCache.put(name, result);
-			}
-		}
-		return result;
-	}
-
-	@Kroll.method
-	public String[] generateUUIDs(int count) {
-		String[] result = new String[count];
-		for (int i = 0; i < count; i++) {
-			result[i] = TDMisc.TDCreateUUID();
-		}
-		return result;
-	}
-
-	@Kroll.method
-	public CouchDatabaseProxy[] getDatabases() {
-		List<CouchDatabaseProxy> proxies = new ArrayList<CouchDatabaseProxy>();
-		for (String name : server.allDatabaseNames()) {
-			proxies.add(databaseProxyNamed(name));
-		}
-		return proxies.toArray(new CouchDatabaseProxy[0]);
-	}
-
-	@Kroll.method
-	public String getVersion() {
-		return TouchDBVersion.TouchDBVersionNumber;
-	}
-
-	@Kroll.getProperty(name = "replications")
-	public CouchReplicationProxy[] replications() {
-		return null;
-	}
-
-	@Kroll.setProperty(name = "activityPollingInterval")
-	public void setActivityPollingInterval(int val) {
-
-	}
-
+    @Override
+    protected void initActivity(Activity activity) {
+        super.initActivity(activity);
+        this.databaseManagerProxy = new DatabaseManagerProxy(activity);
+    }
+    
+    public static native void registerGlobalFunction(Object target, String name, String signature);
 }
