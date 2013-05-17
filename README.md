@@ -1,13 +1,11 @@
 # TiTouchDB
 
 by Paul Mietz Egli (paul@obscure.com)
-based on TouchDB-iOS by Jens Alfke (http://github.com/couchbaselabs/TouchDB-iOS)
+based on Couchbase Lite iOS by Jens Alfke (http://github.com/couchbaselabs/couchbase-lite-ios)
+and Couchbase Lite Android by Traun Leyden (http://github.com/couchbaselabs/couchbase-lite-android)
 
-**TiTouchDB** is an Appcelerator Titanium module which wraps TouchDB, the lightweight, CouchDB-compatible
+**TiTouchDB** is an Appcelerator Titanium module which wraps Couchbase Lite, the lightweight, CouchDB-compatible
 database suitable for embedding into mobile apps.
-
-Because the Titanium runtime already contains a JavaScript interpreter, TiTouchDB can run standard JavaScript
-map and reduce functions directly from design documents, just like Apache CouchDB.
 
 ## Using the Module
 
@@ -15,18 +13,22 @@ See the Wiki pages for usage instructions and the samples directory for example 
 
 ## Requirements
 
-* Titanium SDK 2.1.0 or later
-* Xcode 4.5 or later
-* Runtime requirement is iOS 5+
+* Titanium SDK 3.1.0 or later
+* Xcode 4.5 or later (iOS), runtime requirement is iOS 5+
+* Android SDK r21.1, runtime requirement is android-8
 
 ## License
 
 * TiTouchDB is under the Apache License 2.0
-* TouchDB is under the Apache License 2.0. See that project for additional licenses.
+* Couchbase Lite is under the Apache License 2.0. See that project for additional licenses.
 
 ## Development Status - iOS
 
-**0.5-beta**
+**0.9**
+
+2013-05-17
+
+Merged `public-api` branch to master.  Please see the docs for changes to the module APIs.
 
 2013-01-18
 
@@ -54,7 +56,12 @@ fix.
 
 ## Development Status - Android
 
-**0.5-beta**
+**0.9-beta**
+
+2013-05-17
+
+Merged `public-api` branch to master.  Android is passing tests 001-005; working on
+implementing the rest of the unit tests.
 
 2012-10-11
 
