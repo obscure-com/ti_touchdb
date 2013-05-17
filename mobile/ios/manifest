@@ -2,7 +2,7 @@
 # this is your module manifest and used by Titanium
 # during compilation, packaging, distribution, etc.
 #
-version: 0.7
+version: 0.9
 apiversion: 2
 description: TiTouchDB
 author: Paul Mietz Egli
@@ -15,4 +15,4 @@ name: titouchdb
 moduleid: com.obscure.titouchdb
 guid: d7abdfb0-acc4-433e-aa74-f7e93063bb85
 platform: iphone
-minsdk: 1.8.2
+minsdk: 3.1.0.GA
