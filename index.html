@@ -1,0 +1,131 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>TiTouchDB by pegli</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>TiTouchDB</h1>
+        <p>Titanium wrapper around Couchbase Lite</p>
+
+        <p class="view"><a href="https://github.com/pegli/ti_touchdb">View the Project on GitHub <small>pegli/ti_touchdb</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/pegli/ti_touchdb/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/pegli/ti_touchdb/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/pegli/ti_touchdb">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>TiTouchDB</h1>
+
+<p>by Paul Mietz Egli (<a href="mailto:paul@obscure.com">paul@obscure.com</a>)
+based on Couchbase Lite iOS by Jens Alfke (<a href="http://github.com/couchbase/couchbase-lite-ios">http://github.com/couchbase/couchbase-lite-ios</a>)
+and Couchbase Lite Android by Traun Leyden (<a href="http://github.com/couchbase/couchbase-lite-android">http://github.com/couchbase/couchbase-lite-android</a>)</p>
+
+<p><strong>TiTouchDB</strong> is an Appcelerator Titanium module which wraps Couchbase Lite, the lightweight, CouchDB-compatible
+database suitable for embedding into mobile apps.</p>
+
+<h2>Using the Module</h2>
+
+<p>See the Wiki pages for usage instructions and the samples directory for example apps.</p>
+
+<h2>Requirements</h2>
+
+<ul>
+<li>Titanium SDK 3.1.0 or later</li>
+<li>Xcode 4.5 or later (iOS), runtime requirement is iOS 5+</li>
+<li>Android SDK r21.1, runtime requirement is android-8</li>
+</ul><h2>License</h2>
+
+<ul>
+<li>TiTouchDB is under the Apache License 2.0</li>
+<li>Couchbase Lite is under the Apache License 2.0. See that project for additional licenses.</li>
+</ul><h2>Development Status - iOS</h2>
+
+<p><strong>0.9</strong></p>
+
+<p>2013-05-17</p>
+
+<p>Merged <code>public-api</code> branch to master.  Please see <a href="https://github.com/pegli/ti_touchdb/wiki/API">the docs</a>
+for changes to the module APIs.</p>
+
+<p>2013-02-06</p>
+
+<p>Lots of changes in the TouchDB-iOS world!  Jens has been working on a
+<a href="https://github.com/couchbaselabs/TouchDB-iOS/wiki/API-Transition">new, in-process API</a>
+that replaces the HTTP listener plus CouchCocoa system that was previously the recommended way
+of using TouchDB.  The "public API" branch in the TouchDB repo where this work has been done
+will be the basis for the 1.5 release of TouchDB.  In addition, TouchDB 1.5 will be
+<a href="https://groups.google.com/forum/?fromgroups=#!topic/mobile-couchbase/vaB8H1dlagA">renamed to Couchbase Lite</a>.
+The code has already been moved to <a href="https://github.com/couchbase/couchbase-lite-ios">new Github repo</a>
+and its internal names have been modified to reflect the branding change.  The <em>public-api</em>
+branch of this project is where I have been working to integrate these API changes.  When
+Couchbase Lite 1.5 goes beta, I will be merging public-api to master.</p>
+
+<p>2013-01-18</p>
+
+<p>TouchDB-iOS has a new branch named <code>public-api</code> which removes the need for CouchCocoa
+and changes all of the calls to in-process rather than deferred/HTTP.  I've created a
+public-api branch in this repo where I will be converting the module to use the updated
+library calls.</p>
+
+<p>2012-10-11</p>
+
+<p>Added support for filters; new tutorial code under samples</p>
+
+<p>2012-10-01</p>
+
+<p>Fixed problem with map and reduce functions being garbage collected by the JS context.</p>
+
+<p>2012-08-30</p>
+
+<p>Brand-spanking new TouchBooks example built with the "Master/Detail" application template
+from Titanium Studio.  The new code should be much easier to understand, and as a bonus
+it includes push and pull replication to an IrisCouch server!</p>
+
+<p>Latest build of the project uses the head of TouchDB-iOS to get a JSON view collation bug
+fix.</p>
+
+<h2>Development Status - Android</h2>
+
+<p><strong>0.9-beta</strong></p>
+
+<p>2013-05-17</p>
+
+<p>Merged <code>public-api</code> branch to master.  Android is passing tests 001-005; working on
+implementing the rest of the unit tests.</p>
+
+<p>2012-10-11</p>
+
+<p>Faked the persistent replication classes for API compatibility with iOS by wrapping TDReplicator;
+will update when TouchDB-Android has persistent replication.</p>
+
+<p>2012-08-30</p>
+
+<p>The new TouchBooks example also works on Android.  It's cool.  Check it out.</p>
+
+<p>Android version uses the latest version to TouchDB-Android.  Replication is working in the
+test case and in TouchBooks, but Marty Schoch, the author of TouchDB-Android, reports that
+there are issues with the replicator, so proceed with caution.</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/pegli">pegli</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
