@@ -1,11 +1,4 @@
-# TiTouchDB Module
-
-## Description
-
-The TiTouchDB module wraps the TouchDB and CouchCocoa iOS frameworks and provides
-a CouchDB-compatible database for your Titanium apps.
-
-The reference section follows these conventions:
+This document follows these conventions:
 
 * Text in `code font` refer to module objects.  For example, database is a generic term
   but `database` refers to a TiTouchDB object.
@@ -18,64 +11,42 @@ The reference section follows these conventions:
 NOTE: there are currently some functions that are not yet implemented on Android.  See
 the project's issues on Github for a current status on these methods.
 
+If you aren't familiar with the Couchbase Lite data model, take a look at the excellent
+[documentation](https://github.com/couchbase/couchbase-lite-ios/wiki/Guide%3A-Data-Model)
+provided by that project.  These docs will give you a more in-depth description of
+databases, documents, revisions, and the rest of the objects described in this API reference.
+
+## Table of Contents
+
+* [Module](#module)
+* [Database Manager](#databaseManager)
+* [Database](#database)
+* [Document](#document)
+* [Attachment](#attachment)
+* [View](#view)
+* [Query](#query)
+* [Query Enumerator](#query_enumerator)
+* [Query Row](#query_row)
+* [Replication](#replication)
+
 ## Accessing the Module
 
 To access this module from JavaScript, you would do the following:
 
-	var server = require("com.obscure.TiTouchDB");
+	var titouchdb = require("com.obscure.titouchdb");
 
-<a name="server"/>
-## Server
+<a name="module"/>
+## Module
 
-TODO server description
+Global functions, properties, and constants.
 
 ### Properties
 
-**activeTasks**
+**databaseManager**
 
-array of dictionaries, read-only. An list of the active tasks (view compacting, indexing, etc.)
-currently running on the server.  See http://wiki.apache.org/couchdb/HttpGetActiveTasks.
-
-**activityPollingInterval**
-
-number, read/write.  Set the interval at which the active tasks will be updated, in seconds.
-
-**replications**
-
-array of [`replication`](#replication) objects, read-only.  The persistent replications stored
-in the replicator database.
-
-### Functions
-
-**getVersion**()
-
-Returns the version of TouchDB used to build the module as string.
-
-**generateUUIDs**(count)
-
-* count (number): the number of UUIDs to generate
-
-Return an array of unique identifiers as strings suitable for use as document IDs.
-
-**getDatabases**()
-
-Return an array of all [`database`](#database) objects present in the server.
-
-**databaseNamed**(name)
-
-* name (string): the name of the `database` to return.
-
-Return the [`database`](#database) with the specified name.  If the server does not have a database with
-the provided name, returns null.
+[`databaseManager`](#databaseManager) object, read-only.  The shared database manager instance.
 
 ### Constants
-
-#### Replication State
-
-* REPLICATION\_STATE\_IDLE
-* REPLICATION\_STATE\_TRIGGERED
-* REPLICATION\_STATE\_COMPLETED
-* REPLICATION\_STATE\_ERROR
 
 #### Replication Mode
 
@@ -84,52 +55,129 @@ the provided name, returns null.
 * REPLICATION\_MODE\_IDLE
 * REPLICATION\_MODE\_ACTIVE
 
-#### Stale Queries
+#### Stale queries
 
 * STALE\_QUERY\_NEVER
 * STALE\_QUERY\_OK
 * STALE\_QUERY\_UPDATE\_AFTER
 
-<a name="database"/>
-## Database
 
-TODO database description
+<a name="databaseManager"/>
+## DatabaseManager
+
+Applications interact with the various TiTouchDB databases using the Database Manager.
 
 ### Properties
 
-**relativePath**
+**allDatabaseNames**
 
-string, read-only.  The path of the database in the server.  This is always the same as the database
-name.
+array of strings, read-only.  Return the names of all existing databases.
 
-**replications**
+**error**
 
-array of [`replication`](#replication) objects, read-only.  The persistent replications stored
-in the replicator database.
+dictionary, read-only.  The most-recent error that occurred in the database manager.
+
+**internalURL**
+
+string, read-only.  The internal URL of the database manager.  This can be used to construct
+URLs for internal replication.
 
 ### Methods
 
-**create**()
+**createDatabaseNamed**(name)
 
-Create the database object in the server.  Will fail if the database already exists, so it is
-usually better to use **ensureCreated**().
+* name (string): the name of the `database` to create.
 
-**ensureCreated**()
+Returns the [`database`](#database) with the given name, creating it if it didn't already exist.
+Multiple calls with the same name will return the same object instance.
+NOTE: Database names may not contain capital letters and may not start with an underscore!
 
-Create the database object on the server if it doesn't already exist.  Returns true if successful.
+**databaseNamed**(name)
 
-**deleteDatabase**()
+* name (string): the name of the `database` to return.
 
-Permanently remove this database and all associated data from the server.
+Return the [`database`](#database) with the specified name.  If the database manager does not have a database with
+the provided name, returns null.  Multiple calls with the same name will return the same object instance.
+
+**installDatabase**(name, pathToDatabase, pathToAttachments)
+
+* name (string): the name of the `database` to install
+* pathToDatabase (string): the path of the .touchdb database file to install
+* pathToAttachments (string): the path of the attachments directory to install
+
+Replaces or installs a database from a file.  This is primarily used to install a canned database on first
+launch of an app, in which case you should first check .exists to avoid replacing the database if it exists
+already.  Returns true if the database was copied successfully.
+
+<a name="database"/>
+## Database
+
+A database is a collection of documents and functions which operate upon the documents (views, filters,
+and validations).  Databases in TiTouchDB are primarily namespaces for document collections.
+
+### Properties
+
+**documentCount**
+
+integer, read-only.  The number of documents in the database.
+
+**error**
+
+dictionary, read-only.  The most-recent error that occurred in the database.
+
+**lastSequenceNumber**
+
+integer, read-only. The latest sequence number used.  Every new revision is assigned a new sequence number,
+so this property increases monotonically as changes are made to the database. It can be used to check whether
+the database has changed between two points in time.
+
+**name**
+
+string, read-only.  The database's name.
+
+
+### Methods
+
+**cachedDocumentWithID**(docid)
+
+* docid (string): the unique ID of the document
+
+Fetch an already-instantiated [`document`](#document) object with the given ID, or null if none is yet cached.
+
+**clearDocumentCache**()
+
+Empties the cache of recently used document objects. API calls will now instantiate and return new instances.
 
 **compact**()
 
 Compacts the database, freeing up disk space by deleting old revisions of documents.  This should be
 run periodically, especially after making a lot of changes.  The compact operation is asynchronous.
 
-**getDocumentCount**()
+**defineFilter**(name, filter)
 
-Returns the total number of documents in the database.
+* name (string): the name of the filter function
+* filter (function(rev, params)): the filter function, return true to replicate the revision. Set this
+  argument to null to remove the named filter function.
+    * rev: the revision object to be validated
+    * params: the filter params (currently null)
+
+Defines or clears a named filter function. Filters are used by push replications to choose which documents to send.
+
+**defineValidation**(name, validate)
+
+* name (string): the name of the validation function
+* validate (function(rev, context)): the validation function, return true to accept revision. Set this
+  argument to null to remove the named validation function.
+    * rev: the revision object to be validated
+    * context: the validation context (currently null)
+
+Defines or clears a named document validation function. Before any change to the database, all registered
+validation functions are called and given a chance to reject it. (This includes incoming changes from a
+pull replication.)
+
+**deleteDatabase**()
+
+Permanently remove this database and all associated data.
 
 **documentWithID**(docid)
 
@@ -139,87 +187,24 @@ Fetch a [`document`](#document) object from the database by its identifier or cr
 the provided identifier if it doesn't already exist.  Note that the new document is not saved until a call to
 **putProperties**() is made.
 
-**untitledDocument**()
-
-Create a new [`document`](#document) object with a generated identifier.  The identifier *cannot* be
-changed after creation; use **documentWithID(id)** to create a document that has a specific identifier.
-
-**getAllDocuments**()
-
-Returns an array of all of the [`document`](#document) objects in the database.
-
-**getDocumentsWithIDs**(ids)
-
-* ids (array of strings): list of the identifiers of documents to return
-
-Returns a [`query`](#query) object that can be used to fetch the documents with the provided IDs.
-
-**putChanges**(propertiesArray)
-
-* propertiesArray (array of dictionaries): the document properties to store in the specified
-  revisions.
-  
-Bulk write multiple documents.  If a dictionary in the `propertiesArray` parameter has a key named
-`\_id`, the document with the corresponding ID will be updated or a new document will be created if
-that ID does not exist.  If the dictionary does not have an `\_id` key, a new document will be created
-with a server-generated ID.
-
-**putChanges**(propertiesArray, revisionsArray)
-
-* propertiesArray (array of dictionaries): the document properties to store in the specified revisions.
-  Each element must be a dictionary or null to delete the corresponding document.
-* revisionsArray (array of [`revision`](#revision) or [`document`](#document) objects): a parallel array
-  of revisions or documents to update or delete.
-
-Bulk write changes to multiple revisions in one call.
-
-**deleteRevisions**(revisionsArray)
-
-* revisionsArray (array of [`revision`](#revision) objects)
-
-Remove the specified revisions.
-
-**deleteDocuments**(documentsArray)
-
-* documentsArray (array of [`document`](#document) objects)
-
-Remove the specified documents
-
-**clearDocumentCache**()
-
-TouchDB caches recently-used documents.  Call **clearDocumentCache**() to empty the cache, which forces
-the module to instantiate and return new instances of documents.
-
-**slowQuery**(map, reduce)
-
-* map (string): map function source in JavaScript
-* reduce (string, optional): reduce function source in JavaScript or the name of a predefined reduce function
-
-Returns a [`query`](#query) object that runs an arbitrary map/reduce.  This is the equivalent of a CouchDB
-temporary view, and as such is very slow compared to a precompiled view.
-
-TODO predefined reduce functions?
-
-**designDocumentWithName**(name)
-
-* name (string): the name of the design document
-
-Fetch or create a [`design document`](#design document) object with the provided name.  If the design document
-does not exist, you must call **saveChanges**() to create the document.
-
-**pullFromDatabaseAtURL**(url)
+**pullFromURL**(url)
 
 * url (string): the URL of the database to pull from
 
 Set up a one-time replication from a source database to this database and return a [`replication`](#replication)
 object.  The returned object can be customized prior to the start of replication.
 
-**pushToDatabaseAtURL**(url)
+**pushToURL**(url)
 
 * url (string): the URL of the database to push to
 
 Set up a one-time replication from this database to a remote target database and return a [`replication`](#replication)
 object.  The returned object can be customized prior to the start of replication.
+
+**queryAllDocuments**()
+
+Returns a [`query`](#query) that matches all documents in the database.
+This is like querying an imaginary view that emits every document's ID as a key.
 
 **replicateWithURL**(url, exclusively)
 
@@ -227,57 +212,67 @@ object.  The returned object can be customized prior to the start of replication
 * exclusively (boolean): if true, any existing replications with this URL will be removed
 
 Convenience function for setting up two-way replication with a remote database specified by the provided
-URL.  Returns an object with a keys named "push" and "pull" whose values are the push [`replication`](#replication)
-object and the pull [`replication`](#replication) object, respectively, or null on failure.
+URL.  Returns an array containing the push [`replication`](#replication)
+object and the pull [`replication`](#replication) object, or null on failure.
 
-**replicationFromDatabaseAtURL**(url)
+**slowQueryWithMap**(map)
 
-* url (string): the URL of the database to replicate from
+* map (string): map function source in JavaScript
 
-Set up a persistent replication from a source database to this database and return a
-[`persistent replication`](#persistent replication) object.  If the persistent replication already exists,
-the configuration is unchanged.  The returned object can be customized prior to the start of replication.
+Returns a [`query`](#query) object that runs an arbitrary map.  This is the equivalent of a CouchDB
+temporary view, and as such is very slow compared to a precompiled view.  It may be useful during
+development, but in general this is inefficient if this map will be used more than once,
+because the entire view has to be regenerated from scratch every time.
 
-**replicationToDatabaseAtURL**(url)
+**untitledDocument**()
 
-* url (string): the URL of the database to replicate to
+Create a new [`document`](#document) object with a generated identifier.  The identifier *cannot* be
+changed after creation; use **documentWithID(id)** to create a document that has a specific identifier.
 
-Set up a persistent replication from this database to a source database and return a
-[`persistent replication`](#persistent replication) object.  If the persistent replication already exists,
-the configuration is unchanged.  The returned object can be customized prior to the start of replication.
+**viewNamed**(name)
 
-**registerFilter**(name, code)
+* name (string): the name of the view to fetch
 
-* name (string): the name of the filter function to register
-* code (string): the JavaScript code that implements the filter function
+Returns a [`view`](#view) object with the given name. (This succeeds even if the view doesn't
+already exist, but the view won't be added to the database until it is assigned a map function.)
 
-Register a named filter function in the database for use with filtered replication.  The filter is not
-persistent and needs to be registered each time the app is run.  Use the registered filter name in the
-`filter` property of the [`persistent replication`](#persistent replication).
+### Events
+
+**change**: fired when modifications are made to the documents in the database.
 
 <a name="document"/>
 ## Document
 
-TODO description
+A document is a JSON object consisting of arbitrary key-value pairs.  Each document in a database
+has a unique identifier and may be fetched using this ID or located as part of a query on a view
+object.  Document properties that begin with an underscore are reserved.
 
 ### Properties
-
-**documentID**
-
-string, read-only. The unique ID of this document; its key in the database.
 
 **abbreviatedID**
 
 string, read-only. The document ID abbreviated to a maximum of 10 characters including ".." in the middle.
 Useful for logging or debugging.
 
-**isDeleted**
+**currentRevision**
 
-boolean, read-only.  True if the document has been deleted from the database.
+[`revision`](#revision), read-only.  The current/latest revision. This object is cached
 
 **currentRevisionID**
 
 string, read-only.  The ID of the current revision.  If not known, returns null.
+
+**documentID**
+
+string, read-only. The unique ID of this document; its key in the database.
+
+**error**
+
+dictionary, read-only.  The most-recent error that occurred in the document.
+
+**isDeleted**
+
+boolean, read-only.  True if the document has been deleted from the database.
 
 **properties**
 
@@ -285,6 +280,12 @@ dictionary, read-only
 
 The contents of the current revision of the document; shorthand for `doc.currentRevision.properties`.
 Any keys in the returned dictionary that start with an underscore are TouchDB metadata.
+
+**userProperties**
+
+dictionary, read-only
+
+The value of `properties` with all of the reserved keys removed.
 
 
 ### Methods
@@ -294,16 +295,10 @@ Any keys in the returned dictionary that start with an underscore are TouchDB me
 Mark the document as deleted from the database.  The next time the database is compacted, the document
 will be permanently deleted.
 
-**currentRevision**()
+**getLeafRevisions**()
 
-Returns the current [`revision`](#revision) revision object for this document.
-
-**revisionWithID**(revisionId)
-
-* revisionId (string): the identifier of the revision to fetch
-
-Returns the [`revision`](#revision) object with the specified ID or null if no revision with the
-ID is present in the document.
+Returns an array of leaf [`revision`](#revision) objects in the document's revision tree,
+including deleted revisions (i.e. previously-resolved conflicts.)
 
 **getRevisionHistory**()
 
@@ -312,55 +307,70 @@ but usually chronological unless there has been merging with changes from anothe
 historical revisions available may vary; it depends on how recently the database has been compacted.
 You should not rely on earlier revisions being available, except for those representing unresolved conflicts.
 
+**newRevision**()
+
+Creates an unsaved new [`revision`](#revision) whose parent is the current revision,
+or which will be the first revision if the document doesn't exist yet.
+You can modify this revision's properties and attachments, then save it.
+No change is made to the database until/unless you save the new revision.
+
+**propertyForKey**(key)
+
+* key (string): the key of the property in the document to return.
+
+Return the value of the document property specified by the `key` argument.
+
+**purgeDocument**()
+
+Purges this document from the database; this is more than deletion, it forgets entirely about it.
+The purge will NOT be replicated to other databases.
+
 **putProperties**(properties)
 
 * properties (dictionary): the properties to write to the new document revision.
 
 Updates the document with new properties, creating a new revision.  Except in the case of a new document,
-the `properties` parameter *must* contain a key named `\_rev` with a value of the current revision's
+the `properties` parameter *must* contain a key named `_rev` with a value of the current revision's
 revisionID.  Any object returned from **properties** will have this value, so it is usually best to modify
-that object and pass it to **putProperties**() to do updates.  Returns 201 for a new document, 200 for
-an update, and 412 for a conflict.
+that object and pass it to **putProperties**() to do updates.  Returns a new [`revision`](#revision)
+object or null if the put failed.
 
-**getConflictingRevisions**()
+**revisionWithID**(revisionId)
 
-Returns an array of revisions that are currently in conflict, in no particular order. If there is no conflict,
-returns an array of length 1 containing only the current revision.
+* revisionId (string): the identifier of the revision to fetch
 
-**resolveConflictingRevisions**(conflictsArray, winningRevision)
+Returns the [`revision`](#revision) object with the specified ID or null if no revision with the
+ID is present in the document.
 
-* conflictsArray (array of [`revision`](#revision) objects): the array of conflicting revisions as returned
-  by **getConflictingRevisions**()
-* winningRevision ([`revision`](#revision) object or dictionary): if a `revision`, the `revision` from
-  conflictsArray whose properties should be used to update the document.  If a dictionary, the properties to
-  store into the document to resolve the conflict.
 
 ### Events
 
-TODO document change notification when implemened
+**change**: fired when modifications are made to the document.
+
 
 <a name="attachment"/>
 ## Attachment
 
-TODO description
+Documents may contain zero or more binary attachments of any type.  Attachments are opaque data; they
+cannot be queried with view functions.
 
 ### Properties
 
-**revision**
+**body**
 
-[`revision`](#revision) object, read-only.  The revision that owns this attachment.
+Titanium.Blob, read-only.  The body data of the attachment.
 
-**document**
+**bodyURL**
 
-[`document`](#document) object, read-only.  The document that owns this attachment.
-
-**name**
-
-string, read-only.  The filename of the attachment (the final URL path component).
+string, read-only.  A file URL pointing to the attachment contents.
 
 **contentType**
 
 string, read-only.  The MIME type of the attachment.
+
+**error**
+
+dictionary, read-only.  The most-recent error that occurred in the attachment.
 
 **length**
 
@@ -370,61 +380,106 @@ number, read-only.  The length of the attachment in bytes.
 
 dictionary, read-only.  The CouchDB metadata for the attachment.
 
-**body**
+**name**
 
-Titanium.Blob, read/write.  The body data of the attachment.
+string, read-only.  The filename of the attachment (the final URL path component).
+
 
 ### Methods
 
-**deleteAttachment**()
+**updateBody**()
 
-Remove the attachment from the owning document and revision.
+Updates the body, creating a new document revision in the process.  Returns the new [`revision`](#revision)
+object.
 
 <a name="revision"/>
 ## Revision
 
-TODO description
+A revision is a version of a document stored in the database.  Each time changes are made to a document --
+for example, through a call to `putProperties()` or by adding a new attachment -- a new revision of that
+document is created.  Revisions are used to coordinate changes that come from multiple sources and to 
+determine if incoming changes will result in a conflict in the document contents.  Revisions are *not* a
+version control system for your documents, however, as they can be permanently removed by a database
+`compact` operation.
+
+In TiTouchDB, there are two types of revision objects: existing revisions that have been persisted into
+the database and new revisions that are returned by the `newRevision()` method on the `database` and
+existing revision objects.  Think of new revision objects as scratchpads where you can add properties and
+attachments in multiple steps prior to saving.
+
+TODO maybe split out the docs for new revisions and existing revisions.
 
 ### Properties
-
-**document**
-
-[`document`](#document) object, read-only.  The document that owns this revision.
-
-**documentID**
-
-string, read-only.  The unique identifier of the document that owns this revision.
-
-**revisionID**
-
-string, read-only.  The unique identifier of the revision (the CouchDB "_rev" property).
-
-**isCurrent**
-
-boolean, read-only.  True if this is the latest revision of a document.
-
-**isDeleted**
-
-boolean, read-only.  True if this revision marks the deletion of a document from the database.
-
-**properties**
-
-dictionary, read-only. The contents of the revision. Any keys in the returned dictionary that start with an underscore
-are TouchDB metadata.  Revision properties are cached for the lifespan of the object.
-
-**userProperties**
-
-dictionary, read-only. The contents of the revision without the ones reserved for CouchDB.
-
-**propertiesAreLoaded**
-
-boolean, read-only. If true, the revision has fetched properties from the database.
 
 **attachmentNames**
 
 array of strings, read-only. The names of all attachments on this revision.
 
+**attachments**
+
+array of [`attachment`](#attachment) objects, read-only. All attachments on this revision.
+
+**error**
+
+dictionary, read-only.  The most-recent error that occurred in the revision.
+
+**isDeleted**
+
+boolean, read-only for existing revisions; read-write for new revisions.  True if this revision marks
+the deletion of a document from the database.
+
+**parentRevision**
+
+dictionary, read-only.  The previous revision object in this document's local history (new revision only).
+
+**parentRevisionID**
+
+string, read-only.  The identifier previous revision object in this document's local history (new revision only).
+
+**properties**
+
+dictionary, read-only for existing revisions; read-write for new revisions. The contents of the revision.
+Any keys in the returned dictionary that start with an underscore are reserved.  Revision properties are
+cached for the lifespan of the object.
+
+**revisionID**
+
+string, read-only.  The unique identifier of the revision (the CouchDB "_rev" property).
+
+**userProperties**
+
+dictionary, read-only. The contents of the revision without the ones reserved for the database.
+
 ### Methods
+
+**addAttachment**(name, contentType, content)
+
+* name (string): the name of the new attachment
+* contentType (string): the MIME type of the new attachment
+* content (TiBlob): the attachment content
+
+Creates a new attachment object with the specified name, MIME type, and content.  The attachment
+data will be written to the database when the revision is saved (new revision only).
+
+**attachmentNamed**(name)
+
+* name (string): the name of the attachment to fetch
+
+Returns the [`attachment`](#attachment) object with the specified name or null if the attachment does
+not exist.
+
+**deleteDocument**()
+
+Deletes the document by creating a new deletion-marker revision (existing revisions only).
+
+**getRevisionHistory**()
+
+Returns the history of this document as an array of revisions, in forward order. Older revisions are
+NOT guaranteed to have their properties available (existing revisions only).
+
+**newRevision**()
+
+Create a new, unsaved revision object for this revision's document (existing revisions only).
 
 **propertyForKey**(key)
 
@@ -436,172 +491,173 @@ Returns the revision property for the specified key.
 
 * properties (dictionary): the properties to write to the new revision.
 
-Creates a new revision with the provided properties.  Returns 200 on success and 412 on conflict.
+Creates a new revision for this revision's document with the provided properties (existing revision
+only).
 
-**attachmentNamed**(name)
+**removeAttachment**(name)
 
-* name (string): the name of the attachment to fetch
+* name (string): the name of the attachment to remove
 
-Returns the [`attachment`](#attachment) object with the specified name or null if the attachment does
-not exist.
+Deletes any existing attachment with the given name.  The attachment will be deleted from the
+database when the revision is saved (new revisions only).
 
-**createAttachment**(name, contentType)
+**setPropertyForKey**(key, value)
 
-* name (string): the name of the new attachment
-* contentType (string, optional): the MIME type of the new attachment
+* key (string): key of the property to set
+* value (object): the value of the property to set
 
-Creates a new attachment object with the specified name and MIME type.  If a content type is not
-specified, it will be set to "application/octet-stream".  The attachment is not saved until the
-body is set.  If this method is called with the name of an existing attachment, any changes will
-overwrite the existing attachment.
+Set a property on the revision corresponding to the specified key (new revision only).
 
-<a name="design document"/>
-## Design Document
+**save**()
 
-Design documents extend the [`document`](#document) object, so all properties and methods of that
-object are also available on a design document.
+Save a new revision object to the database.  Returns the saved revision as an existing revision object;
+after calling `save()`, you should use the returned object for any further actions instead of the
+new revision object.
+
+<a name="view"/>
+## View
+
+A view provides a means of indexing documents in a database so they can be fetched based on their
+properties.  View indexes are built by applying a map function to each document in the database which
+can choose to output an index key and optional value for the document.  Once a view index has
+been built, a [`query`](#query) object can be used to fetch all or part of the index along with
+the documents used to build the index.
+
+View objects are fetched or created by calling the `viewNamed()` function on the database object.
+Once you have a view object, you can specify the map function as a standard JavaScript callback:
+
+    var view = database.viewNamed('myview');
+    view.setMap(function(doc) {
+      if (doc.properties.type == 'book') {
+        emit(doc.properties.created, doc.properties.title);
+      }
+    });
+
+Map functions take one parameter named `doc` which will contain a [`document`](#document) object.  Views
+can also have an optional "reduce" function which can be used to summarize the output of the map function.
+See [the CouchDB book](http://guide.couchdb.org/draft/views.html#reduce) for a discussion of reduce
+functions.
+
+*NOTE*: views are not persistent objects in TiTouchDB.  You must register your views each time the
+application is run.
 
 ### Properties
 
-**language**
+**name**
 
-string, read/write.  The language for the functions in the design document.
-
-**viewNames**
-
-array of string, read-only.  A list of the names of the views in the design document.
-
-**validation**
-
-string, read/write.  Source code for the document validation function.
-
-**includeLocalSequence**
-
-boolean, read/write.  Set to true to have view query results include the local sequence number in the index.
-
-**changed**
-
-boolean, read-only.  Returns true if the contents of the design document have changed since the last
-call to **saveChanges**().
+string, read-only.  The name of the view.
 
 ### Methods
 
-**queryViewNamed**(name)
+**query**()
 
-* name (string): the name of the view to query
+Return a [`query`](#query) object that can be used to fetch the keys, values, and documents from this
+view's index.
 
-Return the [`query`](#query) object for the view with the provided name or null if the view does not
-exits.  If the view has changed, it will be saved first.
+**setMap**(map)
 
-**isLanguageAvailable**(lang)
+* map (function(document)): the map function for this view
 
-* lang (string): language to check
+Set the map function for the view.  Calling setMap(null) will delete the view.
 
-Returns true if the specified language can be used for writing functions.
+**setMapAndReduce**(map, reduce)
 
-**mapFunctionOfViewNamed**(name)
+* map (function(document)): the map function for this view
+* reduce (function(keys, values, rereduce)): the reduce function for this view.
+    * keys (array of object): an array of keys output by the map function
+    * values (array of object): an array of objects output by the map function
+    * rereduce (boolean): indicates that some of the keys/values provided have already been reduced.
 
-* name (string): the name of the view
-
-Returns the map function of the view with the given name.
-
-**reduceFunctionOfViewNamed**(name)
-
-* name (string): the name of the view
-
-Returns the reduce function of the view with the given name.
-
-**defineView**(name, map, reduce)
-
-* name (string): the name of the new view
-* map (string): source code of the map function
-* reduce (string, optional): source code of the reduce function.
-
-Set the definition of a view with the provided map and reduce functions.  If the value of the map
-parameter is null, the view will be deleted.
-
-**saveChanges**()
-
-Persist changes to the design document to the underlying database.
+Set the map and reduce functions for the view.  See the [CouchDB documentation](http://wiki.apache.org/couchdb/Introduction_to_CouchDB_views)
+for details on reduce functions.
 
 <a name="query"/>
 ## Query
 
-A `query` object is used to set up a query against a CouchDB view.
+Query objects are used to fetch keys, values, and documents from view indexes.
 
 ### Properties
-
-**designDocument**
-
-[`design document`](#design document) object, read-only.  The design document that contains the view
-being queried.  May be null for some database-level methods that return a query, like `getAllDocuments`
-and `slowQuery`.
-
-**limit**
-
-number, read/write.  The maximum number of rows to return.  Default value is 0, meaning unlimited.
-
-**skip**
-
-number, read/write.  The number of initial rows to skip. Default value is 0.  Should only be used with
-small values. For efficient paging, use startKey and limit.
 
 **descending**
 
 boolean, read/write.  Should the rows be returned in descending key order? Default value is false.
 
-**startKey**
-
-scalar|dictionary|array, read/write.  If present, the minimum key value of the first document to return.
-
 **endKey**
 
 scalar|dictionary|array, read/write.  If present, the maximum key value of the last document to return.
 
-**stale**
+**endKeyDocID**
 
-number, read/write.  If set, allows faster results at the expense of returning possibly out-of-date
-data.  One of `server.STALE\_QUERY\_NEVER`, `server.STALE\_QUERY\_OK`, or `server.STALE\_QUERY\_UPDATE\_AFTER`.
+string, read/write.  The identifier of the last document to return.
 
-**keys**
+**error**
 
-array of scalar|dictionary|array, read/write.  If set, the query will only fetch rows with the provided
-keys.
+dictionary, read-only.  The most-recent error that occurred in the query.
 
 **groupLevel**
 
 number, read/write.  If non-zero, enables grouping of results that have array keys in views that have
 reduce functions.
 
+**keys**
+
+array of scalar|dictionary|array, read/write.  If set, the query will only fetch rows with the provided
+keys.
+
+**limit**
+
+number, read/write.  The maximum number of rows to return.  Default value is 0, meaning unlimited.
+
 **prefetch**
 
 boolean, read/write.  If true, query results will include the entire document contents of the associated
 rows in the `documentContents` property.
+
+**skip**
+
+number, read/write.  The number of initial rows to skip. Default value is 0.  Should only be used with
+small values. For efficient paging, use startKey and limit.
+
+**startKey**
+
+scalar|dictionary|array, read/write.  If present, the minimum key value of the first document to return.
+
+**startKeyDocID**
+
+string, read/write.  The identifier of the first document to return.
+
+**stale**
+
+number, read/write.  If set, allows faster results at the expense of returning possibly out-of-date
+data.  One of `module.STALE_QUERY_NEVER`, `module.STALE_QUERY_OK`, or `module.STALE_QUERY_UPDATE_AFTER`.
+
+**sequences**
+
+boolean, read/write. If true, every row in the result will have a property named `_local_seq` containing the
+sequence ID of the revision it's from.
 
 ### Methods
 
 **rows**()
 
 Synchronous call to get all of the results of querying the associated view.  Returns a
-[`query enumerator`](#query enumerator) object.
+[`query enumerator`](#query_enumerator) object.
 
-<a name="query enumerator"/>
+**rowsIfChanged**()
+
+Same as `rows()`, except returns null if the query results have not changed since the last time it
+was evaluated
+
+<a name="query_enumerator"/>
 ## Query Enumerator
 
 A query enumerator holds the results of a view query.
 
 ### Properties
 
-**rowCount**
+**count**
 
 number, read-only. The number of rows in this view result.
-
-**totalCount**
-
-number, read-only.  The total number of rows in the view result.  May be different than **rowCount**
-if `query.skip` or `query.limit` are set.
-
-*NOTE* this property is currently returning the same value as **rowCount**.
 
 **sequenceNumber**
 
@@ -612,38 +668,67 @@ generated.
 
 **nextRow**()
 
-Returns the next [`query row`](#query row) object in the query results or null if no more rows are
+Returns the next [`query row`](#query_row) object in the query results or null if no more rows are
 present.  Usually called in a `while` loop.
 
 **rowAtIndex**(index)
 
 * index (number): the index of the row to return
 
-Returns the [`query row`](#query row) object at the specified index or null if there is no row at
+Returns the [`query row`](#query_row) object at the specified index or null if there is no row at
 that index.
 
-<a name="query row"/>
+<a name="query_row"/>
 ## Query Row
 
-TODO description
+An object returned by a [`query enumerator`](#query_enumerator) that holds a row's key, value, and
+possibly source document.
 
 ### Properties
 
-**query**
+**document**
 
-[`query`](#query) object, read-only.  The query object from which this row was generated.
+[`document`](#document) object, read-only.  The document that was used to generate this row.  This will be
+null if a grouping was enabled in the query because then the result rows don't correspond to individual
+documents.
+
+**documentID**
+
+string, read-only.  The unique identifier of the document associated with this row.
+
+**documentProperties**
+
+dictionary, read-only.  The properties of the document this row was mapped from.  This property will
+be null unless the **prefetch** property on the query was set to true.
+
+**documentRevision**
+
+string, read-only.  The revision ID of the source document.
 
 **key**
 
 scalar|dictionary|array, read-only.  The key for this row as emitted by the map/reduce functions.
 
-**value**
+**key0**
 
-scalar|dictionary|array, read-only.  The value for this row as emitted by the map/reduce functions.
+scalar|dictionary|array, read-only.  Shorthand for the first element in an array key (see `keyAtIndex()`).
 
-**documentID**
+**key1**
 
-string, read-only.  The unique identifier of the document associated with this row.
+scalar|dictionary|array, read-only.  Shorthand for the second element in an array key (see `keyAtIndex()`).
+
+**key2**
+
+scalar|dictionary|array, read-only.  Shorthand for the third element in an array key (see `keyAtIndex()`).
+
+**key3**
+
+scalar|dictionary|array, read-only.  Shorthand for the fourth element in an array key (see `keyAtIndex()`).
+
+**localSequence**
+
+integer, read-only.  The local sequence number of the associated doc/revision.
+Valid only if the 'sequences' and 'prefetch' properties were set in the query; otherwise returns 0
 
 **sourceDocumentID**
 
@@ -652,20 +737,9 @@ as the **documentID** property unless the map function caused a related document
 an `_id` key to the emitted value; in this case **documentID** will refer to the linked document, while
 **sourceDocumentID** always refers to the original document.
 
-**documentRevision**
+**value**
 
-string, read-only.  The revision ID of the source document.
-
-**document**
-
-[`document`](#document) object, read-only.  The document that was used to generate this row.  This will be
-null if a grouping was enabled in the query because then the result rows don't correspond to individual
-documents.
-
-**documentProperties**
-
-dictionary, read-only.  The properties of the document this row was mapped from.  This property will
-be null unless the **prefetch** property on the query was set to true.
+scalar|dictionary|array, read-only.  The value for this row as emitted by the map/reduce functions.
 
 ### Methods
 
@@ -685,14 +759,26 @@ is to declare your replication variable _outside_ of any event handlers or funct
 
 ### Properties
 
-**createTarget**
+**completed**
 
-boolean, read/write.  If true, create the target database if it doesn't already exist.  Default is false.
+boolean, read-only.  True if the replication is complete.
 
 **continuous**
 
 boolean, read/write.  Should the replication operate continuously, copying changes as soon as the source
 database is modified?  Default is false.
+
+**createTarget**
+
+boolean, read/write.  If true, create the target database if it doesn't already exist.  Default is false.
+
+**doc_ids**
+
+array of string, read/write.  Sets the documents to specify as part of the replication.
+
+**error**
+
+dictionary, read-only.  The most recent error during replication, if any.
 
 **filter**
 
@@ -706,39 +792,37 @@ filter.
 
 dictionary, read/write.  Parameters to pass to the filter function.
 
-**remoteURL**
+**headers**
 
-string, read-only.  The URL of the remote database.
+dictionary, read/write. Extra HTTP headers to send in all requests to the remote server.
+Should map strings (header names) to strings.
+
+**mode**
+
+number, read-only.  The current mode of the replication.  One of `module.REPLICATION_MODE_STOPPED`,
+`module.REPLICATION_MODE_OFFLINE`, `module.REPLICATION_MODE_IDLE`, or `module.REPLICATION_MODE_ACTIVE`.
+
+**persistent**
+
+boolean, read/write.  Is this replication remembered persistently in the _replicator database?
+Persistent continuous replications will automatically restart on the next launch
+or when the app returns to the foreground.
 
 **pull**
 
 boolean, read-only.  If true, the replication is pulling from the remote database to the local database.
 
+**remoteURL**
+
+string, read-only.  The URL of the remote database.
+
 **running**
 
 boolean, read-only.  True if the replication is currently running.
 
-**status**
-
-number, read-only.  The current state of the replication.  One of `server.REPLICATION\_STATE\_IDLE`,
-`server.REPLICATION\_STATE\_TRIGGERED`, `server.REPLICATION\_STATE\_COMPLETED`, or `server.REPLICATION\_STATE\_ERROR`.
-
-**completed**
-
-boolean, read-only.  True if the replication is complete.
-
 **total**
 
 number, read-only.  The total number of changes to be processed if the task is active, else 0.
-
-**error**
-
-dictionary, read-only.  The most recent error during replication, if any.
-
-**mode**
-
-number, read-only.  The current mode of the replication.  One of `server.REPLICATION\_MODE\_STOPPED`,
-`server.REPLICATION\_MODE\_OFFLINE`, `server.REPLICATION\_MODE\_IDLE`, or `server.REPLICATION\_MODE\_ACTIVE`.
 
 ### Methods
 
@@ -752,103 +836,19 @@ Stops a running replication process.
 
 ### Events
 
-**progress**
+**change**
 
-* 
-
-<a name="persistent replication"/>
-## Persistent Replication
-
-### Properties
-
-**source**
-
-string, read-only.  The source URL for the replication.  This will be either a complete HTTP(s) URL or the
-name of a database on this server.
-
-**target**
-
-string, read-only.  The destination URL for the replication. This will be either a complete HTTP(s) URL or
-the name of a database on this server.
-
-**remoteURL**
-
-string, read-only.  The URL of the remote database involved in this replication.
-
-**createTarget**
-
-boolean, read/write.  If true, the target database will be created if it does not exist.  Default is false.
-
-**continuous**
-
-boolean, read/write.  Should the replication operate continuously, copying changes as soon as the source
-database is modified?  Default is false.
-
-**filter**
-
-string, read/write.  Path of an optional filter function to run on the source server.  Only documents for
-which the function returns true are replicated. The path looks like "designdocname/filtername".
-
-**filterParams**
-
-dictionary, read/write.  Parameters to pass to the filter function.
-
-**status**
-
-number, read-only.  The current state of the replication.  One of `server.REPLICATION\_STATE\_IDLE`,
-`server.REPLICATION\_STATE\_TRIGGERED`, `server.REPLICATION\_STATE\_COMPLETED`, or `server.REPLICATION\_STATE\_ERROR`.
-
-**completed**
-
-number, read-only.  The number of changes that have been completed.
-
-**total**
-
-number, read-only.  The total number of changes to be processed if the task is active, else 0.
-
-**error**
-
-dictionary, read-only.  The most recent error during replication, if any.
-
-**mode**
-
-number, read-only.  The current mode of the replication.  One of `server.REPLICATION\_MODE\_STOPPED`,
-`server.REPLICATION\_MODE\_OFFLINE`, `server.REPLICATION\_MODE\_IDLE`, or `server.REPLICATION\_MODE\_ACTIVE`.
-
-### Methods
-
-**actAsUserWithRoles**(username, roles)
-
-* username (string): a server username or null
-* roles (array of strings): an array of CouchDB role names or null
-
-Sets the "user\_ctx" property of the replication, which identifies what privileges it will run with when
-accessing the local server. To replicate design documents, this should be set to a value with "\_admin" in
-the list of roles. The server will not let you specify privileges you don't have, so the request to create
-the replication must be made with credentials that match what you're setting here, unless the server is
-in no-authentication "admin party" mode.
-
-*NOTE* is this necessary for TouchDB?
-
-**actAsAdmin**()
-
-Convenience method that calls **actAsUserWithRoles**() with the admin role.
-
-**restart**()
-
-Restarts a replication; this is most useful to make a non-continuous replication run again after it's stopped.
+Fired when any of these properties change: {mode, running, error, completed, total}.
 
 ## Usage
 
 See the examples on Github for usage.
 
-TODO explain conflicts and resolution.
-
 ## Author
 
 Paul Mietz Egli (paul@obscure.com)
 
-based on TouchDB by Jens Alfke, Marty Schoch and others
+based on Couchbase Lite by Jens Alfke, Marty Schoch, Traun Leyden and others
 
 ## License
 
