@@ -1,8 +1,8 @@
 # TiTouchDB
 
 by Paul Mietz Egli (paul@obscure.com)
-based on Couchbase Lite iOS by Jens Alfke (http://github.com/couchbaselabs/couchbase-lite-ios)
-and Couchbase Lite Android by Traun Leyden (http://github.com/couchbaselabs/couchbase-lite-android)
+based on Couchbase Lite iOS by Jens Alfke (http://github.com/couchbase/couchbase-lite-ios)
+and Couchbase Lite Android by Traun Leyden (http://github.com/couchbase/couchbase-lite-android)
 
 **TiTouchDB** is an Appcelerator Titanium module which wraps Couchbase Lite, the lightweight, CouchDB-compatible
 database suitable for embedding into mobile apps.
@@ -28,7 +28,8 @@ See the Wiki pages for usage instructions and the samples directory for example 
 
 2013-05-17
 
-Merged `public-api` branch to master.  Please see the docs for changes to the module APIs.
+Merged `public-api` branch to master.  Please see [the docs](https://github.com/pegli/ti_touchdb/wiki/API)
+for changes to the module APIs.
 
 2013-02-06
 
