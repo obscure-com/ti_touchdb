@@ -40,6 +40,11 @@ public class BaseRevisionProxy extends KrollProxy {
         return new KrollDict(revision.getProperties());
     }
 
+    @Kroll.method
+    public RevisionProxy[] getRevisionHistory() {
+        return document.getRevisionHistory();
+    }
+    
     @Kroll.getProperty(name = "userProperties")
     public KrollDict getUserProperties() {
         KrollDict result = new KrollDict(revision.getProperties());
