@@ -27,7 +27,7 @@ exports.run_tests = function() {
     /*
     // purge document
     // won't work until this is applied:
-    // https://github.com/couchbaselabs/TouchDB-iOS/pull/204
+    // https://github.com/couchbase/couchbase-lite-ios/pull/46
     var doc2 = createDocWithProperties(db, {
       pi: 3.14159
     }, 'doc2');
