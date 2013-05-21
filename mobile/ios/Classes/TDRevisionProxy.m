@@ -98,6 +98,7 @@
     RELEASE_TO_NIL(lastError)
     
     CBLNewRevision * rev = [self.revision newRevision];
+    NSLog(@"newRevision: new rev parent is %@", rev.parentRevisionID);
     return rev ? [[CBLNewRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLNewRevision:rev] : nil;
 }
 
@@ -120,6 +121,19 @@
     [lastError retain];
     
     return rev ? [[TDRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLRevision:rev] : nil;
+}
+
+- (id)getRevisionHistory:(id)args {
+    RELEASE_TO_NIL(lastError)
+    
+    NSArray * revs = [self.revision getRevisionHistory:&lastError];
+    [lastError retain];
+    
+    NSMutableArray * result = [NSMutableArray arrayWithCapacity:[revs count]];
+    for (CBLRevision * rev in revs) {
+        [result addObject:[[TDRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLRevision:rev]];
+    }
+    return result;
 }
 
 @end
