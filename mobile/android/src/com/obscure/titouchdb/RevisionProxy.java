@@ -6,9 +6,7 @@ import org.appcelerator.kroll.annotations.Kroll;
 
 import android.util.Log;
 
-import com.couchbase.cblite.CBLDatabase;
 import com.couchbase.cblite.CBLRevision;
-import com.couchbase.cblite.CBLStatus;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)
 public class RevisionProxy extends BaseRevisionProxy {
@@ -22,7 +20,13 @@ public class RevisionProxy extends BaseRevisionProxy {
 
     @Kroll.method
     public RevisionProxy deleteDocument() {
-        return null;
+        if (document.deleteDocument()) {
+            return new RevisionProxy(document, document.getCurrentCBLRevision());
+        }
+        else {
+            this.lastError = document.getError();
+            return null;
+        }
     }
 
     @Kroll.getProperty(name = "propertiesAreLoaded")
@@ -32,7 +36,7 @@ public class RevisionProxy extends BaseRevisionProxy {
 
     @Kroll.method
     public NewRevisionProxy newRevision() {
-        return new NewRevisionProxy(document, new CBLRevision(revision.getBody()));
+        return new NewRevisionProxy(document, null, this.revision);
     }
 
     /*

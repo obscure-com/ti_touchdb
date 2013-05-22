@@ -16,9 +16,10 @@ exports.run_tests = function() {
       c: 'a string'
     }, 'doc1');
     assert(doc1.deleted == false, 'deleted flag set on doc1 before deletion');
-    doc1.deleteDocument();
+    var status = doc1.deleteDocument();
+    assert(status !== false, 'deleteDocument returned false: '+JSON.stringify(doc1.error));
     assert(!doc1.error, 'error after call to deleteDocument()');
-    assert(doc1.deleted == true, 'doc1.deleted not set to true after call to deleteDocument()');
+    assert(doc1.deleted == true, 'doc1.deleted not set to true after call to deleteDocument() '+JSON.stringify(doc1.properties));
     
     var doc2 = db.documentWithID('doc1');
     assert(doc2, 'could not reselect doc1 by ID');
@@ -27,7 +28,7 @@ exports.run_tests = function() {
     /*
     // purge document
     // won't work until this is applied:
-    // https://github.com/couchbaselabs/TouchDB-iOS/pull/204
+    // https://github.com/couchbase/couchbase-lite-ios/pull/46
     var doc2 = createDocWithProperties(db, {
       pi: 3.14159
     }, 'doc2');

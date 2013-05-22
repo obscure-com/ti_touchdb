@@ -25,31 +25,40 @@ exports.run_tests = function() {
     assert(p2.title === 'There is Nothing Left to Lose', 'incorrect title property on rev2: '+p2.title);
     
     // create a conflict
-    var rev3 = doc.putProperties(_.extend(rev1.properties, {
+    var rev_conflict = doc.putProperties(_.extend(rev1.properties, {
       "release_date": [1999, 5, 12]
     }));
-    assert(!rev3, 'putProperties returned something for rev3: '+rev3);
+    assert(!rev_conflict, 'putProperties returned something for rev_conflict: '+rev_conflict);
     assert(doc.error, 'conflict should have set doc.error');
     assert(doc.error.code == 409, 'error code should be 409 conflict: '+doc.error.code);
 
     // test the put() and save() functions
-    var rev4 = doc.newRevision();
-    rev4.setPropertyForKey('label', 'RCA');
-    var rev5 = rev4.save();
-    assert(rev5, 'rev4.save() returned null');
-    assert(!rev4.error, 'rev4.save() resulted in an error');
-    var p5 = rev5.properties;
-    assert(p5.label === 'RCA', 'rev4.put() property not present');
-    assert(p5.artist === 'Foo Fighters', 'rev5 did not have an artist property');
+    var rev_tmp = rev2.newRevision();
+    rev_tmp.setPropertyForKey('label', 'RCA');
+    var rev3 = rev_tmp.save();
+    assert(rev3, 'rev_tmp.save() returned null');
+    assert(!rev_tmp.error, 'rev_tmp.save() resulted in an error');
+    var p5 = rev3.properties;
+    assert(p5.label === 'RCA', 'rev3.put() property not present');
+    assert(p5.artist === 'Foo Fighters', 'rev3 did not have an artist property');
     
-    // parent revision
-    assert(rev5.parentRevisionID === rev4.revisionID, 'rev5 should have a parent revision of rev4');
+    // parent revision (only on new revision!)
+    assert(rev_tmp.parentRevisionID === rev2.revisionID, 'rev3 ('+rev_tmp.revisionID+') should have a parent revision of rev2  ('+rev2.revisionID+'); actually '+rev_tmp.parentRevisionID);
     
     // deletion
-    var rev6 = rev5.deleteDocument();
-    assert(rev6, 'deleteDocument() should have returned a deleted revision');
-    assert(!rev5.error, 'deleteDocument() set an error on rev5');
-    assert(rev6.isDeleted, 'rev6 isDeleted returned true');
+    var rev4 = rev3.deleteDocument();
+    assert(rev4, 'deleteDocument() should have returned a deleted revision: '+JSON.stringify(rev3.error));
+    assert(!rev3.error, 'deleteDocument() set an error on rev3');
+    assert(rev4.isDeleted, 'rev4 isDeleted returned true');
+    
+    // history
+    var revs = rev4.getRevisionHistory();
+    assert(revs, 'getRevisionHistory() returned null');
+    assert(revs.length == 4, 'getRevisionHistory() returned the wrong number of revisions: '+revs.length);
+    assert(revs[0].revisionID == rev1.revisionID, 'rev1 id mismatch: '+rev1.revisionID + ' != '+revs[0].revisionID);
+    assert(revs[1].revisionID == rev2.revisionID, 'rev2 id mismatch: '+rev2.revisionID + ' != '+revs[1].revisionID);
+    assert(revs[2].revisionID == rev3.revisionID, 'rev3 id mismatch: '+rev3.revisionID + ' != '+revs[2].revisionID);
+    assert(revs[3].revisionID == rev4.revisionID, 'rev4 id mismatch: '+rev4.revisionID + ' != '+revs[3].revisionID);
     
     db.deleteDatabase();
   }

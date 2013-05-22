@@ -7,10 +7,16 @@ import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 
+import android.util.Log;
+
 import com.couchbase.cblite.CBLRevision;
 
 @Kroll.proxy(creatableInModule = TitouchdbModule.class)
 public class BaseRevisionProxy extends KrollProxy {
+
+    private static final String[] EMPTY_STRING_ARRAY = new String[0];
+
+    private static final String LCAT = "BaseRevisionProxy";
 
     protected KrollDict     lastError = null;
 
@@ -40,6 +46,11 @@ public class BaseRevisionProxy extends KrollProxy {
         return new KrollDict(revision.getProperties());
     }
 
+    @Kroll.method
+    public RevisionProxy[] getRevisionHistory() {
+        return document.getRevisionHistory();
+    }
+    
     @Kroll.getProperty(name = "userProperties")
     public KrollDict getUserProperties() {
         KrollDict result = new KrollDict(revision.getProperties());
@@ -62,8 +73,13 @@ public class BaseRevisionProxy extends KrollProxy {
 
     @Kroll.getProperty(name = "attachmentNames")
     public String[] getAttachmentNames() {
-        // TODO
-        return null;
+        if (revision.getProperties().containsKey("_attachments")) {
+            Log.i(LCAT, "attachments: "+revision.getProperties().get("_attachments"));
+            return EMPTY_STRING_ARRAY;
+        }
+        else {
+            return EMPTY_STRING_ARRAY;
+        }
     }
 
     @Kroll.method
