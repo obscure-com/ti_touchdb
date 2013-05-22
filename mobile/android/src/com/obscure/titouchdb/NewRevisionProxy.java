@@ -6,6 +6,7 @@ import java.util.Map;
 import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.titanium.TiBlob;
 
+import com.couchbase.cblite.CBLAttachment;
 import com.couchbase.cblite.CBLRevision;
 import com.couchbase.cblite.CBLStatus;
 
@@ -71,7 +72,7 @@ public class NewRevisionProxy extends BaseRevisionProxy {
     
     @Kroll.method
     public AttachmentProxy addAttachment(String name, String contentType, TiBlob content) {
-        return null;
+        return document.addAttachment(name, contentType, content);
     }
     
     @Kroll.method

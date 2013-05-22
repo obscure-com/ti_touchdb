@@ -8,9 +8,11 @@ import java.util.Map;
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
+import org.appcelerator.titanium.TiBlob;
 
 import android.util.Log;
 
+import com.couchbase.cblite.CBLAttachment;
 import com.couchbase.cblite.CBLDatabase;
 import com.couchbase.cblite.CBLDatabase.TDContentOptions;
 import com.couchbase.cblite.CBLRevision;
@@ -199,6 +201,25 @@ public class DocumentProxy extends KrollProxy {
         CBLRevision result = database.putRevision(revision, prevRevId, allowConflict, resultStatus);
         setCurrentCBLRevision(result);
         return result;
+    }
+
+    protected AttachmentProxy addAttachment(String name, String contentType, TiBlob content) {
+        CBLRevision current = getCurrentCBLRevision();
+        long attseq = current.getSequence();
+        CBLStatus status = database.insertAttachmentForSequenceWithNameAndType(content.getInputStream(), attseq, name, contentType, current.getGeneration());
+        if (status.isSuccessful()) {
+            // TODO update to the new revision with the attachment?
+            CBLAttachment attachment = database.getAttachmentForSequence(attseq, name, status);
+            if (status.isSuccessful()) {
+                return new AttachmentProxy(name, attachment, content.getLength());
+            }
+        }
+        
+        if (!status.isSuccessful()) {
+            lastError = TitouchdbModule.convertCBLStatusToErrorDict(status);
+        }
+        
+        return null;
     }
 
     // TODO document changes
