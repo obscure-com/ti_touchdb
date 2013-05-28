@@ -19,7 +19,7 @@ public class KrollFilterBlock extends KrollProxy implements CBLFilterBlock {
 
     @Override
     public boolean filter(CBLRevision revision) {
-        return (Boolean) filter.call(this.getKrollObject(), new Object[] { new BaseRevisionProxy(null, revision), null });
+        return (Boolean) filter.call(this.getKrollObject(), new Object[] { new ReadOnlyRevisionProxy(revision), null });
     }
 
 }

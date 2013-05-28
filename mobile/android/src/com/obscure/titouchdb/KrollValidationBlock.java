@@ -12,7 +12,7 @@ import com.couchbase.cblite.CBLValidationContext;
 public class KrollValidationBlock extends KrollProxy implements CBLValidationBlock {
 
     private KrollFunction validate;
-    
+
     private DatabaseProxy database;
 
     public KrollValidationBlock(DatabaseProxy database, KrollFunction validate) {
@@ -24,10 +24,11 @@ public class KrollValidationBlock extends KrollProxy implements CBLValidationBlo
 
     @Override
     public boolean validate(CBLRevision newRevision, CBLValidationContext context) {
-        // TODO create validation context proxy; this is where we will need the database
-        
+        // TODO create validation context proxy; this is where we will need the
+        // database
+
         // use a read-only revision proxy for validation
-        return (Boolean) validate.call(this.getKrollObject(), new Object[] { new BaseRevisionProxy(null, newRevision), null });
+        return (Boolean) validate.call(this.getKrollObject(), new Object[] { new ReadOnlyRevisionProxy(newRevision), null });
     }
 
 }

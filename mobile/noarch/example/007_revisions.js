@@ -49,7 +49,7 @@ exports.run_tests = function() {
     var rev4 = rev3.deleteDocument();
     assert(rev4, 'deleteDocument() should have returned a deleted revision: '+JSON.stringify(rev3.error));
     assert(!rev3.error, 'deleteDocument() set an error on rev3');
-    assert(rev4.isDeleted, 'rev4 isDeleted returned true');
+    assert(rev4.isDeleted, 'rev4 isDeleted returned false');
     
     // history
     var revs = rev4.getRevisionHistory();

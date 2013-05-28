@@ -132,7 +132,7 @@ public class DocumentProxy extends KrollProxy {
 
     @Kroll.method
     public NewRevisionProxy newRevision() {
-        return new NewRevisionProxy(this, null, getCurrentCBLRevision());
+        return new NewRevisionProxy(this, getCurrentCBLRevision());
     }
 
     @Kroll.getProperty(name = "properties")
@@ -203,14 +203,17 @@ public class DocumentProxy extends KrollProxy {
         return result;
     }
 
-    protected AttachmentProxy addAttachment(String name, String contentType, TiBlob content) {
-        CBLRevision current = getCurrentCBLRevision();
-        long attseq = current.getSequence();
-        CBLStatus status = database.insertAttachmentForSequenceWithNameAndType(content.getInputStream(), attseq, name, contentType, current.getGeneration());
+    protected AttachmentProxy addAttachment(CBLRevision rev, String name, String contentType, TiBlob content) {
+        long attseq = rev.getSequence();
+        CBLStatus status = database.insertAttachmentForSequenceWithNameAndType(content.getInputStream(), attseq, name, contentType, rev.getGeneration());
         if (status.isSuccessful()) {
             // TODO update to the new revision with the attachment?
             CBLAttachment attachment = database.getAttachmentForSequence(attseq, name, status);
             if (status.isSuccessful()) {
+                // update the revision so it gets the _attachments property
+                Map<String,Object> props = database.extraPropertiesForRevision(rev, EnumSet.of(TDContentOptions.TDNoBody));
+                rev.getProperties().put("_attachments", props.get("_attachments"));
+                
                 return new AttachmentProxy(name, attachment, content.getLength());
             }
         }
