@@ -5,8 +5,12 @@ import java.util.Map;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 
+import java.util.List;
+
 @Kroll.proxy(parentModule = TitouchdbModule.class)
 public class QueryRowProxy extends KrollProxy {
+
+    private static final String LCAT = "QueryRowProxy";
 
     private String              docid;
 
@@ -20,15 +24,15 @@ public class QueryRowProxy extends KrollProxy {
 
     private Object              value;
 
-    @SuppressWarnings("unchecked")
-    public QueryRowProxy(Map<String, Object> row) {
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public QueryRowProxy(final Map<String, Object> row) {
         assert row != null;
         assert row.containsKey("key");
 
         this.docid = (String) row.get("id");
         this.rev = (String) row.get("rev");
-        this.key = row.get("key");
-        this.value = row.get("value");
+        this.key = TypePreprocessor.preprocess(row.get("key"));
+        this.value = TypePreprocessor.preprocess(row.get("value"));
         this.seq = row.containsKey("seq") ? (Integer) row.get("seq") : 0;
         this.docProperties = (Map<String, Object>) row.get("doc");
     }

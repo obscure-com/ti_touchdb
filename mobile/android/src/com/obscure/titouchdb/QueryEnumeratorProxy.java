@@ -1,5 +1,6 @@
 package com.obscure.titouchdb;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -11,6 +12,8 @@ public class QueryEnumeratorProxy extends KrollProxy {
 
     private List<Map<String, Object>> rows;
 
+    private Iterator<Map<String,Object>> rowIterator;
+    
     public QueryEnumeratorProxy(List<Map<String, Object>> rows) {
         assert rows != null;
         this.rows = rows;
@@ -28,7 +31,10 @@ public class QueryEnumeratorProxy extends KrollProxy {
 
     @Kroll.method
     public QueryRowProxy nextRow() {
-        return null;
+        if (rowIterator == null) {
+            rowIterator = rows.iterator();
+        }
+        return rowIterator.hasNext() ? new QueryRowProxy(rowIterator.next()) : null;
     }
 
     @Kroll.method

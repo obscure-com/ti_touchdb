@@ -18,8 +18,6 @@ import android.app.Activity;
 import android.util.Log;
 
 import com.couchbase.cblite.CBLStatus;
-import com.couchbase.cblite.CBLView;
-import com.couchbase.cblite.CBLViewCompiler;
 
 @Kroll.module(name = "Titouchdb", id = "com.obscure.titouchdb")
 public class TitouchdbModule extends KrollModule {

@@ -28,6 +28,8 @@ public class DatabaseProxy extends KrollProxy {
     private CBLDatabase                database           = null;
 
     private Map<String, DocumentProxy> documentProxyCache = new HashMap<String, DocumentProxy>();
+    
+    private Map<String, ViewProxy> viewProxyCache = new HashMap<String, ViewProxy>();
 
     public DatabaseProxy(CBLDatabase database) {
         assert database != null;
@@ -118,7 +120,13 @@ public class DatabaseProxy extends KrollProxy {
 
     @Kroll.method
     public ViewProxy viewNamed(String name) {
-        return null;
+        if (!viewProxyCache.containsKey(name)) {
+            CBLView view = database.getViewNamed(name);
+            if (view != null) {
+                viewProxyCache.put(name, new ViewProxy(view));
+            }
+        }
+        return viewProxyCache.get(name);
     }
 
     @Kroll.method
