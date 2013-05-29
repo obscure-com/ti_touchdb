@@ -10,6 +10,11 @@ import com.couchbase.cblite.CBLRevision;
 @Kroll.proxy(parentModule = TitouchdbModule.class)
 public class RevisionProxy extends AbstractRevisionProxy {
 
+    @Override
+    protected long getRevisionSequence() {
+        return revision.getSequence();
+    }
+
     private static final String LCAT = "RevisionProxy";
 
     private CBLRevision revision;

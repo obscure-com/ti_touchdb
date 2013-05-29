@@ -9,22 +9,27 @@ import com.couchbase.cblite.CBLRevision;
 public class ReadOnlyRevisionProxy extends AbstractRevisionProxy {
 
     private CBLRevision revision;
-    
+
     public ReadOnlyRevisionProxy(CBLRevision rev) {
         super(null);
         assert rev != null;
-        
+
         this.revision = rev;
     }
 
     @Override
-    @Kroll.getProperty(name="properties")
+    protected long getRevisionSequence() {
+        return revision.getSequence();
+    }
+
+    @Override
+    @Kroll.getProperty(name = "properties")
     public KrollDict getRevisionProperties() {
         return revision.getProperties() != null ? new KrollDict(revision.getProperties()) : null;
     }
 
     @Override
-    @Kroll.getProperty(name="revisionID")
+    @Kroll.getProperty(name = "revisionID")
     public String getRevisionID() {
         return revision.getRevId();
     }

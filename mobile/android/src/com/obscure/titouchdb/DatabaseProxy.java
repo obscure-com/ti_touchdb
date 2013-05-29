@@ -1,5 +1,6 @@
 package com.obscure.titouchdb;
 
+import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,6 +13,7 @@ import org.appcelerator.kroll.annotations.Kroll;
 import android.util.Log;
 
 import com.couchbase.cblite.CBLDatabase;
+import com.couchbase.cblite.CBLRevision;
 import com.couchbase.cblite.CBLStatus;
 import com.couchbase.cblite.CBLValidationBlock;
 import com.couchbase.cblite.CBLView;
@@ -152,6 +154,7 @@ public class DatabaseProxy extends KrollProxy {
     public URL getInternalURL() {
         return null;
     }
+
 
     // TODO change notifications
 }

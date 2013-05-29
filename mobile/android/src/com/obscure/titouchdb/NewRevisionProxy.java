@@ -1,7 +1,9 @@
 package com.obscure.titouchdb;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.annotations.Kroll;
@@ -14,9 +16,16 @@ import com.couchbase.cblite.CBLStatus;
 @Kroll.proxy(parentModule = TitouchdbModule.class)
 public class NewRevisionProxy extends AbstractRevisionProxy {
 
+    private static final String LCAT = "NewRevisionProxy";
+    
+
     private CBLRevision         parentRevision;
 
     private Map<String, Object> properties = new HashMap<String, Object>();
+    
+    private Set<AttachmentProxy> attachmentsToRemove = new HashSet<AttachmentProxy>();
+
+    private Set<String> attachmentsToSave = new HashSet<String>();
 
     public NewRevisionProxy(DocumentProxy document, CBLRevision parentRevision) {
         super(document);
@@ -30,8 +39,15 @@ public class NewRevisionProxy extends AbstractRevisionProxy {
 
     @Kroll.method
     public AttachmentProxy addAttachment(String name, String contentType, TiBlob content) {
-        // return document.addAttachment(revision, name, contentType, content);
-        return null;
+        assert name != null;
+        assert contentType != null;
+        assert content != null;
+
+        CBLAttachment att = new CBLAttachment(content.getInputStream(), contentType);
+        AttachmentProxy proxy = new AttachmentProxy(document, name, att, content.getLength());
+        getAttachmentProxies().put(name,  proxy);
+        attachmentsToSave.add(name);
+        return proxy;
     }
 
     @Kroll.getProperty(name = "parentRevision")
@@ -52,10 +68,14 @@ public class NewRevisionProxy extends AbstractRevisionProxy {
 
     @Kroll.method
     public void removeAttachment(String name) {
-
+        AttachmentProxy proxy = getAttachmentProxies().remove(name);
+        if (proxy != null) {
+            attachmentsToRemove.add(proxy);
+        }
     }
 
     @Kroll.method
+    @SuppressWarnings("unchecked")
     public RevisionProxy save() {
         String prevRevId = null;
 
@@ -63,12 +83,30 @@ public class NewRevisionProxy extends AbstractRevisionProxy {
             prevRevId = parentRevision.getRevId();
         }
 
+        // TODO convert attachments to atts dictionary
+        Map<String,Object> atts = properties.containsKey("_attachments") ? (Map<String,Object>) properties.get("_attachments") : new HashMap<String,Object>();
+        for (AttachmentProxy proxy : attachmentsToRemove) {
+            atts.remove(proxy.getName());
+        }
+        attachmentsToRemove.clear();
+        
+        for (String name : attachmentsToSave) {
+            AttachmentProxy proxy = attachmentNamed(name);
+            if (proxy != null) {
+                atts.put(proxy.getName(), proxy.toAttachmentDictionary());
+            }
+        }
+        attachmentsToSave.clear();
+        
+        properties.put("_attachments", atts);
+        
         CBLStatus status = new CBLStatus();
         CBLRevision revision = new CBLRevision(properties);
+        
         CBLRevision updated = document.putRevision(revision, prevRevId, false, status);
 
-        // TODO store/remove attachments
-
+        // TODO reselect the revision?
+        
         return updated != null ? new RevisionProxy(document, updated) : null;
     }
 

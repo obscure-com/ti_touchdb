@@ -4,6 +4,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
@@ -13,6 +15,7 @@ import org.appcelerator.titanium.TiBlob;
 import android.util.Log;
 
 import com.couchbase.cblite.CBLAttachment;
+import com.couchbase.cblite.CBLRevision;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)
 public class AttachmentProxy extends KrollProxy {
@@ -23,16 +26,25 @@ public class AttachmentProxy extends KrollProxy {
 
     private CBLAttachment       attachment;
 
+    private DocumentProxy       documentProxy;
+
     private String              name;
 
     private long                length;
 
-    public AttachmentProxy(String name, CBLAttachment attachment, long length) {
+    private String              contentType;
+
+    private TiBlob              blob;
+
+    public AttachmentProxy(DocumentProxy documentProxy, String name, CBLAttachment attachment, long length) {
+        // TODO is documentProxy required?
         assert name != null;
         assert attachment != null;
 
+        this.documentProxy = documentProxy;
         this.name = name;
         this.attachment = attachment;
+        this.contentType = attachment.getContentType();
         this.length = length;
     }
 
@@ -43,11 +55,16 @@ public class AttachmentProxy extends KrollProxy {
 
     @Kroll.getProperty(name = "contentType")
     public String getContentType() {
-        return attachment.getContentType();
+        return contentType;
     }
 
     @Kroll.getProperty(name = "length")
     public long getLength() {
+        if (length < 0) {
+            TiBlob body = getBody();
+            length = body != null ? body.getLength() : -1;
+        }
+
         return length;
     }
 
@@ -58,22 +75,24 @@ public class AttachmentProxy extends KrollProxy {
 
     @Kroll.getProperty(name = "body")
     public TiBlob getBody() {
-        // sigh, have to read everything into memory to create a TiBlob...
-        try {
-            int count;
-            byte[] buffer = new byte[1024];
-            InputStream in = attachment.getContentStream();
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-            while ((count = in.read(buffer, 0, buffer.length)) > 0) {
-                out.write(buffer, 0, count);
+        if (blob == null) {
+            // sigh, have to read everything into memory to create a TiBlob...
+            try {
+                int count;
+                byte[] buffer = new byte[1024];
+                InputStream in = attachment.getContentStream();
+                ByteArrayOutputStream out = new ByteArrayOutputStream();
+                while ((count = in.read(buffer, 0, buffer.length)) > 0) {
+                    out.write(buffer, 0, count);
+                }
+                out.flush();
+                blob = TiBlob.blobFromData(out.toByteArray(), attachment.getContentType());
             }
-            out.flush();
-            return TiBlob.blobFromData(out.toByteArray(), attachment.getContentType());
+            catch (IOException e) {
+                Log.e(LCAT, "error reading attachment data: " + e.getMessage());
+            }
         }
-        catch (IOException e) {
-            Log.e(LCAT, "error reading attachment data: " + e.getMessage());
-        }
-        return null;
+        return blob;
     }
 
     @Kroll.getProperty(name = "bodyURL")
@@ -83,15 +102,34 @@ public class AttachmentProxy extends KrollProxy {
     }
 
     @Kroll.method
-    public RevisionProxy updateBody(TiBlob body, @Kroll.argument(optional = true) String contentType) {
-        // TODO
-        // if body is null, delete the attachment
-        return null;
+    public RevisionProxy updateBody(TiBlob blob, @Kroll.argument(optional = true) String contentType) {
+        RevisionProxy result = null;
+        this.blob = blob;
+        this.contentType = contentType != null ? contentType : (blob != null ? blob.getMimeType() : null);
+        this.length = blob != null ? blob.getLength() : -1;
+
+        if (documentProxy != null) {
+            CBLRevision rev = documentProxy.updateAttachment(name, blob != null ? blob.getInputStream() : null, this.contentType);
+            if (rev == null) {
+                lastError = documentProxy.getError();
+                return null;
+            }
+            result = new RevisionProxy(documentProxy, rev);
+        }
+        return result;
     }
 
     @Kroll.getProperty(name = "error")
     public KrollDict getError() {
         return lastError;
+    }
+
+    public Map<String, Object> toAttachmentDictionary() {
+        Map<String, Object> result = new HashMap<String, Object>();
+        result.put("content_type", getContentType());
+        result.put("length", getLength());
+        result.put("data", getBody().toBase64());
+        return result;
     }
 
 }
