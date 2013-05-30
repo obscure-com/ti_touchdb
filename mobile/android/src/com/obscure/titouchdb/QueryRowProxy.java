@@ -5,7 +5,7 @@ import java.util.Map;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 
-import java.util.List;
+import com.couchbase.cblite.CBLDatabase;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)
 public class QueryRowProxy extends KrollProxy {
@@ -24,11 +24,15 @@ public class QueryRowProxy extends KrollProxy {
 
     private Object              value;
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    public QueryRowProxy(final Map<String, Object> row) {
+    private CBLDatabase database;
+    
+    @SuppressWarnings({ "unchecked" })
+    public QueryRowProxy(CBLDatabase database, final Map<String, Object> row) {
+        assert database != null;
         assert row != null;
         assert row.containsKey("key");
-
+        
+        this.database = database;
         this.docid = (String) row.get("id");
         this.rev = (String) row.get("rev");
         this.key = TypePreprocessor.preprocess(row.get("key"));
@@ -39,8 +43,10 @@ public class QueryRowProxy extends KrollProxy {
 
     @Kroll.getProperty(name = "document")
     public DocumentProxy getDocument() {
-        // TODO
-        return null;
+        if (docid == null) {
+            return null;
+        }
+        return new DocumentProxy(database, docid);
     }
 
     @Kroll.getProperty(name = "documentID")
