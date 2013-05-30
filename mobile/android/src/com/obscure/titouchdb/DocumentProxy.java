@@ -107,11 +107,14 @@ public class DocumentProxy extends KrollProxy {
 
     @Kroll.method
     public RevisionProxy[] getRevisionHistory() {
+        // returns revision stubs!
         List<CBLRevision> history = database.getRevisionHistory(getCurrentCBLRevision());
         List<RevisionProxy> result = new ArrayList<RevisionProxy>();
-
+        
         // Android is newest-to-oldest; iOS is oldest-to-newest
         for (int i = history.size() - 1; i >= 0; i--) {
+            CBLRevision rev = history.get(i);
+            CBLStatus status = database.loadRevisionBody(rev, EnumSet.of(TDContentOptions.TDIncludeLocalSeq, TDContentOptions.TDIncludeConflicts));
             result.add(new RevisionProxy(this, history.get(i)));
         }
         return result.toArray(EMPTY_REVISION_PROXY_ARRAY);
@@ -191,6 +194,7 @@ public class DocumentProxy extends KrollProxy {
             return null;
         }
 
+        setCurrentCBLRevision(rev);
         return new RevisionProxy(this, rev);
     }
 
