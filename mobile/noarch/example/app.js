@@ -51,8 +51,11 @@ window.addEventListener('open', function() {
     require('014_replication').run_tests();
     testname.text = '015_filtered_replication';
     require('015_filtered_replication').run_tests();
-    testname.text = '016_internal_replication';
-    require('016_internal_replication').run_tests();
+    if (Ti.Platform.name !== 'android') {
+      // internal replication not yet supported on Android
+      testname.text = '016_internal_replication';
+      require('016_internal_replication').run_tests();
+    }
     testname.text = "all tests passed! whoopee!";
   }
   catch (e) {
