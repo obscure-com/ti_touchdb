@@ -56,7 +56,7 @@ public class DatabaseManagerProxy extends KrollProxy {
         if (result == null) {
             CBLDatabase db = server.getDatabaseNamed(name, create);
             if (db != null && db.open()) {
-                result = new DatabaseProxy(db);
+                result = new DatabaseProxy(server, db);
                 databaseProxyCache.put(name, result);
             }
         }

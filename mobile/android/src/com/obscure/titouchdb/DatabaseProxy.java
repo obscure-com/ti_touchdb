@@ -1,6 +1,6 @@
 package com.obscure.titouchdb;
 
-import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,10 +13,13 @@ import org.appcelerator.kroll.annotations.Kroll;
 import android.util.Log;
 
 import com.couchbase.cblite.CBLDatabase;
-import com.couchbase.cblite.CBLRevision;
+import com.couchbase.cblite.CBLServer;
 import com.couchbase.cblite.CBLStatus;
 import com.couchbase.cblite.CBLValidationBlock;
 import com.couchbase.cblite.CBLView;
+import com.couchbase.cblite.replicator.CBLPuller;
+import com.couchbase.cblite.replicator.CBLPusher;
+import com.couchbase.cblite.replicator.CBLReplicator;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)
 public class DatabaseProxy extends KrollProxy {
@@ -27,12 +30,16 @@ public class DatabaseProxy extends KrollProxy {
 
     private CBLDatabase                database           = null;
 
-    private Map<String, DocumentProxy> documentProxyCache = new HashMap<String, DocumentProxy>();
-    
-    private Map<String, ViewProxy> viewProxyCache = new HashMap<String, ViewProxy>();
+    private CBLServer                  server             = null;
 
-    public DatabaseProxy(CBLDatabase database) {
+    private Map<String, DocumentProxy> documentProxyCache = new HashMap<String, DocumentProxy>();
+
+    private Map<String, ViewProxy>     viewProxyCache     = new HashMap<String, ViewProxy>();
+
+    public DatabaseProxy(CBLServer server, CBLDatabase database) {
+        assert server != null;
         assert database != null;
+        this.server = server;
         this.database = database;
     }
 
@@ -102,7 +109,7 @@ public class DatabaseProxy extends KrollProxy {
     }
 
     private CBLView makeAnonymousView() {
-        for (int i=0; true; i++) {
+        for (int i = 0; true; i++) {
             String name = String.format("$anon$%s", i);
             if (database.getExistingViewNamed(name) == null) {
                 return database.getViewNamed(name);
@@ -110,7 +117,7 @@ public class DatabaseProxy extends KrollProxy {
         }
         // TODO what happens to all of these anonymous views?
     }
-    
+
     @Kroll.method
     public QueryProxy slowQueryWithMap(KrollFunction map) {
         CBLView view = makeAnonymousView();
@@ -145,16 +152,55 @@ public class DatabaseProxy extends KrollProxy {
 
     @Kroll.method
     public ReplicationProxy pushToURL(String url) {
+        try {
+            URL remote = new URL(url);
+            CBLReplicator push = database.getActiveReplicator(remote, true);
+            if (push == null) {
+                push = new CBLPusher(database, remote, false, server.getWorkExecutor());
+            }
+            return new ReplicationProxy(push);
+        }
+        catch (MalformedURLException e) {
+            Log.e(LCAT, "malformed push replication URL: " + url);
+        }
         return null;
     }
 
     @Kroll.method
     public ReplicationProxy pullFromURL(String url) {
+        try {
+            URL remote = new URL(url);
+            CBLReplicator pull = database.getActiveReplicator(remote, false);
+            if (pull == null) {
+                pull = new CBLPuller(database, new URL(url), false, server.getWorkExecutor());
+            }
+            return new ReplicationProxy(pull);
+        }
+        catch (MalformedURLException e) {
+            Log.e(LCAT, "malformed pull replication URL: " + url);
+        }
         return null;
     }
 
     @Kroll.method
-    public ReplicationProxy[] replicateWithURL(String url) {
+    public ReplicationProxy[] replicateWithURL(String url, @Kroll.argument(optional = true) boolean exclusive) {
+        try {
+            URL remote = new URL(url);
+            if (exclusive) {
+                // stop and clear old replications
+                for (Boolean b : new Boolean[] { true, false }) {
+                    CBLReplicator pull = database.getActiveReplicator(remote, b);
+                    if (pull != null) {
+                        pull.stop();
+                        database.getActiveReplicators().remove(pull);
+                    }
+                }
+            }
+            return new ReplicationProxy[] { pushToURL(url), pullFromURL(url) };
+        }
+        catch (MalformedURLException e) {
+            Log.e(LCAT, "malformed replication URL: " + url);
+        }
         return null;
     }
 
@@ -162,7 +208,6 @@ public class DatabaseProxy extends KrollProxy {
     public URL getInternalURL() {
         return null;
     }
-
 
     // TODO change notifications
 }

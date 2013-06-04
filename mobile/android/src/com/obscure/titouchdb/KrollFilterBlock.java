@@ -1,5 +1,8 @@
 package com.obscure.titouchdb;
 
+import java.util.Map;
+
+import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollFunction;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
@@ -18,8 +21,10 @@ public class KrollFilterBlock extends KrollProxy implements CBLFilterBlock {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public boolean filter(CBLRevision revision) {
-        return (Boolean) filter.call(this.getKrollObject(), new Object[] { new ReadOnlyRevisionProxy(revision), null });
+        KrollDict props = new KrollDict((Map<String, Object>) TypePreprocessor.preprocess(revision.getProperties()));
+        return (Boolean) filter.call(this.getKrollObject(), new Object[] { props, null });
     }
 
 }
