@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ti:app xmlns:ti="http://ti.appcelerator.org">
     <deployment-targets>
+        <target device="tizen">false</target>
         <target device="mobileweb">false</target>
         <target device="iphone">true</target>
         <target device="ipad">true</target>
         <target device="android">true</target>
         <target device="blackberry">false</target>
     </deployment-targets>
-    <sdk-version>3.0.2.GA</sdk-version>
+    <sdk-version>3.1.0.GA</sdk-version>
     <id>com.obscure.touchbooksalloy</id>
     <name>TouchBooksAlloy</name>
     <version>1.0</version>
     <publisher>Paul Mietz Egli</publisher>
     <url>http://github.com/pegli/ti_touchdb</url>
-    <description>Example a</description>
+    <description>TouchBooks example app written with Alloy</description>
     <copyright>2012 by Paul Mietz Egli</copyright>
     <icon>appicon.png</icon>
     <persistent-wifi>false</persistent-wifi>
@@ -47,8 +48,8 @@
     </mobileweb>
     <modules>
         <module platform="android" version="1.0">ti.physicalSizeCategory</module>
-        <module platform="iphone" version="0.7">com.obscure.titouchdb</module>
-        <module platform="android" version="0.5">com.obscure.titouchdb</module>
+        <module platform="iphone">com.obscure.titouchdb</module>
+        <module platform="android">com.obscure.titouchdb</module>
     </modules>
     <plugins>
         <plugin version="1.0">ti.alloy</plugin>
