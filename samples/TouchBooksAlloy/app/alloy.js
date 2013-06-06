@@ -13,12 +13,12 @@ if (Alloy.CFG.remote_couchdb_server) {
   var pull = db.pullFromURL(Alloy.CFG.remote_couchdb_server);
   pull.continuous = true;
   pull.addEventListener('change', function(e) {
-    if (e.total > 0 && e.completed === e.total) {
+    if (pull.total > 0 && pull.completed === pull.total) {
       Ti.App.fireEvent('books:update_from_server');
     }
   });
   pull.start();
-  
+
   var push = db.pushToURL(Alloy.CFG.remote_couchdb_server);
   push.continuous = true;
   push.filter = 'books_only';
