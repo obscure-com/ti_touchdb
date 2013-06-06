@@ -16,7 +16,8 @@ exports.run_tests = function() {
     for (i=0; i < 50; i++) {
       createDocWithProperties(db, {
         name: genname('test', i),
-        i: i
+        i: i,
+        dt: [2013, 1, 3]
       });
     }
     

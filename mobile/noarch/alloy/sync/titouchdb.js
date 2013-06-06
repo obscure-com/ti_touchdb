@@ -87,18 +87,12 @@ function Sync(method, model, options) {
         }
         
         var rows = query.rows();
-        if (rows == null) {
-          // query failure
-          Ti.API.error("query failure: "+JSON.stringify(query.error));
-          return;
-        }
 
         // do not use Collection methods!
         var len = 0;
         if (!opts.add) {
           collection.models = [];
         }
-        
         while (row = rows.nextRow()) {
           var m = collection.map_row(collection.model, row);
           if (m) {
