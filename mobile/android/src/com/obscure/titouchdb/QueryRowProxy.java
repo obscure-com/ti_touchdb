@@ -40,7 +40,7 @@ public class QueryRowProxy extends KrollProxy {
         this.key = TypePreprocessor.preprocess(row.get("key"));
         this.value = TypePreprocessor.preprocess(row.get("value"));
         this.seq = row.containsKey("seq") ? (Integer) row.get("seq") : 0;
-        this.docProperties = (Map<String, Object>) row.get("doc");
+        this.docProperties = (Map<String, Object>) TypePreprocessor.preprocess(row.get("doc"));
     }
 
     @Kroll.getProperty(name = "document")

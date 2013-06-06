@@ -99,10 +99,17 @@ public class DocumentProxy extends KrollProxy {
         return null;
     }
 
+    @SuppressWarnings("unchecked")
     @Kroll.getProperty(name = "properties")
     public KrollDict getProperties() {
         CBLRevision rev = getCurrentCBLRevision();
-        return rev != null && rev.getProperties() != null ? new KrollDict(rev.getProperties()) : null;
+        if (rev != null && rev.getProperties() != null) {
+            Map<String,Object> props = (Map<String,Object>) TypePreprocessor.preprocess(rev.getProperties());
+            return new KrollDict(props);
+        }
+        else {
+            return null;
+        }
     }
 
     @Kroll.method

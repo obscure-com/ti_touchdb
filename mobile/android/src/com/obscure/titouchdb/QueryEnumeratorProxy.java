@@ -7,21 +7,25 @@ import java.util.Map;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 
+import android.util.Log;
+
 import com.couchbase.cblite.CBLDatabase;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)
 public class QueryEnumeratorProxy extends KrollProxy {
 
-    private List<Map<String, Object>> rows;
+    private static final String           LCAT = "QueryEnumeratorProxy";
 
-    private Iterator<Map<String,Object>> rowIterator;
-    
-    private CBLDatabase database;
-    
+    private List<Map<String, Object>>     rows;
+
+    private Iterator<Map<String, Object>> rowIterator;
+
+    private CBLDatabase                   database;
+
     public QueryEnumeratorProxy(CBLDatabase database, List<Map<String, Object>> rows) {
         assert database != null;
         assert rows != null;
-        
+
         this.database = database;
         this.rows = rows;
     }
