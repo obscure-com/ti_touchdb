@@ -71,7 +71,13 @@ fix.
 
 ## Development Status - Android
 
-**0.9-beta**
+**0.9**
+
+2013-06-05
+
+Android parity with iOS!  Well, almost.  The Android version of the module doesn't support
+internal replication (replicating from one database to another within TiTouchDB), but all
+of the other test cases are passing and the TouchBooksAlloy sample is working.
 
 2013-05-17
 
