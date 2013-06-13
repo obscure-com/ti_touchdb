@@ -17,6 +17,15 @@ See the Wiki pages for usage instructions and the samples directory for example 
 * Xcode 4.5 or later (iOS), runtime requirement is iOS 5+
 * Android SDK r21.1, runtime requirement is android-8
 
+## Downloads
+
+Prebuilt modules are hosted on Amazon S3:
+
+* [com.obscure.titouchdb-android-0.9.zip](https://pegli.github.s3.amazonaws.com/com.obscure.titouchdb-android-0.9.zip),
+  built 6 Jun 2013
+* [com.obscure.titouchdb-iphone-0.9.zip](https://pegli.github.s3.amazonaws.com/com.obscure.titouchdb-iphone-0.9.zip),
+  built 6 Jun 2013
+
 ## License
 
 * TiTouchDB is under the Apache License 2.0
