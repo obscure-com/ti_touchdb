@@ -24,12 +24,8 @@ exports.definition = {
   extendCollection: function(Collection) {
     _.extend(Collection.prototype, {
       map_row: function(Model, row) {
-        var result = new Model(row.document.properties); 
-        var attnames = row.document.currentRevision.attachmentNames;
-		if (attnames && attnames.length > 0) {
-			var att = row.document.currentRevision.attachmentNamed(attnames[0]);
-			result.set('cover', att.body);
-		}
+        var result = new Model(row.document.properties);
+        // add custom properties here, if any
         return result;
       }
     });
