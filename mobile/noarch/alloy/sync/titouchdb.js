@@ -69,6 +69,7 @@ function Sync(method, model, options) {
         props.modelname = model.config.adapter.modelname;
         var doc = db.untitledDocument();
         doc.putProperties(props);
+        model.id = doc.documentID;
         model.trigger('create');
         break;
 
@@ -175,7 +176,7 @@ module.exports.afterModelCreate = function(Model) {
   
   Model.prototype.attachmentNames = function() {
     var doc = db.documentWithID(this.id);
-    return doc ? doc.attachmentNames : [];
+    return doc ? doc.currentRevision.attachmentNames : [];
   }
   
   return Model;
