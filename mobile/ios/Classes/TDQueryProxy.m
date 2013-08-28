@@ -124,14 +124,6 @@
     self.query.prefetch = [value boolValue];
 }
 
-- (id)sequences {
-    return NUMBOOL(self.query.sequences);
-}
-
-- (void)setSequences:(id)value {
-    self.query.sequences = [value boolValue];
-}
-
 - (id)error {
     return [self errorDict:self.query.error];
 }

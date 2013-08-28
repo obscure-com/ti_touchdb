@@ -65,6 +65,13 @@
 			remoteGlobalIDString = D2AAC07D0554694100DB518D;
 			remoteInfo = titouchdb;
 		};
+		DA5CBE5417CE491400234CDE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DAE20E0B16C2C9D600A7D137 /* CouchbaseLite.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 792867BF178DE01900248AF0;
+			remoteInfo = CBLJSViewCompiler;
+		};
 		DAE20E1916C2C9D700A7D137 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = DAE20E0B16C2C9D600A7D137 /* CouchbaseLite.xcodeproj */;
@@ -298,7 +305,8 @@
 				DAE20E2616C2C9D700A7D137 /* CouchbaseLiteListener.framework */,
 				DAE20E2816C2C9D700A7D137 /* CouchbaseLiteListener.framework */,
 				DAE20E2A16C2C9D700A7D137 /* libCouchbaseLiteListener.a */,
-				DAE20E2C16C2C9D700A7D137 /* TouchServ */,
+				DAE20E2C16C2C9D700A7D137 /* LiteServ */,
+				DA5CBE5517CE491400234CDE /* libCBLJSViewCompiler.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -354,7 +362,7 @@
 		0867D690FE84028FC02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0430;
+				LastUpgradeCheck = 0500;
 			};
 			buildConfigurationList = 1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "titouchdb" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -385,6 +393,13 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		DA5CBE5517CE491400234CDE /* libCBLJSViewCompiler.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libCBLJSViewCompiler.a;
+			remoteRef = DA5CBE5417CE491400234CDE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		DAE20E1A16C2C9D700A7D137 /* CouchbaseLite.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -448,10 +463,10 @@
 			remoteRef = DAE20E2916C2C9D700A7D137 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		DAE20E2C16C2C9D700A7D137 /* TouchServ */ = {
+		DAE20E2C16C2C9D700A7D137 /* LiteServ */ = {
 			isa = PBXReferenceProxy;
 			fileType = "compiled.mach-o.executable";
-			path = TouchServ;
+			path = LiteServ;
 			remoteRef = DAE20E2B16C2C9D700A7D137 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
@@ -599,6 +614,7 @@
 				GCC_WARN_UNUSED_VARIABLE = NO;
 				INSTALL_PATH = /usr/local/lib;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = (
 					"-DDEBUG",
 					"-DTI_POST_1_2",
