@@ -184,7 +184,6 @@
 		DA4919431676B78A00ECCB83 /* TDReplicationProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TDReplicationProxy.m; path = Classes/TDReplicationProxy.m; sourceTree = "<group>"; };
 		DA53C6DF15EE8BAE0065CA47 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		DA5837CB15B09030005CA068 /* ComObscureTitouchdb_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ComObscureTitouchdb_Prefix.pch; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		DA91DD4D15D2C131006414F2 /* TiMacroFixups.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TiMacroFixups.h; sourceTree = "<group>"; };
 		DABFA05016779B4100A58019 /* TDAttachmentProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TDAttachmentProxy.h; path = Classes/TDAttachmentProxy.h; sourceTree = "<group>"; };
 		DABFA05116779B4100A58019 /* TDAttachmentProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TDAttachmentProxy.m; path = Classes/TDAttachmentProxy.m; sourceTree = "<group>"; };
 		DAE20E0B16C2C9D600A7D137 /* CouchbaseLite.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CouchbaseLite.xcodeproj; path = "vendor/couchbase-lite-ios/CouchbaseLite.xcodeproj"; sourceTree = "<group>"; };
@@ -259,7 +258,6 @@
 				DAE72A36152E66C800622013 /* TiProxy+Errors.m */,
 				DA305FCA15B4B5E700DBB89E /* ViewCompiler.h */,
 				DA305FCB15B4B5E700DBB89E /* ViewCompiler.m */,
-				DA91DD4D15D2C131006414F2 /* TiMacroFixups.h */,
 				DA4919221676776A00ECCB83 /* TDDatabaseManagerProxy.h */,
 				DA4919231676776A00ECCB83 /* TDDatabaseManagerProxy.m */,
 				DA491926167679B700ECCB83 /* TDDatabaseProxy.h */,
