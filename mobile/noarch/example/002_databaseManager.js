@@ -56,6 +56,9 @@ exports.run_tests = function() {
       assert(installresult, 'install failed: '+mgr.error);
       var eldb = mgr.databaseNamed('elements');
       assert(eldb, 'could not open elements database after install');
+      var doc = eldb.documentWithID('1AD71A0D-3213-4059-9D91-8C4A70DD9183');
+      var att = doc.currentRevision.attachmentNamed('image.jpg');
+      imageView1.image = att.bodyURL;
       eldb.deleteDatabase();
       
       // install failure
