@@ -12,12 +12,15 @@
 #import "TiBase.h"
 #import "TiHost.h"
 #import "TiUtils.h"
+#import "TiProxy+Errors.h"
 #import "TDDatabaseManagerProxy.h"
+#import "CBLListener.h"
 
 extern BOOL EnableLog(BOOL enable);
 
 @interface ComObscureTitouchdbModule ()
 @property (nonatomic, strong) TDDatabaseManagerProxy * databaseManagerProxy;
+@property (nonatomic, strong) CBLListener * listener;
 @end
 
 @implementation ComObscureTitouchdbModule
@@ -73,6 +76,41 @@ extern BOOL EnableLog(BOOL enable);
 
 - (id)databaseManager {
     return self.databaseManagerProxy;
+}
+
+#pragma mark CBLListener
+
+/** start an HTTP listener for the database.  Options and defaults are:
+   port: 5984,
+   readOnly: false
+*/
+#define DEFAULT_LISTENER_PORT 5984
+- (id)startListener:(id)args {
+    NSDictionary * opts;
+    ENSURE_ARG_OR_NIL_AT_INDEX(opts, args, 0, NSDictionary)
+
+    if (self.listener) {
+        [self.listener stop];
+        self.listener = nil;
+    }
+    
+    __block NSError * error = nil;
+    NSUInteger port = [opts objectForKey:@"port"] ? [[opts objectForKey:@"port"] unsignedIntegerValue] : DEFAULT_LISTENER_PORT;
+    
+    self.listener = [[CBLListener alloc] initWithManager:[CBLManager sharedInstance] port:port];
+    self.listener.readOnly = [[opts objectForKey:@"readOnly"] boolValue];
+    
+    // TODO maybe add auth and Bonjour name?
+    
+    TiThreadPerformOnMainThread(^{
+        [self.listener start:&error];
+    }, YES);
+    
+    return [self errorDict:error];
+}
+
+- (id)stopListener:(id)args {
+    [self.listener stop];
 }
 
 #pragma mark -

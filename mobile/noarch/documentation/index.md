@@ -46,6 +46,22 @@ Global functions, properties, and constants.
 
 [`databaseManager`](#databaseManager) object, read-only.  The shared database manager instance.
 
+### Methods
+
+**startListener**(options)
+
+* options (dict): listener options (defaults shown below)
+    * port (number, 5984): listener port
+    * readOnly (bool, false): set to true to only allow reads
+
+Start a simple HTTP server that provides remote access to the REST API as documented in the
+[Couchbase Lite wiki](https://github.com/couchbase/couchbase-lite-ios/wiki/Guide%3A-REST).
+The listener can also be used to peer-to-peer replication.
+
+**stopListener**()
+
+Stop the listener if it is running.
+
 ### Constants
 
 #### Replication Mode
