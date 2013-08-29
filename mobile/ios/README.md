@@ -19,14 +19,14 @@ really intrepid, you can clone this repo and try building it yourself.
 
 Once you have a binary, declare the module in your tiapp.xml file:
 
-    <module version="0.3">com.obscure.titouchdb</module>
+    <module platform="iphone">com.obscure.titouchdb</module>
 
 Now you can import the module and start up the TouchDB HTTP listener on your port
 of choice:
 
-    var server = require('com.obscure.titouchdb');
-    var db = server.databaseNamed('testfoo');
-    db.ensureCreated();
+    var titouchdb = require('com.obscure.titouchdb');
+    var mgr = titouchdb.databaseManager;
+    var db = mgr.createDatabaseNamed('testfoo');
 
 See the [documentation](https://github.com/pegli/ti_touchdb/blob/master/mobile/ios/documentation/index.md)
 for a list of methods and the [sample projects](https://github.com/pegli/ti_touchdb/tree/master/samples)
