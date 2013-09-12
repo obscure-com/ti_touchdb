@@ -6,13 +6,16 @@ import java.util.Map;
 import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.titanium.TiBlob;
 
-import com.couchbase.cblite.CBLAttachment;
 import com.couchbase.cblite.CBLRevision;
 import com.couchbase.cblite.CBLStatus;
 
 @Kroll.proxy(parentModule=TitouchdbModule.class)
 public class NewRevisionProxy extends BaseRevisionProxy {
 
+    private static final String[] EMPTY_STRING_ARRAY = new String[0];
+
+    private static final AttachmentProxy[] EMPTY_ATTACHMENT_PROXY_ARRAY = new AttachmentProxy[0];
+    
     private CBLRevision parentRevision;
     
     public NewRevisionProxy(DocumentProxy document, CBLRevision rev, CBLRevision parentRevision) {
@@ -29,6 +32,9 @@ public class NewRevisionProxy extends BaseRevisionProxy {
                 props.put(e.getKey(), e.getValue());
             }
         }
+        
+        // TODO get the parent attachments and add them to the cache
+        
         revision.setProperties(props);
     }
 
@@ -67,16 +73,49 @@ public class NewRevisionProxy extends BaseRevisionProxy {
         
         CBLStatus status = new CBLStatus();
         CBLRevision updated = document.putRevision(this.revision, prevRevId, false, status);
+        
+        // TODO add attachments to updated revision?
+        
         return updated != null ? new RevisionProxy(document, updated) : null;
     }
+
+    /*
+     * iOS handles this by storing CBLAttachment objects under the _attachments
+     * key in the document properties and calling the specific function to save
+     * the attachments in putProperties.
+     */
     
+    private Map<String,AttachmentProxy> attachmentCache = new HashMap<String,AttachmentProxy>();
+    
+    @Override
+    public String[] getAttachmentNames() {
+        return attachmentCache.keySet().toArray(EMPTY_STRING_ARRAY);
+    }
+
+    @Override
+    public AttachmentProxy attachmentNamed(String name) {
+        return attachmentCache.get(name);
+    }
+
+    @Override
+    public AttachmentProxy[] getAttachments() {
+        return attachmentCache.values().toArray(EMPTY_ATTACHMENT_PROXY_ARRAY);
+    }
+
     @Kroll.method
     public AttachmentProxy addAttachment(String name, String contentType, TiBlob content) {
-        return document.addAttachment(name, contentType, content);
+        // TODO create the attachment but don't add it yet
+        
+        
+        AttachmentProxy result = document.addAttachment(name, contentType, content);
+        if (result != null) {
+            attachmentCache.put(name, result);
+        }
+        return result;
     }
     
     @Kroll.method
     public void removeAttachment(String name) {
-        
+        // TODO store a list of attachments to remove?
     }
 }
