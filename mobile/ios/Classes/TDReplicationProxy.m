@@ -22,9 +22,8 @@ extern NSString * CBL_ReplicatorStoppedNotification;
     if (self = [super _initWithPageContext:context]) {
         self.replication = replication;
 
+        // TODO lazy setup like TDDatabaseProxy listeners
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(replicationChanged:) name:kCBLReplicationChangeNotification object:replication];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(replicationChanged:) name:CBL_ReplicatorProgressChangedNotification object:replication];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(replicationChanged:) name:CBL_ReplicatorStoppedNotification object:replication];
         
     }
     return self;
@@ -138,11 +137,7 @@ extern NSString * CBL_ReplicatorStoppedNotification;
 #define kReplicationChangedEventName @"change"
 
 - (void)replicationChanged:(NSNotification *)notification {
-    if ([self _hasListeners:kReplicationChangedEventName]) {
-        TiThreadPerformOnMainThread(^{
-            [self fireEvent:kReplicationChangedEventName withObject:nil propagate:YES];
-        }, YES);
-    }
+    [self fireEvent:kReplicationChangedEventName withObject:nil propagate:YES];
 }
 
 @end
