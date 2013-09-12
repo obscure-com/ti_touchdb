@@ -1,18 +1,32 @@
 package com.obscure.titouchdb;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 
+import android.util.Log;
+
+import com.couchbase.cblite.CBLDatabase;
+
 @Kroll.proxy(parentModule = TitouchdbModule.class)
 public class QueryEnumeratorProxy extends KrollProxy {
 
-    private List<Map<String, Object>> rows;
+    private static final String           LCAT = "QueryEnumeratorProxy";
 
-    public QueryEnumeratorProxy(List<Map<String, Object>> rows) {
+    private List<Map<String, Object>>     rows;
+
+    private Iterator<Map<String, Object>> rowIterator;
+
+    private CBLDatabase                   database;
+
+    public QueryEnumeratorProxy(CBLDatabase database, List<Map<String, Object>> rows) {
+        assert database != null;
         assert rows != null;
+
+        this.database = database;
         this.rows = rows;
     }
 
@@ -28,7 +42,10 @@ public class QueryEnumeratorProxy extends KrollProxy {
 
     @Kroll.method
     public QueryRowProxy nextRow() {
-        return null;
+        if (rowIterator == null) {
+            rowIterator = rows.iterator();
+        }
+        return rowIterator.hasNext() ? new QueryRowProxy(database, rowIterator.next()) : null;
     }
 
     @Kroll.method
@@ -36,6 +53,6 @@ public class QueryEnumeratorProxy extends KrollProxy {
         if (index < 0 || index > rows.size()) {
             return null;
         }
-        return new QueryRowProxy(rows.get(index));
+        return new QueryRowProxy(database, rows.get(index));
     }
 }

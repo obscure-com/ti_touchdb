@@ -7,6 +7,10 @@
       <TextField class="value" id="title"/>
       <Label class="label">Author</Label>
       <TextField class="value" id="author"/>
+      <View layout="horizontal" height="Ti.UI.SIZE">
+	      <ImageView id="coverImage"/>
+        <Button id="coverButton" onClick="pickCoverPhoto">Cover Image</Button>
+      </View>
       <Label class="label">Published</Label>
       <Picker id="published" onChange="changePublished"/>
       <Button id="save" onClick="saveChanges">Save</Button>

@@ -17,6 +17,15 @@ See the Wiki pages for usage instructions and the samples directory for example 
 * Xcode 4.5 or later (iOS), runtime requirement is iOS 5+
 * Android SDK r21.1, runtime requirement is android-8
 
+## Downloads
+
+Prebuilt modules are hosted on Amazon S3:
+
+* [com.obscure.titouchdb-android-0.9.zip](https://pegli.github.s3.amazonaws.com/com.obscure.titouchdb-android-0.9.zip),
+  built 6 Jun 2013
+* [com.obscure.titouchdb-iphone-0.9.zip](https://pegli.github.s3.amazonaws.com/com.obscure.titouchdb-iphone-0.9.zip),
+  built 6 Jun 2013
+
 ## License
 
 * TiTouchDB is under the Apache License 2.0
@@ -71,7 +80,13 @@ fix.
 
 ## Development Status - Android
 
-**0.9-beta**
+**0.9**
+
+2013-06-05
+
+Android parity with iOS!  Well, almost.  The Android version of the module doesn't support
+internal replication (replicating from one database to another within TiTouchDB), but all
+of the other test cases are passing and the TouchBooksAlloy sample is working.
 
 2013-05-17
 

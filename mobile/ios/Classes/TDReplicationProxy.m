@@ -103,8 +103,9 @@ extern NSString * CBL_ReplicatorStoppedNotification;
 #pragma mark Replication Status
 
 - (void)start:(id)args {
-    ENSURE_UI_THREAD_1_ARG(args)
-    [self.replication start];
+    TiThreadPerformOnMainThread(^{
+        [self.replication start];
+    }, NO);
 }
 
 - (void)stop:(id)args {

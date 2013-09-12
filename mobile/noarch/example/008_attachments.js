@@ -67,7 +67,8 @@ exports.run_tests = function() {
 
     if (Ti.Platform.osname != 'android') {
       // not sure why this locks up the test
-      imageView.image = inlineatt.body;
+      imageView1.image = inlineatt.body;
+      imageView2.image = inlineatt.bodyURL;
     }
    
     db.deleteDatabase();

@@ -13,14 +13,14 @@ exports.run_tests = function() {
       tag: 1
     });
     var rev1ID = doc.currentRevisionID;
-    assert(rev1ID.indexOf('1-') == 0, 'first revision should start with 1-');
+    assert(rev1ID.indexOf('1-') == 0, 'first revision should start with 1-, was '+rev1ID);
     assert(doc.userProperties.tag == 1, 'tag is incorrect: ' + doc.userProperties.tag);
 
     var p2 = doc.properties;
     p2.tag = 2;
     doc.putProperties(p2);
     var rev2ID = doc.currentRevisionID;
-    assert(rev2ID.indexOf('2-') == 0, 'second revision should start with 2-');
+    assert(rev2ID.indexOf('2-') == 0, 'second revision should start with 2-, was '+rev2ID);
 
     var revs = doc.getRevisionHistory();
     assert(revs, "missing revision history");

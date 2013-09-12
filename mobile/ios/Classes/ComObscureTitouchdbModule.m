@@ -12,7 +12,6 @@
 #import "TiBase.h"
 #import "TiHost.h"
 #import "TiUtils.h"
-#import "TiMacroFixups.h"
 #import "TDDatabaseManagerProxy.h"
 
 extern BOOL EnableLog(BOOL enable);

@@ -631,11 +631,6 @@ string, read/write.  The identifier of the first document to return.
 number, read/write.  If set, allows faster results at the expense of returning possibly out-of-date
 data.  One of `module.STALE_QUERY_NEVER`, `module.STALE_QUERY_OK`, or `module.STALE_QUERY_UPDATE_AFTER`.
 
-**sequences**
-
-boolean, read/write. If true, every row in the result will have a property named `_local_seq` containing the
-sequence ID of the revision it's from.
-
 ### Methods
 
 **rows**()

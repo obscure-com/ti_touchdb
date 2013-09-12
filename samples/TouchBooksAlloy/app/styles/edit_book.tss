@@ -37,6 +37,16 @@
   type: Ti.UI.PICKER_TYPE_DATE  
 },
 
+"#coverImage": {
+  width: "64dp",
+  height: "64dp",
+  left: "2%",
+  right: "2%",
+  top: "2%",
+  bottom: "2%",
+},
+
+
 "#save": {
   left: "2%",
   right: "2%",

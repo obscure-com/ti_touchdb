@@ -27,9 +27,11 @@
         }
         */
     }
+    /*
     else {
         result = [NSMutableDictionary dictionaryWithObject:NUMBOOL(NO) forKey:@"error"];
     }
+    */
     return result;
 }
 

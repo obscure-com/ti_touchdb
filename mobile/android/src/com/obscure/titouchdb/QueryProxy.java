@@ -184,7 +184,7 @@ public class QueryProxy extends KrollProxy {
             }
         }
 
-        return new QueryEnumeratorProxy(rows);
+        return new QueryEnumeratorProxy(database, rows);
     }
 
     @Kroll.method

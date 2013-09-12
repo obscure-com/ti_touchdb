@@ -5,8 +5,14 @@ import java.util.Map;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 
+import android.util.Log;
+
+import com.couchbase.cblite.CBLDatabase;
+
 @Kroll.proxy(parentModule = TitouchdbModule.class)
 public class QueryRowProxy extends KrollProxy {
+
+    private static final String LCAT = "QueryRowProxy";
 
     private String              docid;
 
@@ -20,28 +26,34 @@ public class QueryRowProxy extends KrollProxy {
 
     private Object              value;
 
-    @SuppressWarnings("unchecked")
-    public QueryRowProxy(Map<String, Object> row) {
+    private CBLDatabase         database;
+
+    @SuppressWarnings({ "unchecked" })
+    public QueryRowProxy(CBLDatabase database, final Map<String, Object> row) {
+        assert database != null;
         assert row != null;
         assert row.containsKey("key");
 
+        this.database = database;
         this.docid = (String) row.get("id");
         this.rev = (String) row.get("rev");
-        this.key = row.get("key");
-        this.value = row.get("value");
+        this.key = TypePreprocessor.preprocess(row.get("key"));
+        this.value = TypePreprocessor.preprocess(row.get("value"));
         this.seq = row.containsKey("seq") ? (Integer) row.get("seq") : 0;
-        this.docProperties = (Map<String, Object>) row.get("doc");
+        this.docProperties = (Map<String, Object>) TypePreprocessor.preprocess(row.get("doc"));
     }
 
     @Kroll.getProperty(name = "document")
     public DocumentProxy getDocument() {
-        // TODO
-        return null;
+        if (docid == null) {
+            return null;
+        }
+        return new DocumentProxy(database, docid);
     }
 
     @Kroll.getProperty(name = "documentID")
     public String getDocumentID() {
-        return docid;
+        return docProperties != null && docProperties.containsKey("_id") ? (String) docProperties.get("_id") : docid;
     }
 
     @Kroll.getProperty(name = "documentProperties")

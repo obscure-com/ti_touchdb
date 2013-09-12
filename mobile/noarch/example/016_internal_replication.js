@@ -20,7 +20,7 @@ exports.run_tests = function() {
     var pull = db_target.pullFromURL(db_source.internalURL);
     pull.addEventListener('change', function(e) {
       Ti.API.info("internal replication: pull change: "+JSON.stringify(e));
-      assert(!pull.error.error, "replication error: "+JSON.stringify(pull.error));
+      assert(!pull.error, "replication error: "+JSON.stringify(pull.error));
       pullTotal = pull.total > pullTotal ? pull.total : pullTotal;
       pullCompleted = pull.completed > pullCompleted ? pull.completed : pullCompleted;
       

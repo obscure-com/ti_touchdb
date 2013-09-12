@@ -23,7 +23,7 @@ exports.run_tests = function() {
     
     var pull = db.pullFromURL('http://touchbooks.iriscouch.com/test');
     pull.addEventListener('change', function(e) {
-      assert(!pull.error.error, "replication error: "+JSON.stringify(pull.error));
+      assert(!pull.error, "replication error: "+JSON.stringify(pull.error));
       pullTotal = pull.total > pullTotal ? pull.total : pullTotal;
       pullCompleted = pull.completed > pullCompleted ? pull.completed : pullCompleted;
       
@@ -36,7 +36,7 @@ exports.run_tests = function() {
     /*
     var push = db.pushToURL('http://touchbooks.iriscouch.com/test');
     push.addEventListener('change', function(e) {
-      assert(!push.error.error, "replication error: "+JSON.stringify(push.error));
+      assert(!push.error, "replication error: "+JSON.stringify(push.error));
       pushTotal = push.total > pushTotal ? push.total : pushTotal;
       pushCompleted = push.completed > pushCompleted ? push.completed : pushCompleted;
       
@@ -55,7 +55,7 @@ exports.run_tests = function() {
   // TODO maybe launch replication in a timeout and block on the check?
   var interval = setInterval(function() {
     if (pullDone && pushDone) {
-      Ti.API.info("replication done!  doc count = "+db.getDocumentCount());
+      Ti.API.info("replication done!  doc count = "+db.documentCount);
       clearInterval(interval);
       db.deleteDatabase();
     }

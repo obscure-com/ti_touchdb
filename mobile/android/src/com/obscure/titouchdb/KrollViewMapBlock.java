@@ -6,18 +6,20 @@ import org.appcelerator.kroll.KrollFunction;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 
+import android.util.Log;
+
 import com.couchbase.cblite.CBLViewMapBlock;
 import com.couchbase.cblite.CBLViewMapEmitBlock;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)
 public class KrollViewMapBlock extends KrollProxy implements CBLViewMapBlock {
 
-    private static final String LCAT = "KrollViewMapBlock";
+    private static final String        LCAT = "KrollViewMapBlock";
 
-    private CBLViewMapEmitBlock emitter;
-    
-    private KrollFunction       map;
-    
+    private static CBLViewMapEmitBlock emitter;
+
+    private KrollFunction              map;
+
     public KrollViewMapBlock(KrollFunction map) {
         assert map != null;
         this.map = map;
@@ -27,10 +29,10 @@ public class KrollViewMapBlock extends KrollProxy implements CBLViewMapBlock {
     public void emit(Object key, Object value) {
         emitter.emit(key, value);
     }
-    
+
     @Override
     public void map(Map<String, Object> document, CBLViewMapEmitBlock emitter) {
-        this.emitter = emitter;
-        map.call(this.getKrollObject(), new Object[] { document });
+        KrollViewMapBlock.emitter = emitter;
+        map.call(this.getKrollObject(), new Object[] { TypePreprocessor.preprocess(document) });
     }
 }

@@ -69,6 +69,7 @@ function Sync(method, model, options) {
         props.modelname = model.config.adapter.modelname;
         var doc = db.untitledDocument();
         doc.putProperties(props);
+        model.id = doc.documentID;
         model.trigger('create');
         break;
 
@@ -147,6 +148,36 @@ module.exports.afterModelCreate = function(Model) {
   
   Model.prototype.idAttribute = '_id'; // true for all TouchDB documents
   Model.prototype.config.Model = Model; // needed for fetch operations to initialize the collection from persistent store
+
+  Model.prototype.attachmentNamed = function(name) {
+    var doc = db.documentWithID(this.id);
+    if (doc) {
+      return doc.currentRevision.attachmentNamed(name);
+    }
+  };
+  
+  Model.prototype.addAttachment = function(name, contentType, content) {
+    var doc = db.documentWithID(this.id);
+    if (doc) {
+      var rev = doc.newRevision();
+      rev.addAttachment(name, contentType, content);
+      rev.save();
+    }
+  };
+  
+  Model.prototype.removeAttachment = function(name) {
+    var doc = db.documentWithID(this.id);
+    if (doc) {
+      var rev = doc.newRevision();
+      rev.removeAttachment(name);
+      rev.save();
+    }
+  };
+  
+  Model.prototype.attachmentNames = function() {
+    var doc = db.documentWithID(this.id);
+    return doc ? doc.currentRevision.attachmentNames : [];
+  }
   
   return Model;
 };

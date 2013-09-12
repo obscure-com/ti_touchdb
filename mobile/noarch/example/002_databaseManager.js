@@ -11,7 +11,13 @@ exports.run_tests = function() {
     var allnames = mgr.allDatabaseNames;
     assert(!mgr.error, 'unexpected database manager error: allDatabaseNames');
     assert(allnames, 'allDatabaseNames should not return null');
-    assert(allnames.length == 0, 'allDatabaseNames should return empty array: '+allnames);
+    if (allnames.length > 0) {
+      Ti.API.warn("removing leftover databases: "+allnames);
+      _.each(allnames, function(name) {
+        var db = mgr.databaseNamed(name);
+        db.deleteDatabase();
+      });
+    }
 
     var nonexistantdb = mgr.databaseNamed('test002');
     assert(!mgr.error, 'unexpected database manager error: nonexistant test002 '+JSON.stringify(mgr.error));
@@ -50,6 +56,9 @@ exports.run_tests = function() {
       assert(installresult, 'install failed: '+mgr.error);
       var eldb = mgr.databaseNamed('elements');
       assert(eldb, 'could not open elements database after install');
+      var doc = eldb.documentWithID('1AD71A0D-3213-4059-9D91-8C4A70DD9183');
+      var att = doc.currentRevision.attachmentNamed('image.jpg');
+      imageView1.image = att.bodyURL;
       eldb.deleteDatabase();
       
       // install failure

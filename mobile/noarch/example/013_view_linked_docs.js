@@ -37,7 +37,7 @@ exports.run_tests = function() {
     while (row = result.nextRow()) {
         assert(row.key == rownum, "incorrect key: "+row.key +" != "+rownum);
         var prevdoc = docs[rownum-1];
-        assert(prevdoc.documentID == row.documentID, "document ID did not match at row "+rownum);
+        assert(prevdoc.documentID == row.documentID, "document ID did not match at row "+rownum+"; orig: "+prevdoc.documentID+"; new: "+row.documentID);
         ++rownum;
     }
 

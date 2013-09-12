@@ -18,8 +18,6 @@ import android.app.Activity;
 import android.util.Log;
 
 import com.couchbase.cblite.CBLStatus;
-import com.couchbase.cblite.CBLView;
-import com.couchbase.cblite.CBLViewCompiler;
 
 @Kroll.module(name = "Titouchdb", id = "com.obscure.titouchdb")
 public class TitouchdbModule extends KrollModule {
@@ -29,13 +27,13 @@ public class TitouchdbModule extends KrollModule {
     public static final String                LCAT                     = "TiTouchDB";
 
     @Kroll.constant
-    public static final int                   REPLICATION_MODE_ACTIVE  = 0;
+    public static final int                   REPLICATION_MODE_ACTIVE  = 3;
 
     @Kroll.constant
-    public static final int                   REPLICATION_MODE_IDLE    = 0;
+    public static final int                   REPLICATION_MODE_IDLE    = 2;
 
     @Kroll.constant
-    public static final int                   REPLICATION_MODE_OFFLINE = 0;
+    public static final int                   REPLICATION_MODE_OFFLINE = 1;
 
     @Kroll.constant
     public static final int                   REPLICATION_MODE_STOPPED = 0;
@@ -44,10 +42,10 @@ public class TitouchdbModule extends KrollModule {
     public static final int                   STALE_QUERY_NEVER        = 0;
 
     @Kroll.constant
-    public static final int                   STALE_QUERY_OK           = 0;
+    public static final int                   STALE_QUERY_OK           = 1;
 
     @Kroll.constant
-    public static final int                   STALE_QUERY_UPDATE_AFTER = 0;
+    public static final int                   STALE_QUERY_UPDATE_AFTER = 2;
 
     static {
         System.loadLibrary("function-utils");

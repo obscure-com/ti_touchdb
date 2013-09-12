@@ -1,1 +1,1 @@
-../vendor/couchbase-lite-android/Couchbase-Lite-Android/jni/sqlite3.h
+../vendor/couchbase-lite-android/CouchbaseLiteProject/CBLite/jni/sqlite3.h
