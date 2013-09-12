@@ -24,10 +24,7 @@ exports.run_tests = function() {
     var pull = db.pullFromURL('http://touchbooks.iriscouch.com/test');
     pull.addEventListener('change', function(e) {
       assert(!pull.error, "replication error: "+JSON.stringify(pull.error));
-      pullTotal = pull.total > pullTotal ? pull.total : pullTotal;
-      pullCompleted = pull.completed > pullCompleted ? pull.completed : pullCompleted;
-      
-      pullDone = !pull.running && pullCompleted >= pullTotal;
+      pullDone = !!(!pull.running && (pull.completed >= pull.total));
     });
     pull.start();
     
