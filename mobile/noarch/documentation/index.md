@@ -79,8 +79,9 @@ dictionary, read-only.  The most-recent error that occurred in the database mana
 
 **internalURL**
 
-string, read-only.  The internal URL of the database manager.  This can be used to construct
-URLs for internal replication.
+string, read-only.  The internal URL of the database manager.  This can be used by local
+HTTP clients to communicate with the database.  For local-to-local replication, use the
+database `name` property.
 
 ### Methods
 
@@ -114,6 +115,11 @@ already.  Returns true if the database was copied successfully.
 
 A database is a collection of documents and functions which operate upon the documents (views, filters,
 and validations).  Databases in TiTouchDB are primarily namespaces for document collections.
+
+Note on replication: the methods which create [`Replication`](#replication) objects can take either 
+a URL of a remote CouchDB database or the name of a database running under the current
+[`DatabaseManager`](#databaseManager).  The value of the `internalURL` property should not be used 
+to set up a local-to-local replication.
 
 ### Properties
 
@@ -189,14 +195,14 @@ the provided identifier if it doesn't already exist.  Note that the new document
 
 **pullFromURL**(url)
 
-* url (string): the URL of the database to pull from
+* url (string): the URL of the remote database to pull from or a local database.
 
 Set up a one-time replication from a source database to this database and return a [`replication`](#replication)
 object.  The returned object can be customized prior to the start of replication.
 
 **pushToURL**(url)
 
-* url (string): the URL of the database to push to
+* url (string): the URL of the remote database to push to or the name of a local database
 
 Set up a one-time replication from this database to a remote target database and return a [`replication`](#replication)
 object.  The returned object can be customized prior to the start of replication.
@@ -208,7 +214,7 @@ This is like querying an imaginary view that emits every document's ID as a key.
 
 **replicateWithURL**(url, exclusively)
 
-* url (string): the URL of the database to replicate with
+* url (string): the URL of the remote database to replicate with or the name of a local database
 * exclusively (boolean): if true, any existing replications with this URL will be removed
 
 Convenience function for setting up two-way replication with a remote database specified by the provided
