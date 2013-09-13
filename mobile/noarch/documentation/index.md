@@ -218,8 +218,8 @@ This is like querying an imaginary view that emits every document's ID as a key.
 * exclusively (boolean): if true, any existing replications with this URL will be removed
 
 Convenience function for setting up two-way replication with a remote database specified by the provided
-URL.  Returns an array containing the push [`replication`](#replication)
-object and the pull [`replication`](#replication) object, or null on failure.
+URL.  Returns an array containing the pull [`replication`](#replication)
+object and the push [`replication`](#replication) object, or null on failure.
 
 **slowQueryWithMap**(map)
 
