@@ -24,26 +24,19 @@ exports.run_tests = function() {
     var pull = db.pullFromURL('http://touchbooks.iriscouch.com/test');
     pull.addEventListener('change', function(e) {
       assert(!pull.error, "replication error: "+JSON.stringify(pull.error));
-      pullTotal = pull.total > pullTotal ? pull.total : pullTotal;
-      pullCompleted = pull.completed > pullCompleted ? pull.completed : pullCompleted;
-      
-      pullDone = !pull.running && pullCompleted >= pullTotal;
+      pullDone = !!(!pull.running && (pull.completed >= pull.total));
     });
     pull.start();
     
     // just do pull replication for now
     pushDone = true;
-    /*
+
     var push = db.pushToURL('http://touchbooks.iriscouch.com/test');
     push.addEventListener('change', function(e) {
       assert(!push.error, "replication error: "+JSON.stringify(push.error));
-      pushTotal = push.total > pushTotal ? push.total : pushTotal;
-      pushCompleted = push.completed > pushCompleted ? push.completed : pushCompleted;
-      
-      pushDone = !push.running && pushCompleted >= pushTotal;
+      pushDone = !!(!push.running && (push.completed >= push.total));
     });
     push.start();
-    */
   }
   catch (e) {
     db.deleteDatabase();

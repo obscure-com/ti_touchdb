@@ -26,7 +26,9 @@
 
 - (id)initWithExecutionContext:(id<TiEvaluator>)context {
     if (self = [super _initWithPageContext:context]) {
-        self.databaseManager = [CBLManager sharedInstance];
+        TiThreadPerformOnMainThread(^{
+            self.databaseManager = [CBLManager sharedInstance];
+        }, YES);
         self.databaseProxyCache = [NSMutableDictionary dictionary];
         lastError = nil;
     }

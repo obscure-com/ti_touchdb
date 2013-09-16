@@ -550,7 +550,9 @@
 				HEADER_SEARCH_PATHS = (
 					"$(TITANIUM_BASE_SDK)",
 					"$(TITANIUM_BASE_SDK2)",
-					"$(SRCROOT)/vendor/couchbase-lite-ios/**",
+					"$(SRCROOT)/vendor/couchbase-lite-ios/Source",
+					"$(SRCROOT)/vendor/couchbase-lite-ios/Source/API/**",
+					"$(SRCROOT)/vendor/couchbase-lite-ios/vendor/MYUtilities",
 				);
 				INSTALL_PATH = /usr/local/lib;
 				OTHER_CFLAGS = (
@@ -583,7 +585,9 @@
 				HEADER_SEARCH_PATHS = (
 					"$(TITANIUM_BASE_SDK)",
 					"$(TITANIUM_BASE_SDK2)",
-					"$(SRCROOT)/vendor/couchbase-lite-ios/**",
+					"$(SRCROOT)/vendor/couchbase-lite-ios/Source",
+					"$(SRCROOT)/vendor/couchbase-lite-ios/Source/API/**",
+					"$(SRCROOT)/vendor/couchbase-lite-ios/vendor/MYUtilities",
 				);
 				INSTALL_PATH = /usr/local/lib;
 				OTHER_CFLAGS = "-DTI_POST_1_2";

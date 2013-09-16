@@ -17,14 +17,11 @@ exports.run_tests = function() {
 
     Ti.API.info("created 20 docs");
     
-    var pull = db_target.pullFromURL(db_source.internalURL);
+    // use the database name for the source, not db.internalURL
+    var pull = db_target.pullFromURL(db_source.name);
     pull.addEventListener('change', function(e) {
-      Ti.API.info("internal replication: pull change: "+JSON.stringify(e));
       assert(!pull.error, "replication error: "+JSON.stringify(pull.error));
-      pullTotal = pull.total > pullTotal ? pull.total : pullTotal;
-      pullCompleted = pull.completed > pullCompleted ? pull.completed : pullCompleted;
-      
-      pullDone = !pull.running && pullCompleted >= pullTotal;
+      pullDone = !!(!pull.running && (pull.completed >= pull.total));
     });
     pull.start();
     
