@@ -553,6 +553,7 @@
 					"$(SRCROOT)/vendor/couchbase-lite-ios/Source",
 					"$(SRCROOT)/vendor/couchbase-lite-ios/Source/API/**",
 					"$(SRCROOT)/vendor/couchbase-lite-ios/vendor/MYUtilities",
+					"$(SRCROOT)/vendor/couchbase-lite-ios/Listener",
 				);
 				INSTALL_PATH = /usr/local/lib;
 				OTHER_CFLAGS = (
@@ -588,6 +589,7 @@
 					"$(SRCROOT)/vendor/couchbase-lite-ios/Source",
 					"$(SRCROOT)/vendor/couchbase-lite-ios/Source/API/**",
 					"$(SRCROOT)/vendor/couchbase-lite-ios/vendor/MYUtilities",
+					"$(SRCROOT)/vendor/couchbase-lite-ios/Listener",
 				);
 				INSTALL_PATH = /usr/local/lib;
 				OTHER_CFLAGS = "-DTI_POST_1_2";
