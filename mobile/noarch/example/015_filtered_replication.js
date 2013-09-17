@@ -33,10 +33,7 @@ exports.run_tests = function() {
     
     push = db.pushToURL('http://touchbooks.iriscouch.com/test015');
     push.addEventListener('change', function(e) {
-      if (lastmode == 3 && push.mode == 0) {
-        pushComplete = true;
-      }
-      lastmode = push.mode;
+      pushComplete = !!(!push.running && (push.completed >= push.total));
     })
     push.filter = 'books_only';
     push.start();
