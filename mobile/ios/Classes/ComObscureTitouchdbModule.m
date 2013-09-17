@@ -14,6 +14,9 @@
 #import "TiUtils.h"
 #import "TiProxy+Errors.h"
 #import "TDDatabaseManagerProxy.h"
+#import "CBLReplication.h"
+#import "CBLQuery.h"
+#import "CBLManager.h"
 #import "CBLListener.h"
 
 extern BOOL EnableLog(BOOL enable);
@@ -42,8 +45,6 @@ extern BOOL EnableLog(BOOL enable);
     
     EnableLog(YES);
 
-    self.databaseManagerProxy = [[TDDatabaseManagerProxy alloc] initWithExecutionContext:[self executionContext]];
-    
 	NSLog(@"[INFO] %@ loaded", self);
     
     if (__has_feature(objc_arc)) {
@@ -75,6 +76,9 @@ extern BOOL EnableLog(BOOL enable);
 #pragma mark CBLDatabaseManager
 
 - (id)databaseManager {
+    if (!self.databaseManagerProxy) {
+        self.databaseManagerProxy = [[TDDatabaseManagerProxy alloc] initWithExecutionContext:[self executionContext]];
+    }
     return self.databaseManagerProxy;
 }
 
@@ -102,9 +106,7 @@ extern BOOL EnableLog(BOOL enable);
     
     // TODO maybe add auth and Bonjour name?
     
-    TiThreadPerformOnMainThread(^{
-        [self.listener start:&error];
-    }, YES);
+    [self.listener start:&error];
     
     return [self errorDict:error];
 }
