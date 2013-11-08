@@ -31,12 +31,14 @@ exports.run_tests = function() {
     // just do pull replication for now
     pushDone = true;
 
+/*
     var push = db.pushToURL('http://touchbooks.iriscouch.com/test');
     push.addEventListener('change', function(e) {
       assert(!push.error, "replication error: "+JSON.stringify(push.error));
       pushDone = !!(!push.running && (push.completed >= push.total));
     });
     push.start();
+*/
   }
   catch (e) {
     db.deleteDatabase();
