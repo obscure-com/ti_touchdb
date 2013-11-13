@@ -22,11 +22,16 @@
 
 {
     NSError * lastError;
+    dispatch_queue_t manager_queue;
 }
 
 - (id)initWithExecutionContext:(id<TiEvaluator>)context {
     if (self = [super _initWithPageContext:context]) {
-        self.databaseManager = [CBLManager sharedInstance];
+        manager_queue = dispatch_queue_create("database_manager_queue", NULL);
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            self.databaseManager = [CBLManager sharedInstance];
+            self.databaseManager.dispatchQueue = manager_queue;
+        });
         self.databaseProxyCache = [NSMutableDictionary dictionary];
         lastError = nil;
     }
