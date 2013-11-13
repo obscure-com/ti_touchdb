@@ -8,16 +8,20 @@ exports.run_tests = function() {
   try {
     assert(!mgr.error, 'unexpected database manager error: '+JSON.stringify(mgr.error));
 
-    var allnames = mgr.allDatabaseNames;
+    var allnames = _.filter(mgr.allDatabaseNames, function(n) {
+      return n.indexOf('_') != 0;
+    });
     assert(!mgr.error, 'unexpected database manager error: allDatabaseNames');
     assert(allnames, 'allDatabaseNames should not return null');
     if (allnames.length > 0) {
-      Ti.API.warn("removing leftover databases: "+allnames);
       _.each(allnames, function(name) {
+        Ti.API.warn("removing leftover database: "+name);
         var db = mgr.databaseNamed(name);
         db.deleteDatabase();
       });
     }
+
+    Ti.API.info("all database names = "+mgr.allDatabaseNames);
 
     var nonexistantdb = mgr.databaseNamed('test002');
     assert(!mgr.error, 'unexpected database manager error: nonexistant test002 '+JSON.stringify(mgr.error));
@@ -33,7 +37,10 @@ exports.run_tests = function() {
     assert(newdb2, 'failed to get newly-created db');
     assert(newdb == newdb2, 'proxies were not equal');
 
-    allnames = mgr.allDatabaseNames;
+    // filter out system databases
+    allnames = _.filter(mgr.allDatabaseNames, function(n) {
+      return n.indexOf('_') != 0;
+    });
     assert(!mgr.error, 'unexpected database manager error: allDatabaseNames');
     assert(allnames.length === 1, 'wrong number of database names');
     assert(allnames[0] === 'test002', 'wrong name returned by allDatabaseNames');
