@@ -22,8 +22,13 @@ extern NSString * CBL_ReplicatorStoppedNotification;
     if (self = [super _initWithPageContext:context]) {
         self.replication = replication;
 
-        // TODO lazy setup like TDDatabaseProxy listeners
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(replicationChanged:) name:kCBLReplicationChangeNotification object:replication];
+        /*
+         * replication progress events are sent from private CBL_Replication objects, not the
+         * public CBLReplication that we get in this layer.  For this reason, we have to listen
+         * for ALL CBL_ReplicatorProgressChangedNotification notifications and sort out which one
+         * belongs to our CBLReplication in the handler method.
+         */
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(replicationChanged:) name:CBL_ReplicatorProgressChangedNotification object:nil];
         
     }
     return self;
@@ -134,7 +139,11 @@ extern NSString * CBL_ReplicatorStoppedNotification;
 #define kReplicationChangedEventName @"change"
 
 - (void)replicationChanged:(NSNotification *)notification {
-    [self fireEvent:kReplicationChangedEventName withObject:nil propagate:YES];
+    // very nasty, precious, looking at its internalzzz
+    id bgrepl = [self.replication valueForKeyPath:@"_bg_replicator"];
+    if (bgrepl == notification.object) {
+        [self fireEvent:kReplicationChangedEventName withObject:nil propagate:YES];
+    }
 }
 
 @end
