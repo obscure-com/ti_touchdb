@@ -33,7 +33,15 @@ Prebuilt modules are hosted on Amazon S3:
 
 ## Development Status - iOS
 
-**0.9**
+**1.0-beta**
+
+2013-11-13
+
+Fixed replication progress notifications!
+
+Updated to the latest `couchbase-lite-ios` code.  Jens added a new feature where the database
+manager could be provided with a GCD queue to use for running background operations, which should
+decrease the thread-related issues we've been having.
 
 2013-05-17
 
