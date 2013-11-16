@@ -197,7 +197,7 @@ extern NSString* const kCBLDatabaseChangeNotification;
     RELEASE_TO_NIL(lastError)
     
     NSURL * url = [NSURL URLWithString:urlstr];
-    CBLReplication * replication = [self.database pushToURL:url];
+    CBLReplication * replication = [self.database replicationToURL:url];
     return [[TDReplicationProxy alloc] initWithExecutionContext:[self executionContext] CBLReplication:replication];
 }
 
@@ -208,7 +208,7 @@ extern NSString* const kCBLDatabaseChangeNotification;
     RELEASE_TO_NIL(lastError)
     
     NSURL * url = [NSURL URLWithString:urlstr];
-    CBLReplication * replication = [self.database pullFromURL:url];
+    CBLReplication * replication = [self.database replicationFromURL:url];
     return [[TDReplicationProxy alloc] initWithExecutionContext:[self executionContext] CBLReplication:replication];
 }
 
@@ -221,7 +221,7 @@ extern NSString* const kCBLDatabaseChangeNotification;
     RELEASE_TO_NIL(lastError)
     
     NSURL * url = [NSURL URLWithString:urlstr];
-    NSArray * repls = [self.database replicateWithURL:url exclusively:[exclusive boolValue]];
+    NSArray * repls = [self.database replicationsWithURL:url exclusively:[exclusive boolValue]];
     
     NSMutableArray * result = [NSMutableArray arrayWithCapacity:[repls count]];
     for (CBLReplication * repl in repls) {
