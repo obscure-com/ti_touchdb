@@ -78,7 +78,7 @@ function Sync(method, model, options) {
         var collection = model; // just to clear things up 
         
         // collection
-        var view = opts.view || collection.config.adapter.views[0];
+        var view = opts.view || collection.config.adapter.views[0]["name"];
         
         // add default view options from model
         opts = _.defaults(opts, collection.config.adapter.view_options);
