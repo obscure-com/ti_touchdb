@@ -239,7 +239,7 @@ extern NSString* const kCBLDatabaseChangeNotification;
 #define kDatabaseChangedEventName @"change"
 
 - (void)databaseChanged:(NSNotification *)notification {
-    [self fireEvent:kDatabaseChangedEventName withObject:notification.userInfo];
+    [self fireEvent:kDatabaseChangedEventName withObject:nil];
 }
 
 - (void)_listenerAdded:(NSString*)type count:(int)count {

@@ -165,7 +165,7 @@
 #define kDocumentChangedEventName @"change"
 
 - (void)documentChanged:(NSNotification *)notification {
-    [self fireEvent:kDocumentChangedEventName withObject:notification.userInfo];
+    [self fireEvent:kDocumentChangedEventName withObject:nil];
 }
 
 - (void)_listenerAdded:(NSString*)type count:(int)count {
