@@ -190,6 +190,14 @@ extern NSString* const kCBLDatabaseChangeNotification;
 
 #pragma mark Replication
 
+- (id)allReplications {
+    NSMutableArray * result = [NSMutableArray array];
+    for (CBLReplication * r in [self.database allReplications]) {
+        [result addObject:[[TDReplicationProxy alloc] initWithExecutionContext:[self executionContext] CBLReplication:r]];
+    }
+    return result;
+}
+
 - (id)pushToURL:(id)args {
     NSString * urlstr;
     ENSURE_ARG_AT_INDEX(urlstr, args, 0, NSString);
