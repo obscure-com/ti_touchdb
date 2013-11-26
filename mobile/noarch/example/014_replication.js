@@ -26,6 +26,13 @@ exports.run_tests = function() {
       assert(!pull.error, "replication error: "+JSON.stringify(pull.error));
       pullDone = !!(!pull.running && (pull.completed >= pull.total));
     });
+    
+    // check the replication list
+    var repls = db.allReplications;
+    assert(repls, "allReplications returned null");
+    assert(repls.length === 1, "allReplications returned incorrect number of replications: "+repls.length);
+    assert(repls[0].remoteURL === pull.remoteURL, "allReplications remote URL is wrong: "+repls[0].remoteURL);
+    
     pull.start();
     
     // just do pull replication for now
