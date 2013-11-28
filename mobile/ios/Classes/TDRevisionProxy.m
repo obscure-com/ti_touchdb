@@ -26,12 +26,25 @@
     [super dealloc];
 }
 
-- (id)isDeleted {
-    return NUMBOOL(self.revision.isDeleted);
+- (id)isDeletion {
+    return NUMBOOL(self.revision.isDeletion);
+}
+
+- (id)isGone {
+    return NUMBOOL(self.revision.isGone);
 }
 
 - (id)revisionID {
     return self.revision.revisionID;
+}
+
+- (id)parentRevision {
+    CBLSavedRevision * rev = self.revision.parentRevision;
+    return rev ? [[TDSavedRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLSavedRevision:rev] : nil;
+}
+
+- (id)parentRevisionID {
+    return self.revision.parentRevisionID;
 }
 
 - (id)properties {
@@ -49,6 +62,19 @@
     RELEASE_TO_NIL(lastError)
     
     return [self.revision.properties objectForKey:key];
+}
+
+- (id)getRevisionHistory:(id)args {
+    RELEASE_TO_NIL(lastError)
+    
+    NSArray * revs = [self.revision getRevisionHistory:&lastError];
+    [lastError retain];
+    
+    NSMutableArray * result = [NSMutableArray arrayWithCapacity:[revs count]];
+    for (CBLSavedRevision * rev in revs) {
+        [result addObject:[[TDSavedRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLSavedRevision:rev]];
+    }
+    return result;
 }
 
 - (id)attachmentNames {
@@ -81,25 +107,41 @@
 @end
 
 
-@implementation TDRevisionProxy
+@interface TDSavedRevisionProxy ()
+@property (nonatomic, strong) CBLSavedRevision * revision;
+@end
 
-- (id)initWithExecutionContext:(id<TiEvaluator>)context CBLRevision:(CBLRevision *)revision {
+@implementation TDSavedRevisionProxy
+
+- (id)initWithExecutionContext:(id<TiEvaluator>)context CBLSavedRevision:(CBLSavedRevision *)revision {
     if (self = [super _initWithPageContext:context]) {
         self.revision = revision;
     }
     return self;
 }
 
-- (id)propertiesAreLoaded {
-    return NUMBOOL(self.revision.propertiesAreLoaded);
+- (id)propertiesAvailable {
+    return NUMBOOL([self.revision propertiesAvailable]);
 }
 
-- (id)newRevision:(id)args {
+- (id)createRevision:(id)args {
     RELEASE_TO_NIL(lastError)
     
-    CBLNewRevision * rev = [self.revision newRevision];
-    NSLog(@"newRevision: new rev parent is %@", rev.parentRevisionID);
-    return rev ? [[CBLNewRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLNewRevision:rev] : nil;
+    NSDictionary * props;
+    ENSURE_ARG_OR_NIL_AT_INDEX(props, args, 0, NSDictionary)
+    
+    if (props) {
+        CBLSavedRevision * rev = [self.revision createRevisionWithProperties:props error:&lastError];
+        [lastError retain];
+
+        return rev ? [[TDSavedRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLSavedRevision:rev] : nil;
+    }
+    else {
+        CBLUnsavedRevision * rev = [self.revision createRevision];
+        return [[TDUnsavedRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLUnsavedRevision:rev];
+    }
+
+    return nil;
 }
 
 - (id)putProperties:(id)args {
@@ -108,64 +150,46 @@
     
     RELEASE_TO_NIL(lastError)
     
-    CBLRevision * rev = [self.revision putProperties:props error:&lastError];
+    CBLSavedRevision * rev = [self.revision createRevisionWithProperties:props error:&lastError];
     [lastError retain];
     
-    return rev ? [[TDRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLRevision:rev] : nil;
+    return rev ? [[TDSavedRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLSavedRevision:rev] : nil;
 }
 
 - (id)deleteDocument:(id)args {
     RELEASE_TO_NIL(lastError)
     
-    CBLRevision * rev = [self.revision deleteDocument:&lastError];
+    CBLSavedRevision * rev = [self.revision deleteDocument:&lastError];
     [lastError retain];
     
-    return rev ? [[TDRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLRevision:rev] : nil;
-}
-
-- (id)getRevisionHistory:(id)args {
-    RELEASE_TO_NIL(lastError)
-    
-    NSArray * revs = [self.revision getRevisionHistory:&lastError];
-    [lastError retain];
-    
-    NSMutableArray * result = [NSMutableArray arrayWithCapacity:[revs count]];
-    for (CBLRevision * rev in revs) {
-        [result addObject:[[TDRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLRevision:rev]];
-    }
-    return result;
+    return rev ? [[TDSavedRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLSavedRevision:rev] : nil;
 }
 
 @end
 
-@interface CBLNewRevisionProxy ()
-@property (nonatomic, strong) CBLNewRevision * revision;
+@interface TDUnsavedRevisionProxy ()
+@property (nonatomic, strong) CBLUnsavedRevision * revision;
 @end
 
-@implementation CBLNewRevisionProxy
+@implementation TDUnsavedRevisionProxy
 
-- (id)initWithExecutionContext:(id<TiEvaluator>)context CBLNewRevision:(CBLNewRevision *)revision {
+- (id)initWithExecutionContext:(id<TiEvaluator>)context CBLUnsavedRevision:(CBLUnsavedRevision *)revision {
     if (self = [super _initWithPageContext:context]) {
         self.revision = revision;
     }
     return self;
 }
 
-- (void)setIsDeleted:(id)arg {
-    self.revision.isDeleted = [arg boolValue];
+- (void)setIsDeletion:(id)arg {
+    self.revision.isDeletion = [arg boolValue];
 }
 
 - (void)setProperties:(id)arg {
     self.revision.properties = arg;
 }
 
-- (id)parentRevision {
-    CBLRevision * rev = self.revision.parentRevision;
-    return rev ? [[TDRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLRevision:rev] : nil;
-}
-
-- (id)parentRevisionID {
-    return self.revision.parentRevisionID;
+- (void)setUserProperties:(id)arg {
+    self.revision.userProperties = arg;
 }
 
 - (void)setPropertyForKey:(id)args {
@@ -181,13 +205,13 @@
 - (id)save:(id)args {
     RELEASE_TO_NIL(lastError)
 
-    CBLRevision * rev = [self.revision save:&lastError];
+    CBLSavedRevision * rev = [self.revision save:&lastError];
     [lastError retain];
     
-    return rev ? [[TDRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLRevision:rev] : nil;
+    return rev ? [[TDSavedRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLSavedRevision:rev] : nil;
 }
 
-- (void)addAttachment:(id)args {
+- (void)setAttachment:(id)args {
     NSString * name;
     NSString * contentType;
     TiBlob * content;
@@ -197,8 +221,7 @@
     
     RELEASE_TO_NIL(lastError)
 
-    CBLAttachment * attachment = [[CBLAttachment alloc] initWithContentType:contentType body:content.data];
-    [self.revision addAttachment:attachment named:name];
+    [self.revision setAttachmentNamed:name withContentType:contentType content:content.data];
 }
 
 - (void)removeAttachment:(id)args {

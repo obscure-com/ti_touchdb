@@ -11,11 +11,11 @@
 @interface TDRevisionProxyBase : TiProxy
 @end
 
-@interface TDRevisionProxy : TDRevisionProxyBase
-- (id)initWithExecutionContext:(id<TiEvaluator>)context CBLRevision:(CBLRevision *)revision;
+@interface TDSavedRevisionProxy : TDRevisionProxyBase
+- (id)initWithExecutionContext:(id<TiEvaluator>)context CBLSavedRevision:(CBLSavedRevision *)revision;
 @end
 
 
-@interface CBLNewRevisionProxy : TDRevisionProxyBase
-- (id)initWithExecutionContext:(id<TiEvaluator>)context CBLNewRevision:(CBLNewRevision *)revision;
+@interface TDUnsavedRevisionProxy : TDRevisionProxyBase
+- (id)initWithExecutionContext:(id<TiEvaluator>)context CBLUnsavedRevision:(CBLUnsavedRevision *)revision;
 @end

@@ -17,7 +17,7 @@ exports.run_tests = function() {
       }, 'zzz');
       
       // start with one replication at the beginning
-      var pull = db.pullFromDatabaseAtURL('http://touchbooks.iriscouch.com/books');
+      var pull = db.replicationFromURL('http://touchbooks.iriscouch.com/books');
       pull.addEventListener('progress', function(e) {
         Ti.API.info('pull progress: '+JSON.stringify(e));
       });
@@ -27,7 +27,7 @@ exports.run_tests = function() {
       });
       pull.start();
       
-      var push = db.pushToDatabaseAtURL('http://touchbooks.iriscouch.com/test');
+      var push = db.replicationToURL('http://touchbooks.iriscouch.com/test');
       push.addEventListener('progress', function(e) {
         Ti.API.info('push progress: '+JSON.stringify(e));
       });

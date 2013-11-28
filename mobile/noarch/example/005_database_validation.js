@@ -12,7 +12,7 @@ function required(rev, field) {
 }
 
 exports.run_tests = function() {
-  var db = touchdb.databaseManager.createDatabaseNamed('test005');
+  var db = touchdb.databaseManager.databaseNamed('test005');
   try {
     db.defineValidation('require_tag', function(rev, context) {
       return rev.properties.tag != null;
@@ -44,7 +44,7 @@ exports.run_tests = function() {
     assert(!doc2.error, 'rev3 putProperties caused an error: '+JSON.stringify(rev3));
     
     // test removing validation
-    var doc3 = db.untitledDocument();
+    var doc3 = db.createDocument();
     var rev4 = doc3.putProperties({
       x: 12.4
     });
@@ -65,7 +65,7 @@ exports.run_tests = function() {
       return required(rev, 'foo') && required(rev, 'bar');
     });
     
-    var doc4 = db.untitledDocument();
+    var doc4 = db.createDocument();
     var rev6 = doc4.putProperties({
       foo: 3.14
     });

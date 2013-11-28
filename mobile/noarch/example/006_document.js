@@ -5,7 +5,7 @@ var _ = require('underscore'),
 
 exports.run_tests = function() {
   var mgr = touchdb.databaseManager;
-  var db = mgr.createDatabaseNamed('test006');
+  var db = mgr.databaseNamed('test006');
   try {
     // document creation is tested in other files
     

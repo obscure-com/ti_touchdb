@@ -5,7 +5,7 @@ var _ = require('underscore'),
 
 exports.run_tests = function() {
   var mgr = touchdb.databaseManager;
-  var db = mgr.createDatabaseNamed('test014');
+  var db = mgr.databaseNamed('test014');
   
   
   var pullTotal = 0, pullCompleted = 0;
@@ -21,7 +21,7 @@ exports.run_tests = function() {
       timestamp: dt.getTime() / 1000,
     }, 'zzz');
     
-    var pull = db.pullFromURL('http://touchbooks.iriscouch.com/test');
+    var pull = db.replicationFromURL('http://touchbooks.iriscouch.com/test');
     pull.addEventListener('change', function(e) {
       assert(!pull.error, "replication error: "+JSON.stringify(pull.error));
       pullDone = !!(!pull.running && (pull.completed >= pull.total));
@@ -39,7 +39,7 @@ exports.run_tests = function() {
     pushDone = true;
 
 /*
-    var push = db.pushToURL('http://touchbooks.iriscouch.com/test');
+    var push = db.replicationToURL('http://touchbooks.iriscouch.com/test');
     push.addEventListener('change', function(e) {
       assert(!push.error, "replication error: "+JSON.stringify(push.error));
       pushDone = !!(!push.running && (push.completed >= push.total));

@@ -5,7 +5,7 @@ var _ = require('underscore'),
 
 exports.run_tests = function() {
   var mgr = touchdb.databaseManager;
-  var db = mgr.createDatabaseNamed('test015');
+  var db = mgr.databaseNamed('test015');
   
   // filtered push replication
   db.defineFilter('books_only', function(rev) {
@@ -31,7 +31,7 @@ exports.run_tests = function() {
       title: 'National Geographic'
     }, "9781426203862");
     
-    push = db.pushToURL('http://touchbooks.iriscouch.com/test015');
+    push = db.replicationToURL('http://touchbooks.iriscouch.com/test015');
     push.addEventListener('change', function(e) {
       pushComplete = !!(!push.running && (push.completed >= push.total));
     })

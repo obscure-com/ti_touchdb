@@ -13,7 +13,7 @@ exports.run_tests = function() {
         createDocuments(db, 10);
         db.registerFilter('even', 'function(doc,req){ return (doc.sequence % 2) == 0; }');
         
-        var push = db.pushToDatabaseAtURL('http://touchbooks.iriscouch.com/test18');
+        var push = db.replicationToURL('http://touchbooks.iriscouch.com/test18');
         push.filter = 'even';
         push.addEventListener('progress', function(e) {
           Ti.API.info('push progress: '+JSON.stringify(e));

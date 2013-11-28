@@ -5,7 +5,7 @@ var _ = require('underscore'),
 
 exports.run_tests = function() {
   var mgr = touchdb.databaseManager;
-  var a = mgr.createDatabaseNamed('test003a');
+  var a = mgr.databaseNamed('test003a');
   try {
     
     assert(a.name === 'test003a', 'incorrect database name: '+ a.name);
@@ -44,8 +44,7 @@ exports.run_tests = function() {
     assert(doc1 === doc3, 'original and reselected doc should be the same object');
     
     // all documents query
-    a.clearDocumentCache();
-    var query = a.queryAllDocuments();
+    var query = a.createAllDocumentsQuery();
     assert(query !== null, "all docs query should not be null");
     
     var rows = query.rows();

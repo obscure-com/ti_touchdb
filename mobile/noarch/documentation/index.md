@@ -66,16 +66,16 @@ Stop the listener if it is running.
 
 #### Replication Mode
 
-* REPLICATION\_MODE\_STOPPED
-* REPLICATION\_MODE\_OFFLINE
-* REPLICATION\_MODE\_IDLE
-* REPLICATION\_MODE\_ACTIVE
+* REPLICATION_MODE_STOPPED
+* REPLICATION_MODE_OFFLINE
+* REPLICATION_MODE_IDLE
+* REPLICATION_MODE_ACTIVE
 
 #### Stale queries
 
-* STALE\_QUERY\_NEVER
-* STALE\_QUERY\_OK
-* STALE\_QUERY\_UPDATE\_AFTER
+* QUERY_UPDATE_INDEX_BEFORE
+* QUERY_UPDATE_INDEX_NEVER
+* QUERY_UPDATE_INDEX_AFTER
 
 
 <a name="databaseManager"/>
@@ -89,6 +89,14 @@ Applications interact with the various TiTouchDB databases using the Database Ma
 
 array of strings, read-only.  Return the names of all existing databases.
 
+**defaultDirectory**
+
+string, read-only.  The default data storage directory.
+
+**directory**
+
+string, read-only.  The actual data storage directory.
+
 **error**
 
 dictionary, read-only.  The most-recent error that occurred in the database manager.
@@ -101,7 +109,7 @@ database `name` property.
 
 ### Methods
 
-**createDatabaseNamed**(name)
+**databaseNamed**(name)
 
 * name (string): the name of the `database` to create.
 
@@ -109,7 +117,7 @@ Returns the [`database`](#database) with the given name, creating it if it didn'
 Multiple calls with the same name will return the same object instance.
 NOTE: Database names may not contain capital letters and may not start with an underscore!
 
-**databaseNamed**(name)
+**existingDatabaseNamed**(name)
 
 * name (string): the name of the `database` to return.
 
@@ -126,6 +134,13 @@ Replaces or installs a database from a file.  This is primarily used to install 
 launch of an app, in which case you should first check .exists to avoid replacing the database if it exists
 already.  Returns true if the database was copied successfully.
 
+**isValidDatabaseName**(name)
+
+* name (string): the prospective database name to test
+
+Returns true if the provided string can be used as a database name.  (Only the characters in 
+"abcdefghijklmnopqrstuvwxyz0123456789_$()+-/" are allowed.)
+
 <a name="database"/>
 ## Database
 
@@ -138,6 +153,11 @@ a URL of a remote CouchDB database or the name of a database running under the c
 to set up a local-to-local replication.
 
 ### Properties
+
+**allReplications**
+
+array of [`replication`](#replication) objects, read-only.  A list of all stored replications for
+this database.
 
 **documentCount**
 
@@ -153,6 +173,11 @@ integer, read-only. The latest sequence number used.  Every new revision is assi
 so this property increases monotonically as changes are made to the database. It can be used to check whether
 the database has changed between two points in time.
 
+**maxRevTreeDepth**
+
+unsigned integer, read/write.  The maximum depth of a document's revision tree. Revisions older than this limit
+will be deleted during a compact operation.  Default is 20.
+
 **name**
 
 string, read-only.  The database's name.
@@ -160,20 +185,20 @@ string, read-only.  The database's name.
 
 ### Methods
 
-**cachedDocumentWithID**(docid)
-
-* docid (string): the unique ID of the document
-
-Fetch an already-instantiated [`document`](#document) object with the given ID, or null if none is yet cached.
-
-**clearDocumentCache**()
-
-Empties the cache of recently used document objects. API calls will now instantiate and return new instances.
-
 **compact**()
 
 Compacts the database, freeing up disk space by deleting old revisions of documents.  This should be
 run periodically, especially after making a lot of changes.  The compact operation is asynchronous.
+
+**createAllDocumentsQuery**()
+
+Returns a [`query`](#query) that matches all documents in the database.
+This is like querying an imaginary view that emits every document's ID as a key.
+
+**createDocument**()
+
+Create a new [`document`](#document) object with a generated identifier.  The identifier *cannot* be
+changed after creation; use **documentWithID(id)** to create a document that has a specific identifier.
 
 **defineFilter**(name, filter)
 
@@ -203,30 +228,24 @@ Permanently remove this database and all associated data.
 
 **documentWithID**(docid)
 
-* docid (string): the unique ID of the document
+* docid (string, optional): the unique ID of the document
 
 Fetch a [`document`](#document) object from the database by its identifier or create a new document with
 the provided identifier if it doesn't already exist.  Note that the new document is not saved until a call to
-**putProperties**() is made.
+**putProperties**() is made.  If no document ID is provided, one will be generated.
 
-**pullFromURL**(url)
+**existingDocumentWithID**(docid)
 
-* url (string): the URL of the remote database to pull from or a local database.
+* docid (string): the unique ID of the document
 
-Set up a one-time replication from a source database to this database and return a [`replication`](#replication)
-object.  The returned object can be customized prior to the start of replication.
+Fetch a [`document`](#document) object from the database by its identifier.  Returns null if a document with
+the provided identifier doesn't already exist.
 
-**pushToURL**(url)
+**existingViewNamed**(name)
 
-* url (string): the URL of the remote database to push to or the name of a local database
+* name (string): the name of the view to fetch
 
-Set up a one-time replication from this database to a remote target database and return a [`replication`](#replication)
-object.  The returned object can be customized prior to the start of replication.
-
-**queryAllDocuments**()
-
-Returns a [`query`](#query) that matches all documents in the database.
-This is like querying an imaginary view that emits every document's ID as a key.
+Returns a [`view`](#view) object with the given name or null if no view with the provided name exists.
 
 **replicateWithURL**(url, exclusively)
 
@@ -237,6 +256,20 @@ Convenience function for setting up two-way replication with a remote database s
 URL.  Returns an array containing the pull [`replication`](#replication)
 object and the push [`replication`](#replication) object, or null on failure.
 
+**replicationFromURL**(url)
+
+* url (string): the URL of the remote database to pull from or a local database.
+
+Set up a one-time replication from a source database to this database and return a [`replication`](#replication)
+object.  The returned object can be customized prior to the start of replication.
+
+**replicationToURL**(url)
+
+* url (string): the URL of the remote database to push to or the name of a local database
+
+Set up a one-time replication from this database to a remote target database and return a [`replication`](#replication)
+object.  The returned object can be customized prior to the start of replication.
+
 **slowQueryWithMap**(map)
 
 * map (string): map function source in JavaScript
@@ -245,11 +278,6 @@ Returns a [`query`](#query) object that runs an arbitrary map.  This is the equi
 temporary view, and as such is very slow compared to a precompiled view.  It may be useful during
 development, but in general this is inefficient if this map will be used more than once,
 because the entire view has to be regenerated from scratch every time.
-
-**untitledDocument**()
-
-Create a new [`document`](#document) object with a generated identifier.  The identifier *cannot* be
-changed after creation; use **documentWithID(id)** to create a document that has a specific identifier.
 
 **viewNamed**(name)
 
@@ -312,6 +340,13 @@ The value of `properties` with all of the reserved keys removed.
 
 ### Methods
 
+**createRevision**()
+
+Creates an unsaved new [`revision`](#revision) whose parent is the current revision,
+or which will be the first revision if the document doesn't exist yet.
+You can modify this revision's properties and attachments, then save it.
+No change is made to the database until/unless you save the new revision.
+
 **deleteDocument**()
 
 Mark the document as deleted from the database.  The next time the database is compacted, the document
@@ -328,13 +363,6 @@ Returns an array of available [`revision`](#revision) objects.  The ordering is 
 but usually chronological unless there has been merging with changes from another server. The number of
 historical revisions available may vary; it depends on how recently the database has been compacted.
 You should not rely on earlier revisions being available, except for those representing unresolved conflicts.
-
-**newRevision**()
-
-Creates an unsaved new [`revision`](#revision) whose parent is the current revision,
-or which will be the first revision if the document doesn't exist yet.
-You can modify this revision's properties and attachments, then save it.
-No change is made to the database until/unless you save the new revision.
 
 **propertyForKey**(key)
 
@@ -378,11 +406,11 @@ cannot be queried with view functions.
 
 ### Properties
 
-**body**
+**content**
 
 Titanium.Blob, read-only.  The body data of the attachment.
 
-**bodyURL**
+**contentURL**
 
 string, read-only.  A file URL pointing to the attachment contents.
 
@@ -406,14 +434,6 @@ dictionary, read-only.  The CouchDB metadata for the attachment.
 
 string, read-only.  The filename of the attachment (the final URL path component).
 
-
-### Methods
-
-**updateBody**()
-
-Updates the body, creating a new document revision in the process.  Returns the new [`revision`](#revision)
-object.
-
 <a name="revision"/>
 ## Revision
 
@@ -425,7 +445,7 @@ version control system for your documents, however, as they can be permanently r
 `compact` operation.
 
 In TiTouchDB, there are two types of revision objects: existing revisions that have been persisted into
-the database and new revisions that are returned by the `newRevision()` method on the `database` and
+the database and new revisions that are returned by the `createRevision()` method on the `database` and
 existing revision objects.  Think of new revision objects as scratchpads where you can add properties and
 attachments in multiple steps prior to saving.
 
@@ -445,18 +465,23 @@ array of [`attachment`](#attachment) objects, read-only. All attachments on this
 
 dictionary, read-only.  The most-recent error that occurred in the revision.
 
-**isDeleted**
+**isDeletion**
 
 boolean, read-only for existing revisions; read-write for new revisions.  True if this revision marks
 the deletion of a document from the database.
 
+**isGone**
+
+boolean, read-only.  True if this revision marks the deletion or removal from available channels of
+its document
+
 **parentRevision**
 
-dictionary, read-only.  The previous revision object in this document's local history (new revision only).
+dictionary, read-only.  The previous revision object in this document's local history.
 
 **parentRevisionID**
 
-string, read-only.  The identifier previous revision object in this document's local history (new revision only).
+string, read-only.  The identifier previous revision object in this document's local history.
 
 **properties**
 
@@ -464,17 +489,24 @@ dictionary, read-only for existing revisions; read-write for new revisions. The 
 Any keys in the returned dictionary that start with an underscore are reserved.  Revision properties are
 cached for the lifespan of the object.
 
+**propertiesAvailable**
+
+boolean, read-only.  Returns true if the revision properties can be accessed.  They may not be if the
+revision is an ancestor and either the database has been compacted, or the revision was replicated from
+another db.
+
 **revisionID**
 
 string, read-only.  The unique identifier of the revision (the CouchDB "_rev" property).
 
 **userProperties**
 
-dictionary, read-only. The contents of the revision without the ones reserved for the database.
+dictionary, read-only on saved revision. The contents of the revision without the ones reserved for the
+database.  Can be set on unsaved revisions.
 
 ### Methods
 
-**addAttachment**(name, contentType, content)
+**setAttachment**(name, contentType, content)
 
 * name (string): the name of the new attachment
 * contentType (string): the MIME type of the new attachment
@@ -490,6 +522,14 @@ data will be written to the database when the revision is saved (new revision on
 Returns the [`attachment`](#attachment) object with the specified name or null if the attachment does
 not exist.
 
+**createRevision**(properties)
+
+* properties (dictionary): the properties to write to the new revision.  Optional.
+
+Create a new revision object for this revision's document.  If properties are specified, then
+the revision will be saved before it is returned; otherwise, the revision will be saved when
+properties are assigned.
+
 **deleteDocument**()
 
 Deletes the document by creating a new deletion-marker revision (existing revisions only).
@@ -497,11 +537,7 @@ Deletes the document by creating a new deletion-marker revision (existing revisi
 **getRevisionHistory**()
 
 Returns the history of this document as an array of revisions, in forward order. Older revisions are
-NOT guaranteed to have their properties available (existing revisions only).
-
-**newRevision**()
-
-Create a new, unsaved revision object for this revision's document (existing revisions only).
+NOT guaranteed to have their properties available.
 
 **propertyForKey**(key)
 
@@ -569,7 +605,23 @@ application is run.
 
 string, read-only.  The name of the view.
 
+**isStale**
+
+boolean, read-only.  True if the view has not indexed all documents.
+
+**lastSequenceIndexed**
+
+The internal sequence number of the last document that was indexed by this view.
+
 ### Methods
+
+**deleteIndex()**
+
+Deletes the view's persistent index, which will be regenerated on the next query.
+
+**deleteView()**
+
+Permanently delete this view.
 
 **query**()
 
@@ -599,6 +651,17 @@ for details on reduce functions.
 Query objects are used to fetch keys, values, and documents from view indexes.
 
 ### Properties
+
+**allDocsMode**
+
+integer, read/write.  Set the behavior of a query created by `createAllDocumentsQuery()`.  Can be
+set to one of the following:
+
+* `TiTouchDb.QUERY_ALL_DOCS`: the query returns all non-deleted documents (default).
+* `TiTouchDB.QUERY_INCLUDE_DELETED`: the query also returns deleted documents.
+* `TiTouchDB.QUERY_SHOW_CONFLICTS`: the `conflictingRevisions` property of each row will contain
+the conflicts, if any, for the document.
+* `TiTouchDB.QUERY_ONLY_CONFLICTS`: only documents in conflict will be returned.
 
 **descending**
 
@@ -630,6 +693,10 @@ keys.
 
 number, read/write.  The maximum number of rows to return.  Default value is 0, meaning unlimited.
 
+**mapOnly**
+
+boolean, read/write.  Set to true to disable the reduce function.
+
 **prefetch**
 
 boolean, read/write.  If true, query results will include the entire document contents of the associated
@@ -660,11 +727,6 @@ data.  One of `module.STALE_QUERY_NEVER`, `module.STALE_QUERY_OK`, or `module.ST
 Synchronous call to get all of the results of querying the associated view.  Returns a
 [`query enumerator`](#query_enumerator) object.
 
-**rowsIfChanged**()
-
-Same as `rows()`, except returns null if the query results have not changed since the last time it
-was evaluated
-
 <a name="query_enumerator"/>
 ## Query Enumerator
 
@@ -681,6 +743,10 @@ number, read-only. The number of rows in this view result.
 number, read-only.  The current sequence number of the database at the time the view was
 generated.
 
+**stale**
+
+boolean, read-only.  True if the database has changed since the view was generated.
+
 ### Methods
 
 **nextRow**()
@@ -695,6 +761,10 @@ present.  Usually called in a `while` loop.
 Returns the [`query row`](#query_row) object at the specified index or null if there is no row at
 that index.
 
+**reset()**
+
+Resets the enumeration so the next call to `nextRow()` will return the first row.
+
 <a name="query_row"/>
 ## Query Row
 
@@ -702,6 +772,13 @@ An object returned by a [`query enumerator`](#query_enumerator) that holds a row
 possibly source document.
 
 ### Properties
+
+**conflictingRevisions**
+
+array of revisions, read-only.  If the document is in conflict, returns an array of conflicting revisions
+with the default "winning" revision in the first element.  Only present for a query created with
+`createAllDocumentsQuery()` which also has its `allDocsMode` property set to `QUERY_SHOW_CONFLICTS`
+or `QUERY_ONLY_CONFLICTS`.
 
 **document**
 
@@ -742,7 +819,7 @@ scalar|dictionary|array, read-only.  Shorthand for the third element in an array
 
 scalar|dictionary|array, read-only.  Shorthand for the fourth element in an array key (see `keyAtIndex()`).
 
-**localSequence**
+**sequenceNumber**
 
 integer, read-only.  The local sequence number of the associated doc/revision.
 Valid only if the 'sequences' and 'prefetch' properties were set in the query; otherwise returns 0
@@ -776,7 +853,11 @@ is to declare your replication variable _outside_ of any event handlers or funct
 
 ### Properties
 
-**completed**
+**changesCount**
+
+number, read-only.  The total number of changes to be processed if the task is active, else 0.
+
+**completedChangesCount**
 
 boolean, read-only.  True if the replication is complete.
 
@@ -789,7 +870,7 @@ database is modified?  Default is false.
 
 boolean, read/write.  If true, create the target database if it doesn't already exist.  Default is false.
 
-**doc_ids**
+**documentIDs**
 
 array of string, read/write.  Sets the documents to specify as part of the replication.
 
@@ -819,6 +900,11 @@ Should map strings (header names) to strings.
 number, read-only.  The current mode of the replication.  One of `module.REPLICATION_MODE_STOPPED`,
 `module.REPLICATION_MODE_OFFLINE`, `module.REPLICATION_MODE_IDLE`, or `module.REPLICATION_MODE_ACTIVE`.
 
+**network**
+
+string, read/write.  Specify which class of network the replication will use.  Valid values are
+"WiFi" and "Cell".
+
 **persistent**
 
 boolean, read/write.  Is this replication remembered persistently in the _replicator database?
@@ -837,11 +923,11 @@ string, read-only.  The URL of the remote database.
 
 boolean, read-only.  True if the replication is currently running.
 
-**total**
-
-number, read-only.  The total number of changes to be processed if the task is active, else 0.
-
 ### Methods
+
+**restart**()
+
+Restarts a completed or failed replication.
 
 **start**()
 

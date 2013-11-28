@@ -5,7 +5,7 @@ var _ = require('underscore'),
 
 exports.run_tests = function() {
   var mgr = touchdb.databaseManager;
-  var db = mgr.createDatabaseNamed('test011');
+  var db = mgr.databaseNamed('test011');
   
   try {
     for (i=0; i < 10; i++) {
@@ -18,7 +18,7 @@ exports.run_tests = function() {
     
     // update documents in a query loop
     (function() {
-      var query = db.queryAllDocuments();
+      var query = db.createAllDocumentsQuery();
       var rows = query.rows();
       while (row = rows.nextRow()) {
         var doc = row.document; 
@@ -31,7 +31,7 @@ exports.run_tests = function() {
 
     // refetch to make sure they are correct
     (function() {
-      var query = db.queryAllDocuments();
+      var query = db.createAllDocumentsQuery();
       var rows = query.rows();
       while (row = rows.nextRow()) {
         var doc = row.document; 

@@ -69,9 +69,9 @@
 }
 
 - (id)currentRevision {
-    CBLRevision * revision = [self.document currentRevision];
+    CBLSavedRevision * revision = [self.document currentRevision];
     if (revision) {
-        return [[TDRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLRevision:revision];
+        return [[TDSavedRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLSavedRevision:revision];
     }
     else {
         return nil;
@@ -84,9 +84,9 @@
     
     RELEASE_TO_NIL(lastError)
 
-    CBLRevision * revision = [self.document revisionWithID:revID];
+    CBLSavedRevision * revision = [self.document revisionWithID:revID];
     if (revision) {
-        return [[TDRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLRevision:revision];
+        return [[TDSavedRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLSavedRevision:revision];
     }
     else {
         return nil;
@@ -102,8 +102,8 @@
     if (lastError) return nil;
     
     NSMutableArray * result = [NSMutableArray arrayWithCapacity:[revs count]];
-    for (CBLRevision * rev in revs) {
-        [result addObject:[[TDRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLRevision:rev]];
+    for (CBLSavedRevision * rev in revs) {
+        [result addObject:[[TDSavedRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLSavedRevision:rev]];
     }
     return result;
 }
@@ -117,17 +117,17 @@
     if (lastError) return nil;
     
     NSMutableArray * result = [NSMutableArray arrayWithCapacity:[revs count]];
-    for (CBLRevision * rev in revs) {
-        [result addObject:[[TDRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLRevision:rev]];
+    for (CBLSavedRevision * rev in revs) {
+        [result addObject:[[TDSavedRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLSavedRevision:rev]];
     }
     return result;
 }
 
-- (id)newRevision:(id)args {
+- (id)createRevision:(id)args {
     RELEASE_TO_NIL(lastError)
 
-    CBLNewRevision * rev = [self.document newRevision];
-    return rev ? [[CBLNewRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLNewRevision:rev] : nil;
+    CBLUnsavedRevision * rev = [self.document newRevision];
+    return rev ? [[TDUnsavedRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLUnsavedRevision:rev] : nil;
 }
 
 #pragma mark Document Properties
@@ -155,9 +155,9 @@
     
     RELEASE_TO_NIL(lastError)
 
-    CBLRevision * rev = [self.document putProperties:props error:&lastError];
+    CBLSavedRevision * rev = [self.document putProperties:props error:&lastError];
     [lastError retain];
-    return rev ? [[TDRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLRevision:rev] : nil;
+    return rev ? [[TDSavedRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLSavedRevision:rev] : nil;
 }
 
 #pragma mark Change Notifications

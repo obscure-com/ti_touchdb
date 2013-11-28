@@ -52,12 +52,12 @@ extern NSString * CBL_ReplicatorStoppedNotification;
     self.replication.persistent = [value boolValue];
 }
 
-- (id)create_target {
-    return NUMBOOL(self.replication.create_target);
+- (id)createTarget {
+    return NUMBOOL(self.replication.createTarget);
 }
 
-- (void)setCreate_target:(id)value {
-    self.replication.create_target = [value boolValue];
+- (void)setCreateTarget:(id)value {
+    self.replication.createTarget = [value boolValue];
 }
 
 - (id)continuous {
@@ -77,22 +77,21 @@ extern NSString * CBL_ReplicatorStoppedNotification;
     self.replication.filter = value;
 }
 
-- (id)query_params {
-    return self.replication.query_params;
+- (id)filterParams {
+    return self.replication.filterParams;
 }
 
-- (void)setQuery_params:(id)value {
-    ENSURE_DICT(value)
-    self.replication.query_params = value;
+- (void)setFilterParams:(id)value {
+    self.replication.filterParams = value;
 }
 
-- (id)doc_ids {
-    return self.replication.doc_ids;
+- (id)documentIDs {
+    return self.replication.documentIDs;
 }
 
-- (void)setDoc_ids:(id)value {
+- (void)setDocumentIDs:(id)value {
     ENSURE_ARRAY(value)
-    self.replication.doc_ids = value;
+    self.replication.documentIDs = value;
 }
 
 - (id)headers {
@@ -102,6 +101,14 @@ extern NSString * CBL_ReplicatorStoppedNotification;
 - (void)setHeaders:(id)value {
     ENSURE_DICT(value)
     self.replication.headers = value;
+}
+
+- (id)network {
+    return self.replication.network;
+}
+
+- (void)setNetwork:(id)value {
+    self.replication.network = value;
 }
 
 #pragma mark Replication Status
@@ -114,16 +121,20 @@ extern NSString * CBL_ReplicatorStoppedNotification;
     [self.replication stop];
 }
 
+- (void)restart:(id)args {
+    [self.replication restart];
+}
+
 - (id)running {
     return NUMBOOL(self.replication.running);
 }
 
-- (id)completed {
-    return NUMINT(self.replication.completed);
+- (id)completedChangesCount {
+    return NUMINT(self.replication.completedChangesCount);
 }
 
-- (id)total {
-    return NUMINT(self.replication.total);
+- (id)changesCount {
+    return NUMINT(self.replication.changesCount);
 }
 
 - (id)error {

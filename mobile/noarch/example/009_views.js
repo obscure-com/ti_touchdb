@@ -5,7 +5,7 @@ var _ = require('underscore'),
 
 exports.run_tests = function() {
   var mgr = touchdb.databaseManager;
-  var db = mgr.createDatabaseNamed('test009');
+  var db = mgr.databaseNamed('test009');
   
   try {
     // String.format("%02d", i) outputs '00' every time??!?!
@@ -32,7 +32,7 @@ exports.run_tests = function() {
 
     
       (function() {
-        var rows = view.query().rows();
+        var rows = view.createQuery().rows();
         assert(rows, 'no rows for view query');
         assert(rows.count == 50, 'incorrect number of rows: '+rows.count);
 
@@ -45,7 +45,7 @@ exports.run_tests = function() {
     
       (function() {
         // test query parameters
-        var query = view.query();
+        var query = view.createQuery();
         query.limit = 10;
         query.skip = 10;
         var rows = query.rows();
@@ -58,7 +58,7 @@ exports.run_tests = function() {
       })();
     
       (function(){
-        var query = view.query();
+        var query = view.createQuery();
         query.startKey = 'test22';
         query.endKey = 'test28';
         var rows = query.rows();
@@ -82,7 +82,7 @@ exports.run_tests = function() {
         emit([doc.name, doc.i % 3], null);
       }, '1');
       
-      var rows = view.query().rows();
+      var rows = view.createQuery().rows();
       assert(rows, 'no rows for view query');
       assert(rows.count == 50, 'incorrect number of rows: '+rows.count);
 
@@ -113,7 +113,7 @@ exports.run_tests = function() {
         '1'
       );
       
-      var query = view.query();
+      var query = view.createQuery();
       query.groupLevel = 1;
       var rows = query.rows();
       assert(rows, 'missing rows from map/reduce query');

@@ -4,10 +4,10 @@ var window = Ti.UI.createWindow({
   backgroundColor: 'white'
 });
 
-// turn on logging
-Ti.App.Properties.setBool("Log", true);
-Ti.App.Properties.setBool("LogSync", true);
-Ti.App.Properties.setBool("LogSyncVerbose", true);
+var touchdb = require('com.obscure.titouchdb');
+
+touchdb.enableLogging("SyncVerbose");
+touchdb.enableLogging("ChangeTracker");
 
 var testname = Ti.UI.createLabel();
 window.add(testname);

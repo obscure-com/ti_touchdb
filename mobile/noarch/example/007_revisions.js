@@ -5,7 +5,7 @@ var _ = require('underscore'),
 
 exports.run_tests = function() {
   var mgr = touchdb.databaseManager;
-  var db = mgr.createDatabaseNamed('test007');
+  var db = mgr.databaseNamed('test007');
   try {
     var doc = createDocWithProperties(db, {
       "title":"There is Nothing Left to Lose",
@@ -33,7 +33,7 @@ exports.run_tests = function() {
     assert(doc.error.code == 409, 'error code should be 409 conflict: '+doc.error.code);
 
     // test the put() and save() functions
-    var rev_tmp = rev2.newRevision();
+    var rev_tmp = rev2.createRevision();
     rev_tmp.setPropertyForKey('label', 'RCA');
     var rev3 = rev_tmp.save();
     assert(rev3, 'rev_tmp.save() returned null');
@@ -49,7 +49,7 @@ exports.run_tests = function() {
     var rev4 = rev3.deleteDocument();
     assert(rev4, 'deleteDocument() should have returned a deleted revision: '+JSON.stringify(rev3.error));
     assert(!rev3.error, 'deleteDocument() set an error on rev3');
-    assert(rev4.isDeleted, 'rev4 isDeleted returned false');
+    assert(rev4.isDeletion, 'rev4 isDeletion returned false');
     
     // history
     var revs = rev4.getRevisionHistory();

@@ -5,12 +5,12 @@ var _ = require('underscore'),
 
 exports.run_tests = function() {
   var mgr = touchdb.databaseManager;
-  var db = mgr.createDatabaseNamed('test008');
+  var db = mgr.databaseNamed('test008');
   try {
     var doc = createDocWithProperties(db, {
       testName: 'test attachments'
     });
-    var rev = doc.newRevision();
+    var rev = doc.createRevision();
     
     assert(rev, 'doc.newRevision() returned null');
     assert(rev.attachmentNames, 'missing attachmentNames property');
@@ -18,7 +18,7 @@ exports.run_tests = function() {
     assert(!rev.attachmentNamed('index.html'), "found index.html attachment which shouldn't exist");
     
     var buf = Ti.createBuffer({ value: 'This is a test attachment!' });
-    var attach1 = rev.addAttachment('index.html', 'text/plain; charset=utf-8', buf.toBlob());
+    var attach1 = rev.setAttachment('index.html', 'text/plain; charset=utf-8', buf.toBlob());
     rev.save();
     
     var rev2 = doc.currentRevision;
@@ -29,17 +29,11 @@ exports.run_tests = function() {
     assert(refetch, 're-fetched attachment missing');
     assert(refetch.contentType === 'text/plain; charset=utf-8', 'incorrect content type: '+refetch.contentType);
     
-    var body = refetch.body;
-    assert(body, "missing body on re-fetch");
-    assert(body.mimeType === refetch.contentType, "mismatched content types: "+body.mimeType);
-    assert(body.text === 'This is a test attachment!', 'incorrect attachment body text: '+body.text);
+    var content = refetch.content;
+    assert(content, "missing content on re-fetch");
+    assert(content.mimeType === refetch.contentType, "mismatched content types: "+content.mimeType);
+    assert(content.text === 'This is a test attachment!', 'incorrect attachment content text: '+content.text);
     
-    var rev3 = refetch.updateBody(null);
-    assert(rev3.attachmentNames.length == 0, "expected no attachments following delete: "+rev3.attachmentNames.join(','));
-    
-    var missing = rev3.attachmentNamed('index.html');
-    assert(!missing, "fetched deleted attachment");
-
     // inline attachments
     var inline = {
       "_attachments" :     {
@@ -62,13 +56,13 @@ exports.run_tests = function() {
     
     var inlineatt = inlinerev.attachmentNamed('image.png');
     assert(inlineatt, "missing attachment named image.png");
-    assert(inlineatt.body, "empty body for attachment");
-    assert(inlineatt.body.mimeType == 'image/png', "incorrect mime type for inline attachment: "+inlineatt.body.mimeType);
+    assert(inlineatt.content, "empty content for attachment");
+    assert(inlineatt.content.mimeType == 'image/png', "incorrect mime type for inline attachment: "+inlineatt.content.mimeType);
 
     if (Ti.Platform.osname != 'android') {
       // not sure why this locks up the test
-      imageView1.image = inlineatt.body;
-      imageView2.image = inlineatt.bodyURL;
+      imageView1.image = inlineatt.content;
+      imageView2.image = inlineatt.contentURL;
     }
    
     db.deleteDatabase();

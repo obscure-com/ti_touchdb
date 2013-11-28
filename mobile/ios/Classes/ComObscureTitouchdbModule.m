@@ -82,6 +82,13 @@ extern BOOL EnableLog(BOOL enable);
     return self.databaseManagerProxy;
 }
 
+- (void)enableLogging:(id)args {
+    NSString * category;
+    ENSURE_ARG_AT_INDEX(category, args, 0, NSString)
+    
+    [CBLManager enableLogging:category];
+}
+
 #pragma mark CBLListener
 
 /** start an HTTP listener for the database.  Options and defaults are:
@@ -123,8 +130,13 @@ MAKE_SYSTEM_PROP(REPLICATION_MODE_OFFLINE, kCBLReplicationOffline)
 MAKE_SYSTEM_PROP(REPLICATION_MODE_IDLE, kCBLReplicationIdle)
 MAKE_SYSTEM_PROP(REPLICATION_MODE_ACTIVE, kCBLReplicationActive)
 
-MAKE_SYSTEM_PROP(STALE_QUERY_NEVER, kCBLStaleNever)
-MAKE_SYSTEM_PROP(STALE_QUERY_OK, kCBLStaleOK)
-MAKE_SYSTEM_PROP(STALE_QUERY_UPDATE_AFTER, kCBLStaleUpdateAfter)
+MAKE_SYSTEM_PROP(QUERY_ALL_DOCS, kCBLAllDocs)
+MAKE_SYSTEM_PROP(QUERY_INCLUDE_DELETED, kCBLIncludeDeleted)
+MAKE_SYSTEM_PROP(QUERY_SHOW_CONFLICTS, kCBLShowConflicts)
+MAKE_SYSTEM_PROP(QUERY_ONLY_CONFLICTS, kCBLOnlyConflicts)
+
+MAKE_SYSTEM_PROP(QUERY_UPDATE_INDEX_BEFORE, kCBLUpdateIndexBefore)
+MAKE_SYSTEM_PROP(QUERY_UPDATE_INDEX_NEVER, kCBLUpdateIndexNever)
+MAKE_SYSTEM_PROP(QUERY_UPDATE_INDEX_AFTER, kCBLUpdateIndexAfter)
 
 @end

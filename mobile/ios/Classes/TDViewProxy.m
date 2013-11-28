@@ -60,8 +60,24 @@
     return NUMBOOL(result);
 }
 
-- (id)query:(id)args {
-    CBLQuery * query = [self.view query];
+- (id)stale {
+    return NUMBOOL(self.view.stale);
+}
+
+- (id)lastSequenceIndexed {
+    return NUMLONG(self.view.lastSequenceIndexed);
+}
+
+- (void)deleteIndex:(id)args {
+    [self.view deleteIndex];
+}
+
+- (void)deleteView:(id)args {
+    [self.view deleteView];
+}
+
+- (id)createQuery:(id)args {
+    CBLQuery * query = [self.view createQuery];
     return query ? [[TDQueryProxy alloc] initWithExecutionContext:[self executionContext] CBLQuery:query] : nil;
 }
 

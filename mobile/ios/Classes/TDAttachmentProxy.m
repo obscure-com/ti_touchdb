@@ -49,26 +49,12 @@
     return self.attachment.metadata;
 }
 
-- (id)body {
-    return [[TiBlob alloc] initWithData:self.attachment.body mimetype:self.attachment.contentType];
+- (id)content {
+    return [[TiBlob alloc] initWithData:self.attachment.content mimetype:self.attachment.contentType];
 }
 
-- (id)bodyURL {
-    return [self.attachment.bodyURL absoluteString];
-}
-
-- (id)updateBody:(id)args {
-    TiBlob * body;
-    NSString * contentType;
-    ENSURE_ARG_OR_NULL_AT_INDEX(body, args, 0, TiBlob)
-    ENSURE_ARG_OR_NULL_AT_INDEX(contentType, args, 1, NSString)
-    
-    RELEASE_TO_NIL(lastError)
-
-    CBLRevision * rev = [self.attachment updateBody:body.data contentType:contentType error:&lastError];
-    [lastError retain];
-    
-    return rev ? [[TDRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLRevision:rev] : nil;
+- (id)contentURL {
+    return [self.attachment.contentURL absoluteString];
 }
 
 - (id)error {

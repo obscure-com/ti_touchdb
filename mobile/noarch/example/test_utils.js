@@ -17,7 +17,7 @@ function createDocWithProperties(db, props, id) {
       doc = db.documentWithID(id);
     }
     else {
-      doc = db.untitledDocument();
+      doc = db.createDocument();
     }
     assert(doc, "couldn't create doc");
     

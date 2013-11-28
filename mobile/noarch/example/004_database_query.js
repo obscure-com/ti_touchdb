@@ -4,7 +4,7 @@ var _ = require('underscore'),
     touchdb = require('com.obscure.titouchdb');
 
 exports.run_tests = function() {
-  var db = touchdb.databaseManager.createDatabaseNamed('test004');
+  var db = touchdb.databaseManager.databaseNamed('test004');
   try {
     createDocuments(db, 10);
     assert(db.documentCount === 10, 'incorrect number of documents in the database: '+db.documentCount);
@@ -27,7 +27,7 @@ exports.run_tests = function() {
     }
     
     // queryAllDocuments
-    var q2 = db.queryAllDocuments();
+    var q2 = db.createAllDocumentsQuery();
     assert(q2 != null, 'queryAllDocuments returned null');
     
     var r2 = q2.rows();

@@ -9,9 +9,11 @@
 #import "TDQueryProxy.h"
 #import "TiProxy+Errors.h"
 #import "TDDocumentProxy.h"
+#import "TDRevisionProxy.h"
 
 @interface TDQueryProxy ()
 @property (nonatomic, strong) CBLQuery * query;
+@property (nonatomic, strong) NSError * lastError;
 @end
 
 @interface CBLQueryEnumeratorProxy : TiProxy
@@ -92,12 +94,12 @@
     self.query.endKeyDocID = value;
 }
 
-- (id)stale {
-    return NUMINT(self.query.stale);
+- (id)updateIndex {
+    return NUMINT(self.query.updateIndex);
 }
 
-- (void)setStale:(id)value {
-    self.query.stale = [value intValue];
+- (void)setUpdateIndex:(id)value {
+    self.query.updateIndex = [value intValue];
 }
 
 - (id)keys {
@@ -106,6 +108,14 @@
 
 - (void)setKeys:(id)value {
     self.query.keys = value;
+}
+
+- (id)mapOnly {
+    return NUMBOOL(self.query.mapOnly);
+}
+
+- (void)setMapOnly:(id)value {
+    self.query.mapOnly = [value boolValue];
 }
 
 - (id)groupLevel {
@@ -124,24 +134,29 @@
     self.query.prefetch = [value boolValue];
 }
 
+- (id)allDocsMode {
+    return NUMINT(self.query.allDocsMode);
+}
+
+- (void)setAllDocsMode:(id)value {
+    self.query.allDocsMode = [value intValue];
+}
+
 - (id)error {
-    return [self errorDict:self.query.error];
+    return [self errorDict:self.lastError];
 }
 
 #pragma mark Public API
 
 - (id)rows:(id)args {
-    CBLQueryEnumerator * e = [self.query rows];
-    return e ? [[CBLQueryEnumeratorProxy alloc] initWithCBLQueryEnumerator:e] : nil;
-}
-
-- (id)rowsIfChanged:(id)args {
-    CBLQueryEnumerator * e = [self.query rowsIfChanged];
+    NSError * error = nil;
+    CBLQueryEnumerator * e = [self.query rows:&error];
+    self.lastError = error;
+    
     return e ? [[CBLQueryEnumeratorProxy alloc] initWithCBLQueryEnumerator:e] : nil;
 }
 
 @end
-
 
 
 @implementation CBLQueryEnumeratorProxy
@@ -161,6 +176,10 @@
     return NUMINT(self.enumerator.sequenceNumber);
 }
 
+- (id)stale {
+    return NUMBOOL(self.enumerator.stale);
+}
+
 - (id)nextRow:(id)args {
     CBLQueryRow * row = [self.enumerator nextRow];
     return row ? [[CBLQueryRowProxy alloc] initWithCBLQueryRow:row] : nil;
@@ -172,6 +191,10 @@
     
     CBLQueryRow * row = [self.enumerator rowAtIndex:[index unsignedIntValue]];
     return row ? [[CBLQueryRowProxy alloc] initWithCBLQueryRow:row] : nil;
+}
+
+- (void)reset:(id)args {
+    [self.enumerator reset];
 }
 
 @end
@@ -236,8 +259,16 @@
     return self.row.key3;
 }
 
-- (id)localSequence {
-    return NUMINT(self.row.localSequence);
+- (id)sequenceNumber {
+    return NUMINT(self.row.sequenceNumber);
+}
+
+- (id)conflictingRevisions {
+    NSMutableArray * result = [NSMutableArray array];
+    for (CBLSavedRevision * rev in self.row.conflictingRevisions) {
+        [result addObject:[[TDSavedRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLSavedRevision:rev]];
+    }
+    return result;
 }
 
 @end

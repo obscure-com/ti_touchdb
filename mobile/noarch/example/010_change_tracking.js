@@ -5,7 +5,7 @@ var _ = require('underscore'),
 
 exports.run_tests = function() {
   var mgr = touchdb.databaseManager;
-  var db = mgr.createDatabaseNamed('test010');
+  var db = mgr.databaseNamed('test010');
   
   var changes = 0, checkCount = 20;
   try {
