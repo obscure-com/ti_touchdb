@@ -94,12 +94,12 @@
     self.query.endKeyDocID = value;
 }
 
-- (id)updateIndex {
-    return NUMINT(self.query.updateIndex);
+- (id)indexUpdateMode {
+    return NUMINT(self.query.indexUpdateMode);
 }
 
-- (void)setUpdateIndex:(id)value {
-    self.query.updateIndex = [value intValue];
+- (void)setIndexUpdateMode:(id)value {
+    self.query.indexUpdateMode = [value intValue];
 }
 
 - (id)keys {

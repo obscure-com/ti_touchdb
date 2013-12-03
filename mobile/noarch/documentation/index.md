@@ -684,6 +684,13 @@ dictionary, read-only.  The most-recent error that occurred in the query.
 number, read/write.  If non-zero, enables grouping of results that have array keys in views that have
 reduce functions.
 
+**indexUpdateMode**
+
+number, read/write.  Determines whether or when the view index is updated. By default, the index will
+be updated if necessary before the query runs (`QUERY_UPDATE_INDEX_BEFORE`).  To get stale results and
+update the index afterward, set this to `QUERY_UPDATE_INDEX_AFTER`.  To read the stale index and not
+update, use `QUERY_UPDATE_INDEX_NEVER`.
+
 **keys**
 
 array of scalar|dictionary|array, read/write.  If set, the query will only fetch rows with the provided
