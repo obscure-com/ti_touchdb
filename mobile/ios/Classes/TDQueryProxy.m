@@ -148,9 +148,9 @@
 
 #pragma mark Public API
 
-- (id)rows:(id)args {
+- (id)run:(id)args {
     NSError * error = nil;
-    CBLQueryEnumerator * e = [self.query rows:&error];
+    CBLQueryEnumerator * e = [self.query run:&error];
     self.lastError = error;
     
     return e ? [[CBLQueryEnumeratorProxy alloc] initWithCBLQueryEnumerator:e] : nil;
