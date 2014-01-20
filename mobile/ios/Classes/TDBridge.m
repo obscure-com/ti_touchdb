@@ -79,11 +79,14 @@ CBLMapEmitBlock _emitBlock;
 }
 
 - (CBLValidationBlock)validationBlockForCallback:(KrollCallback *)callback inExecutionContext:(id<TiEvaluator>)context {
-    CBLValidationBlock result = ^(CBLSavedRevision* newRevision, id<CBLValidationContext> validationContext) {
-        TDSavedRevisionProxy * revisionProxy = [[TDSavedRevisionProxy alloc] initWithExecutionContext:context CBLSavedRevision:newRevision];
+    CBLValidationBlock result = ^(CBLRevision* newRevision, id<CBLValidationContext> validationContext) {
+        TDUnsavedRevisionProxy * revisionProxy = [[TDUnsavedRevisionProxy alloc] initWithExecutionContext:context CBLUnsavedRevision:(CBLUnsavedRevision *)newRevision];
         id contextDoc = [NSNull null]; // TODO
         id result = [callback call:[NSArray arrayWithObjects:revisionProxy, contextDoc, nil] thisObject:nil];
-        return [result boolValue];
+        if (![result boolValue]) {
+            // TODO refactor so the callback can send a message via [context rejectWithMessage:]
+            [validationContext reject];
+        }
     };
     
     return [[result copy] autorelease];
