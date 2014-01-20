@@ -29,7 +29,6 @@ extern NSString * CBL_ReplicatorStoppedNotification;
          * belongs to our CBLReplication in the handler method.
          */
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(replicationChanged:) name:CBL_ReplicatorProgressChangedNotification object:nil];
-        
     }
     return self;
 }
@@ -42,14 +41,6 @@ extern NSString * CBL_ReplicatorStoppedNotification;
 
 - (id)pull {
     return NUMBOOL(self.replication.pull);
-}
-
-- (id)persistent {
-    return NUMBOOL(self.replication.persistent);
-}
-
-- (void)setPersistent:(id)value {
-    self.replication.persistent = [value boolValue];
 }
 
 - (id)createTarget {
@@ -137,12 +128,12 @@ extern NSString * CBL_ReplicatorStoppedNotification;
     return NUMINT(self.replication.changesCount);
 }
 
-- (id)error {
-    return [self errorDict:self.replication.error];
+- (id)lastError {
+    return [self errorDict:self.replication.lastError];
 }
 
-- (id)mode {
-    return NUMINT(self.replication.mode);
+- (id)status {
+    return NUMINT(self.replication.status);
 }
 
 #pragma mark Notifications
