@@ -225,8 +225,8 @@
     return self.row.sourceDocumentID;
 }
 
-- (id)documentRevision {
-    return self.row.documentRevision;
+- (id)documentRevisionID {
+    return self.row.documentRevisionID;
 }
 
 - (id)document {

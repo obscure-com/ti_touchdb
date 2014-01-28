@@ -31,7 +31,7 @@ exports.run_tests = function() {
       title: 'National Geographic'
     }, "9781426203862");
     
-    push = db.replicationToURL('http://touchbooks.iriscouch.com/test015');
+    push = db.createPushReplication('http://touchbooks.iriscouch.com/test015');
     push.addEventListener('change', function(e) {
       pushComplete = !!(!push.running && (push.completed >= push.total));
     })

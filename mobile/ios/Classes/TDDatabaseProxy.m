@@ -243,28 +243,29 @@ extern NSString* const kCBLDatabaseChangeNotification;
     return result;
 }
 
-- (id)replicationToURL:(id)args {
+- (id)createPushReplication:(id)args {
     NSString * urlstr;
     ENSURE_ARG_AT_INDEX(urlstr, args, 0, NSString);
     
     RELEASE_TO_NIL(lastError)
     
     NSURL * url = [NSURL URLWithString:urlstr];
-    CBLReplication * replication = [self.database replicationToURL:url];
+    CBLReplication * replication = [self.database createPushReplication:url];
     return [[TDReplicationProxy alloc] initWithExecutionContext:[self executionContext] CBLReplication:replication];
 }
 
-- (id)replicationFromURL:(id)args {
+- (id)createPullReplication:(id)args {
     NSString * urlstr;
     ENSURE_ARG_AT_INDEX(urlstr, args, 0, NSString);
     
     RELEASE_TO_NIL(lastError)
     
     NSURL * url = [NSURL URLWithString:urlstr];
-    CBLReplication * replication = [self.database replicationFromURL:url];
+    CBLReplication * replication = [self.database createPullReplication:url];
     return [[TDReplicationProxy alloc] initWithExecutionContext:[self executionContext] CBLReplication:replication];
 }
 
+/*
 - (id)replicateWithURL:(id)args {
     NSString * urlstr;
     NSNumber * exclusive;
@@ -282,6 +283,7 @@ extern NSString* const kCBLDatabaseChangeNotification;
     }
     return result;
 }
+*/
 
 - (id)internalURL {
     return self.database.internalURL;

@@ -29,7 +29,7 @@ exports.run_tests = function() {
     query.endKey = 33;
     query.prefetch = true;
     
-    var result = query.rows();
+    var result = query.run();
     assert(result, "query did not return a result object");
     assert(result.count == 11, "query returned the wrong number of rows: "+result.count);
     

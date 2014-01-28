@@ -32,7 +32,7 @@ exports.run_tests = function() {
 
     
       (function() {
-        var rows = view.createQuery().rows();
+        var rows = view.createQuery().run();
         assert(rows, 'no rows for view query');
         assert(rows.count == 50, 'incorrect number of rows: '+rows.count);
 
@@ -48,7 +48,7 @@ exports.run_tests = function() {
         var query = view.createQuery();
         query.limit = 10;
         query.skip = 10;
-        var rows = query.rows();
+        var rows = query.run();
         assert(rows.count === 10, 'incorrect number of rows returned (limit): '+rows.count);
         for (var i=0; i < 10; i++) {
           var row = rows.rowAtIndex(i);
@@ -61,7 +61,7 @@ exports.run_tests = function() {
         var query = view.createQuery();
         query.startKey = 'test22';
         query.endKey = 'test28';
-        var rows = query.rows();
+        var rows = query.run();
         assert(rows.count === 7, 'incorrect number of rows returned (startkey): '+rows.count);
         for (var i=0; i < 7; i++) {
           var row = rows.rowAtIndex(i);
@@ -82,7 +82,7 @@ exports.run_tests = function() {
         emit([doc.name, doc.i % 3], null);
       }, '1');
       
-      var rows = view.createQuery().rows();
+      var rows = view.createQuery().run();
       assert(rows, 'no rows for view query');
       assert(rows.count == 50, 'incorrect number of rows: '+rows.count);
 
@@ -115,7 +115,7 @@ exports.run_tests = function() {
       
       var query = view.createQuery();
       query.groupLevel = 1;
-      var rows = query.rows();
+      var rows = query.run();
       assert(rows, 'missing rows from map/reduce query');
       assert(rows.count == 1, 'incorrect number of rows: '+rows.count);
       var row = rows.rowAtIndex(0);

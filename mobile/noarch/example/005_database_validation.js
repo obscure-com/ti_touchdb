@@ -15,6 +15,7 @@ exports.run_tests = function() {
   var db = touchdb.databaseManager.databaseNamed('test005');
   try {
     db.defineValidation('require_tag', function(rev, context) {
+      Ti.API.info("props are "+JSON.stringify(rev.properties));
       return rev.properties.tag != null;
     });
     
@@ -48,7 +49,7 @@ exports.run_tests = function() {
     var rev4 = doc3.putProperties({
       x: 12.4
     });
-    assert(rev4 == null, 'putProperties fo first revision should hvae returned null for invalid doc');
+    assert(rev4 == null, 'putProperties for first revision should have returned null for invalid doc');
     assert(doc3.error, 'rev4 should result in an error object');
     
     db.defineValidation('require_tag');

@@ -19,7 +19,7 @@ exports.run_tests = function() {
     // update documents in a query loop
     (function() {
       var query = db.createAllDocumentsQuery();
-      var rows = query.rows();
+      var rows = query.run();
       while (row = rows.nextRow()) {
         var doc = row.document; 
         assert(doc, "did not get doc from query row");
@@ -32,7 +32,7 @@ exports.run_tests = function() {
     // refetch to make sure they are correct
     (function() {
       var query = db.createAllDocumentsQuery();
-      var rows = query.rows();
+      var rows = query.run();
       while (row = rows.nextRow()) {
         var doc = row.document; 
         assert(doc, "did not get doc from query row");

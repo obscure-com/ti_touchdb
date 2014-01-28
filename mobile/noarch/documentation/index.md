@@ -156,7 +156,7 @@ to set up a local-to-local replication.
 
 **allReplications**
 
-array of [`replication`](#replication) objects, read-only.  A list of all stored replications for
+array of [`replication`](#replication) objects, read-only.  A list of all running replications for
 this database.
 
 **documentCount**
@@ -199,6 +199,20 @@ This is like querying an imaginary view that emits every document's ID as a key.
 
 Create a new [`document`](#document) object with a generated identifier.  The identifier *cannot* be
 changed after creation; use **documentWithID(id)** to create a document that has a specific identifier.
+
+**createPullReplication**(url)
+
+* url (string): the URL of the remote database to pull from or a local database.
+
+Set up a one-time replication from a source database to this database and return a [`replication`](#replication)
+object.  The returned object can be customized prior to the start of replication.
+
+**createPushReplication**(url)
+
+* url (string): the URL of the remote database to push to or the name of a local database
+
+Set up a one-time replication from this database to a remote target database and return a [`replication`](#replication)
+object.  The returned object can be customized prior to the start of replication.
 
 **defineFilter**(name, filter)
 
@@ -246,29 +260,6 @@ the provided identifier doesn't already exist.
 * name (string): the name of the view to fetch
 
 Returns a [`view`](#view) object with the given name or null if no view with the provided name exists.
-
-**replicateWithURL**(url, exclusively)
-
-* url (string): the URL of the remote database to replicate with or the name of a local database
-* exclusively (boolean): if true, any existing replications with this URL will be removed
-
-Convenience function for setting up two-way replication with a remote database specified by the provided
-URL.  Returns an array containing the pull [`replication`](#replication)
-object and the push [`replication`](#replication) object, or null on failure.
-
-**replicationFromURL**(url)
-
-* url (string): the URL of the remote database to pull from or a local database.
-
-Set up a one-time replication from a source database to this database and return a [`replication`](#replication)
-object.  The returned object can be customized prior to the start of replication.
-
-**replicationToURL**(url)
-
-* url (string): the URL of the remote database to push to or the name of a local database
-
-Set up a one-time replication from this database to a remote target database and return a [`replication`](#replication)
-object.  The returned object can be customized prior to the start of replication.
 
 **slowQueryWithMap**(map)
 
@@ -729,7 +720,7 @@ data.  One of `module.STALE_QUERY_NEVER`, `module.STALE_QUERY_OK`, or `module.ST
 
 ### Methods
 
-**rows**()
+**run**()
 
 Synchronous call to get all of the results of querying the associated view.  Returns a
 [`query enumerator`](#query_enumerator) object.
@@ -881,10 +872,6 @@ boolean, read/write.  If true, create the target database if it doesn't already 
 
 array of string, read/write.  Sets the documents to specify as part of the replication.
 
-**error**
-
-dictionary, read-only.  The most recent error during replication, if any.
-
 **filter**
 
 string, read/write.  Path of an optional filter function to run on the source server.  Only documents for
@@ -902,21 +889,14 @@ dictionary, read/write.  Parameters to pass to the filter function.
 dictionary, read/write. Extra HTTP headers to send in all requests to the remote server.
 Should map strings (header names) to strings.
 
-**mode**
+**lastError**
 
-number, read-only.  The current mode of the replication.  One of `module.REPLICATION_MODE_STOPPED`,
-`module.REPLICATION_MODE_OFFLINE`, `module.REPLICATION_MODE_IDLE`, or `module.REPLICATION_MODE_ACTIVE`.
+dictionary, read-only.  The most recent error during replication, if any.
 
 **network**
 
 string, read/write.  Specify which class of network the replication will use.  Valid values are
 "WiFi" and "Cell".
-
-**persistent**
-
-boolean, read/write.  Is this replication remembered persistently in the _replicator database?
-Persistent continuous replications will automatically restart on the next launch
-or when the app returns to the foreground.
 
 **pull**
 
@@ -929,6 +909,11 @@ string, read-only.  The URL of the remote database.
 **running**
 
 boolean, read-only.  True if the replication is currently running.
+
+**status**
+
+number, read-only.  The current mode of the replication.  One of `module.REPLICATION_MODE_STOPPED`,
+`module.REPLICATION_MODE_OFFLINE`, `module.REPLICATION_MODE_IDLE`, or `module.REPLICATION_MODE_ACTIVE`.
 
 ### Methods
 

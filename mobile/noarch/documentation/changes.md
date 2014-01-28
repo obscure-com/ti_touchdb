@@ -1,4 +1,4 @@
-2013-11-27
+2014-01-20
 
 The couchbase-lite-ios project is undergoing another set of API changes, which
 I'm tracking in the cblite\_api\_changes branch.  This is a summary of the changes
@@ -34,8 +34,9 @@ to date:
 * Renamed `queryAllDocuments()` to `createAllDocumentsQuery()`.
 * Added `existingViewNamed(name)` which returns an existing view or null.  The
   `viewNamed(name)` function continues to create a view if it doesn't exist.
-* Renamed `pushToURL(url)` to `replicationToURL(url)`. 
-* Renamed `pullFromURL(url)` to `replicationFromURL(url)`. 
+* Renamed `pushToURL(url)` to `createPushReplication(url)`. 
+* Renamed `pullFromURL(url)` to `createPullReplication(url)`. 
+* Removed `replicateWithURL()`.
 
 ### Document
 
@@ -43,6 +44,7 @@ to date:
 
 ### Query
 
+* Renamed `rows()` to `run()`.
 * Renamed `stale` property to `updateIndex`.  Use the staleness constants defined on
   the module for this property.
 
@@ -85,12 +87,16 @@ to date:
 ### Query Row
 
 * Renamed `localSequence` to `sequenceNumber`.
+* Renamed `documentRevision` to `documentRevisionID`.
 
 ### Replication
 
+* Removed `persistent` property as persistent replications are no longer supported
 * Renamed `create_target` to `createTarget`.
 * Renamed `query_params` to `filterParams`.
 * Renamed `doc_ids` to `documentIDs`.
 * Added `network` property.
 * Renamed `changes` to `completedChangesCount`.
 * Renamed `total` to `changesCount`.
+* Renamed `error` to `lastError`.
+* Renamed `mode` to `status`.

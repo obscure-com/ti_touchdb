@@ -21,27 +21,31 @@ exports.run_tests = function() {
       timestamp: dt.getTime() / 1000,
     }, 'zzz');
     
-    var pull = db.replicationFromURL('http://touchbooks.iriscouch.com/test');
+    var pull = db.createPullReplication('http://touchbooks.iriscouch.com/test');
     pull.addEventListener('change', function(e) {
-      assert(!pull.error, "replication error: "+JSON.stringify(pull.error));
+      assert(!pull.lastError, "replication error: "+JSON.stringify(pull.lastError));
       pullDone = !!(!pull.running && (pull.completed >= pull.total));
     });
     
     // check the replication list
     var repls = db.allReplications;
     assert(repls, "allReplications returned null");
+    assert(repls.length === 0, "allReplications returned incorrect number of replications: "+repls.length);
+
+    pull.start();
+    
+    repls = db.allReplications;
+    assert(repls, "allReplications returned null");
     assert(repls.length === 1, "allReplications returned incorrect number of replications: "+repls.length);
     assert(repls[0].remoteURL === pull.remoteURL, "allReplications remote URL is wrong: "+repls[0].remoteURL);
-    
-    pull.start();
     
     // just do pull replication for now
     pushDone = true;
 
 /*
-    var push = db.replicationToURL('http://touchbooks.iriscouch.com/test');
+    var push = db.createPushReplication('http://touchbooks.iriscouch.com/test');
     push.addEventListener('change', function(e) {
-      assert(!push.error, "replication error: "+JSON.stringify(push.error));
+      assert(!push.lastError, "replication error: "+JSON.stringify(push.lastError));
       pushDone = !!(!push.running && (push.completed >= push.total));
     });
     push.start();

@@ -47,7 +47,7 @@ exports.run_tests = function() {
     var query = a.createAllDocumentsQuery();
     assert(query !== null, "all docs query should not be null");
     
-    var rows = query.rows();
+    var rows = query.run();
     assert(rows !== null, "all docs query rows returned null");
     assert(rows.count === 2, "incorrect number of rows returned by all docs query: "+rows.count);
 

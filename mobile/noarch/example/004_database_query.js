@@ -17,8 +17,8 @@ exports.run_tests = function() {
     
     assert(q1 !== null, 'slowQueryWithMap returned null');
 
-    var r1 = q1.rows();
-    assert(r1 !== null, 'q1.rows() returned null');
+    var r1 = q1.run();
+    assert(r1 !== null, 'q1.run() returned null');
     assert(r1.count === 5, 'r1 returned an incorrect number of documents: 5 != '+r1.count);
     for (i=0; i < r1.count; i++) {
       var row = r1.rowAtIndex(i);
@@ -30,8 +30,8 @@ exports.run_tests = function() {
     var q2 = db.createAllDocumentsQuery();
     assert(q2 != null, 'queryAllDocuments returned null');
     
-    var r2 = q2.rows();
-    assert(r2 != null, 'q2.rows() returned null');
+    var r2 = q2.run();
+    assert(r2 != null, 'q2.run() returned null');
     assert(r2.count == 10, 'r2 returned an incorrect number of documents: 10 != '+r2.count);
     for (i=0; i < r2.count; i++) {
       var row = r2.rowAtIndex(i);
