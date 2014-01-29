@@ -24,7 +24,8 @@ exports.run_tests = function() {
     var pull = db.createPullReplication('http://touchbooks.iriscouch.com/test');
     pull.addEventListener('change', function(e) {
       assert(!pull.lastError, "replication error: "+JSON.stringify(pull.lastError));
-      pullDone = !!(!pull.running && (pull.completed >= pull.total));
+      pullDone = !!(!pull.running && (pull.completedChangesCount >= pull.changesCount));
+      Ti.API.info("running "+pull.running+" completed "+pull.completedChangesCount+" total "+pull.changesCount);
     });
     
     // check the replication list
@@ -46,7 +47,7 @@ exports.run_tests = function() {
     var push = db.createPushReplication('http://touchbooks.iriscouch.com/test');
     push.addEventListener('change', function(e) {
       assert(!push.lastError, "replication error: "+JSON.stringify(push.lastError));
-      pushDone = !!(!push.running && (push.completed >= push.total));
+      pushDone = !!(!push.running && (push.completedChangesCount >= push.changesCount));
     });
     push.start();
 */

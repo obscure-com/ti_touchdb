@@ -33,7 +33,7 @@ exports.run_tests = function() {
     
     push = db.createPushReplication('http://touchbooks.iriscouch.com/test015');
     push.addEventListener('change', function(e) {
-      pushComplete = !!(!push.running && (push.completed >= push.total));
+      pushComplete = !!(!push.running && (push.completedChangesCount >= push.changesCount));
     })
     push.filter = 'books_only';
     push.start();

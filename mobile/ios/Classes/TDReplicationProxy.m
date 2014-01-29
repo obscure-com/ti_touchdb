@@ -144,7 +144,9 @@ extern NSString * CBL_ReplicatorStoppedNotification;
     // very nasty, precious, looking at its internalzzz
     id bgrepl = [self.replication valueForKeyPath:@"_bg_replicator"];
     if (bgrepl == notification.object) {
-        [self fireEvent:kReplicationChangedEventName withObject:nil propagate:YES];
+        TiThreadPerformOnMainThread(^{
+            [self fireEvent:kReplicationChangedEventName withObject:nil propagate:YES];
+        }, NO);
     }
 }
 

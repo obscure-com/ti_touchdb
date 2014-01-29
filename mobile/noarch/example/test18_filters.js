@@ -20,7 +20,7 @@ exports.run_tests = function() {
         });
         push.addEventListener('stopped', function(e) {
           Ti.API.info('push stopped: '+JSON.stringify(e));
-          pushComplete = (e.completed >= e.total);
+          pushComplete = (e.completedChangesCount >= e.changesCount);
         });
         push.start();
     }

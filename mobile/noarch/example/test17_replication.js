@@ -23,7 +23,7 @@ exports.run_tests = function() {
       });
       pull.addEventListener('stopped', function(e) {
         Ti.API.info('pull stopped: '+JSON.stringify(e));
-        pullComplete = (e.completed >= e.total);
+        pullComplete = (e.completedChangesCount >= e.changesCount);
       });
       pull.start();
       
@@ -33,7 +33,7 @@ exports.run_tests = function() {
       });
       push.addEventListener('stopped', function(e) {
         Ti.API.info('push stopped: '+JSON.stringify(e));
-        pushComplete = (e.completed >= e.total);
+        pushComplete = (e.completedChangesCount >= e.changesCount);
       });
       push.start();
     }
