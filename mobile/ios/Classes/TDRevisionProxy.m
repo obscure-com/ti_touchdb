@@ -90,10 +90,6 @@
     return self;
 }
 
-- (id)propertiesAreLoaded {
-    return NUMBOOL(self.revision.propertiesAreLoaded);
-}
-
 - (id)newRevision:(id)args {
     RELEASE_TO_NIL(lastError)
     
@@ -149,10 +145,6 @@
         self.revision = revision;
     }
     return self;
-}
-
-- (void)setIsDeleted:(id)arg {
-    self.revision.isDeleted = [arg boolValue];
 }
 
 - (void)setProperties:(id)arg {
