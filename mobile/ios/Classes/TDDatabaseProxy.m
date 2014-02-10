@@ -77,7 +77,7 @@ extern NSString* const kCBLDatabaseChangeNotification;
     return NUMBOOL(result);
 }
 
-- (id)documentWithID:(id)args {
+- (id)getDocument:(id)args {
     NSString * docID;
     ENSURE_ARG_OR_NULL_AT_INDEX(docID, args, 0, NSString);
     

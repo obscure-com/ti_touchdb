@@ -68,7 +68,8 @@
  Returns the database with the given name, creating it if it didn't already exist.
  Multiple calls with the same name will return the same TDDatabaseProxy instance.
  */
-- (id)databaseNamed:(id)args {
+- (id)getDatabase:(id)args {
+    NSLog(@"dbmanager databaseNamed");
     NSString * name;
     ENSURE_ARG_AT_INDEX(name, args, 0, NSString);
     
@@ -94,7 +95,7 @@
  Multiple calls with the same name will return the same TDDatabaseProxy instance.
  NOTE: Database names may not contain capital letters!
  */
-- (id)existingDatabaseNamed:(id)args {
+- (id)getExistingDatabase:(id)args {
     NSString * name;
     ENSURE_ARG_AT_INDEX(name, args, 0, NSString);
 
@@ -119,7 +120,7 @@
 /** Replaces or installs a database from a file.
  This is primarily used to install a canned database on first launch of an app, in which case you should first check .exists to avoid replacing the database if it exists already. The canned database would have been copied into your app bundle at build time.
  @return  YES if the database was copied, NO if an error occurred. */
-- (id)installDatabase:(id)args {
+- (id)replaceDatabase:(id)args {
     NSString * name;
     NSString * pathToDatabase;
     NSString * pathToAttachments;
@@ -152,6 +153,11 @@
  */
 - (id)internalURL {
     return self.databaseManager.internalURL;
+}
+
+/** Releases all resources used by the CBLManager instance and closes all its databases. */
+- (void)close:(id)args {
+    [self.databaseManager close];
 }
 
 - (id)error {

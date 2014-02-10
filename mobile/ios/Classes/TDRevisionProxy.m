@@ -82,7 +82,7 @@
     return result ? result : [NSArray array];
 }
 
-- (id)attachmentNamed:(id)args {
+- (id)getAttachment:(id)args {
     NSString * name;
     ENSURE_ARG_AT_INDEX(name, args, 0, NSString)
     
