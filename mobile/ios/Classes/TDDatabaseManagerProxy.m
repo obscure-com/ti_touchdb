@@ -7,6 +7,7 @@
 //
 
 #import "TDDatabaseManagerProxy.h"
+#import "ComObscureTitouchdbModule.h"
 #import "CBLManager.h"
 #import "TiProxy+Errors.h"
 #import "TDDatabaseProxy.h"
@@ -25,6 +26,10 @@
     dispatch_queue_t manager_queue;
 }
 
++ (instancetype)proxyWithModule:(ComObscureTitouchdbModule *)module {
+    return [[[TDDatabaseManagerProxy alloc] initWithExecutionContext:module.executionContext] autorelease];
+}
+
 - (id)initWithExecutionContext:(id<TiEvaluator>)context {
     if (self = [super _initWithPageContext:context]) {
         manager_queue = dispatch_queue_create("database_manager_queue", NULL);
@@ -41,6 +46,10 @@
 - (void)dealloc {
     self.lastError = nil;
     [super dealloc];
+}
+
+- (void)forgetDatabaseProxyNamed:(NSString *)name {
+    [self.databaseProxyCache removeObjectForKey:name];
 }
 
 #pragma mark Public API
@@ -69,7 +78,6 @@
  Multiple calls with the same name will return the same TDDatabaseProxy instance.
  */
 - (id)getDatabase:(id)args {
-    NSLog(@"dbmanager databaseNamed");
     NSString * name;
     ENSURE_ARG_AT_INDEX(name, args, 0, NSString);
     
@@ -79,7 +87,7 @@
     if (!result) {
         CBLDatabase * db = [self.databaseManager databaseNamed:name error:nil];
         if (db) {
-            result = [[TDDatabaseProxy alloc] initWithExecutionContext:[self executionContext] CBLDatabase:db];
+            result = [TDDatabaseProxy proxyWithManager:self database:db];
             [self.databaseProxyCache setObject:result forKey:name];
         }
         else {
@@ -111,7 +119,7 @@
             return nil;
         }
         
-        result = [[TDDatabaseProxy alloc] initWithExecutionContext:[self executionContext] CBLDatabase:db];
+        result = [TDDatabaseProxy proxyWithManager:self database:db];
         [self.databaseProxyCache setObject:result forKey:name];
     }
     return result;
@@ -134,6 +142,10 @@
     NSError * error = nil;
     BOOL result = [self.databaseManager replaceDatabaseNamed:name withDatabaseFile:pathToDatabase withAttachments:pathToAttachments error:&error];
     self.lastError = error;
+    
+    if (result) {
+        [self forgetDatabaseProxyNamed:name];
+    }
     
     return NUMBOOL(result);
 }

@@ -77,7 +77,7 @@ extern BOOL EnableLog(BOOL enable);
 
 - (id)databaseManager {
     if (!self.databaseManagerProxy) {
-        self.databaseManagerProxy = [[TDDatabaseManagerProxy alloc] initWithExecutionContext:[self executionContext]];
+        self.databaseManagerProxy = [TDDatabaseManagerProxy proxyWithModule:self];
     }
     return self.databaseManagerProxy;
 }

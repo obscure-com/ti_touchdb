@@ -7,8 +7,11 @@
 //
 
 #import "TiProxy.h"
+#import "TDDatabaseProxy.h"
+
+@class ComObscureTitouchdbModule;
 
 @interface TDDatabaseManagerProxy : TiProxy
-@property (readonly) NSArray * allDatabaseNames;
-- (id)initWithExecutionContext:(id<TiEvaluator>)context;
++ (instancetype)proxyWithModule:(ComObscureTitouchdbModule *)module;
+- (void)forgetDatabaseProxyNamed:(NSString *)name;
 @end

@@ -1,12 +1,17 @@
 require('ti-mocha');
 
 var should = require('should');
+var utils = require('test_utils');
 
 module.exports = function() {
   var titouchdb = require('com.obscure.titouchdb'),
       manager = titouchdb.databaseManager;
   
   describe('database manager', function() {
+
+    before(function() {
+      utils.delete_nonsystem_databases(manager);
+    });
 
     it('must exist', function() {
       should.exist(manager);
@@ -69,6 +74,14 @@ module.exports = function() {
       should(manager.error).eql(null);
     });
     
+    it('must return the same db instance each time', function() {
+      var db1 = manager.getDatabase('test002_2');
+      var db2 = manager.getDatabase('test002_2');
+      if (db1 !== db2) {
+        throw new Error('did not return the same database instance');
+      }
+    });
+    
     if (Ti.Platform.osname === 'iphone' || Ti.Platform.osname === 'ipad') {
       it('must install a prebuilt db', function() {
         var basedir = Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory, 'assets', 'CouchbaseLite').path;
@@ -94,15 +107,5 @@ module.exports = function() {
         should(manager.error).should.be.an.Object;
       });
     }
-        
-    after(function() {
-      manager.allDatabaseNames.forEach(function(name) {
-        if (name.indexOf('_') != 0) {
-          manager.getExistingDatabase(name).deleteDatabase();
-          console.log('cleaned '+name);
-        }
-      });
-    });
-    
   });
 };

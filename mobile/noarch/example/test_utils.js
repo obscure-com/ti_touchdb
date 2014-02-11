@@ -1,5 +1,28 @@
 var _ = require('underscore');
 
+exports.delete_nonsystem_databases = function(manager) {
+  manager.allDatabaseNames.forEach(function(name) {
+    if (name.indexOf('_') != 0) {
+      manager.getExistingDatabase(name).deleteDatabase();
+    }
+  });
+};
+
+exports.install_elements_database = function(manager) {
+  var basedir = Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory, 'assets', 'CouchbaseLite').path;
+  var dbfile = [basedir, 'elements.touchdb'].join(Ti.Filesystem.separator);
+  var attdir = [basedir, 'elements attachments'].join(Ti.Filesystem.separator);
+  if (manager.replaceDatabase('elements', dbfile, attdir)) {
+    return manager.getExistingDatabase('elements');
+  }
+  else {
+    throw new Exception('could not install elements database');
+  }
+};
+
+
+// old stuff below
+
 function assert(exp, msg) {
     if (!exp) {
         throw "FAILURE: "+msg;

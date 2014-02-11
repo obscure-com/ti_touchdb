@@ -8,6 +8,7 @@
 
 #import "TDDatabaseProxy.h"
 #import "TiProxy+Errors.h"
+#import "TDDatabaseManagerProxy.h"
 #import "TDDocumentProxy.h"
 #import "TDQueryProxy.h"
 #import "TDViewProxy.h"
@@ -15,8 +16,10 @@
 #import "TDBridge.h"
 
 @interface TDDatabaseProxy ()
+@property (nonatomic, assign) TDDatabaseManagerProxy * managerProxy;
 @property (nonatomic, strong) CBLDatabase * database;
 @property (nonatomic, strong) NSMutableDictionary * documentProxyCache;
+- (id)initWithManager:(TDDatabaseManagerProxy *)manager database:(CBLDatabase *)database;
 @end
 
 @implementation TDDatabaseProxy
@@ -27,8 +30,13 @@
 
 extern NSString* const kCBLDatabaseChangeNotification;
 
-- (id)initWithExecutionContext:(id<TiEvaluator>)context CBLDatabase:(CBLDatabase *)database {
-    if (self = [super _initWithPageContext:context]) {
++ (instancetype)proxyWithManager:(TDDatabaseManagerProxy *)manager database:(CBLDatabase *)database {
+    return [[[TDDatabaseProxy alloc] initWithManager:manager database:database] autorelease];
+}
+
+- (id)initWithManager:(TDDatabaseManagerProxy *)manager database:(CBLDatabase *)database {
+    if (self = [super _initWithPageContext:manager.pageContext]) {
+        self.managerProxy = manager;
         self.database = database;
         self.documentProxyCache = [NSMutableDictionary dictionary];
     }
@@ -53,6 +61,10 @@ extern NSString* const kCBLDatabaseChangeNotification;
     return [NSNumber numberWithInt:self.database.documentCount];
 }
 
+- (id)manager {
+    return self.managerProxy;
+}
+
 - (id)maxRevTreeDepth {
     return NUMINT(self.database.maxRevTreeDepth);
 }
@@ -73,6 +85,7 @@ extern NSString* const kCBLDatabaseChangeNotification;
 - (id)deleteDatabase:(id)args {
     RELEASE_TO_NIL(lastError)
 
+    [self.manager forgetDatabaseProxyNamed:self.database.name];
     BOOL result = [self.database deleteDatabase:&lastError];
     return NUMBOOL(result);
 }
@@ -99,7 +112,7 @@ extern NSString* const kCBLDatabaseChangeNotification;
     return proxy;
 }
 
-- (id)existingDocumentWithID:(id)args {
+- (id)getExistingDocument:(id)args {
     NSString * docID;
     ENSURE_ARG_AT_INDEX(docID, args, 0, NSString);
     
@@ -123,7 +136,6 @@ extern NSString* const kCBLDatabaseChangeNotification;
 }
 
 
-
 - (id)error {
     return lastError ? [self errorDict:lastError] : nil;
 }
@@ -137,23 +149,21 @@ extern NSString* const kCBLDatabaseChangeNotification;
     return proxy;
 }
 
-/*
-- (id)cachedDocumentWithID:(id)args {
-    NSString * docID;
-    ENSURE_ARG_OR_NULL_AT_INDEX(docID, args, 0, NSString);
+#pragma mark Local Documents
 
-    RELEASE_TO_NIL(lastError)
-    
-    return [self.documentProxyCache objectForKey:docID];
+- (id)getExistingLocalDocumnet:(id)args {
+    return nil;
 }
 
-- (void)clearDocumentCache:(id)args {
-    RELEASE_TO_NIL(lastError)
-    
-    [self.documentProxyCache removeAllObjects];
-    [self.database clearDocumentCache];
+- (id)deleteLocalDocument:(id)args {
+    return nil;
 }
-*/
+
+- (id)putLocalDocument:(id)args {
+    return nil;
+}
+
+
 
 #pragma mark Queries and Views
 
@@ -175,7 +185,7 @@ extern NSString* const kCBLDatabaseChangeNotification;
     return [[TDQueryProxy alloc] initWithExecutionContext:[self executionContext] CBLQuery:query];
 }
 
-- (id)viewNamed:(id)args {
+- (id)getView:(id)args {
     NSString * name;
     ENSURE_ARG_AT_INDEX(name, args, 0, NSString);
     
@@ -185,7 +195,7 @@ extern NSString* const kCBLDatabaseChangeNotification;
     return [[TDViewProxy alloc] initWithExecutionContext:[self executionContext] CBLView:view];
 }
 
-- (id)existingViewNamed:(id)args {
+- (id)getExistingView:(id)args {
     NSString * name;
     ENSURE_ARG_AT_INDEX(name, args, 0, NSString);
     
@@ -250,7 +260,7 @@ extern NSString* const kCBLDatabaseChangeNotification;
     RELEASE_TO_NIL(lastError)
     
     NSURL * url = [NSURL URLWithString:urlstr];
-    CBLReplication * replication = [self.database createPushReplication:url];
+    CBLReplication * replication = [self.database replicationToURL:url];
     return [[TDReplicationProxy alloc] initWithExecutionContext:[self executionContext] CBLReplication:replication];
 }
 
@@ -261,7 +271,7 @@ extern NSString* const kCBLDatabaseChangeNotification;
     RELEASE_TO_NIL(lastError)
     
     NSURL * url = [NSURL URLWithString:urlstr];
-    CBLReplication * replication = [self.database createPullReplication:url];
+    CBLReplication * replication = [self.database replicationFromURL:url];
     return [[TDReplicationProxy alloc] initWithExecutionContext:[self executionContext] CBLReplication:replication];
 }
 
