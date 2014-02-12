@@ -80,7 +80,8 @@ CBLMapEmitBlock _emitBlock;
 
 - (CBLValidationBlock)validationBlockForCallback:(KrollCallback *)callback inExecutionContext:(id<TiEvaluator>)context {
     CBLValidationBlock result = ^(CBLRevision* newRevision, id<CBLValidationContext> validationContext) {
-        TDUnsavedRevisionProxy * revisionProxy = [[TDUnsavedRevisionProxy alloc] initWithExecutionContext:context CBLUnsavedRevision:(CBLUnsavedRevision *)newRevision];
+        // TODO need a document for the unsaved revision proxy!
+        TDUnsavedRevisionProxy * revisionProxy = [TDUnsavedRevisionProxy proxyWithDocument:nil unsavedRevision:(CBLUnsavedRevision *)newRevision];
         id contextDoc = [NSNull null]; // TODO
         id result = [callback call:[NSArray arrayWithObjects:revisionProxy, contextDoc, nil] thisObject:nil];
         if (![result boolValue]) {

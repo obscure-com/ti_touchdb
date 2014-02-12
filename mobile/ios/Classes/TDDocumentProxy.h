@@ -7,10 +7,9 @@
 //
 
 #import "TiProxy.h"
-#import "CouchbaseLite.h"
 
-@class TDSavedRevisionProxy;
+@class TDDatabaseProxy;
 
 @interface TDDocumentProxy : TiProxy
-- (id)initWithExecutionContext:(id<TiEvaluator>)context CBLDocument:(CBLDocument *)document;
++ (instancetype)proxyWithDatabase:(TDDatabaseProxy *)database document:(CBLDocument *)document;
 @end

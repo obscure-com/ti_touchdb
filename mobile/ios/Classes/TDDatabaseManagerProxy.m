@@ -110,6 +110,7 @@
     self.lastError = nil;
 
     TDDatabaseProxy * result = [self.databaseProxyCache objectForKey:name];
+
     if (!result) {
         NSError * error = nil;
         CBLDatabase * db = [self.databaseManager existingDatabaseNamed:name error:&error];
@@ -120,8 +121,11 @@
         }
         
         result = [TDDatabaseProxy proxyWithManager:self database:db];
-        [self.databaseProxyCache setObject:result forKey:name];
+        if (result) {
+            [self.databaseProxyCache setObject:result forKey:name];
+        }
     }
+    
     return result;
 }
 

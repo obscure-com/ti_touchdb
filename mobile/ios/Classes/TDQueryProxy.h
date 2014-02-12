@@ -8,6 +8,8 @@
 
 #import "TiProxy.h"
 
+@class TDDatabaseProxy;
+
 @interface TDQueryProxy : TiProxy
-- (id)initWithExecutionContext:(id<TiEvaluator>)context CBLQuery:(CBLQuery *)query;
++ (instancetype)proxyWithDatabase:(TDDatabaseProxy *)database query:(CBLQuery *)query;
 @end

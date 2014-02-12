@@ -8,6 +8,8 @@
 
 #import "TiProxy.h"
 
+@class TDRevisionProxyBase;
+
 @interface TDAttachmentProxy : TiProxy
-- (id)initWithExecutionContext:(id<TiEvaluator>)context CBLAttachment:(CBLAttachment *)attachment;
++ (instancetype)proxyWithRevision:(TDRevisionProxyBase *)revision attachment:(CBLAttachment *)attachment;
 @end

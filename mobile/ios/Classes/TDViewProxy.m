@@ -7,17 +7,25 @@
 //
 
 #import "TDViewProxy.h"
+#import "TDDatabaseProxy.h"
 #import "TDBridge.h"
 #import "TDQueryProxy.h"
 
 @interface TDViewProxy ()
+@property (nonatomic, assign) TDDatabaseProxy * database;
 @property (nonatomic, strong) CBLView * view;
 @end
 
 @implementation TDViewProxy
 
-- (id)initWithExecutionContext:(id<TiEvaluator>)context CBLView:(CBLView *)view {
-    if (self = [super _initWithPageContext:context]) {
++ (instancetype)proxyWithDatabase:(TDDatabaseProxy *)database view:(CBLView *)view {
+    return [[[TDViewProxy alloc] initWithDatabase:database view:view] autorelease];
+    
+}
+
+- (id)initWithDatabase:(TDDatabaseProxy *)database view:(CBLView *)view {
+    if (self = [super _initWithPageContext:database.pageContext]) {
+        self.database = database;
         self.view = view;
     }
     return self;
@@ -78,7 +86,7 @@
 
 - (id)createQuery:(id)args {
     CBLQuery * query = [self.view createQuery];
-    return query ? [[TDQueryProxy alloc] initWithExecutionContext:[self executionContext] CBLQuery:query] : nil;
+    return query ? [TDQueryProxy proxyWithDatabase:self.database query:query] : nil;
 }
 
 @end

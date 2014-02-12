@@ -12,6 +12,7 @@
 #import "TiBlob.h"
 
 @interface TDAttachmentProxy ()
+@property (nonatomic, assign) TDRevisionProxyBase * revision;
 @property (nonatomic, strong) CBLAttachment * attachment;
 @end
 
@@ -21,8 +22,13 @@
     NSError * lastError;
 }
 
-- (id)initWithExecutionContext:(id<TiEvaluator>)context CBLAttachment:(CBLAttachment *)attachment {
-    if (self = [super _initWithPageContext:context]) {
++ (instancetype)proxyWithRevision:(TDRevisionProxyBase *)revision attachment:(CBLAttachment *)attachment {
+    return [[[TDAttachmentProxy alloc] initWithRevision:revision attachment:attachment] autorelease];
+}
+
+- (id)initWithRevision:(TDRevisionProxyBase *)revision attachment:(CBLAttachment *)attachment {
+    if (self = [super _initWithPageContext:revision.pageContext]) {
+        self.revision = revision;
         self.attachment = attachment;
     }
     return self;

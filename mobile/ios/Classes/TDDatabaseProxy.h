@@ -9,7 +9,10 @@
 #import "TiProxy.h"
 
 @class TDDatabaseManagerProxy;
+@class TDDocumentProxy;
 
 @interface TDDatabaseProxy : TiProxy
 + (instancetype)proxyWithManager:(TDDatabaseManagerProxy *)manager database:(CBLDatabase *)database;
+
+- (TDDocumentProxy *)_existingDocumentWithID:(NSString *)documentID;
 @end

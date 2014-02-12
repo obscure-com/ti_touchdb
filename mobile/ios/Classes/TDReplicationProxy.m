@@ -7,19 +7,26 @@
 //
 
 #import "TDReplicationProxy.h"
+#import "TDDatabaseProxy.h"
 #import "TiProxy+Errors.h"
 
 extern NSString * CBL_ReplicatorProgressChangedNotification;
 extern NSString * CBL_ReplicatorStoppedNotification;
 
 @interface TDReplicationProxy ()
+@property (nonatomic, assign) TDDatabaseProxy * database;
 @property (nonatomic, strong) CBLReplication * replication;
 @end
 
 @implementation TDReplicationProxy
 
-- (id)initWithExecutionContext:(id<TiEvaluator>)context CBLReplication:(CBLReplication *)replication {
-    if (self = [super _initWithPageContext:context]) {
++ (instancetype)proxyWithDatabase:(TDDatabaseProxy *)database replication:(CBLReplication *)replication {
+    return [[[TDReplicationProxy alloc] initWithDatabase:database replication:replication] autorelease];
+}
+
+- (id)initWithDatabase:(TDDatabaseProxy *)database replication:(CBLReplication *)replication {
+    if (self = [super _initWithPageContext:database.pageContext]) {
+        self.database = database;
         self.replication = replication;
 
         /*

@@ -8,9 +8,11 @@
 
 #import "TDDocumentProxy.h"
 #import "TiProxy+Errors.h"
+#import "TDDatabaseProxy.h"
 #import "TDRevisionProxy.h"
 
 @interface TDDocumentProxy ()
+@property (nonatomic, assign) TDDatabaseProxy * database;
 @property (nonatomic, strong) CBLDocument * document;
 @end
 
@@ -20,8 +22,13 @@
     NSError * lastError;
 }
 
-- (id)initWithExecutionContext:(id<TiEvaluator>)context CBLDocument:(CBLDocument *)document {
-    if (self = [super _initWithPageContext:context]) {
++ (instancetype)proxyWithDatabase:(TDDatabaseProxy *)database document:(CBLDocument *)document {
+    return [[[TDDocumentProxy alloc] initWithDatabase:database CBLDocument:document] autorelease];
+}
+
+- (id)initWithDatabase:(TDDatabaseProxy *)database CBLDocument:(CBLDocument *)document {
+    if (self = [super _initWithPageContext:database.pageContext]) {
+        self.database = database;
         self.document = document;
     }
     return self;
@@ -71,7 +78,7 @@
 - (id)currentRevision {
     CBLSavedRevision * revision = [self.document currentRevision];
     if (revision) {
-        return [[TDSavedRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLSavedRevision:revision];
+        return [TDSavedRevisionProxy proxyWithDocument:self savedRevision:revision];
     }
     else {
         return nil;
@@ -86,7 +93,7 @@
 
     CBLSavedRevision * revision = [self.document revisionWithID:revID];
     if (revision) {
-        return [[TDSavedRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLSavedRevision:revision];
+        return [TDSavedRevisionProxy proxyWithDocument:self savedRevision:revision];
     }
     else {
         return nil;
@@ -103,7 +110,7 @@
     
     NSMutableArray * result = [NSMutableArray arrayWithCapacity:[revs count]];
     for (CBLSavedRevision * rev in revs) {
-        [result addObject:[[TDSavedRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLSavedRevision:rev]];
+        [result addObject:[TDSavedRevisionProxy proxyWithDocument:self savedRevision:rev]];
     }
     return result;
 }
@@ -118,7 +125,7 @@
     
     NSMutableArray * result = [NSMutableArray arrayWithCapacity:[revs count]];
     for (CBLSavedRevision * rev in revs) {
-        [result addObject:[[TDSavedRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLSavedRevision:rev]];
+        [result addObject:[TDSavedRevisionProxy proxyWithDocument:self savedRevision:rev]];
     }
     return result;
 }
@@ -127,7 +134,7 @@
     RELEASE_TO_NIL(lastError)
 
     CBLUnsavedRevision * rev = [self.document newRevision];
-    return rev ? [[TDUnsavedRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLUnsavedRevision:rev] : nil;
+    return rev ? [TDUnsavedRevisionProxy proxyWithDocument:self unsavedRevision:rev] : nil;
 }
 
 #pragma mark Document Properties
@@ -157,7 +164,7 @@
 
     CBLSavedRevision * rev = [self.document putProperties:props error:&lastError];
     [lastError retain];
-    return rev ? [[TDSavedRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLSavedRevision:rev] : nil;
+    return rev ? [TDSavedRevisionProxy proxyWithDocument:self savedRevision:rev] : nil;
 }
 
 #pragma mark Change Notifications
