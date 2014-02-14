@@ -113,7 +113,7 @@
 }
 
 - (id)keys {
-    return self.query.keys;
+    return self.query.keys ? self.query.keys : @[];
 }
 
 - (void)setKeys:(id)value {
@@ -163,6 +163,10 @@
     CBLQueryEnumerator * e = [self.query run:&error];
     self.lastError = error;
     
+    if (error) {
+        NSLog(@"run error: %@", error);
+    }
+    
     return e ? [TDQueryEnumeratorProxy proxyWithQuery:self queryEnumerator:e] : nil;
 }
 
@@ -195,12 +199,12 @@
     return NUMBOOL(self.enumerator.stale);
 }
 
-- (id)nextRow:(id)args {
+- (id)next:(id)args {
     CBLQueryRow * row = [self.enumerator nextRow];
     return row ? [TDQueryRowProxy proxyWithQueryEnumerator:self queryRow:row] : nil;
 }
 
-- (id)rowAtIndex:(id)args {
+- (id)getRow:(id)args {
     NSNumber * index;
     ENSURE_ARG_AT_INDEX(index, args, 0, NSNumber)
     

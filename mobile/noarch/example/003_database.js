@@ -5,17 +5,17 @@ var utils = require('test_utils');
 
 module.exports = function() {
   var titouchdb = require('com.obscure.titouchdb'),
-      manager = titouchdb.databaseManager,
-      db;
+      manager = titouchdb.databaseManager;
 
   describe('database (general)', function() {
+    var db;
 
     before(function() {
       utils.delete_nonsystem_databases(manager);
       
       // load up the elements db
       utils.install_elements_database(manager);
-      db = manager.getDatabase('elements');
+      db = manager.getExistingDatabase('elements');
     });
 
     it('must have a documentCount property', function() {
@@ -68,6 +68,11 @@ module.exports = function() {
 
 
   describe('database (documents)', function() {
+    var db;
+    
+    before(function() {
+      db = manager.getExistingDatabase('elements');
+    });
     
     it('must have a createDocument function', function() {
       should(db.createDocument).be.a.Function;
@@ -78,12 +83,16 @@ module.exports = function() {
 
     it('must have a getDocument function', function() {
       should(db.getDocument).be.a.Function;
-
+    });
+    
+    it('must return an existing doc from getDocument() when the doc ID exists', function() {
       var existing = db.getDocument('59215DBF-69E2-4F0F-9D38-9A430F5A731C');
       should.exist(existing);
       should(existing).be.an.Object;
       should.not.exist(db.error);
-      
+    });
+    
+    it('must return a new doc from getDocument() when the doc ID does not exist', function() {
       var newdoc = db.getDocument('getdocument-test-new-doc-id');
       should.exist(newdoc);
       should(newdoc).be.an.Object;
@@ -102,6 +111,16 @@ module.exports = function() {
       should.not.exist(nonexisting);
     });
 
+    it('must not save a document until a call to putProperties', function() {
+      var c1 = db.documentCount;
+      var doc = db.getDocument();
+      var c2 = db.documentCount;
+      c1.should.eql(c2);
+      doc.putProperties({foo:10});
+      var c3 = db.documentCount;
+      c3.should.eql(c1+1);
+    });
+
     it.skip('must have a getValidation function', function() {
       should(db.getValidation).be.a.Function;
     });
@@ -109,7 +128,7 @@ module.exports = function() {
     it.skip('must have a setValidation function', function() {
       should(db.setValidation).be.a.Function;
     });
-  
+    
     // LOCAL DOCUMENTS
     
     it('must have a deleteLocalDocument function', function() {
@@ -127,12 +146,14 @@ module.exports = function() {
   
 
   describe('database (views)', function() {
+    var db = manager.getDatabase('test003_views');
     
     it('must have a createAllDocumentsQuery function', function() {
       should(db.createAllDocumentsQuery).be.a.Function;
       var q = db.createAllDocumentsQuery();
       should.not.exist(db.error);
       should.exist(q);
+      should(q).be.an.Object;
     });
     
     it('must have a getExistingView function', function() {
@@ -147,7 +168,8 @@ module.exports = function() {
   
 
   describe('database (replications)', function() {
-
+    var db = manager.getDatabase('test003_replications');
+    
     it.skip('must have a filterCompiler property', function() {
       should(db).have.property('filterCompiler');
     });
