@@ -19,6 +19,7 @@
 @property (nonatomic, assign) TDDatabaseManagerProxy * managerProxy;
 @property (nonatomic, strong) CBLDatabase * database;
 @property (nonatomic, strong) NSMutableDictionary * documentProxyCache;
+@property (nonatomic, strong) NSMutableDictionary * validationProxyCache;
 - (id)initWithManager:(TDDatabaseManagerProxy *)manager database:(CBLDatabase *)database;
 @end
 
@@ -39,6 +40,7 @@ extern NSString* const kCBLDatabaseChangeNotification;
         self.managerProxy = manager;
         self.database = database;
         self.documentProxyCache = [NSMutableDictionary dictionary];
+        self.validationProxyCache = [NSMutableDictionary dictionary];
     }
     return self;
 }
@@ -208,7 +210,14 @@ extern NSString* const kCBLDatabaseChangeNotification;
     return view ? [TDViewProxy proxyWithDatabase:self view:view] : nil;
 }
 
-- (id)defineValidation:(id)args {
+- (id)getValidation:(id)args {
+    NSString * name;
+    ENSURE_ARG_AT_INDEX(name, args, 0, NSString);
+
+    return [self.validationProxyCache objectForKey:name];
+}
+
+- (void)setValidation:(id)args {
     NSString * name;
     KrollCallback * callback;
     ENSURE_ARG_AT_INDEX(name, args, 0, NSString);
@@ -217,14 +226,14 @@ extern NSString* const kCBLDatabaseChangeNotification;
     RELEASE_TO_NIL(lastError)
     
     if (callback) {
-        CBLValidationBlock validation = [[TDBridge sharedInstance] validationBlockForCallback:callback inExecutionContext:[self executionContext]];
+        CBLValidationBlock validation = [[TDBridge sharedInstance] validationBlockInDatabase:self forCallback:callback];
         [self.database setValidationNamed:name asBlock:validation];
+        [self.validationProxyCache setObject:callback forKey:name];
     }
     else {
         [self.database setValidationNamed:name asBlock:nil];
+        [self.validationProxyCache removeObjectForKey:name];
     }
-    
-    return nil;
 }
 
 - (id)defineFilter:(id)args {

@@ -121,11 +121,11 @@ module.exports = function() {
       c3.should.eql(c1+1);
     });
 
-    it.skip('must have a getValidation function', function() {
+    it('must have a getValidation function', function() {
       should(db.getValidation).be.a.Function;
     });
   
-    it.skip('must have a setValidation function', function() {
+    it('must have a setValidation function', function() {
       should(db.setValidation).be.a.Function;
     });
     
