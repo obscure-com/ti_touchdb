@@ -140,6 +140,9 @@ extern NSString* const kCBLDatabaseChangeNotification;
     return proxy;
 }
 
+- (void)_removeProxyForDocument:(NSString *)documentID {
+    [self.documentProxyCache removeObjectForKey:documentID];
+}
 
 - (id)error {
     return lastError ? [self errorDict:lastError] : nil;

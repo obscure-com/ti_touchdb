@@ -23,7 +23,7 @@ module.exports = function() {
     
     it('must have a database property', function() {
       should(q).have.property('database');
-      should(q.database).eql(db);
+      should(q.database).be.exactly(db);
     });
     
     it('must have a descending property', function() {

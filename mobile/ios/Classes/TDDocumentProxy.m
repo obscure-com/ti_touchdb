@@ -12,7 +12,7 @@
 #import "TDRevisionProxy.h"
 
 @interface TDDocumentProxy ()
-@property (nonatomic, assign) TDDatabaseProxy * database;
+@property (nonatomic, assign) TDDatabaseProxy * db;
 @property (nonatomic, strong) CBLDocument * document;
 @end
 
@@ -28,7 +28,7 @@
 
 - (id)initWithDatabase:(TDDatabaseProxy *)database CBLDocument:(CBLDocument *)document {
     if (self = [super _initWithPageContext:database.pageContext]) {
-        self.database = database;
+        self.db = database;
         self.document = document;
     }
     return self;
@@ -57,6 +57,7 @@
 
 - (id)deleteDocument:(id)args {
     RELEASE_TO_NIL(lastError)
+    [self.db _removeProxyForDocument:self.document.documentID];
     BOOL result = [self.document deleteDocument:&lastError];
     [lastError retain];
     return NUMBOOL(result);
@@ -64,9 +65,14 @@
 
 - (id)purgeDocument:(id)args {
     RELEASE_TO_NIL(lastError)
+    [self.db _removeProxyForDocument:self.document.documentID];
     BOOL result = [self.document purgeDocument:&lastError];
     [lastError retain];
     return NUMBOOL(result);
+}
+
+- (id)database {
+    return self.db;
 }
 
 #pragma mark REVISIONS:
@@ -85,7 +91,7 @@
     }
 }
 
-- (id)revisionWithID:(id)args {
+- (id)getRevision:(id)args {
     NSString * revID;
     ENSURE_ARG_AT_INDEX(revID, args, 0, NSString)
     
@@ -100,7 +106,7 @@
     }
 }
 
-- (id)getRevisionHistory:(id)args {
+- (id)revisionHistory {
     RELEASE_TO_NIL(lastError)
 
     NSArray * revs = [self.document getRevisionHistory:&lastError];
@@ -115,7 +121,7 @@
     return result;
 }
 
-- (id)getLeafRevisions:(id)args {
+- (id)leafRevisions {
     RELEASE_TO_NIL(lastError)
 
     NSArray * revs = [self.document getLeafRevisions:&lastError];
@@ -137,6 +143,10 @@
     return rev ? [TDUnsavedRevisionProxy proxyWithDocument:self unsavedRevision:rev] : nil;
 }
 
+- (id)conflictingRevisions {
+    return nil;
+}
+
 #pragma mark Document Properties
 
 - (id)properties {
@@ -147,7 +157,7 @@
     return self.document.userProperties;
 }
 
-- (id)propertyForKey:(id)args {
+- (id)getProperty:(id)args {
     NSString * key;
     ENSURE_ARG_AT_INDEX(key, args, 0, NSString)
     

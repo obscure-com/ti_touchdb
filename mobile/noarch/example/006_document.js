@@ -1,76 +1,196 @@
-Ti.include('test_utils.js')
+require('ti-mocha');
 
-var _ = require('underscore'),
-    touchdb = require('com.obscure.titouchdb');
+var should = require('should');
+var utils = require('test_utils');
 
-exports.run_tests = function() {
-  var mgr = touchdb.databaseManager;
-  var db = mgr.databaseNamed('test006');
-  try {
-    // document creation is tested in other files
+module.exports = function() {
+  var titouchdb = require('com.obscure.titouchdb'),
+      manager = titouchdb.databaseManager;
+
+  describe('document (general)', function() {
+    var db, doc, rev;
     
-    // document deletion
-    var doc1 = createDocWithProperties(db, {
-      a: 10,
-      b: false,
-      c: 'a string'
-    }, 'doc1');
-    assert(doc1.deleted == false, 'deleted flag set on doc1 before deletion');
-    var status = doc1.deleteDocument();
-    assert(status !== false, 'deleteDocument returned false: '+JSON.stringify(doc1.error));
-    assert(!doc1.error, 'error after call to deleteDocument()');
-    assert(doc1.deleted == true, 'doc1.deleted not set to true after call to deleteDocument() '+JSON.stringify(doc1.properties));
-    
-    var doc2 = db.documentWithID('doc1');
-    assert(doc2, 'could not reselect doc1 by ID');
-    assert(doc2.deleted, 'reselected doc was not deleted');
-    
-    /*
-    // purge document
-    // won't work until this is applied:
-    // https://github.com/couchbase/couchbase-lite-ios/pull/46
-    var doc2 = createDocWithProperties(db, {
-      pi: 3.14159
-    }, 'doc2');
-    
-    var purgeResult = doc2.purgeDocument();
-    assert(!doc2.error, 'error after call to purgeDocument(): '+JSON.stringify(doc2.error));
-    assert(purgeResult, 'purgeDocument returned false');
-    
-    var doc3 = db.cachedDocumentWithID('doc2');
-    assert(!doc3, 'db returned a purged document: '+JSON.stringify(doc3));
-    */
-    
-    // TODO doc properties
-    var doc4 = createDocWithProperties(db, {
-      "item": "apple",
-      "prices": {
-          "Fresh Mart": 1.59,
-          "Price Max": 5.99,
-          "Apples Express": 0.79
-      }      
+    before(function() {
+      utils.delete_nonsystem_databases(manager);
+      db = manager.getDatabase('test006_docgeneral');
+      doc = db.getDocument();
+      rev = doc.putProperties({ name: "generic doc", tag: 5 });
     });
-    var p4 = doc4.properties;
-    assert(p4, 'missing properties for doc4');
-    assert(p4['_id'] == doc4.documentID, 'incorrect _id property: '+p4['_id']);
-    assert(p4._rev, 'missing _rev property');
-    assert(p4.item == 'apple', 'incorrect value for "item" property');
-    assert(p4.prices['Fresh Mart'] == 1.59, 'incorrect value for prices["Fresh Mart"] property');
-
-    var u4 = doc4.userProperties;
-    assert(u4, 'missing user properties for doc4');
-    assert(!u4._id, 'user properties should not contain _id');
-    assert(u4.item == 'apple', 'incorrect value for "item" user property');
-
-    assert(doc4.propertyForKey('item') == 'apple', 'incorrect value returned from propertyForKey: ' + doc4.propertyForKey('apple'));
-
-    // TODO notifications
     
-    db.deleteDatabase();
-  }
-  catch (e) {
-    db.deleteDatabase();
-    throw e;
-  }
+    it.skip('must have a conflictingRevisions property', function() {
+      should(doc).have.property('conflictingRevisions');
+    });
     
-}
+    it('must have a currentRevision property', function() {
+      should(doc).have.property('currentRevision', rev);
+    });
+    
+    it('must have a currentRevisionID property', function() {
+      should(doc).have.property('currentRevisionID');
+      doc.currentRevisionID.should.be.a.String;
+    });
+    
+    it('must have a database property', function() {
+      should(doc).have.property('database', db);
+    });
+
+    it('must have a deleted property', function() {
+      should(doc).have.property('deleted', false);
+    });
+    
+    it('must have a documentID property', function() {
+      should(doc).have.property('documentID');
+      doc.documentID.should.be.a.String;
+    });
+    
+    it('must have a leafRevisions property', function() {
+      should(doc).have.property('leafRevisions', [rev]);
+    });
+    
+    it.skip('must have a model property', function() {
+      should(doc).have.property('model');
+    });
+    
+    it('must have a properties property', function() {
+      should(doc).have.property('properties');
+      should(doc.properties).have.properties(['_id', '_rev']);
+    });
+    
+    it('must have a revisionHistory property', function() {
+      should(doc).have.property('revisionHistory', [rev]);
+    });
+
+    it('must have a userProperties property', function() {
+      should(doc).have.property('userProperties');
+      should(doc.userProperties).not.have.properties(['_id', '_rev']);
+    });
+
+    it.skip('must have an addChangeListener function', function() {
+      should(doc.addChangeListener).be.a.Function;
+    });
+    
+    it('must have a createRevision function', function() {
+      should(doc.createRevision).be.a.Function;
+    });
+    
+    it('must have a deleteDocument function', function() {
+      should(doc.deleteDocument).be.a.Function;
+    });
+    
+    it('must have a getProperty function', function() {
+      should(doc.getProperty).be.a.Function;
+    });
+    
+    it('must have a getRevision function', function() {
+      should(doc.getRevision).be.a.Function;
+    });
+    
+    it('must have a purgeDocument function', function() {
+      should(doc.purgeDocument).be.a.Function;
+    });
+    
+    it('must have a putProperties function', function() {
+      should(doc.putProperties).be.a.Function;
+    });
+    
+    it.skip('must have an removeChangeListener function', function() {
+      should(doc.removeChangeListener).be.a.Function;
+    });
+    
+    it.skip('must have an update function', function() {
+      should(doc.update).be.a.Function;
+    });
+  });
+  
+    
+  describe('document (lifecycle)', function() {
+    var db;
+    
+    before(function() {
+      utils.delete_nonsystem_databases(manager);
+      db = manager.getDatabase('test006_doclifecycle');
+    });
+    
+    it('must save a revision', function() {
+      var doc = db.getDocument();
+      var rev = doc.putProperties({
+        a: 10,
+        b: false,
+        c: 'a string'
+      });
+      should.exist(rev);
+      // TODO cache currentRevision
+      // should(doc.currentRevision).be.exactly(rev);
+      doc.deleted.should.eql(false);
+      should(doc.properties).have.properties({
+        a: 10,
+        b: false,
+        c: 'a string'
+      });
+    });
+    
+    it('must delete a document', function() {
+      var doc = db.getDocument();
+      var rev = doc.putProperties({name: 'short lived'});
+      doc.deleted.should.eql(false);
+      doc.deleteDocument();
+      
+      var redoc = db.getExistingDocument(doc.documentID);
+      redoc.deleted.should.eql(true);
+    });
+    
+    it('must purge a document', function() {
+      var doc = db.getDocument();
+      var rev = doc.putProperties({name: 'purgatory'});
+      var result = doc.purgeDocument();
+      result.should.be.ok;
+      
+      var redoc = db.getExistingDocument(doc.documentID);
+      should.not.exist(redoc);
+    });
+    
+    it('must support specifying a document ID', function() {
+      var doc = db.getDocument('document-with-id');
+      var rev = doc.putProperties({ name: 'doc with custom ID' });
+      doc.documentID.should.eql('document-with-id');
+      
+      var redoc = db.getExistingDocument('document-with-id');
+      should.exist(redoc);
+      should(redoc).be.exactly(doc);
+    });
+  });
+  
+  describe('document (properties)', function() {
+    var db, doc;
+    
+    before(function() {
+      utils.delete_nonsystem_databases(manager);
+      db = manager.getDatabase('test006_docprops');
+      
+      doc = db.getDocument();
+      doc.putProperties({
+        name: 'Paul', 
+        born: 1967,
+        aliases: ['Paul Egli', 'pegli', 'Igor'],
+        married: true
+      });
+    });
+    
+    it('must be able to fetch a property', function() {
+      doc.getProperty('name').should.eql('Paul');
+      doc.getProperty('born').should.eql(1967);
+      doc.getProperty('aliases')[1].should.eql('pegli');
+      doc.getProperty('married').should.eql(true);
+    });
+    
+    it('must have all props in the properties property', function() {
+      doc.properties.should.have.properties(['_id', '_rev', 'name', 'born', 'aliases', 'married']);
+    });
+
+    it('must not have _id and _rev in the userProperties property', function() {
+      doc.userProperties.should.have.properties(['name', 'born', 'aliases', 'married']);
+    });
+
+  });
+  
+};

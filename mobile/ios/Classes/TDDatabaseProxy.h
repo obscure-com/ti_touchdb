@@ -15,4 +15,5 @@
 + (instancetype)proxyWithManager:(TDDatabaseManagerProxy *)manager database:(CBLDatabase *)database;
 
 - (TDDocumentProxy *)_existingDocumentWithID:(NSString *)documentID;
+- (void)_removeProxyForDocument:(NSString *)documentID;
 @end

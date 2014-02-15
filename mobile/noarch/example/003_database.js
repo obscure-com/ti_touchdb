@@ -115,12 +115,12 @@ module.exports = function() {
       var c1 = db.documentCount;
       var doc = db.getDocument();
       var c2 = db.documentCount;
-      c1.should.eql(c2);
+      c1.should.be.exactly(c2);
       doc.putProperties({foo:10});
       var c3 = db.documentCount;
       c3.should.eql(c1+1);
     });
-
+    
     it('must have a getValidation function', function() {
       should(db.getValidation).be.a.Function;
     });

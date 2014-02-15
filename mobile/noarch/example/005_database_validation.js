@@ -28,7 +28,7 @@ module.exports = function() {
     it('must return stored validation functions', function() {
       var fn = db.getValidation('temp');
       should.exist(fn);
-      should(fn).eql(dummy_fn);
+      should(fn).be.exactly(dummy_fn);
     });
     
     it('must remove validations when set to null', function() {
