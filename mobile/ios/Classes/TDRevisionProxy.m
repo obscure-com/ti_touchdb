@@ -215,9 +215,12 @@
 }
 
 - (id)save:(id)args {
+    NSNumber * allowConflicts;
+    ENSURE_ARG_OR_NULL_AT_INDEX(allowConflicts, args, 0, NSNumber)
+    
     RELEASE_TO_NIL(lastError)
 
-    CBLSavedRevision * rev = [self.revision save:&lastError];
+    CBLSavedRevision * rev = [allowConflicts boolValue] ? [self.revision saveAllowingConflict:&lastError] : [self.revision save:&lastError];
     [lastError retain];
     
     return rev ? [TDSavedRevisionProxy proxyWithDocument:self.document savedRevision:rev] : nil;

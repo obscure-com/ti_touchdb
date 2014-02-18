@@ -106,19 +106,21 @@
     }
 }
 
+- (id)_revisionProxyArray:(NSArray *)revs {
+    NSMutableArray * result = [NSMutableArray arrayWithCapacity:[revs count]];
+    for (CBLSavedRevision * rev in revs) {
+        [result addObject:[TDSavedRevisionProxy proxyWithDocument:self savedRevision:rev]];
+    }
+    return result;
+}
+
 - (id)revisionHistory {
     RELEASE_TO_NIL(lastError)
 
     NSArray * revs = [self.document getRevisionHistory:&lastError];
     [lastError retain];
     
-    if (lastError) return nil;
-    
-    NSMutableArray * result = [NSMutableArray arrayWithCapacity:[revs count]];
-    for (CBLSavedRevision * rev in revs) {
-        [result addObject:[TDSavedRevisionProxy proxyWithDocument:self savedRevision:rev]];
-    }
-    return result;
+    return lastError ? nil : [self _revisionProxyArray:revs];
 }
 
 - (id)leafRevisions {
@@ -127,13 +129,7 @@
     NSArray * revs = [self.document getLeafRevisions:&lastError];
     [lastError retain];
     
-    if (lastError) return nil;
-    
-    NSMutableArray * result = [NSMutableArray arrayWithCapacity:[revs count]];
-    for (CBLSavedRevision * rev in revs) {
-        [result addObject:[TDSavedRevisionProxy proxyWithDocument:self savedRevision:rev]];
-    }
-    return result;
+    return lastError ? nil : [self _revisionProxyArray:revs];
 }
 
 - (id)createRevision:(id)args {
@@ -144,7 +140,12 @@
 }
 
 - (id)conflictingRevisions {
-    return nil;
+    RELEASE_TO_NIL(lastError)
+    
+    NSArray * revs = [self.document getConflictingRevisions:&lastError];
+    [lastError retain];
+    
+    return lastError ? nil : [self _revisionProxyArray:revs];
 }
 
 #pragma mark Document Properties
