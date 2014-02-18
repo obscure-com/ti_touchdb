@@ -11,6 +11,7 @@
 @class TDDocumentProxy;
 
 @interface TDRevisionProxyBase : TiProxy
+- (id)revisionID;
 @end
 
 @interface TDSavedRevisionProxy : TDRevisionProxyBase

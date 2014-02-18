@@ -119,8 +119,7 @@ module.exports = function() {
         c: 'a string'
       });
       should.exist(rev);
-      // TODO cache currentRevision
-      // should(doc.currentRevision).be.exactly(rev);
+      should(doc.currentRevision).be.exactly(rev);
       doc.deleted.should.eql(false);
       should(doc.properties).have.properties({
         a: 10,

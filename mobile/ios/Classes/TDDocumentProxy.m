@@ -14,6 +14,7 @@
 @interface TDDocumentProxy ()
 @property (nonatomic, assign) TDDatabaseProxy * db;
 @property (nonatomic, strong) CBLDocument * document;
+@property (nonatomic, strong) TDRevisionProxyBase * cachedCurrentRevision;
 @end
 
 @implementation TDDocumentProxy
@@ -82,13 +83,12 @@
 }
 
 - (id)currentRevision {
-    CBLSavedRevision * revision = [self.document currentRevision];
-    if (revision) {
-        return [TDSavedRevisionProxy proxyWithDocument:self savedRevision:revision];
+    if (!self.document.currentRevision) return nil;
+    
+    if (![[self.cachedCurrentRevision revisionID] isEqualToString:self.document.currentRevisionID]) {
+        self.cachedCurrentRevision = [TDSavedRevisionProxy proxyWithDocument:self savedRevision:self.document.currentRevision];
     }
-    else {
-        return nil;
-    }
+    return self.cachedCurrentRevision;
 }
 
 - (id)getRevision:(id)args {
@@ -174,7 +174,11 @@
 
     CBLSavedRevision * rev = [self.document putProperties:props error:&lastError];
     [lastError retain];
-    return rev ? [TDSavedRevisionProxy proxyWithDocument:self savedRevision:rev] : nil;
+    
+    if (!rev) return nil;
+    
+    self.cachedCurrentRevision = [TDSavedRevisionProxy proxyWithDocument:self savedRevision:rev];
+    return self.cachedCurrentRevision;
 }
 
 #pragma mark Change Notifications
