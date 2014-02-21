@@ -11,6 +11,7 @@
 @class TDDocumentProxy;
 
 @interface TDRevisionProxyBase : TiProxy
+@property (nonatomic, assign) TDDocumentProxy * doc;
 - (id)revisionID;
 @end
 

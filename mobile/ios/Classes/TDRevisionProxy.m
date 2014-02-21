@@ -17,7 +17,6 @@
     @package
     NSError * lastError;
 }
-@property (nonatomic, assign) TDDocumentProxy * doc;
 @property (nonatomic, strong) CBLRevision * revision;
 @end
 

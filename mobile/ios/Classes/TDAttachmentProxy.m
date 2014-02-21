@@ -12,7 +12,7 @@
 #import "TiBlob.h"
 
 @interface TDAttachmentProxy ()
-@property (nonatomic, assign) TDRevisionProxyBase * revision;
+@property (nonatomic, assign) TDRevisionProxyBase * rev;
 @property (nonatomic, strong) CBLAttachment * attachment;
 @end
 
@@ -28,7 +28,7 @@
 
 - (id)initWithRevision:(TDRevisionProxyBase *)revision attachment:(CBLAttachment *)attachment {
     if (self = [super _initWithPageContext:revision.pageContext]) {
-        self.revision = revision;
+        self.rev = revision;
         self.attachment = attachment;
     }
     return self;
@@ -37,6 +37,14 @@
 - (void)dealloc {
     RELEASE_TO_NIL(lastError)
     [super dealloc];
+}
+
+- (id)revision {
+    return self.rev;
+}
+
+- (id)document {
+    return self.rev.doc;
 }
 
 - (id)name {
