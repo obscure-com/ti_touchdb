@@ -197,6 +197,14 @@ module.exports = function() {
       should(doc.currentRevision).eql(null);
     });
     
+    it('must return an unsaved revision from createRevision in a new document', function() {
+      var doc = db.getDocument();
+      var rev = doc.createRevision();
+      should.exist(rev);
+      rev.properties.should.have.properties(['_id']);
+      should(rev.save).be.a.Function; // indicates SavedRevision
+    });
+    
     it('must create a single revision', function() {
       var doc = db.getDocument();
       var rev = doc.putProperties({

@@ -12,7 +12,6 @@
 #import "TDRevisionProxy.h"
 
 @interface TDDocumentProxy ()
-@property (nonatomic, assign) TDDatabaseProxy * db;
 @property (nonatomic, strong) CBLDocument * document;
 @property (nonatomic, strong) TDRevisionProxyBase * cachedCurrentRevision;
 @end

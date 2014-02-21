@@ -11,5 +11,6 @@
 @class TDDatabaseProxy;
 
 @interface TDDocumentProxy : TiProxy
+@property (nonatomic, assign) TDDatabaseProxy * db;
 + (instancetype)proxyWithDatabase:(TDDatabaseProxy *)database document:(CBLDocument *)document;
 @end

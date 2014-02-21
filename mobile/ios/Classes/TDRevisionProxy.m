@@ -17,7 +17,7 @@
     @package
     NSError * lastError;
 }
-@property (nonatomic, assign) TDDocumentProxy * document;
+@property (nonatomic, assign) TDDocumentProxy * doc;
 @property (nonatomic, strong) CBLRevision * revision;
 @end
 
@@ -28,24 +28,28 @@
     [super dealloc];
 }
 
-- (id)isDeletion {
-    return NUMBOOL(self.revision.isDeletion);
+- (id)database {
+    return self.doc.db;
 }
 
-- (id)isGone {
-    return NUMBOOL(self.revision.isGone);
+- (id)document {
+    return self.doc;
+}
+
+- (id)isDeletion {
+    return NUMBOOL(self.revision.isDeletion);
 }
 
 - (id)revisionID {
     return self.revision.revisionID;
 }
 
-- (id)parentRevision {
+- (id)parent {
     CBLSavedRevision * rev = self.revision.parentRevision;
     return rev ? [TDSavedRevisionProxy proxyWithDocument:self.document savedRevision:rev] : nil;
 }
 
-- (id)parentRevisionID {
+- (id)parentID {
     return self.revision.parentRevisionID;
 }
 
@@ -57,7 +61,7 @@
     return self.revision.userProperties;
 }
 
-- (id)propertyForKey:(id)args {
+- (id)getProperty:(id)args {
     NSString * key;
     ENSURE_ARG_AT_INDEX(key, args, 0, NSString)
     
@@ -66,7 +70,7 @@
     return [self.revision.properties objectForKey:key];
 }
 
-- (id)getRevisionHistory:(id)args {
+- (id)revisionHistory {
     RELEASE_TO_NIL(lastError)
     
     NSArray * revs = [self.revision getRevisionHistory:&lastError];
@@ -99,6 +103,7 @@
     for (CBLAttachment * att in self.revision.attachments) {
         [result addObject:[TDAttachmentProxy proxyWithRevision:self attachment:att]];
     }
+
     return result;
 }
 
@@ -121,6 +126,7 @@
 
 - (id)initWithDocument:(TDDocumentProxy *)document savedRevision:(CBLSavedRevision *)revision {
     if (self = [super _initWithPageContext:document.pageContext]) {
+        self.doc = document;
         self.revision = revision;
     }
     return self;
@@ -186,7 +192,7 @@
 
 - (id)initWithDocument:(TDDocumentProxy *)document unsavedRevision:(CBLUnsavedRevision *)revision {
     if (self = [super _initWithPageContext:document.pageContext]) {
-        self.document = document;
+        self.doc = document;
         self.revision = revision;
     }
     return self;
@@ -229,14 +235,23 @@
 - (void)setAttachment:(id)args {
     NSString * name;
     NSString * contentType;
-    TiBlob * content;
+    NSObject * content;
     ENSURE_ARG_AT_INDEX(name, args, 0, NSString)
     ENSURE_ARG_AT_INDEX(contentType, args, 1, NSString)
-    ENSURE_ARG_AT_INDEX(content, args, 2, TiBlob)
+    ENSURE_ARG_AT_INDEX(content, args, 2, NSObject)
     
     RELEASE_TO_NIL(lastError)
 
-    [self.revision setAttachmentNamed:name withContentType:contentType content:content.data];
+    if ([content isKindOfClass:[TiBlob class]]) {
+        [self.revision setAttachmentNamed:name withContentType:contentType content:((TiBlob *)content).data];
+    }
+    else if ([content isKindOfClass:[NSString class]]) {
+        NSURL * contentUrl = [NSURL URLWithString:(NSString *)content];
+        [self.revision setAttachmentNamed:name withContentType:contentType contentURL:contentUrl];
+    }
+    else {
+        // TODO type error?
+    }
 }
 
 - (void)removeAttachment:(id)args {
