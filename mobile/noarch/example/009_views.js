@@ -1,133 +1,208 @@
-Ti.include('test_utils.js')
+require('ti-mocha');
 
-var _ = require('underscore'),
-    touchdb = require('com.obscure.titouchdb');
+var should = require('should');
+var utils = require('test_utils');
 
-exports.run_tests = function() {
-  var mgr = touchdb.databaseManager;
-  var db = mgr.databaseNamed('test009');
+module.exports = function() {
+  var titouchdb = require('com.obscure.titouchdb'),
+      manager = titouchdb.databaseManager;
+      
+  describe('view (general)', function() {
+    var db, view;
+    
+    before(function() {
+      utils.delete_nonsystem_databases(manager);
+      utils.install_elements_database(manager);
+      db = manager.getExistingDatabase('elements');
+      view = db.getView('test');
+      view.setMapReduce(function(doc) {
+        emit(doc._id, 1);
+      },
+      function(keys, values, rereduce) {
+        var result = 0;
+        for (i in values) {
+          result += values[i];
+        }
+        return result;
+      },
+      '1');
+    });
+    
+    it('must have a database property', function() {
+      should(view).have.property('database', db);
+    });
+    
+    it('must have a isStale property', function() {
+      should(view).have.property('isStale');
+      view.isStale.should.be.a.Boolean;
+    });
+    
+    it('must have a lastSequenceIndexed property', function() {
+      should(view).have.property('lastSequenceIndexed');
+      view.lastSequenceIndexed.should.be.a.Number;
+    });
+    
+    it('must have a map property', function() {
+      should(view).have.property('map');
+      should(view.map).be.a.Function;
+    });
+    
+    it('must have a name property', function() {
+      should(view).have.property('name', 'test');
+    });
+    
+    it('must have a reduce property', function() {
+      should(view).have.property('reduce');
+      should(view.reduce).be.a.Function;
+    });
+    
+    it('must have a createQuery method', function() {
+      should(view.createQuery).be.a.Function;
+    });
+    
+    it('must have a deleteView method', function() {
+      should(view.deleteView).be.a.Function;
+    });
+    
+    it('must have a deleteIndex method', function() {
+      should(view.deleteIndex).be.a.Function;
+    });
+    
+    it('must have a setMap method', function() {
+      should(view.setMap).be.a.Function;
+    });
+    
+    it('must have a setMapReduce method', function() {
+      should(view.setMapReduce).be.a.Function;
+    });
+  });
   
-  try {
-    // String.format("%02d", i) outputs '00' every time??!?!
-    function genname(str, n) {
-      return str + (n < 10 ? '0' + n : n);
-    }
+  describe('view (lifecycle)', function() {
+    var db;
     
-    for (i=0; i < 50; i++) {
-      createDocWithProperties(db, {
-        name: genname('test', i),
-        i: i,
-        dt: [2013, 1, 3]
-      });
-    }
+    before(function() {
+      db = manager.getDatabase('test008_viewlifecycle');
+    });
     
-    (function() {
-      var view = db.viewNamed('vu');
-      assert(view, 'db.viewNamed() returned null');
-      assert(view.name === 'vu', 'returned incorrect view name: '+view.name);
-
+    it('must create a view', function() {
+      var view = db.getView('test1');
       view.setMap(function(doc) {
-        emit(doc.name, doc.i);
-      }, '1');
-
-    
-      (function() {
-        var rows = view.createQuery().run();
-        assert(rows, 'no rows for view query');
-        assert(rows.count == 50, 'incorrect number of rows: '+rows.count);
-
-        for (i=0; i < 50; i++) {
-          var row = rows.rowAtIndex(i);
-          assert(row.key === genname('test', i), 'incorrect row key: '+row.key+", should be "+genname('test', i));
-          assert(row.value === i, 'incorrect row value: '+row.value);
-        }
-      })();
-    
-      (function() {
-        // test query parameters
-        var query = view.createQuery();
-        query.limit = 10;
-        query.skip = 10;
-        var rows = query.run();
-        assert(rows.count === 10, 'incorrect number of rows returned (limit): '+rows.count);
-        for (var i=0; i < 10; i++) {
-          var row = rows.rowAtIndex(i);
-          assert(row.key === genname('test', i+query.skip), 'incorrect row key: '+row.key+", should be "+genname('test', i+query.skip));
-          assert(row.value === i+query.skip, 'incorrect row value: '+row.value);
-        }
-      })();
-    
-      (function(){
-        var query = view.createQuery();
-        query.startKey = 'test22';
-        query.endKey = 'test28';
-        var rows = query.run();
-        assert(rows.count === 7, 'incorrect number of rows returned (startkey): '+rows.count);
-        for (var i=0; i < 7; i++) {
-          var row = rows.rowAtIndex(i);
-          assert(row.key === genname('test', i+22), 'incorrect row key: '+row.key+", should be "+genname('test', i+22));
-          assert(row.value === i+22, 'incorrect row value: '+row.value);
-        }
-      
-      })();
-    })();
-    
-    (function(){
-      // complex keys
-      var view = db.viewNamed('complexView');
-      assert(view, 'db.viewNamed() returned null');
-      assert(view.name === 'complexView', 'returned incorrect view name: '+view.name);
-
-      view.setMap(function(doc) {
-        emit([doc.name, doc.i % 3], null);
+        emit(doc._id, null);
       }, '1');
       
-      var rows = view.createQuery().run();
-      assert(rows, 'no rows for view query');
-      assert(rows.count == 50, 'incorrect number of rows: '+rows.count);
-
-      for (i=0; i < 50; i++) {
-        var row = rows.rowAtIndex(i);
-        assert(_.isArray(row.key), 'row key is not an array: '+row.key);
-        assert(row.key0 === genname('test', i), 'incorrect row key0 at row '+i+': '+row.key0+", should be "+genname('test', i));
-        assert(row.key1 === i % 3, 'incorrect row key1 at row '+i+': '+row.key1+", should be "+(i % 3));
-        assert(row.value === null, 'incorrect row value: '+row.value);
-      }
-    })();
+      var viewreselect = db.getExistingView('test1');
+      should.exist(viewreselect);
+      view.name.should.eql(viewreselect.name);
+    });
     
-    (function(){
-      // reduce
-      var view = db.viewNamed('reducedView');
+    it('must be stale if it has not been queried', function() {
+      var view = db.getExistingView('test1');
+      utils.create_test_documents(db, 4);
+      view.isStale.should.be.true;
+    });
 
-      view.setMapAndReduce(
-        function(doc) {
-          emit("foo", 1);
-        },
-        function(keys, values, rereduce) {
-          var sum = 0;
-          for (i=0; i < values.length; i++) {
-            sum += values[i];
-          }
-          return sum;
-        },
-        '1'
-      );
+    it('must delete a view', function() {
+      db.getView('test1').deleteView();
+      var v = db.getExistingView('test1');
+      should.not.exist(v);
+    });
+    
+  });
+  
+  describe('view (map only)', function() {
+    var db, view;
+    
+    before(function() {
+      utils.delete_nonsystem_databases(manager);
+      utils.install_elements_database(manager);
+      db = manager.getExistingDatabase('elements');
       
-      var query = view.createQuery();
-      query.groupLevel = 1;
-      var rows = query.run();
-      assert(rows, 'missing rows from map/reduce query');
-      assert(rows.count == 1, 'incorrect number of rows: '+rows.count);
-      var row = rows.rowAtIndex(0);
-      assert(row, "missing first row");
-      assert(row.value == 50, "incorrect sum value: "+row.value);
-    })();
+      view = db.getView('noble_gases');
+    });
+    
+    it('must set a map function', function() {
+      var map = function(doc) {
+        var noble_atnos = [2, 10, 18, 36, 54, 86];
+        if (!!~noble_atnos.indexOf(doc.atomic_number)) {
+          emit(doc.name, doc.atomic_number);
+        }
+      };
+      view.setMap(map, '1');
+      should(view.map).be.a.Function;
+      should(view.map).be.exactly(map);
+    });
+    
+    it('must return the correct number of rows from a query', function() {
+      var q = view.createQuery();
+      should.exist(q);
+      
+      var e = q.run();
+      e.count.should.eql(6);
+    });
+    
+    it('must return the correct keys and values from a query', function() {
+      var e = view.createQuery().run();
+      e.getRow(0).key.should.eql('Argon');
+      e.getRow(0).value.should.eql(18);
+      e.getRow(1).key.should.eql('Helium');
+      e.getRow(1).value.should.eql(2);
+      e.getRow(2).key.should.eql('Krypton');
+      e.getRow(2).value.should.eql(36);
+      e.getRow(3).key.should.eql('Neon');
+      e.getRow(3).value.should.eql(10);
+      e.getRow(4).key.should.eql('Radon');
+      e.getRow(4).value.should.eql(86);
+      e.getRow(5).key.should.eql('Xenon');
+      e.getRow(5).value.should.eql(54);
+    });
+  });
+  
+  describe('view (map/reduce)', function() {
+    var db, view;
+    
+    before(function() {
+      utils.delete_nonsystem_databases(manager);
+      utils.install_elements_database(manager);
+      db = manager.getExistingDatabase('elements');
 
-    db.deleteDatabase();
-  }
-  catch (e) {
-    db.deleteDatabase();
-    throw e;
-  }
-
-}  
+      view = db.getView('noble_gases');
+    });
+    
+    it('must set map and reduce', function() {
+      var map = function(doc) {
+        var noble_atnos = [2, 10, 18, 36, 54, 86];
+        if (!!~noble_atnos.indexOf(doc.atomic_number)) {
+          emit(doc.name, doc.atomic_number);
+        }
+      };
+      var reduce = function(keys, values, rereduce) {
+        var sum = 0;
+        for (i in values) {
+          sum += values[i];
+        }
+        return sum;
+      };
+      
+      view.setMapReduce(map, reduce, '1');
+      should(view.map).be.a.Function;
+      should(view.map).be.exactly(map);
+      should(view.reduce).be.a.Function;
+      should(view.reduce).be.exactly(reduce);
+    });
+    
+    it('must return the correct number of rows from a query', function() {
+      var q = view.createQuery();
+      should.exist(q);
+      
+      var e = q.run();
+      e.count.should.eql(1);
+    });
+    
+    it('must return the correct value from a query', function() {
+      var e = view.createQuery().run();
+      var r = e.getRow(0);
+      r.value.should.eql(206);
+      should.not.exist(r.key);
+    });
+  });
+};

@@ -10,6 +10,8 @@ require('006_document')();
 require('007_revisions')();
 require('007_savedrevision')();
 require('007_unsavedrevision')();
+require('008_attachments')();
+require('009_views')();
 
 // create a window and run the tests
 var window = Ti.UI.createWindow({

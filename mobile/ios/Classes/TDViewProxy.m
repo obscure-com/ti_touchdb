@@ -14,6 +14,8 @@
 @interface TDViewProxy ()
 @property (nonatomic, assign) TDDatabaseProxy * database;
 @property (nonatomic, strong) CBLView * view;
+@property (nonatomic, assign) KrollCallback * _map;
+@property (nonatomic, assign) KrollCallback * _reduce;
 @end
 
 @implementation TDViewProxy
@@ -35,13 +37,16 @@
     return self.view.name;
 }
 
-- (id)setMapAndReduce:(id)args {
+- (id)setMapReduce:(id)args {
     KrollCallback * map;
     KrollCallback * reduce;
     NSString * version;
     ENSURE_ARG_OR_NULL_AT_INDEX(map, args, 0, KrollCallback)
     ENSURE_ARG_OR_NULL_AT_INDEX(reduce, args, 1, KrollCallback)
 
+    self._map = map;
+    self._reduce = reduce;
+    
     CBLMapBlock mapblock = map ? [[TDBridge sharedInstance] mapBlockForCallback:map inExecutionContext:[self executionContext]] : nil;
     CBLReduceBlock reduceblock = reduce ? [[TDBridge sharedInstance] reduceBlockForCallback:reduce inExecutionContext:[self executionContext]] : nil;
 
@@ -58,6 +63,9 @@
     NSString * version = nil;
     ENSURE_ARG_OR_NULL_AT_INDEX(map, args, 0, KrollCallback)
     
+    self._map = map;
+    self._reduce = nil;
+    
     CBLMapBlock mapblock = map ? [[TDBridge sharedInstance] mapBlockForCallback:map inExecutionContext:[self executionContext]] : nil;
     
     if (mapblock) {
@@ -68,7 +76,15 @@
     return NUMBOOL(result);
 }
 
-- (id)stale {
+- (id)map {
+    return self._map;
+}
+
+- (id)reduce {
+    return self._reduce;
+}
+
+- (id)isStale {
     return NUMBOOL(self.view.stale);
 }
 
