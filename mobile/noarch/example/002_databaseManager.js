@@ -46,7 +46,7 @@ module.exports = function() {
     it('must provide all database names', function() {
       should(manager).have.property('allDatabaseNames');
       manager.allDatabaseNames.should.be.an.Array;
-      manager.allDatabaseNames.should.have.a.lengthOf(1);
+      manager.allDatabaseNames.should.have.a.lengthOf(0);
     });
     
     it('must have a close method', function() {
