@@ -32,7 +32,10 @@
 
 - (id)initWithExecutionContext:(id<TiEvaluator>)context {
     if (self = [super _initWithPageContext:context]) {
-        manager_queue = dispatch_queue_create("database_manager_queue", NULL);
+        // FMDb will not run unless the manager queue is the same one as returned
+        // from the deprecated method dispatch_get_current_queue().
+        // manager_queue = dispatch_queue_create("database_manager_queue", NULL);
+        manager_queue = dispatch_get_current_queue();
         dispatch_sync(dispatch_get_main_queue(), ^{
             self.databaseManager = [CBLManager sharedInstance];
             self.databaseManager.dispatchQueue = manager_queue;
