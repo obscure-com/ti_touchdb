@@ -120,10 +120,7 @@ module.exports = function() {
         label: 'RCA'
       });
 
-      should.exist(rev4);
-      rev4.revisionID.indexOf('4-').should.eql(0);
-      rev4.userProperties.should.eql({});
-      rev4.isDeletion.should.eql(true);
+      should.not.exist(rev4);
     });
     
     it('must have a revision history 1', function() {
@@ -153,17 +150,6 @@ module.exports = function() {
       history[2].revisionID.should.eql(rev3.revisionID);
     });
 
-    it('must have a revision history 4', function() {
-      var history = rev4.revisionHistory;
-      should.exist(history);
-      should(history).be.an.Array;
-      history.length.should.eql(4);
-      history[0].revisionID.should.eql(rev1.revisionID);
-      history[1].revisionID.should.eql(rev2.revisionID);
-      history[2].revisionID.should.eql(rev3.revisionID);
-      history[3].revisionID.should.eql(rev4.revisionID);
-    });
-    
     it('must have a parentID 1', function() {
       should(rev1.parentID).be.type('undefined');
     });
@@ -174,10 +160,6 @@ module.exports = function() {
     
     it('must have a parentID 3', function() {
       rev3.parentID.should.eql(rev2.revisionID);
-    });
-    
-    it('must have a parentID 4', function() {
-      rev4.parentID.should.eql(rev3.revisionID);
     });
     
   });
@@ -223,8 +205,8 @@ module.exports = function() {
       utils.install_elements_database(manager);
       db = manager.getExistingDatabase('elements');
       
-      doc_with_atts = db.getExistingDocument('1AD71A0D-3213-4059-9D91-8C4A70DD9183');
-      doc_no_atts = db.getExistingDocument('59215DBF-69E2-4F0F-9D38-9A430F5A731C');
+      doc_with_atts = db.getExistingDocument('Al');
+      doc_no_atts = db.getExistingDocument('Ra');
     });
     
     it('must have an empty attachment array for a doc without attachments', function() {

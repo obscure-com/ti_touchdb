@@ -15,7 +15,7 @@ module.exports = function() {
       utils.install_elements_database(manager);
       db = manager.getExistingDatabase('elements');
       
-      doc = db.getExistingDocument('1AD71A0D-3213-4059-9D91-8C4A70DD9183');
+      doc = db.getExistingDocument('Bi');
       att = doc.currentRevision.getAttachment('image.jpg');
     });
     

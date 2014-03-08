@@ -23,7 +23,7 @@ module.exports = function() {
     });
     
     it('must have a lastSequenceNumber property', function() {
-      should(db).have.property('lastSequenceNumber', 122);
+      should(db).have.property('lastSequenceNumber', 118);
     });
     
     it('must have a manager property', function() {
@@ -86,7 +86,7 @@ module.exports = function() {
     });
     
     it('must return an existing doc from getDocument() when the doc ID exists', function() {
-      var existing = db.getDocument('59215DBF-69E2-4F0F-9D38-9A430F5A731C');
+      var existing = db.getDocument('Fe');
       should.exist(existing);
       should(existing).be.an.Object;
       should.not.exist(db.error);
@@ -102,22 +102,23 @@ module.exports = function() {
     it('must have a getExistingDocument function', function() {
       should(db.getExistingDocument).be.a.Function;
       
-      var existing = db.getExistingDocument('59215DBF-69E2-4F0F-9D38-9A430F5A731C');
+      var existing = db.getExistingDocument('I');
       should.exist(existing);
       should(existing).be.an.Object;
       should.not.exist(db.error);
       
-      var nonexisting = db.getExistigDocument('this-is-a-doc-id-that-does-not-exist');
+      var nonexisting = db.getExistingDocument('this-is-a-doc-id-that-does-not-exist');
       should.not.exist(nonexisting);
     });
 
     it('must not save a document until a call to putProperties', function() {
-      var c1 = db.documentCount;
-      var doc = db.getDocument();
-      var c2 = db.documentCount;
+      var db2 = manager.getDatabase('writable');
+      var c1 = db2.documentCount;
+      var doc = db2.getDocument();
+      var c2 = db2.documentCount;
       c1.should.be.exactly(c2);
       doc.putProperties({foo:10});
-      var c3 = db.documentCount;
+      var c3 = db2.documentCount;
       c3.should.eql(c1+1);
     });
     

@@ -60,6 +60,9 @@
     [self.db _removeProxyForDocument:self.document.documentID];
     BOOL result = [self.document deleteDocument:&lastError];
     [lastError retain];
+    if (result) {
+        self.cachedCurrentRevision = nil;
+    }
     return NUMBOOL(result);
 }
 
@@ -68,6 +71,9 @@
     [self.db _removeProxyForDocument:self.document.documentID];
     BOOL result = [self.document purgeDocument:&lastError];
     [lastError retain];
+    if (result) {
+        self.cachedCurrentRevision = nil;
+    }
     return NUMBOOL(result);
 }
 

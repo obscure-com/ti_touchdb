@@ -10,7 +10,7 @@ exports.delete_nonsystem_databases = function(manager) {
 
 exports.install_elements_database = function(manager) {
   var basedir = Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory, 'assets', 'CouchbaseLite').path;
-  var dbfile = [basedir, 'elements.touchdb'].join(Ti.Filesystem.separator);
+  var dbfile = [basedir, 'elements.cblite'].join(Ti.Filesystem.separator);
   var attdir = [basedir, 'elements attachments'].join(Ti.Filesystem.separator);
   if (manager.replaceDatabase('elements', dbfile, attdir)) {
     return manager.getExistingDatabase('elements');

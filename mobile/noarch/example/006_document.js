@@ -123,7 +123,8 @@ module.exports = function() {
       var doc = db.getDocument();
       var rev = doc.putProperties({name: 'short lived'});
       doc.deleted.should.eql(false);
-      doc.deleteDocument();
+      var deleted = doc.deleteDocument();
+      deleted.should.be.true;
       
       var redoc = db.getExistingDocument(doc.documentID);
       redoc.deleted.should.eql(true);
@@ -219,6 +220,15 @@ module.exports = function() {
         b: false,
         c: 'a string'
       });
+    });
+    
+    it('must return null for currentRevision after deletion', function() {
+      // https://github.com/couchbase/couchbase-lite-ios/issues/265
+      var doc = db.getDocument();
+      var rev1 = doc.putProperties({ foo:'bar' });
+      doc.deleteDocument();
+      var rev2 = doc.currentRevision;
+      should.not.exist(rev2);
     });
     
     it('must not update a document without a _rev', function() {

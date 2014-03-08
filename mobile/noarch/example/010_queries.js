@@ -1,0 +1,134 @@
+require('ti-mocha');
+
+var should = require('should');
+var utils = require('test_utils');
+
+module.exports = function() {
+  var titouchdb = require('com.obscure.titouchdb'),
+      manager = titouchdb.databaseManager;
+  
+  describe('query (general)', function() {
+    var db, view, query;
+    
+    before(function() {
+      utils.delete_nonsystem_databases(manager);
+      db = manager.getDatabase('test01');
+      view = db.getView('test');
+      view.setMap(function(doc) { emit(doc.id, null); }, '1');
+      query = view.createQuery();
+    });
+    
+    it('must have a database property', function() {
+      should(query).have.property('database', db);
+    });
+    
+    it('must have a descending property', function() {
+      should(query).have.property('descending');
+      query.descending.should.be.a.Boolean;
+    });
+    
+    it('must have an endKey property', function() {
+      should(query).have.property('endKey');
+    });
+    
+    it('must have an endKeyDocId property', function() {
+      should(query).have.property('endKeyDocId');
+    });
+    
+    it('must have a groupLevel property', function() {
+      should(query).have.property('groupLevel');
+      query.groupLevel.should.be.a.Number;
+    });
+    
+    it('must have an allDocsMode property', function() {
+      should(query).have.property('allDocsMode');
+      query.allDocsMode.should.be.a.Number;
+    });
+    
+    it('must have an indexUpdateMode property', function() {
+      should(query).have.property('indexUpdateMode');
+      query.indexUpdateMode.should.be.a.Number;
+    });
+    
+    it('must have a keys property', function() {
+      should(query).have.property('keys');
+    });
+
+    it('must have a limit property', function() {
+      should(query).have.property('indexUpdateMode');
+      query.indexUpdateMode.should.be.a.Number;
+    });
+    
+    it('must have a mapOnly property', function() {
+      should(query).have.property('mapOnly');
+      query.mapOnly.should.be.a.Boolean;
+    });
+    
+    it('must have a prefetch property', function() {
+      should(query).have.property('prefetch');
+      query.prefetch.should.be.a.Boolean;
+    });
+    
+    it('must have a skip property', function() {
+      should(query).have.property('skip');
+      query.skip.should.be.a.Number;
+    });
+    
+    it('must have a startKey property', function() {
+      should(query).have.property('startKey');
+    });
+    
+    it('must have a startKeyDocId property', function() {
+      should(query).have.property('startKeyDocId');
+    });
+    
+  });
+  
+  describe('query (subsets)', function() {
+    var db, view;
+    
+    before(function() {
+      utils.delete_nonsystem_databases(manager);
+      utils.install_elements_database(manager);
+      db = manager.getExistingDatabase('elements');
+      view = db.getView('docs_by_atno');
+      view.setMap(function(doc) { emit(doc.atomic_number, doc.name); }, '1');
+    });
+    
+    it('must return the correct number of rows when limit is set', function() {
+      var q = view.createQuery();
+      q.limit = 5;
+      var e = q.run();
+      e.count.should.eql(5);
+      
+      e.getRow(0).key.should.eql(1);
+      e.getRow(1).key.should.eql(2);
+      e.getRow(2).key.should.eql(3);
+      e.getRow(3).key.should.eql(4);
+      e.getRow(4).key.should.eql(5);
+    });
+    
+    it('must return the correct starting row when skip is set', function() {
+      var q = view.createQuery();
+      q.skip = 8;
+      var e = q.run();
+      e.getRow(0).key.should.eql(9);
+    });
+    
+    it('must return the correct rows for startKey and endKey', function() {
+      var q = view.createQuery();
+      q.startKey = 41;
+      q.endKey = 55;
+      var e = q.run();
+      e.count.should.eql(15);
+      e.getRow(0).key.should.eql(41);
+      e.getRow(14).key.should.eql(55);
+    });
+    
+    it('must return the correct rows for startKeyDocId and endKeyDocId', function() {
+      var q = view.createQuery();
+      
+    });
+  });
+  
+};

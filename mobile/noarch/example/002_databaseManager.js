@@ -85,7 +85,7 @@ module.exports = function() {
     if (Ti.Platform.osname === 'iphone' || Ti.Platform.osname === 'ipad') {
       it('must install a prebuilt db', function() {
         var basedir = Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory, 'assets', 'CouchbaseLite').path;
-        var dbfile = [basedir, 'elements.touchdb'].join(Ti.Filesystem.separator);
+        var dbfile = [basedir, 'elements.cblite'].join(Ti.Filesystem.separator);
         var attdir = [basedir, 'elements attachments'].join(Ti.Filesystem.separator);
         var installresult = manager.replaceDatabase('elements', dbfile, attdir);
         installresult.should.be.ok;
@@ -93,9 +93,9 @@ module.exports = function() {
         var eldb = manager.getExistingDatabase('elements');
         should.exist(eldb);
         
-        var doc = eldb.getDocument('1AD71A0D-3213-4059-9D91-8C4A70DD9183');
+        var doc = eldb.getDocument('Al');
         should.exist(doc);
-        doc.documentID.should.eql('1AD71A0D-3213-4059-9D91-8C4A70DD9183');
+        doc.documentID.should.eql('Al');
         
         var att = doc.currentRevision.getAttachment('image.jpg');
         should.exist(att);
