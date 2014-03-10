@@ -15,7 +15,7 @@
 @property (nonatomic, assign) TDDatabaseProxy * database;
 @property (nonatomic, strong) CBLView * view;
 @property (nonatomic, assign) KrollCallback * _map;
-@property (nonatomic, assign) KrollCallback * _reduce;
+@property (nonatomic, assign) id _reduce;
 @end
 
 @implementation TDViewProxy
@@ -39,16 +39,50 @@
 
 - (id)setMapReduce:(id)args {
     KrollCallback * map;
-    KrollCallback * reduce;
+    NSObject * reduce;
     NSString * version;
     ENSURE_ARG_OR_NULL_AT_INDEX(map, args, 0, KrollCallback)
-    ENSURE_ARG_OR_NULL_AT_INDEX(reduce, args, 1, KrollCallback)
+    ENSURE_ARG_OR_NULL_AT_INDEX(reduce, args, 1, NSObject)
 
     self._map = map;
     self._reduce = reduce;
     
     CBLMapBlock mapblock = map ? [[TDBridge sharedInstance] mapBlockForCallback:map inExecutionContext:[self executionContext]] : nil;
-    CBLReduceBlock reduceblock = reduce ? [[TDBridge sharedInstance] reduceBlockForCallback:reduce inExecutionContext:[self executionContext]] : nil;
+    CBLReduceBlock reduceblock = nil;
+    if ([reduce isKindOfClass:[KrollCallback class]]) {
+        reduceblock = [[TDBridge sharedInstance] reduceBlockForCallback:(KrollCallback *)reduce inExecutionContext:[self executionContext]];
+    }
+    else if ([reduce isKindOfClass:[NSString class]]) {
+        NSString * r = (NSString *)reduce;
+        if ([r isEqualToString:@"_count"]) {
+            reduceblock = ^(NSArray* keys, NSArray* values, BOOL rereduce) {
+                if (rereduce) {
+                    return [values valueForKeyPath:@"@sum.self"];
+                }
+                else {
+                    return (id) NUMINT([values count]);
+                }
+            };
+        }
+        else if ([r isEqualToString:@"_sum"]) {
+            reduceblock = ^(NSArray* keys, NSArray* values, BOOL rereduce) {
+                NSLog(@"obj %@", [values[0] class]);
+                return [values valueForKeyPath:@"@sum.self"];
+            };
+        }
+        else if ([r isEqualToString:@"_stats"]) {
+            reduceblock = ^(NSArray* keys, NSArray* values, BOOL rereduce) {
+                // TODO sumsqr
+                NSNumber * count = rereduce ? [values valueForKeyPath:@"@sum.self"] : NUMINT([values count]);
+                return @{
+                         @"sum": [values valueForKeyPath:@"@sum.self"],
+                         @"min":[values valueForKeyPath:@"@min.self"],
+                         @"max":[values valueForKeyPath:@"@max.self"],
+                         @"count": count,
+                };
+            };
+        }
+    }
 
     if (mapblock) {
         ENSURE_ARG_AT_INDEX(version, args, 2, NSString)

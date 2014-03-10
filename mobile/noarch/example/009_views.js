@@ -204,5 +204,45 @@ module.exports = function() {
       r.value.should.eql(206);
       should.not.exist(r.key);
     });
+    
+    it('must support the built-in _count reduce function', function() {
+      var v = db.getView('count');
+      v.setMapReduce(function(doc) { emit(doc.atomic_number, null); }, '_count', '1');
+      
+      var q = v.createQuery();
+      var e = q.run();
+      e.count.should.eql(1);
+      e.getRow(0).value.should.eql(118);
+    });
+    
+    it('must support the built-in _sum reduce function', function() {
+      var v = db.getView('sum');
+      v.setMapReduce(function(doc) { emit(doc.atomic_number, doc.atomic_weight); }, '_sum', '1');
+      
+      var q = v.createQuery();
+      var e = q.run();
+      e.count.should.eql(1);
+      e.getRow(0).value.should.be.approximately(17279.610692, 0.00001);
+    });
+
+    it('must support the built-in _stats reduce function', function() {
+      var v = db.getView('sum');
+      v.setMapReduce(function(doc) { emit(doc.atomic_number, doc.atomic_weight); }, '_stats', '1');
+      
+      var q = v.createQuery();
+      var e = q.run();
+      e.count.should.eql(1);
+      
+      var stats = e.getRow(0).value;
+      stats.should.be.an.Object;
+      stats.sum.should.be.approximately(17279.610692, 0.00001);
+      stats.count.should.eql(118);
+      stats.min.should.be.approximately(1.00794, 0.0001);
+      stats.max.should.eql(294);
+      // TODO sumsqr
+      // stats.sumsqr.should.be.approximately(0, 0.1);
+    });
+
   });
+  
 };
