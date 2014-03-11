@@ -160,8 +160,7 @@ module.exports = function() {
     
     before(function() {
       utils.delete_nonsystem_databases(manager);
-      utils.install_elements_database(manager);
-      db = manager.getExistingDatabase('elements');
+      db = utils.install_elements_database(manager);
 
       view = db.getView('noble_gases');
     });
