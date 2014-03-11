@@ -12,8 +12,7 @@ module.exports = function() {
     
     before(function() {
       utils.delete_nonsystem_databases(manager);
-      utils.install_elements_database(manager);
-      db = manager.getExistingDatabase('elements');
+      db = utils.install_elements_database(manager);
       
       doc = db.getExistingDocument('Bi');
       att = doc.currentRevision.getAttachment('image.jpg');

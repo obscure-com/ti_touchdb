@@ -9,6 +9,9 @@ exports.delete_nonsystem_databases = function(manager) {
 };
 
 exports.install_elements_database = function(manager) {
+  /*
+  // this creates a symlink in the module example app which causes problems
+  // with deleting and recreating the database.
   var basedir = Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory, 'assets', 'CouchbaseLite').path;
   var dbfile = [basedir, 'elements.cblite'].join(Ti.Filesystem.separator);
   var attdir = [basedir, 'elements attachments'].join(Ti.Filesystem.separator);
@@ -18,6 +21,22 @@ exports.install_elements_database = function(manager) {
   else {
     throw new Exception('could not install elements database');
   }
+  */
+  
+  var f = Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory, 'assets', 'elements.json');
+  var docs = JSON.parse(f.read().text);
+  var db = manager.getExistingDatabase('elements');
+  if (db != null) {
+    db.deleteDatabase();
+  }
+  db = manager.getDatabase('elements');
+  for (i in docs.docs) {
+    var d = docs.docs[i];
+    var doc = db.getDocument(d._id);
+    delete d._id;
+    doc.putProperties(d);
+  }
+  return db;
 };
 
 exports.create_test_documents = function(db, n) {

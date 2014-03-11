@@ -14,8 +14,7 @@ module.exports = function() {
       utils.delete_nonsystem_databases(manager);
       
       // load up the elements db
-      utils.install_elements_database(manager);
-      db = manager.getExistingDatabase('elements');
+      db = utils.install_elements_database(manager);
     });
 
     it('must have a documentCount property', function() {

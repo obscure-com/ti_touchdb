@@ -202,8 +202,7 @@ module.exports = function() {
     
     before(function() {
       utils.delete_nonsystem_databases(manager);
-      utils.install_elements_database(manager);
-      db = manager.getExistingDatabase('elements');
+      db = utils.install_elements_database(manager);
       
       doc_with_atts = db.getExistingDocument('Al');
       doc_no_atts = db.getExistingDocument('Ra');
