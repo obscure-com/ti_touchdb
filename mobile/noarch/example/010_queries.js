@@ -89,8 +89,7 @@ module.exports = function() {
     
     before(function() {
       utils.delete_nonsystem_databases(manager);
-      utils.install_elements_database(manager);
-      db = manager.getExistingDatabase('elements');
+      db = utils.install_elements_database(manager);
       view = db.getView('docs_by_atno');
       view.setMap(function(doc) { emit(doc.atomic_number, doc.name); }, '1');
     });
@@ -165,8 +164,7 @@ module.exports = function() {
   describe('query (ordering)', function() {
     before(function() {
       utils.delete_nonsystem_databases(manager);
-      utils.install_elements_database(manager);
-      db = manager.getExistingDatabase('elements');
+      db = utils.install_elements_database(manager);
       view = db.getView('docs_by_atno');
       view.setMap(function(doc) { emit(doc.atomic_number, doc.name); }, '1');
     });
@@ -201,19 +199,67 @@ module.exports = function() {
   describe('query (grouping)', function() {
     before(function() {
       utils.delete_nonsystem_databases(manager);
-      utils.install_elements_database(manager);
-      db = manager.getExistingDatabase('elements');
-      view = db.getView('electrons');
-      view.setMap(function(doc) { emit(doc.electrons, doc.name); }, '1');
+      db = utils.install_elements_database(manager);
     });
     
     it('must query by complex key', function() {
+      var view = db.getView('electrons_maponly');
+      view.setMap(function(doc) { emit(doc.electrons, doc.atomic_weight); }, '1');
       var q = view.createQuery();
       var e = q.run();
       e.count.should.eql(118);
       e.getRow(0).key.should.eql([1]);
       e.getRow(81).key.should.eql([2, 8, 18, 32, 18, 4]);
     });
+
+    it('must group rows', function() {
+      var view = db.getView('electrons_mapreduce');
+      view.setMapReduce(function(doc) { emit(doc.electrons, doc.atomic_weight); }, '_count', '1');
+      var q = view.createQuery();
+      q.groupLevel = 2;
+      var e = q.run();
+      e.count.should.eql(10);
+      e.getRow(0).key.should.eql([1]);
+      e.getRow(1).key.should.eql([2]);
+      e.getRow(2).key.should.eql([2, 1]);
+      e.getRow(3).key.should.eql([2, 2]);
+      e.getRow(4).key.should.eql([2, 3]);
+      e.getRow(5).key.should.eql([2, 4]);
+      e.getRow(6).key.should.eql([2, 5]);
+      e.getRow(7).key.should.eql([2, 6]);
+      e.getRow(8).key.should.eql([2, 7]);
+      e.getRow(9).key.should.eql([2, 8]);
+    });
     
-  })
+    it('must ignore reduce when mapOnly is set', function() {
+      var view = db.getView('electrons_mapreduce');
+      var q = view.createQuery();
+      q.mapOnly = true;
+      var e = q.run();
+      e.count.should.eql(118);
+    });
+  });
+  
+  describe('query (misc)', function() {
+    var db;
+    
+    before(function() {
+      utils.delete_nonsystem_databases(manager);
+      db = manager.getDatabase('test010_misc');
+      var docs = utils.create_test_documents(db, 15);
+    });
+    
+    it('must prefetch documents', function() {
+      var view = db.getView('simple');
+      view.setMap(function(doc) { emit(doc.atomic_number, null); }, '1');
+      
+      var q = view.createQuery();
+      q.prefetch = true;
+      var e = q.run();
+      var r = e.getRow(0);
+      r.documentProperties.should.have.properties(['_id', '_rev', 'testName', 'sequence']);
+    });
+    
+  });
+  
 };
