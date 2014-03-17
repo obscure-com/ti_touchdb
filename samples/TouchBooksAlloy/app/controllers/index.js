@@ -12,7 +12,7 @@ Ti.App.addEventListener('books:edit_book', function(e) {
   }
   
   if (OS_IOS) {
-    $.nav.open(editBookController.getView());
+    $.main.openWindow(editBookController.getView());
   }
   else if (OS_ANDROID) {
     editBookController.getView().open();
