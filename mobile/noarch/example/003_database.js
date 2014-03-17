@@ -174,11 +174,11 @@ module.exports = function() {
       should(db).have.property('filterCompiler');
     });
     
-    it.skip('must have a getFilter function', function() {
+    it('must have a getFilter function', function() {
       should(db.getFilter).be.a.Function;
     });
   
-    it.skip('must have a setFilter function', function() {
+    it('must have a setFilter function', function() {
       should(db.setFilter).be.a.Function;
     });
   

@@ -19,7 +19,8 @@
 @property (nonatomic, assign) TDDatabaseManagerProxy * managerProxy;
 @property (nonatomic, strong) CBLDatabase * database;
 @property (nonatomic, strong) NSMutableDictionary * documentProxyCache;
-@property (nonatomic, strong) NSMutableDictionary * validationProxyCache;
+@property (nonatomic, strong) NSMutableDictionary * filterCallbackCache;
+@property (nonatomic, strong) NSMutableDictionary * validationCallbackCache;
 - (id)initWithManager:(TDDatabaseManagerProxy *)manager database:(CBLDatabase *)database;
 @end
 
@@ -40,7 +41,8 @@ extern NSString* const kCBLDatabaseChangeNotification;
         self.managerProxy = manager;
         self.database = database;
         self.documentProxyCache = [NSMutableDictionary dictionary];
-        self.validationProxyCache = [NSMutableDictionary dictionary];
+        self.filterCallbackCache = [NSMutableDictionary dictionary];
+        self.validationCallbackCache = [NSMutableDictionary dictionary];
     }
     return self;
 }
@@ -217,7 +219,7 @@ extern NSString* const kCBLDatabaseChangeNotification;
     NSString * name;
     ENSURE_ARG_AT_INDEX(name, args, 0, NSString);
 
-    return [self.validationProxyCache objectForKey:name];
+    return [self.validationCallbackCache objectForKey:name];
 }
 
 - (void)setValidation:(id)args {
@@ -231,15 +233,15 @@ extern NSString* const kCBLDatabaseChangeNotification;
     if (callback) {
         CBLValidationBlock validation = [[TDBridge sharedInstance] validationBlockInDatabase:self forCallback:callback];
         [self.database setValidationNamed:name asBlock:validation];
-        [self.validationProxyCache setObject:callback forKey:name];
+        [self.validationCallbackCache setObject:callback forKey:name];
     }
     else {
         [self.database setValidationNamed:name asBlock:nil];
-        [self.validationProxyCache removeObjectForKey:name];
+        [self.validationCallbackCache removeObjectForKey:name];
     }
 }
 
-- (id)defineFilter:(id)args {
+- (id)setFilter:(id)args {
     NSString * name;
     KrollCallback * callback;
     ENSURE_ARG_AT_INDEX(name, args, 0, NSString);
@@ -250,12 +252,21 @@ extern NSString* const kCBLDatabaseChangeNotification;
     if (callback) {
         CBLFilterBlock filter = [[TDBridge sharedInstance] filterBlockForCallback:callback inExecutionContext:[self executionContext]];
         [self.database setFilterNamed:name asBlock:filter];
+        [self.filterCallbackCache setObject:callback forKey:name];
     }
     else {
         [self.database setFilterNamed:name asBlock:nil];
+        [self.filterCallbackCache removeObjectForKey:name];
     }
     
     return nil;
+}
+
+- (id)getFilter:(id)args {
+    NSString * name;
+    ENSURE_ARG_AT_INDEX(name, args, 0, NSString);
+    
+    return [self.filterCallbackCache objectForKey:name];
 }
 
 #pragma mark Replication
