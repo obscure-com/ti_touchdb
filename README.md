@@ -7,7 +7,13 @@ and Couchbase Lite Android by Traun Leyden (http://github.com/couchbase/couchbas
 **TiTouchDB** is an Appcelerator Titanium module which wraps Couchbase Lite, the lightweight, CouchDB-compatible
 database suitable for embedding into mobile apps.
 
-## Using the Module
+## Quick Start
+
+[![gitTio](http://gitt.io/badge.png)](http://gitt.io/component/com.obscure.titouchdb)
+
+Download the latest distribution ZIP-file or install using the [gitTio CLI](http://gitt.io/cli):
+
+`$ gittio install com.obscure.titouchdb`
 
 See the Wiki pages for usage instructions and the samples directory for example apps.
 
@@ -34,6 +40,18 @@ Prebuilt modules are hosted on Amazon S3:
 ## Development Status - iOS
 
 **1.0-beta**
+
+2014-03-17
+
+Merged in the beta 3 library from couchbase-lite-ios.
+
+Almost all of the new work is being done in the `cblite_api_changes` branch.  There are two main activities
+in that branch:
+
+1. The module API now conforms to the upcoming Couchbase Lite common API specification.  This spec is designed
+to ensure that the Android, iOS, Titanium, and Xamarin versions of the database all provide the same functionality.
+2. I've converted the ad-hoc testing code in the `example` folder to use [ti-mocha](https://github.com/tonylukasavage/ti-mocha).
+The new unit tests are much easier to write and understand.
 
 2013-11-13
 
