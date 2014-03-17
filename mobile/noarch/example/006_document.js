@@ -214,6 +214,7 @@ module.exports = function() {
         c: 'a string'
       });
       should.exist(rev);
+      should.exist(doc.documentID);
       should(doc.currentRevision).be.exactly(rev);
       should(doc.properties).have.properties({
         a: 10,

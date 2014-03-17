@@ -13,6 +13,8 @@ require('007_unsavedrevision')();
 require('008_attachments')();
 require('009_views')();
 require('010_queries')();
+require('011_query_enumerator')();
+require('012_query_row')();
 
 
 

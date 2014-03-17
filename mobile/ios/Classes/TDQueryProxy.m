@@ -208,7 +208,12 @@
     NSNumber * index;
     ENSURE_ARG_AT_INDEX(index, args, 0, NSNumber)
     
-    CBLQueryRow * row = [self.enumerator rowAtIndex:[index unsignedIntValue]];
+    NSUInteger i = [index unsignedIntegerValue];
+    if (i >= self.enumerator.count) {
+        return nil;
+    }
+    
+    CBLQueryRow * row = [self.enumerator rowAtIndex:i];
     return row ? [TDQueryRowProxy proxyWithQueryEnumerator:self queryRow:row] : nil;
 }
 
@@ -231,6 +236,10 @@
         self.row = row;
     }
     return self;
+}
+
+- (id)database {
+    return self.queryEnumerator.query.database;
 }
 
 - (id)key {

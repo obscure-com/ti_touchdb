@@ -42,11 +42,11 @@ exports.install_elements_database = function(manager) {
 exports.create_test_documents = function(db, n) {
   var result = [];
   for (var i=0; i < n; i++) {
-      var doc = createDocWithProperties(db, {
+      var rev = createDocWithProperties(db, {
           testName: 'someTest',
           sequence: i
       });
-      result.push(doc);
+      result.push(rev.document);
   }
   return result;
 };
