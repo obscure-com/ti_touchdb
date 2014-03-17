@@ -3,7 +3,7 @@ var book = arguments && arguments[0] || {};
 $.title.text = book.get('title');
 
 var att = book.attachmentNamed('cover.png');
-var cover = att ? att.body : '/images/text_page.png';
+var cover = att ? att.content : '/images/text_page.png';
 $.cover.image = cover;
 
 $.tableViewRow.addEventListener('click', function(e) {
