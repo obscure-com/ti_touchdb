@@ -42,12 +42,16 @@ extern NSString * CBL_ReplicatorStoppedNotification;
 
 #pragma mark Replication Configuration
 
-- (id)remoteURL {
+- (id)remoteUrl {
     return [self.replication.remoteURL absoluteString];
 }
 
-- (id)pull {
+- (id)isPull {
     return NUMBOOL(self.replication.pull);
+}
+
+- (id)isRunning {
+    return NUMBOOL(self.replication.running);
 }
 
 - (id)createTarget {
@@ -83,11 +87,11 @@ extern NSString * CBL_ReplicatorStoppedNotification;
     self.replication.filterParams = value;
 }
 
-- (id)documentIDs {
+- (id)docIDs {
     return self.replication.documentIDs;
 }
 
-- (void)setDocumentIDs:(id)value {
+- (void)setDocIDs:(id)value {
     ENSURE_ARRAY(value)
     self.replication.documentIDs = value;
 }
@@ -99,6 +103,10 @@ extern NSString * CBL_ReplicatorStoppedNotification;
 - (void)setHeaders:(id)value {
     ENSURE_DICT(value)
     self.replication.headers = value;
+}
+
+- (id)localDatabase {
+    return self.database;
 }
 
 - (id)network {
