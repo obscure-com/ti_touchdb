@@ -50,6 +50,10 @@ extern BOOL EnableLog(BOOL enable);
     if (__has_feature(objc_arc)) {
         NSLog(@"[INFO] ARC is enabled");
     }
+    
+    if (getenv("NSZombieEnabled") || getenv("NSAutoreleaseFreedObjectCheckEnabled")) {
+		NSLog(@"[INFO] NSZombieEnabled/NSAutoreleaseFreedObjectCheckEnabled enabled!");
+	}
 }
 
 -(void)shutdown:(id)sender {
