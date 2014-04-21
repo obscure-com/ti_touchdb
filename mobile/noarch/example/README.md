@@ -8,3 +8,7 @@ being in a specific state.  Normally, reloading the database from a file would b
 enough to restore state, but when building a test app from the `example` directory,
 the database file is actually a symlink, so deleting and reinstalling doesn't reset
 the entire db contents.
+
+### Replication tests
+
+The replication tests require a CouchDB server

@@ -62,3 +62,28 @@ function createDocWithProperties(db, props, id) {
     }
     return doc.putProperties(props);
 }
+
+exports.verify_couchdb_server = function(config_file, cb) {
+  var f = Ti.Filesystem.getFile(config_file);
+  if (!f.exists()) {
+    cb(new Error('replication_config.json file not found'));
+    return null;
+  }
+
+  var conf = JSON.parse(f.read().text);
+
+  var s = Ti.Network.Socket.createTCP({
+    host: conf.host,
+    port: conf.port,
+    connected: function() {
+      cb();
+      this.close();
+    },
+    error: function(e) {
+      cb(new Error('could not connect to '+conf.host+':'+conf.port));
+    }
+  });
+  s.connect();
+  
+  return conf;
+}

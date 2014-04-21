@@ -109,5 +109,56 @@ module.exports = function() {
     })
     
   });
+
+  describe('pull replication (one-shot)', function() {
+    // very important! keep a reference to the replication object.
+    var conf, repl;
+    
+    before(function(done) {
+      utils.delete_nonsystem_databases(manager);
+      conf = utils.verify_couchdb_server('replication_config.json', done);
+    });
   
+    it('must replicate an entire db', function(done) {
+      this.timeout(10000);
+      var db = manager.getDatabase('repl1');
+      repl = db.createPullReplication('http://'+conf.host+':'+conf.port+'/'+conf.dbname);
+      repl.addEventListener('status', function(e) {
+        if (e.status == titouchdb.REPLICATION_MODE_STOPPED) {
+          should.not.exist(repl.lastError);
+          db.documentCount.should.eql(118);
+          repl.isRunning.should.eql(false);
+          done();
+        }
+      });
+      repl.start();
+    });
+  });
+  
+  describe('push replication (one-shot)', function() {
+    var conf, db, repl;
+    
+    before(function(done) {
+      utils.delete_nonsystem_databases(manager);
+      db = manager.getDatabase('repl2');
+      utils.create_test_documents(db, 12);
+      conf = utils.verify_couchdb_server('replication_config.json', done);
+    });
+    
+    it('must replicate an entire db', function(done) {
+      this.timeout(10000);
+      var dbname = "repl2_" + Ti.Platform.createUUID().substring(0, 8).toLowerCase();
+      repl = db.createPushReplication('http://'+conf.host+':'+conf.port+'/'+dbname);
+      repl.createTarget = true;
+      repl.addEventListener('status', function(e) {
+        if (e.status == titouchdb.REPLICATION_MODE_STOPPED) {
+          should.not.exist(repl.lastError);
+          repl.completedChangesCount.should.eql(12);
+          repl.isRunning.should.eql(false);
+          done();
+        }
+      });
+      repl.start();
+    });
+  });
 };
