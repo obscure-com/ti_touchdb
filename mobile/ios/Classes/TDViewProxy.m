@@ -60,7 +60,7 @@
                     return [values valueForKeyPath:@"@sum.self"];
                 }
                 else {
-                    return (id) NUMINT([values count]);
+                    return (id) NUMLONG([values count]);
                 }
             };
         }
@@ -73,7 +73,7 @@
         else if ([r isEqualToString:@"_stats"]) {
             reduceblock = ^(NSArray* keys, NSArray* values, BOOL rereduce) {
                 // TODO sumsqr
-                NSNumber * count = rereduce ? [values valueForKeyPath:@"@sum.self"] : NUMINT([values count]);
+                NSNumber * count = rereduce ? [values valueForKeyPath:@"@sum.self"] : NUMLONG([values count]);
                 return @{
                          @"sum": [values valueForKeyPath:@"@sum.self"],
                          @"min":[values valueForKeyPath:@"@min.self"],
