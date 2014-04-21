@@ -286,7 +286,7 @@ extern NSString* const kCBLDatabaseChangeNotification;
     RELEASE_TO_NIL(lastError)
     
     NSURL * url = [NSURL URLWithString:urlstr];
-    CBLReplication * replication = [self.database replicationToURL:url];
+    CBLReplication * replication = [self.database createPushReplication:url];
     return [TDReplicationProxy proxyWithDatabase:self replication:replication];
 }
 
@@ -297,7 +297,7 @@ extern NSString* const kCBLDatabaseChangeNotification;
     RELEASE_TO_NIL(lastError)
     
     NSURL * url = [NSURL URLWithString:urlstr];
-    CBLReplication * replication = [self.database replicationFromURL:url];
+    CBLReplication * replication = [self.database createPullReplication:url];
     return [TDReplicationProxy proxyWithDatabase:self replication:replication];
 }
 
