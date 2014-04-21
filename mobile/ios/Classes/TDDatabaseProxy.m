@@ -58,11 +58,11 @@ extern NSString* const kCBLDatabaseChangeNotification;
 }
 
 - (id)lastSequenceNumber {
-    return [NSNumber numberWithInt:self.database.lastSequenceNumber];
+    return [NSNumber numberWithLong:self.database.lastSequenceNumber];
 }
 
 - (id)documentCount {
-    return [NSNumber numberWithInt:self.database.documentCount];
+    return [NSNumber numberWithLong:self.database.documentCount];
 }
 
 - (id)manager {
@@ -70,7 +70,7 @@ extern NSString* const kCBLDatabaseChangeNotification;
 }
 
 - (id)maxRevTreeDepth {
-    return NUMINT(self.database.maxRevTreeDepth);
+    return NUMLONG(self.database.maxRevTreeDepth);
 }
 
 - (void)setMaxRevTreeDepth:(id)value {

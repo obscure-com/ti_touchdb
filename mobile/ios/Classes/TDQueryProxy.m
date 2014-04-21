@@ -49,7 +49,7 @@
 #pragma mark Properties
 
 - (id)limit {
-    return NUMINT(self.query.limit);
+    return NUMLONG(self.query.limit);
 }
 
 - (void)setLimit:(id)value {
@@ -57,7 +57,7 @@
 }
 
 - (id)skip {
-    return NUMINT(self.query.skip);
+    return NUMLONG(self.query.skip);
 }
 
 - (void)setSkip:(id)value {
@@ -129,7 +129,7 @@
 }
 
 - (id)groupLevel {
-    return NUMINT(self.query.groupLevel);
+    return NUMLONG(self.query.groupLevel);
 }
 
 - (void)setGroupLevel:(id)value {
@@ -188,11 +188,11 @@
 }
 
 - (id)count {
-    return NUMINT(self.enumerator.count);
+    return NUMLONG(self.enumerator.count);
 }
 
 - (id)sequenceNumber {
-    return NUMINT(self.enumerator.sequenceNumber);
+    return NUMLONG(self.enumerator.sequenceNumber);
 }
 
 - (id)stale {
@@ -293,7 +293,7 @@
 }
 
 - (id)sequenceNumber {
-    return NUMINT(self.row.sequenceNumber);
+    return NUMLONG(self.row.sequenceNumber);
 }
 
 - (id)conflictingRevisions {
