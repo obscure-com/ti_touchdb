@@ -36,6 +36,7 @@
 
 - (void)dealloc {
     RELEASE_TO_NIL(lastError)
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [super dealloc];
 }
 

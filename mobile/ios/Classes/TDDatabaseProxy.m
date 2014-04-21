@@ -47,6 +47,11 @@ extern NSString* const kCBLDatabaseChangeNotification;
     return self;
 }
 
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [super dealloc];
+}
+
 - (NSString *)description {
     return [NSString stringWithFormat:@"TDDatabaseProxy [%@]", self.database.name];
 }
