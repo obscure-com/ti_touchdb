@@ -8,7 +8,6 @@
 
 #import "TDDatabaseManagerProxy.h"
 #import "ComObscureTitouchdbModule.h"
-#import "CBLManager.h"
 #import "TiProxy+Errors.h"
 #import "TDDatabaseProxy.h"
 

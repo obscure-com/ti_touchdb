@@ -14,10 +14,6 @@
 #import "TiUtils.h"
 #import "TiProxy+Errors.h"
 #import "TDDatabaseManagerProxy.h"
-#import "CBLReplication.h"
-#import "CBLQuery.h"
-#import "CBLManager.h"
-#import "CBLListener.h"
 
 extern BOOL EnableLog(BOOL enable);
 

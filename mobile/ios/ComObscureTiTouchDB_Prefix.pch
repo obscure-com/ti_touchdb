@@ -24,10 +24,5 @@ out = nil; \
 } \
 
 // CouchbaseLite
-#import "CouchbaseLite.h"
-
-#import "CollectionUtils.h"
-#import "Logging.h"
-#import "Test.h"
-
-//static double CouchbaseLiteVersionNumber = 0.7; // TouchDB_vers.c not generated for module?
+#import <CouchbaseLite/CouchbaseLite.h>
+#import <CouchbaseLiteListener/CBLListener.h>
