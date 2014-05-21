@@ -118,6 +118,14 @@ extern NSString * CBL_ReplicatorStoppedNotification;
     self.replication.network = value;
 }
 
+#pragma mark Authentication
+
+- (void)setCredential:(id)value {
+    ENSURE_DICT(value)
+    NSDictionary * cred = value;
+    self.replication.credential = [NSURLCredential credentialWithUser:cred[@"user"] password:cred[@"pass"] persistence:NSURLCredentialPersistenceForSession];
+}
+
 #pragma mark Replication Status
 
 - (void)start:(id)args {

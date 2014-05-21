@@ -100,6 +100,10 @@ module.exports = function() {
       should(repl.restart).be.a.Function;
     })
     
+    it('must have a setCredential method', function() {
+      should(repl.setCredential).be.a.Function;
+    });
+    
     it('must have a start method', function() {
       should(repl.start).be.a.Function;
     })
