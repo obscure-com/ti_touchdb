@@ -14,7 +14,49 @@
 #import "KrollMethod.h"
 #import "KrollObject.h"
 
+#import "TDDatabaseProxy.h"
 #import "TDRevisionProxy.h"
+
+@interface TDValidationContextProxy : TiProxy
+@property (nonatomic, assign) TDDatabaseProxy * database;
+@property (nonatomic, retain) id<CBLValidationContext> context;
+@end
+
+@implementation TDValidationContextProxy
+
++ (instancetype)proxyWithDatabase:(TDDatabaseProxy *)database validationContext:(id<CBLValidationContext>)validationContext {
+    TDValidationContextProxy * result = [[TDValidationContextProxy alloc] _initWithPageContext:database.pageContext];
+    result.database = database;
+    result.context = validationContext;
+    return [result autorelease];
+}
+
+- (id)changedKeys {
+    return [self.context changedKeys];
+}
+
+- (id)currentRevision {
+    CBLSavedRevision * rev = [self.context currentRevision];
+    return [TDSavedRevisionProxy proxyWithDocument:[self.database _existingDocumentWithID:rev.document.documentID] savedRevision:rev];
+}
+
+- (void)reject:(id)args {
+    [self.context reject];
+}
+
+- (void)rejectWithMessage:(id)args {
+    NSString * message;
+    ENSURE_ARG_AT_INDEX(message, args, 0, NSString)
+    
+    [self.context rejectWithMessage:message];
+}
+
+- (id)validateChanges:(id)args {
+    // TODO
+    return NUMBOOL(NO);
+}
+
+@end
 
 @interface TDBridge ()
 - (void)bindCallback:(TiObjectCallAsFunctionCallback)fn name:(NSString*)name context:(TiContextRef)context;
@@ -78,19 +120,18 @@ CBLMapEmitBlock _emitBlock;
     return [[result copy] autorelease];
 }
 
-- (CBLValidationBlock)validationBlockForCallback:(KrollCallback *)callback inExecutionContext:(id<TiEvaluator>)context {
+- (CBLValidationBlock)validationBlockInDatabase:(TDDatabaseProxy *)database forCallback:(KrollCallback *)callback {
     CBLValidationBlock result = ^(CBLRevision* newRevision, id<CBLValidationContext> validationContext) {
-        TDRevisionProxy * revisionProxy = [[TDRevisionProxy alloc] initWithExecutionContext:context CBLRevision:newRevision];
-        id contextDoc = [NSNull null]; // TODO
-        id result = [callback call:[NSArray arrayWithObjects:revisionProxy, contextDoc, nil] thisObject:nil];
-        if ([result boolValue]) [validationContext reject];
+        TDUnsavedRevisionProxy * revisionProxy = [TDUnsavedRevisionProxy proxyWithDocument:[database _existingDocumentWithID:newRevision.document.documentID] unsavedRevision:(CBLUnsavedRevision *)newRevision];
+        TDValidationContextProxy * validationContextProxy = [TDValidationContextProxy proxyWithDatabase:database validationContext:validationContext];
+        [callback call:[NSArray arrayWithObjects:revisionProxy, validationContextProxy, nil] thisObject:nil];
     };
     
     return [[result copy] autorelease];
 }
 
 - (CBLFilterBlock)filterBlockForCallback:(KrollCallback *)callback inExecutionContext:(id<TiEvaluator>)context {
-    CBLFilterBlock result = ^(CBLRevision* revision, NSDictionary* params) {
+    CBLFilterBlock result = ^(CBLSavedRevision* revision, NSDictionary* params) {
         // had trouble passing a proxy to a callback, but the document dictionary was fine.
         id result = [callback call:[NSArray arrayWithObjects:revision.properties, params, nil] thisObject:nil];
         return [result boolValue];

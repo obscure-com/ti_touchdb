@@ -20,7 +20,7 @@ See the Wiki pages for usage instructions and the samples directory for example 
 ## Requirements
 
 * Titanium SDK 3.1.0 or later
-* Xcode 4.5 or later (iOS), runtime requirement is iOS 5+
+* Xcode 4.5 or later (iOS), runtime requirement is iOS 6+
 * Android SDK r21.1, runtime requirement is android-8
 
 ## Downloads

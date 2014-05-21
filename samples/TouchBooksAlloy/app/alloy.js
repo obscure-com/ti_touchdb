@@ -8,15 +8,15 @@ Ti.App.Properties.setBool("LogSync", true);
 Ti.App.Properties.setBool("LogSyncVerbose", true);
 
 var server = require('com.obscure.titouchdb'),
-    db = server.databaseManager.createDatabaseNamed(Alloy.CFG.books_db_name || 'books');
+    db = server.databaseManager.getDatabase(Alloy.CFG.books_db_name || 'books');
 
-db.defineFilter('books_only', function(doc,req) {
+db.setFilter('books_only', function(doc,req) {
   return doc.modelname === "book";
 });
 
 if (Alloy.CFG.remote_couchdb_server) {
-  var repls = db.replicateWithURL(Alloy.CFG.remote_couchdb_server);
-  var pull = repls[0], push = repls[1];
+  var pull = db.createPullReplication(Alloy.CFG.remote_couchdb_server);
+  var push = db.createPushReplication(Alloy.CFG.remote_couchdb_server);
   
   pull.continuous = true;
   pull.addEventListener('change', function(e) {

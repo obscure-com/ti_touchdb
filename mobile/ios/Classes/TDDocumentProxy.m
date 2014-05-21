@@ -8,10 +8,12 @@
 
 #import "TDDocumentProxy.h"
 #import "TiProxy+Errors.h"
+#import "TDDatabaseProxy.h"
 #import "TDRevisionProxy.h"
 
 @interface TDDocumentProxy ()
 @property (nonatomic, strong) CBLDocument * document;
+@property (nonatomic, strong) TDRevisionProxyBase * cachedCurrentRevision;
 @end
 
 @implementation TDDocumentProxy
@@ -20,8 +22,13 @@
     NSError * lastError;
 }
 
-- (id)initWithExecutionContext:(id<TiEvaluator>)context CBLDocument:(CBLDocument *)document {
-    if (self = [super _initWithPageContext:context]) {
++ (instancetype)proxyWithDatabase:(TDDatabaseProxy *)database document:(CBLDocument *)document {
+    return [[[TDDocumentProxy alloc] initWithDatabase:database CBLDocument:document] autorelease];
+}
+
+- (id)initWithDatabase:(TDDatabaseProxy *)database CBLDocument:(CBLDocument *)document {
+    if (self = [super _initWithPageContext:database.pageContext]) {
+        self.db = database;
         self.document = document;
     }
     return self;
@@ -29,6 +36,7 @@
 
 - (void)dealloc {
     RELEASE_TO_NIL(lastError)
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [super dealloc];
 }
 
@@ -50,16 +58,28 @@
 
 - (id)deleteDocument:(id)args {
     RELEASE_TO_NIL(lastError)
+    [self.db _removeProxyForDocument:self.document.documentID];
     BOOL result = [self.document deleteDocument:&lastError];
     [lastError retain];
+    if (result) {
+        self.cachedCurrentRevision = nil;
+    }
     return NUMBOOL(result);
 }
 
 - (id)purgeDocument:(id)args {
     RELEASE_TO_NIL(lastError)
+    [self.db _removeProxyForDocument:self.document.documentID];
     BOOL result = [self.document purgeDocument:&lastError];
     [lastError retain];
+    if (result) {
+        self.cachedCurrentRevision = nil;
+    }
     return NUMBOOL(result);
+}
+
+- (id)database {
+    return self.db;
 }
 
 #pragma mark REVISIONS:
@@ -69,65 +89,69 @@
 }
 
 - (id)currentRevision {
-    CBLRevision * revision = [self.document currentRevision];
-    if (revision) {
-        return [[TDRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLRevision:revision];
+    if (!self.document.currentRevision) return nil;
+    
+    if (![[self.cachedCurrentRevision revisionID] isEqualToString:self.document.currentRevisionID]) {
+        self.cachedCurrentRevision = [TDSavedRevisionProxy proxyWithDocument:self savedRevision:self.document.currentRevision];
     }
-    else {
-        return nil;
-    }
+    return self.cachedCurrentRevision;
 }
 
-- (id)revisionWithID:(id)args {
+- (id)getRevision:(id)args {
     NSString * revID;
     ENSURE_ARG_AT_INDEX(revID, args, 0, NSString)
     
     RELEASE_TO_NIL(lastError)
 
-    CBLRevision * revision = [self.document revisionWithID:revID];
+    CBLSavedRevision * revision = [self.document revisionWithID:revID];
     if (revision) {
-        return [[TDRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLRevision:revision];
+        return [TDSavedRevisionProxy proxyWithDocument:self savedRevision:revision];
     }
     else {
         return nil;
     }
 }
 
-- (id)getRevisionHistory:(id)args {
+- (id)_revisionProxyArray:(NSArray *)revs {
+    NSMutableArray * result = [NSMutableArray arrayWithCapacity:[revs count]];
+    for (CBLSavedRevision * rev in revs) {
+        [result addObject:[TDSavedRevisionProxy proxyWithDocument:self savedRevision:rev]];
+    }
+    return result;
+}
+
+- (id)revisionHistory {
     RELEASE_TO_NIL(lastError)
 
     NSArray * revs = [self.document getRevisionHistory:&lastError];
     [lastError retain];
     
-    if (lastError) return nil;
-    
-    NSMutableArray * result = [NSMutableArray arrayWithCapacity:[revs count]];
-    for (CBLRevision * rev in revs) {
-        [result addObject:[[TDRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLRevision:rev]];
-    }
-    return result;
+    return lastError ? nil : [self _revisionProxyArray:revs];
 }
 
-- (id)getLeafRevisions:(id)args {
+- (id)leafRevisions {
     RELEASE_TO_NIL(lastError)
 
     NSArray * revs = [self.document getLeafRevisions:&lastError];
     [lastError retain];
     
-    if (lastError) return nil;
-    
-    NSMutableArray * result = [NSMutableArray arrayWithCapacity:[revs count]];
-    for (CBLRevision * rev in revs) {
-        [result addObject:[[TDRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLRevision:rev]];
-    }
-    return result;
+    return lastError ? nil : [self _revisionProxyArray:revs];
 }
 
-- (id)newRevision:(id)args {
+- (id)createRevision:(id)args {
     RELEASE_TO_NIL(lastError)
 
-    CBLNewRevision * rev = [self.document newRevision];
-    return rev ? [[CBLNewRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLNewRevision:rev] : nil;
+    CBLUnsavedRevision * rev = [self.document newRevision];
+    return rev ? [TDUnsavedRevisionProxy proxyWithDocument:self unsavedRevision:rev] : nil;
+}
+
+- (id)conflictingRevisions {
+    RELEASE_TO_NIL(lastError)
+    
+    NSArray * revs = [self.document getConflictingRevisions:&lastError];
+    [lastError retain];
+    
+    return lastError ? nil : [self _revisionProxyArray:revs];
 }
 
 #pragma mark Document Properties
@@ -140,7 +164,7 @@
     return self.document.userProperties;
 }
 
-- (id)propertyForKey:(id)args {
+- (id)getProperty:(id)args {
     NSString * key;
     ENSURE_ARG_AT_INDEX(key, args, 0, NSString)
     
@@ -155,9 +179,13 @@
     
     RELEASE_TO_NIL(lastError)
 
-    CBLRevision * rev = [self.document putProperties:props error:&lastError];
+    CBLSavedRevision * rev = [self.document putProperties:props error:&lastError];
     [lastError retain];
-    return rev ? [[TDRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLRevision:rev] : nil;
+    
+    if (!rev) return nil;
+    
+    self.cachedCurrentRevision = [TDSavedRevisionProxy proxyWithDocument:self savedRevision:rev];
+    return self.cachedCurrentRevision;
 }
 
 #pragma mark Change Notifications

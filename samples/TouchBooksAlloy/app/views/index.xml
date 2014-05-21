@@ -1,6 +1,6 @@
 <Alloy>
-  <NavigationWindow id="nav" platform="ios">
+  <NavigationWindow id="main" platform="ios">
     <Require src="book_list"/>
   </NavigationWindow>
-  <Require id="nav" src="book_list" platform="android"/>
+  <Require id="main" src="book_list" platform="android"/>
 </Alloy>

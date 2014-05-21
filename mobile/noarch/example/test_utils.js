@@ -1,15 +1,56 @@
 var _ = require('underscore');
 
-function assert(exp, msg) {
-    if (!exp) {
-        throw "FAILURE: "+msg;
+exports.delete_nonsystem_databases = function(manager) {
+  manager.allDatabaseNames.forEach(function(name) {
+    if (name.indexOf('_') != 0) {
+      manager.getExistingDatabase(name).deleteDatabase();
     }
-}
+  });
+};
 
-function wait(ms) {
-  var start = +(new Date());
-  while (new Date() - start < ms);
-}
+exports.install_elements_database = function(manager) {
+  /*
+  // this creates a symlink in the module example app which causes problems
+  // with deleting and recreating the database.
+  var basedir = Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory, 'assets', 'CouchbaseLite').path;
+  var dbfile = [basedir, 'elements.cblite'].join(Ti.Filesystem.separator);
+  var attdir = [basedir, 'elements attachments'].join(Ti.Filesystem.separator);
+  if (manager.replaceDatabase('elements', dbfile, attdir)) {
+    return manager.getExistingDatabase('elements');
+  }
+  else {
+    throw new Exception('could not install elements database');
+  }
+  */
+  
+  var f = Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory, 'assets', 'elements.json');
+  var docs = JSON.parse(f.read().text);
+  var db = manager.getExistingDatabase('elements');
+  if (db != null) {
+    db.deleteDatabase();
+  }
+  db = manager.getDatabase('elements');
+  for (i in docs.docs) {
+    var d = docs.docs[i];
+    var doc = db.getDocument(d._id);
+    delete d._id;
+    doc.putProperties(d);
+  }
+  return db;
+};
+
+exports.create_test_documents = function(db, n) {
+  var result = [];
+  for (var i=0; i < n; i++) {
+      var rev = createDocWithProperties(db, {
+          testName: 'someTest',
+          sequence: i
+      });
+      result.push(rev.document);
+  }
+  return result;
+};
+
 
 function createDocWithProperties(db, props, id) {
     var doc;
@@ -17,31 +58,32 @@ function createDocWithProperties(db, props, id) {
       doc = db.documentWithID(id);
     }
     else {
-      doc = db.untitledDocument();
+      doc = db.createDocument();
     }
-    assert(doc, "couldn't create doc");
-    
-    var rev = doc.putProperties(props); // saves the doc!
-    assert(rev, 'putProperties did not return a revision');
-    assert(!doc.error, 'putProperties resulted in an error');
-    assert(doc.currentRevisionID, "saved doc should have currentRevisionID: "+doc.currentRevisionID);
-    assert(doc.currentRevision, "saved doc should have currentRevision");
-    assert(doc.documentID, "saved doc should have documentID");
-    if (id) {
-      assert(doc.documentID === id, "saved doc id ("+doc.documentID+") does not match id ("+id+")")
-    }
-    
-    return doc;
+    return doc.putProperties(props);
 }
 
-function createDocuments(db, n) {
-    var result = [];
-    for (var i=0; i < n; i++) {
-        var doc = createDocWithProperties(db, {
-            testName: 'someTest',
-            sequence: i
-        });
-        result.push(doc);
+exports.verify_couchdb_server = function(config_file, cb) {
+  var f = Ti.Filesystem.getFile(config_file);
+  if (!f.exists()) {
+    cb(new Error('replication_config.json file not found'));
+    return null;
+  }
+
+  var conf = JSON.parse(f.read().text);
+
+  var s = Ti.Network.Socket.createTCP({
+    host: conf.host,
+    port: conf.port,
+    connected: function() {
+      cb();
+      this.close();
+    },
+    error: function(e) {
+      cb(new Error('could not connect to '+conf.host+':'+conf.port));
     }
-    return result;
+  });
+  s.connect();
+  
+  return conf;
 }

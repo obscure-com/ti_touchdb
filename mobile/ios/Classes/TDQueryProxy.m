@@ -8,24 +8,36 @@
 
 #import "TDQueryProxy.h"
 #import "TiProxy+Errors.h"
+#import "TDDatabaseProxy.h"
 #import "TDDocumentProxy.h"
+#import "TDRevisionProxy.h"
 
 @interface TDQueryProxy ()
+@property (nonatomic, assign) TDDatabaseProxy * database;
 @property (nonatomic, strong) CBLQuery * query;
+@property (nonatomic, strong) NSError * lastError;
 @end
 
-@interface CBLQueryEnumeratorProxy : TiProxy
+@interface TDQueryEnumeratorProxy : TiProxy
+@property (nonatomic, assign) TDQueryProxy * query;
 @property (nonatomic, strong) CBLQueryEnumerator * enumerator;
-- (id)initWithCBLQueryEnumerator:(CBLQueryEnumerator *)e;
++ (instancetype)proxyWithQuery:(TDQueryProxy *)query queryEnumerator:(CBLQueryEnumerator *)queryEnumerator;
 @end
 
-@interface CBLQueryRowProxy : TiProxy
+@interface TDQueryRowProxy : TiProxy
+@property (nonatomic, assign) TDQueryEnumeratorProxy * queryEnumerator;
 @property (nonatomic, strong) CBLQueryRow * row;
-- (id)initWithCBLQueryRow:(CBLQueryRow *)row;
++ (instancetype)proxyWithQueryEnumerator:(TDQueryEnumeratorProxy *)enumerator queryRow:(CBLQueryRow *)row;
 @end
 
 
 @implementation TDQueryProxy
+
++ (instancetype)proxyWithDatabase:(TDDatabaseProxy *)database query:(CBLQuery *)query {
+    TDQueryProxy * result = [[[TDQueryProxy alloc] initWithExecutionContext:database.pageContext CBLQuery:query] autorelease];
+    result.database = database;
+    return result;
+}
 
 - (id)initWithExecutionContext:(id<TiEvaluator>)context CBLQuery:(CBLQuery *)query {
     if (self = [super _initWithPageContext:context]) {
@@ -37,7 +49,7 @@
 #pragma mark Properties
 
 - (id)limit {
-    return NUMINT(self.query.limit);
+    return NUMLONG(self.query.limit);
 }
 
 - (void)setLimit:(id)value {
@@ -45,7 +57,7 @@
 }
 
 - (id)skip {
-    return NUMINT(self.query.skip);
+    return NUMLONG(self.query.skip);
 }
 
 - (void)setSkip:(id)value {
@@ -92,24 +104,32 @@
     self.query.endKeyDocID = value;
 }
 
-- (id)stale {
-    return NUMINT(self.query.stale);
+- (id)indexUpdateMode {
+    return NUMINT(self.query.indexUpdateMode);
 }
 
-- (void)setStale:(id)value {
-    self.query.stale = [value intValue];
+- (void)setIndexUpdateMode:(id)value {
+    self.query.indexUpdateMode = [value intValue];
 }
 
 - (id)keys {
-    return self.query.keys;
+    return self.query.keys ? self.query.keys : @[];
 }
 
 - (void)setKeys:(id)value {
     self.query.keys = value;
 }
 
+- (id)mapOnly {
+    return NUMBOOL(self.query.mapOnly);
+}
+
+- (void)setMapOnly:(id)value {
+    self.query.mapOnly = [value boolValue];
+}
+
 - (id)groupLevel {
-    return NUMINT(self.query.groupLevel);
+    return NUMLONG(self.query.groupLevel);
 }
 
 - (void)setGroupLevel:(id)value {
@@ -124,66 +144,102 @@
     self.query.prefetch = [value boolValue];
 }
 
+- (id)allDocsMode {
+    return NUMINT(self.query.allDocsMode);
+}
+
+- (void)setAllDocsMode:(id)value {
+    self.query.allDocsMode = [value intValue];
+}
+
 - (id)error {
-    return [self errorDict:self.query.error];
+    return [self errorDict:self.lastError];
 }
 
 #pragma mark Public API
 
-- (id)rows:(id)args {
-    CBLQueryEnumerator * e = [self.query rows];
-    return e ? [[CBLQueryEnumeratorProxy alloc] initWithCBLQueryEnumerator:e] : nil;
-}
-
-- (id)rowsIfChanged:(id)args {
-    CBLQueryEnumerator * e = [self.query rowsIfChanged];
-    return e ? [[CBLQueryEnumeratorProxy alloc] initWithCBLQueryEnumerator:e] : nil;
+- (id)run:(id)args {
+    NSError * error = nil;
+    CBLQueryEnumerator * e = [self.query run:&error];
+    self.lastError = error;
+    
+    if (error) {
+        NSLog(@"run error: %@", error);
+    }
+    
+    return e ? [TDQueryEnumeratorProxy proxyWithQuery:self queryEnumerator:e] : nil;
 }
 
 @end
 
 
+@implementation TDQueryEnumeratorProxy
 
-@implementation CBLQueryEnumeratorProxy
++ (instancetype)proxyWithQuery:(TDQueryProxy *)query queryEnumerator:(CBLQueryEnumerator *)queryEnumerator {
+    return [[[TDQueryEnumeratorProxy alloc] initWithQuery:query queryEnumerator:queryEnumerator] autorelease];
+}
 
-- (id)initWithCBLQueryEnumerator:(CBLQueryEnumerator *)e {
+- (id)initWithQuery:(TDQueryProxy *) query queryEnumerator:(CBLQueryEnumerator *)e {
     if (self = [super init]) {
+        self.query = query;
         self.enumerator = e;
     }
     return self;
 }
 
 - (id)count {
-    return NUMINT(self.enumerator.count);
+    return NUMLONG(self.enumerator.count);
 }
 
 - (id)sequenceNumber {
-    return NUMINT(self.enumerator.sequenceNumber);
+    return NUMLONG(self.enumerator.sequenceNumber);
 }
 
-- (id)nextRow:(id)args {
+- (id)stale {
+    return NUMBOOL(self.enumerator.stale);
+}
+
+- (id)next:(id)args {
     CBLQueryRow * row = [self.enumerator nextRow];
-    return row ? [[CBLQueryRowProxy alloc] initWithCBLQueryRow:row] : nil;
+    return row ? [TDQueryRowProxy proxyWithQueryEnumerator:self queryRow:row] : nil;
 }
 
-- (id)rowAtIndex:(id)args {
+- (id)getRow:(id)args {
     NSNumber * index;
     ENSURE_ARG_AT_INDEX(index, args, 0, NSNumber)
     
-    CBLQueryRow * row = [self.enumerator rowAtIndex:[index unsignedIntValue]];
-    return row ? [[CBLQueryRowProxy alloc] initWithCBLQueryRow:row] : nil;
+    NSUInteger i = [index unsignedIntegerValue];
+    if (i >= self.enumerator.count) {
+        return nil;
+    }
+    
+    CBLQueryRow * row = [self.enumerator rowAtIndex:i];
+    return row ? [TDQueryRowProxy proxyWithQueryEnumerator:self queryRow:row] : nil;
+}
+
+- (void)reset:(id)args {
+    [self.enumerator reset];
 }
 
 @end
 
 
-@implementation CBLQueryRowProxy
+@implementation TDQueryRowProxy
 
-- (id)initWithCBLQueryRow:(CBLQueryRow *)row {
++ (instancetype)proxyWithQueryEnumerator:(TDQueryEnumeratorProxy *)enumerator queryRow:(CBLQueryRow *)row {
+    return [[[TDQueryRowProxy alloc] initWithQueryEnumerator:enumerator queryRow:row] autorelease];
+}
+
+- (id)initWithQueryEnumerator:(TDQueryEnumeratorProxy *)enumerator queryRow:(CBLQueryRow *)row {
     if (self = [super init]) {
+        self.queryEnumerator = enumerator;
         self.row = row;
     }
     return self;
+}
+
+- (id)database {
+    return self.queryEnumerator.query.database;
 }
 
 - (id)key {
@@ -202,12 +258,12 @@
     return self.row.sourceDocumentID;
 }
 
-- (id)documentRevision {
-    return self.row.documentRevision;
+- (id)documentRevisionID {
+    return self.row.documentRevisionID;
 }
 
 - (id)document {
-    return self.row.document ? [[TDDocumentProxy alloc] initWithExecutionContext:[self executionContext] CBLDocument:self.row.document] : nil;
+    return self.row.document ? [self.queryEnumerator.query.database _existingDocumentWithID:self.row.documentID] : nil;
 }
 
 - (id)documentProperties {
@@ -236,8 +292,16 @@
     return self.row.key3;
 }
 
-- (id)localSequence {
-    return NUMINT(self.row.localSequence);
+- (id)sequenceNumber {
+    return NUMLONG(self.row.sequenceNumber);
+}
+
+- (id)conflictingRevisions {
+    NSMutableArray * result = [NSMutableArray array];
+    for (CBLSavedRevision * rev in self.row.conflictingRevisions) {
+        [result addObject:[TDSavedRevisionProxy proxyWithDocument:[self.queryEnumerator.query.database _existingDocumentWithID:rev.document.documentID] savedRevision:rev]];
+    }
+    return result;
 }
 
 @end

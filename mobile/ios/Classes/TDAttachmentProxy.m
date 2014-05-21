@@ -12,6 +12,7 @@
 #import "TiBlob.h"
 
 @interface TDAttachmentProxy ()
+@property (nonatomic, assign) TDRevisionProxyBase * rev;
 @property (nonatomic, strong) CBLAttachment * attachment;
 @end
 
@@ -21,8 +22,13 @@
     NSError * lastError;
 }
 
-- (id)initWithExecutionContext:(id<TiEvaluator>)context CBLAttachment:(CBLAttachment *)attachment {
-    if (self = [super _initWithPageContext:context]) {
++ (instancetype)proxyWithRevision:(TDRevisionProxyBase *)revision attachment:(CBLAttachment *)attachment {
+    return [[[TDAttachmentProxy alloc] initWithRevision:revision attachment:attachment] autorelease];
+}
+
+- (id)initWithRevision:(TDRevisionProxyBase *)revision attachment:(CBLAttachment *)attachment {
+    if (self = [super _initWithPageContext:revision.pageContext]) {
+        self.rev = revision;
         self.attachment = attachment;
     }
     return self;
@@ -31,6 +37,14 @@
 - (void)dealloc {
     RELEASE_TO_NIL(lastError)
     [super dealloc];
+}
+
+- (id)revision {
+    return self.rev;
+}
+
+- (id)document {
+    return self.rev.doc;
 }
 
 - (id)name {
@@ -49,26 +63,12 @@
     return self.attachment.metadata;
 }
 
-- (id)body {
-    return [[TiBlob alloc] initWithData:self.attachment.body mimetype:self.attachment.contentType];
+- (id)content {
+    return [[TiBlob alloc] initWithData:self.attachment.content mimetype:self.attachment.contentType];
 }
 
-- (id)bodyURL {
-    return [self.attachment.bodyURL absoluteString];
-}
-
-- (id)updateBody:(id)args {
-    TiBlob * body;
-    NSString * contentType;
-    ENSURE_ARG_OR_NULL_AT_INDEX(body, args, 0, TiBlob)
-    ENSURE_ARG_OR_NULL_AT_INDEX(contentType, args, 1, NSString)
-    
-    RELEASE_TO_NIL(lastError)
-
-    CBLRevision * rev = [self.attachment updateBody:body.data contentType:contentType error:&lastError];
-    [lastError retain];
-    
-    return rev ? [[TDRevisionProxy alloc] initWithExecutionContext:[self executionContext] CBLRevision:rev] : nil;
+- (id)contentURL {
+    return [self.attachment.contentURL absoluteString];
 }
 
 - (id)error {

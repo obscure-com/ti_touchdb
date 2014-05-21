@@ -14,10 +14,6 @@
 #import "TiUtils.h"
 #import "TiProxy+Errors.h"
 #import "TDDatabaseManagerProxy.h"
-#import "CBLReplication.h"
-#import "CBLQuery.h"
-#import "CBLManager.h"
-#import "CBLListener.h"
 
 extern BOOL EnableLog(BOOL enable);
 
@@ -50,6 +46,10 @@ extern BOOL EnableLog(BOOL enable);
     if (__has_feature(objc_arc)) {
         NSLog(@"[INFO] ARC is enabled");
     }
+    
+    if (getenv("NSZombieEnabled") || getenv("NSAutoreleaseFreedObjectCheckEnabled")) {
+		NSLog(@"[INFO] NSZombieEnabled/NSAutoreleaseFreedObjectCheckEnabled enabled!");
+	}
 }
 
 -(void)shutdown:(id)sender {
@@ -77,9 +77,16 @@ extern BOOL EnableLog(BOOL enable);
 
 - (id)databaseManager {
     if (!self.databaseManagerProxy) {
-        self.databaseManagerProxy = [[TDDatabaseManagerProxy alloc] initWithExecutionContext:[self executionContext]];
+        self.databaseManagerProxy = [TDDatabaseManagerProxy proxyWithModule:self];
     }
     return self.databaseManagerProxy;
+}
+
+- (void)enableLogging:(id)args {
+    NSString * category;
+    ENSURE_ARG_AT_INDEX(category, args, 0, NSString)
+    
+    [CBLManager enableLogging:category];
 }
 
 #pragma mark CBLListener
@@ -123,8 +130,13 @@ MAKE_SYSTEM_PROP(REPLICATION_MODE_OFFLINE, kCBLReplicationOffline)
 MAKE_SYSTEM_PROP(REPLICATION_MODE_IDLE, kCBLReplicationIdle)
 MAKE_SYSTEM_PROP(REPLICATION_MODE_ACTIVE, kCBLReplicationActive)
 
-MAKE_SYSTEM_PROP(STALE_QUERY_NEVER, kCBLUpdateIndexNever)
-MAKE_SYSTEM_PROP(STALE_QUERY_OK, kCBLUpdateIndexBefore)
-MAKE_SYSTEM_PROP(STALE_QUERY_UPDATE_AFTER, kCBLUpdateIndexAfter)
+MAKE_SYSTEM_PROP(QUERY_ALL_DOCS, kCBLAllDocs)
+MAKE_SYSTEM_PROP(QUERY_INCLUDE_DELETED, kCBLIncludeDeleted)
+MAKE_SYSTEM_PROP(QUERY_SHOW_CONFLICTS, kCBLShowConflicts)
+MAKE_SYSTEM_PROP(QUERY_ONLY_CONFLICTS, kCBLOnlyConflicts)
+
+MAKE_SYSTEM_PROP(QUERY_UPDATE_INDEX_BEFORE, kCBLUpdateIndexBefore)
+MAKE_SYSTEM_PROP(QUERY_UPDATE_INDEX_NEVER, kCBLUpdateIndexNever)
+MAKE_SYSTEM_PROP(QUERY_UPDATE_INDEX_AFTER, kCBLUpdateIndexAfter)
 
 @end

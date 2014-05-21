@@ -7,57 +7,60 @@
 //
 
 #import "TDReplicationProxy.h"
+#import "TDDatabaseProxy.h"
 #import "TiProxy+Errors.h"
 
 extern NSString * CBL_ReplicatorProgressChangedNotification;
 extern NSString * CBL_ReplicatorStoppedNotification;
 
 @interface TDReplicationProxy ()
+@property (nonatomic, assign) TDDatabaseProxy * database;
 @property (nonatomic, strong) CBLReplication * replication;
+- (void)startObservingReplication:(CBLReplication*)repl;
+- (void)stopObservingReplication:(CBLReplication*)repl;
 @end
 
 @implementation TDReplicationProxy
 
-- (id)initWithExecutionContext:(id<TiEvaluator>)context CBLReplication:(CBLReplication *)replication {
-    if (self = [super _initWithPageContext:context]) {
++ (instancetype)proxyWithDatabase:(TDDatabaseProxy *)database replication:(CBLReplication *)replication {
+    return [[[TDReplicationProxy alloc] initWithDatabase:database replication:replication] autorelease];
+}
+
+- (id)initWithDatabase:(TDDatabaseProxy *)database replication:(CBLReplication *)replication {
+    if (self = [super _initWithPageContext:database.pageContext]) {
+        self.database = database;
         self.replication = replication;
 
-        /*
-         * replication progress events are sent from private CBL_Replication objects, not the
-         * public CBLReplication that we get in this layer.  For this reason, we have to listen
-         * for ALL CBL_ReplicatorProgressChangedNotification notifications and sort out which one
-         * belongs to our CBLReplication in the handler method.
-         */
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(replicationChanged:) name:CBL_ReplicatorProgressChangedNotification object:nil];
-        
+        [self startObservingReplication:self.replication];
     }
     return self;
 }
 
+- (void)dealloc {
+    [self stopObservingReplication:self.replication];
+    [super dealloc];
+}
+
 #pragma mark Replication Configuration
 
-- (id)remoteURL {
+- (id)remoteUrl {
     return [self.replication.remoteURL absoluteString];
 }
 
-- (id)pull {
+- (id)isPull {
     return NUMBOOL(self.replication.pull);
 }
 
-- (id)persistent {
-    return NUMBOOL(self.replication.persistent);
+- (id)isRunning {
+    return NUMBOOL(self.replication.running);
 }
 
-- (void)setPersistent:(id)value {
-    self.replication.persistent = [value boolValue];
+- (id)createTarget {
+    return NUMBOOL(self.replication.createTarget);
 }
 
-- (id)create_target {
-    return NUMBOOL(self.replication.create_target);
-}
-
-- (void)setCreate_target:(id)value {
-    self.replication.create_target = [value boolValue];
+- (void)setCreateTarget:(id)value {
+    self.replication.createTarget = [value boolValue];
 }
 
 - (id)continuous {
@@ -77,22 +80,21 @@ extern NSString * CBL_ReplicatorStoppedNotification;
     self.replication.filter = value;
 }
 
-- (id)query_params {
-    return self.replication.query_params;
+- (id)filterParams {
+    return self.replication.filterParams;
 }
 
-- (void)setQuery_params:(id)value {
-    ENSURE_DICT(value)
-    self.replication.query_params = value;
+- (void)setFilterParams:(id)value {
+    self.replication.filterParams = value;
 }
 
-- (id)doc_ids {
-    return self.replication.doc_ids;
+- (id)docIDs {
+    return self.replication.documentIDs;
 }
 
-- (void)setDoc_ids:(id)value {
+- (void)setDocIDs:(id)value {
     ENSURE_ARRAY(value)
-    self.replication.doc_ids = value;
+    self.replication.documentIDs = value;
 }
 
 - (id)headers {
@@ -102,6 +104,26 @@ extern NSString * CBL_ReplicatorStoppedNotification;
 - (void)setHeaders:(id)value {
     ENSURE_DICT(value)
     self.replication.headers = value;
+}
+
+- (id)localDatabase {
+    return self.database;
+}
+
+- (id)network {
+    return self.replication.network;
+}
+
+- (void)setNetwork:(id)value {
+    self.replication.network = value;
+}
+
+#pragma mark Authentication
+
+- (void)setCredential:(id)value {
+    ENSURE_DICT(value)
+    NSDictionary * cred = value;
+    self.replication.credential = [NSURLCredential credentialWithUser:cred[@"user"] password:cred[@"pass"] persistence:NSURLCredentialPersistenceForSession];
 }
 
 #pragma mark Replication Status
@@ -114,35 +136,60 @@ extern NSString * CBL_ReplicatorStoppedNotification;
     [self.replication stop];
 }
 
+- (void)restart:(id)args {
+    [self.replication restart];
+}
+
 - (id)running {
     return NUMBOOL(self.replication.running);
 }
 
-- (id)completed {
-    return NUMINT(self.replication.completed);
+- (id)completedChangesCount {
+    return NUMINT(self.replication.completedChangesCount);
 }
 
-- (id)total {
-    return NUMINT(self.replication.total);
+- (id)changesCount {
+    return NUMINT(self.replication.changesCount);
 }
 
-- (id)error {
-    return [self errorDict:self.replication.error];
+- (id)lastError {
+    return [self errorDict:self.replication.lastError];
 }
 
-- (id)mode {
-    return NUMINT(self.replication.mode);
+- (id)status {
+    return NUMINT(self.replication.status);
 }
 
 #pragma mark Notifications
 
 #define kReplicationChangedEventName @"change"
+#define kReplicationStoppedEventName @"status"
 
-- (void)replicationChanged:(NSNotification *)notification {
-    // very nasty, precious, looking at its internalzzz
-    id bgrepl = [self.replication valueForKeyPath:@"_bg_replicator"];
-    if (bgrepl == notification.object) {
-        [self fireEvent:kReplicationChangedEventName withObject:nil propagate:YES];
+- (void)startObservingReplication:(CBLReplication*)repl {
+    [repl addObserver:self forKeyPath:@"completedChangesCount" options:0 context:NULL];
+    [repl addObserver:self forKeyPath:@"changesCount" options:0 context:NULL];
+    [repl addObserver:self forKeyPath:@"status" options:0 context:NULL];
+}
+
+- (void)stopObservingReplication:(CBLReplication*)repl {
+    [repl removeObserver:self forKeyPath:@"completedChangesCount"];
+    [repl removeObserver:self forKeyPath:@"changesCount"];
+    [repl removeObserver:self forKeyPath:@"status"];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    CBLReplication * repl = (CBLReplication *)object;
+    if ([@"status" isEqualToString:keyPath]) {
+        // fire status event
+        TiThreadPerformOnMainThread(^{
+            [self fireEvent:kReplicationStoppedEventName withObject:@{@"status":NUMINT(repl.status)} propagate:YES];
+        }, NO);
+    }
+    else {
+        // fire change event
+        TiThreadPerformOnMainThread(^{
+            [self fireEvent:kReplicationChangedEventName withObject:nil propagate:YES];
+        }, NO);
     }
 }
 

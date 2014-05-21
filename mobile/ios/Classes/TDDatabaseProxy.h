@@ -8,6 +8,12 @@
 
 #import "TiProxy.h"
 
+@class TDDatabaseManagerProxy;
+@class TDDocumentProxy;
+
 @interface TDDatabaseProxy : TiProxy
-- (id)initWithExecutionContext:(id<TiEvaluator>)context CBLDatabase:(CBLDatabase *)database;
++ (instancetype)proxyWithManager:(TDDatabaseManagerProxy *)manager database:(CBLDatabase *)database;
+
+- (TDDocumentProxy *)_existingDocumentWithID:(NSString *)documentID;
+- (void)_removeProxyForDocument:(NSString *)documentID;
 @end

@@ -8,14 +8,18 @@
 
 #import "TiProxy.h"
 
+@class TDDocumentProxy;
+
 @interface TDRevisionProxyBase : TiProxy
+@property (nonatomic, assign) TDDocumentProxy * doc;
+- (id)revisionID;
 @end
 
-@interface TDRevisionProxy : TDRevisionProxyBase
-- (id)initWithExecutionContext:(id<TiEvaluator>)context CBLRevision:(CBLRevision *)revision;
+@interface TDSavedRevisionProxy : TDRevisionProxyBase
++ (instancetype)proxyWithDocument:(TDDocumentProxy *)document savedRevision:(CBLSavedRevision *)revision;
 @end
 
 
-@interface CBLNewRevisionProxy : TDRevisionProxyBase
-- (id)initWithExecutionContext:(id<TiEvaluator>)context CBLNewRevision:(CBLNewRevision *)revision;
+@interface TDUnsavedRevisionProxy : TDRevisionProxyBase
++ (instancetype)proxyWithDocument:(TDDocumentProxy *)document unsavedRevision:(CBLUnsavedRevision *)revision;
 @end
