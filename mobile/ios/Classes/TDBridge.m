@@ -83,7 +83,7 @@ CBLMapEmitBlock _emitBlock;
         TDRevisionProxy * revisionProxy = [[TDRevisionProxy alloc] initWithExecutionContext:context CBLRevision:newRevision];
         id contextDoc = [NSNull null]; // TODO
         id result = [callback call:[NSArray arrayWithObjects:revisionProxy, contextDoc, nil] thisObject:nil];
-        return [result boolValue];
+        if ([result boolValue]) [validationContext reject];
     };
     
     return [[result copy] autorelease];

@@ -1,4 +1,4 @@
-"#main": {
+"#nav": {
   backgroundColor: 'white',
   fullscreen: true
 }
