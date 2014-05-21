@@ -10,10 +10,11 @@ import org.appcelerator.kroll.annotations.Kroll;
 
 import android.util.Log;
 
-import com.couchbase.cblite.CBLDatabase;
-import com.couchbase.cblite.CBLQueryOptions;
-import com.couchbase.cblite.CBLStatus;
-import com.couchbase.cblite.CBLView;
+import com.couchbase.lite.CouchbaseLiteException;
+import com.couchbase.lite.Database;
+import com.couchbase.lite.QueryOptions;
+import com.couchbase.lite.QueryRow;
+import com.couchbase.lite.View;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)
 public class QueryProxy extends KrollProxy {
@@ -24,13 +25,13 @@ public class QueryProxy extends KrollProxy {
 
     private KrollDict             lastError;
 
-    private CBLDatabase           database;
+    private Database           database;
 
     private String                view;
 
-    private CBLQueryOptions       queryOptions       = new CBLQueryOptions();
+    private QueryOptions       queryOptions       = new QueryOptions();
 
-    public QueryProxy(CBLDatabase database, String view) {
+    public QueryProxy(Database database, String view) {
         assert database != null;
 
         this.database = database;
@@ -161,30 +162,35 @@ public class QueryProxy extends KrollProxy {
     @Kroll.method
     @SuppressWarnings("unchecked")
     public QueryEnumeratorProxy rows() {
-        List<Map<String, Object>> rows = null;
+        List<QueryRow> rows = null;
+        try {
         if (view == null) {
             // _all_docs
-            rows = (List<Map<String, Object>>) database.getAllDocs(this.queryOptions).get("rows");
+            rows = (List<QueryRow>) database.getAllDocs(this.queryOptions).get("rows");
         }
         else {
-            CBLView v = database.getExistingViewNamed(view);
+            View v = database.getExistingView(view);
+            v.updateIndex();
+            /*
             
-            CBLStatus status = v.updateIndex();
             if (status == null || !status.isSuccessful()) {
                 Log.e(LCAT, "Error updating view: " + view);
                 return null;
             }
-            
-            status = new CBLStatus();
-            rows = v.queryWithOptions(this.queryOptions, status);
-            
+            */
+            rows = v.queryWithOptions(this.queryOptions);
+            /*
             if (status == null || !status.isSuccessful()) {
                 Log.e(LCAT, "Error getting rows from view: " + view);
                 return null;
             }
+            */
         }
-
-        return new QueryEnumeratorProxy(database, rows);
+        }
+        catch (CouchbaseLiteException e) {
+            // TODO
+        }
+        return rows != null ? new QueryEnumeratorProxy(database, rows) : null;
     }
 
     @Kroll.method

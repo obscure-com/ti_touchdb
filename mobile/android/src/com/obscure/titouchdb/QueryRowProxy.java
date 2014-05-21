@@ -2,73 +2,59 @@ package com.obscure.titouchdb;
 
 import java.util.Map;
 
+import javax.xml.bind.TypeConstraintException;
+
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 
-import android.util.Log;
-
-import com.couchbase.cblite.CBLDatabase;
+import com.couchbase.lite.Database;
+import com.couchbase.lite.QueryRow;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)
 public class QueryRowProxy extends KrollProxy {
 
     private static final String LCAT = "QueryRowProxy";
 
-    private String              docid;
-
-    private Map<String, Object> docProperties;
-
-    private Object              key;
-
-    private String              rev;
-
-    private int                 seq;
-
-    private Object              value;
-
-    private CBLDatabase         database;
+    private QueryRow row;
+    
+    private Database         database;
 
     @SuppressWarnings({ "unchecked" })
-    public QueryRowProxy(CBLDatabase database, final Map<String, Object> row) {
+    public QueryRowProxy(Database database, final QueryRow row) {
         assert database != null;
         assert row != null;
-        assert row.containsKey("key");
+        assert row.getKey() != null;
 
         this.database = database;
-        this.docid = (String) row.get("id");
-        this.rev = (String) row.get("rev");
-        this.key = TypePreprocessor.preprocess(row.get("key"));
-        this.value = TypePreprocessor.preprocess(row.get("value"));
-        this.seq = row.containsKey("seq") ? (Integer) row.get("seq") : 0;
-        this.docProperties = (Map<String, Object>) TypePreprocessor.preprocess(row.get("doc"));
+        this.row = row;
     }
 
     @Kroll.getProperty(name = "document")
     public DocumentProxy getDocument() {
-        if (docid == null) {
+        if (row.getDocumentId() == null) {
             return null;
         }
-        return new DocumentProxy(database, docid);
+        return new DocumentProxy(database, row.getDocumentId());
     }
 
     @Kroll.getProperty(name = "documentID")
     public String getDocumentID() {
-        return docProperties != null && docProperties.containsKey("_id") ? (String) docProperties.get("_id") : docid;
+        return row.getDocumentId();
     }
 
     @Kroll.getProperty(name = "documentProperties")
     public Map<String, Object> getDocumentProperties() {
-        return docProperties;
+        return row.getDocumentProperties();
     }
 
     @Kroll.getProperty(name = "documentRevision")
     public String getDocumentRevision() {
-        return rev;
+        return row.getDocumentRevisionId();
     }
 
     @Kroll.getProperty(name = "key")
     public Object getKey() {
-        return key;
+        return row.getKey();
     }
 
     @Kroll.getProperty(name = "key0")
@@ -92,22 +78,23 @@ public class QueryRowProxy extends KrollProxy {
     }
 
     @Kroll.getProperty(name = "localSequence")
-    public int getLocalSequence() {
-        return seq;
+    public long getLocalSequence() {
+        return row.getSequenceNumber();
     }
 
     @Kroll.getProperty(name = "sourceDocumentID")
     public String getSourceDocumentID() {
-        return docid;
+        return row.getSourceDocumentId();
     }
 
     @Kroll.getProperty(name = "value")
     public Object getValue() {
-        return value;
+        return TypePreprocessor.preprocess(row.getValue());
     }
 
     @Kroll.method
     public Object keyAtIndex(int index) {
+        Object key = row.getKey();
         if (key instanceof Object[] && index >= 0 && index < ((Object[]) key).length) {
             return ((Object[]) key)[index];
         }

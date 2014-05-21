@@ -4,14 +4,14 @@ import org.appcelerator.kroll.KrollFunction;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 
-import com.couchbase.cblite.CBLView;
+import com.couchbase.lite.View;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)
 public class ViewProxy extends KrollProxy {
 
-    private CBLView view;
+    private View view;
 
-    public ViewProxy(CBLView view) {
+    public ViewProxy(View view) {
         assert view != null;
         this.view = view;
     }
@@ -23,19 +23,19 @@ public class ViewProxy extends KrollProxy {
 
     @Kroll.method
     public boolean setMapAndReduce(KrollFunction map, KrollFunction reduce, String version) {
-        KrollViewMapBlock mapblock = new KrollViewMapBlock(map);
-        KrollViewReduceBlock reduceblock = new KrollViewReduceBlock(reduce);
-        return view.setMapReduceBlocks(mapblock, reduceblock, version);
+        KrollMapper mapblock = new KrollMapper(map);
+        KrollReducer reduceblock = new KrollReducer(reduce);
+        return view.setMapReduce(mapblock, reduceblock, version);
     }
 
     @Kroll.method
     public boolean setMap(KrollFunction map, String version) {
-        KrollViewMapBlock mapblock = new KrollViewMapBlock(map);
-        return view.setMapReduceBlocks(mapblock, null, version);
+        KrollMapper mapblock = new KrollMapper(map);
+        return view.setMapReduce(mapblock, null, version);
     }
 
     @Kroll.method
     public QueryProxy query() {
-        return new QueryProxy(view.getDb(), view.getName());
+        return new QueryProxy(view.getDatabase(), view.getName());
     }
 }

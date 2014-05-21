@@ -4,8 +4,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Observable;
-import java.util.Observer;
 
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollFunction;
@@ -18,18 +16,20 @@ import org.appcelerator.titanium.TiApplication;
 import android.os.Message;
 import android.util.Log;
 
-import com.couchbase.cblite.CBLDatabase;
-import com.couchbase.cblite.CBLRevision;
-import com.couchbase.cblite.CBLServer;
-import com.couchbase.cblite.CBLStatus;
-import com.couchbase.cblite.CBLValidationBlock;
-import com.couchbase.cblite.CBLView;
-import com.couchbase.cblite.replicator.CBLPuller;
-import com.couchbase.cblite.replicator.CBLPusher;
-import com.couchbase.cblite.replicator.CBLReplicator;
+import com.couchbase.lite.CouchbaseLiteException;
+import com.couchbase.lite.Database;
+import com.couchbase.lite.Database.ChangeEvent;
+import com.couchbase.lite.Database.ChangeListener;
+import com.couchbase.lite.Manager;
+import com.couchbase.lite.Revision;
+import com.couchbase.lite.Validator;
+import com.couchbase.lite.View;
+import com.couchbase.lite.replicator.Puller;
+import com.couchbase.lite.replicator.Pusher;
+import com.couchbase.lite.replicator.Replication;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)
-public class DatabaseProxy extends KrollProxy implements Observer {
+public class DatabaseProxy extends KrollProxy implements ChangeListener {
 
     private static final String        LCAT                       = "DatabaseProxy";
 
@@ -37,23 +37,23 @@ public class DatabaseProxy extends KrollProxy implements Observer {
 
     private static final int           MSG_HANDLE_DATABASE_CHANGE = MSG_FIRST_ID + 1200;
 
-    private CBLDatabase                database                   = null;
+    private Database                database                   = null;
 
     private Map<String, DocumentProxy> documentProxyCache         = new HashMap<String, DocumentProxy>();
 
     private KrollDict                  lastError;
 
-    private CBLServer                  server                     = null;
+    private Manager                  manager                     = null;
 
     private Map<String, ViewProxy>     viewProxyCache             = new HashMap<String, ViewProxy>();
 
-    public DatabaseProxy(CBLServer server, CBLDatabase database) {
-        assert server != null;
+    public DatabaseProxy(Manager manager, Database database) {
+        assert manager != null;
         assert database != null;
-        this.server = server;
+        this.manager = manager;
         this.database = database;
 
-        database.addObserver(this);
+        database.addChangeListener(this);
     }
 
     @Kroll.method
@@ -67,34 +67,45 @@ public class DatabaseProxy extends KrollProxy implements Observer {
     }
 
     @Kroll.method
-    public boolean compact() {
-        CBLStatus status = database.compact();
-        return status != null && status.isSuccessful();
+    public void compact() {
+        try {
+            database.compact();
+        }
+        catch (CouchbaseLiteException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     @Kroll.method
     public void defineFilter(String name, @Kroll.argument(optional = true) KrollFunction filter) {
-        database.defineFilter(name, filter != null ? new KrollFilterBlock(filter) : null);
+        database.setFilter(name, filter != null ? new KrollReplicationFilter(filter) : null);
     }
 
     @Kroll.method
     public void defineValidation(String name, @Kroll.argument(optional = true) KrollFunction validation) {
-        CBLValidationBlock block = null;
+        Validator validator = null;
         if (validation != null) {
-            block = new KrollValidationBlock(this, validation);
+            validator = new KrollValidator(this, validation);
         }
-        database.defineValidation(name, block);
+        database.setValidation(name, validator);
     }
 
     @Kroll.method
-    public boolean deleteDatabase() {
-        return database.deleteDatabase();
+    public void deleteDatabase() {
+        try {
+            database.delete();
+        }
+        catch (CouchbaseLiteException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     @Kroll.method
     public DocumentProxy documentWithID(@Kroll.argument(optional = true) String docid) {
         if (docid == null || docid.length() < 1) {
-            docid = CBLDatabase.generateDocumentId();
+            docid = Database.generateDocumentId();
         }
 
         DocumentProxy result = documentProxyCache.get(docid);
@@ -122,7 +133,7 @@ public class DatabaseProxy extends KrollProxy implements Observer {
 
     @Kroll.getProperty(name = "lastSequenceNumber")
     public Long getLastSequenceNumber() {
-        return database.getLastSequence();
+        return database.getLastSequenceNumber();
     }
 
     @Kroll.getProperty(name = "name")
@@ -132,11 +143,11 @@ public class DatabaseProxy extends KrollProxy implements Observer {
 
     @SuppressWarnings("unchecked")
     private void handleDatabaseChange(Object arg) {
-        // database change notification is { "rev": CBLRevision, "seq": int }
+        // database change notification is { "rev": Revision, "seq": int }
         Map<String, Object> change = (Map<String, Object>) arg;
         KrollDict params = new KrollDict();
         params.put("seq", change.get("seq"));
-        params.put("rev", new ReadOnlyRevisionProxy((CBLRevision) change.get("rev")));
+        params.put("rev", new ReadOnlyRevisionProxy((Revision) change.get("rev")));
         fireEvent("change", params);
     }
 
@@ -153,11 +164,11 @@ public class DatabaseProxy extends KrollProxy implements Observer {
         }
     }
 
-    private CBLView makeAnonymousView() {
+    private View makeAnonymousView() {
         for (int i = 0; true; i++) {
             String name = String.format("$anon$%s", i);
-            if (database.getExistingViewNamed(name) == null) {
-                return database.getViewNamed(name);
+            if (database.getView(name) == null) {
+                return database.getView(name);
             }
         }
         // TODO what happens to all of these anonymous views?
@@ -166,10 +177,9 @@ public class DatabaseProxy extends KrollProxy implements Observer {
     @Kroll.method
     public ReplicationProxy pullFromURL(String url) {
         try {
-            URL remote = new URL(url);
-            CBLReplicator pull = database.getActiveReplicator(remote, false);
+            Replication pull = database.getReplicator(url);
             if (pull == null) {
-                pull = new CBLPuller(database, new URL(url), false, server.getWorkExecutor());
+                pull = new Puller(database, new URL(url), false, manager.getWorkExecutor());
             }
             return new ReplicationProxy(pull);
         }
@@ -182,10 +192,9 @@ public class DatabaseProxy extends KrollProxy implements Observer {
     @Kroll.method
     public ReplicationProxy pushToURL(String url) {
         try {
-            URL remote = new URL(url);
-            CBLReplicator push = database.getActiveReplicator(remote, true);
+            Replication push = database.getReplicator(url);
             if (push == null) {
-                push = new CBLPusher(database, remote, false, server.getWorkExecutor());
+                push = new Pusher(database, new URL(url), false, manager.getWorkExecutor());
             }
             return new ReplicationProxy(push);
         }
@@ -203,20 +212,19 @@ public class DatabaseProxy extends KrollProxy implements Observer {
     @Kroll.method
     public ReplicationProxy[] replicateWithURL(String url, @Kroll.argument(optional = true) boolean exclusive) {
         try {
-            URL remote = new URL(url);
             if (exclusive) {
                 // stop and clear old replications
                 for (Boolean b : new Boolean[] { true, false }) {
-                    CBLReplicator pull = database.getActiveReplicator(remote, b);
+                    Replication pull = database.getReplicator(url);
                     if (pull != null) {
                         pull.stop();
-                        database.getActiveReplicators().remove(pull);
+                        database.getActiveReplications().remove(pull);
                     }
                 }
             }
             return new ReplicationProxy[] { pushToURL(url), pullFromURL(url) };
         }
-        catch (MalformedURLException e) {
+        catch (Exception e) {
             Log.e(LCAT, "malformed replication URL: " + url);
         }
         return null;
@@ -224,34 +232,34 @@ public class DatabaseProxy extends KrollProxy implements Observer {
 
     @Kroll.method
     public QueryProxy slowQueryWithMap(KrollFunction map) {
-        CBLView view = makeAnonymousView();
-        view.setMapReduceBlocks(new KrollViewMapBlock(map), null, "1");
+        View view = makeAnonymousView();
+        view.setMapReduce(new KrollMapper(map), null, "1");
         return new QueryProxy(this.database, view.getName());
     }
 
     @Kroll.method
     public DocumentProxy untitledDocument() {
-        return documentWithID(CBLDatabase.generateDocumentId());
-    }
-
-    @Override
-    public void update(Observable o, Object arg) {
-        if (!TiApplication.isUIThread()) {
-            TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_HANDLE_DATABASE_CHANGE), arg);
-        }
-        else {
-            handleDatabaseChange(arg);
-        }
+        return documentWithID(Database.generateDocumentId());
     }
 
     @Kroll.method
     public ViewProxy viewNamed(String name) {
         if (!viewProxyCache.containsKey(name)) {
-            CBLView view = database.getViewNamed(name);
+            View view = database.getView(name);
             if (view != null) {
                 viewProxyCache.put(name, new ViewProxy(view));
             }
         }
         return viewProxyCache.get(name);
+    }
+
+    @Override
+    public void changed(ChangeEvent e) {
+        if (!TiApplication.isUIThread()) {
+            TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_HANDLE_DATABASE_CHANGE), e);
+        }
+        else {
+            handleDatabaseChange(e);
+        }
     }
 }

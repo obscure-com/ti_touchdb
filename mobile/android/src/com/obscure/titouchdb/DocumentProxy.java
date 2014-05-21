@@ -1,8 +1,6 @@
 package com.obscure.titouchdb;
 
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 
@@ -12,10 +10,11 @@ import org.appcelerator.kroll.annotations.Kroll;
 
 import android.util.Log;
 
-import com.couchbase.cblite.CBLDatabase;
-import com.couchbase.cblite.CBLDatabase.TDContentOptions;
-import com.couchbase.cblite.CBLRevision;
-import com.couchbase.cblite.CBLStatus;
+import com.couchbase.lite.CouchbaseLiteException;
+import com.couchbase.lite.Database;
+import com.couchbase.lite.Document;
+import com.couchbase.lite.Revision;
+import com.couchbase.lite.SavedRevision;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)
 public class DocumentProxy extends KrollProxy {
@@ -24,68 +23,55 @@ public class DocumentProxy extends KrollProxy {
 
     private static final String          LCAT                       = "DocumentProxy";
 
-    private CBLRevision                  currentRevision;
-
-    private CBLDatabase                  database;
-
-    private String                       docid;
+    private Database                     database;
+    
+    private Document document;
 
     private KrollDict                    lastError                  = null;
 
-    public DocumentProxy(CBLDatabase database, String docid) {
+    public DocumentProxy(Database database, String docid) {
         assert database != null;
         assert docid != null;
 
         this.database = database;
-        this.docid = docid;
+        this.document = database.getDocument(docid);
     }
 
     @Kroll.method
     public boolean deleteDocument() {
-        // create and save a new revision with the deleted property set to true
-        CBLRevision current = getCurrentCBLRevision();
-        CBLRevision rev = new CBLRevision(docid, null, true);
-        CBLStatus status = new CBLStatus();
-        current = database.putRevision(rev, current != null ? current.getRevId() : null, false, status);
-        if (!status.isSuccessful()) {
-            lastError = TitouchdbModule.convertCBLStatusToErrorDict(status);
-            return false;
+        try {
+        return document.delete();
         }
-        setCurrentCBLRevision(current);
-        return true;
-    }
-    
-    @Kroll.getProperty(name = "abbreviatedID")
-    public String getAbbreviatedID() {
-        return this.docid.length() > 10 ? this.docid.substring(0, 4) + ".." + this.docid.substring(this.docid.length() - 4) : this.docid;
+        catch (CouchbaseLiteException e) {
+            // TODO
+        }
+        return false;
     }
 
-    protected CBLRevision getCurrentCBLRevision() {
-        if (currentRevision == null) {
-            setCurrentCBLRevision(database.getDocumentWithIDAndRev(this.docid, null, EnumSet.noneOf(TDContentOptions.class)));
-        }
-        return currentRevision;
+    @Kroll.getProperty(name = "abbreviatedID")
+    public String getAbbreviatedID() {
+        // TODO
+        return null;
+//        return this.docid.length() > 10 ? this.docid.substring(0, 4) + ".." + this.docid.substring(this.docid.length() - 4) : this.docid;
     }
 
     @Kroll.getProperty(name = "currentRevision")
     public RevisionProxy getCurrentRevision() {
-        CBLRevision rev = getCurrentCBLRevision();
-        return rev != null ? new RevisionProxy(this, rev) : null;
+        return new RevisionProxy(this, document.getCurrentRevision());
     }
 
     @Kroll.getProperty(name = "currentRevisionID")
     public String getCurrentRevisionID() {
-        CBLRevision rev = getCurrentCBLRevision();
-        return rev != null ? rev.getRevId() : null;
+        return document.getCurrentRevisionId();
     }
 
-    protected CBLDatabase getDatabase() {
+    protected Database getDatabase() {
         return database;
     }
 
     @Kroll.getProperty(name = "documentID")
     public String getDocumentID() {
-        return this.docid;
+        return document.getId();
     }
 
     @Kroll.getProperty(name = "error")
@@ -102,45 +88,44 @@ public class DocumentProxy extends KrollProxy {
     @SuppressWarnings("unchecked")
     @Kroll.getProperty(name = "properties")
     public KrollDict getProperties() {
-        CBLRevision rev = getCurrentCBLRevision();
-        if (rev != null && rev.getProperties() != null) {
-            Map<String,Object> props = (Map<String,Object>) TypePreprocessor.preprocess(rev.getProperties());
-            return new KrollDict(props);
-        }
-        else {
-            return null;
-        }
+        Map<String, Object> props = (Map<String, Object>) TypePreprocessor.preprocess(document.getProperties());
+        return new KrollDict(props);
     }
 
     @Kroll.method
     public RevisionProxy[] getRevisionHistory() {
-        // returns revision stubs!
-        List<CBLRevision> history = database.getRevisionHistory(getCurrentCBLRevision());
         List<RevisionProxy> result = new ArrayList<RevisionProxy>();
-        
-        // Android is newest-to-oldest; iOS is oldest-to-newest
-        for (int i = history.size() - 1; i >= 0; i--) {
-            CBLRevision rev = history.get(i);
-            CBLStatus status = database.loadRevisionBody(rev, EnumSet.of(TDContentOptions.TDIncludeLocalSeq, TDContentOptions.TDIncludeConflicts));
-            result.add(new RevisionProxy(this, history.get(i)));
+
+        try {
+        for (SavedRevision revision : document.getRevisionHistory()) {
+            result.add(new RevisionProxy(this, revision));
         }
+        }
+        catch (CouchbaseLiteException e) {
+            // TODO
+        }
+        
+//        List<SavedRevision> history = document.getRevisionHistory();
+//
+//        // Android is newest-to-oldest; iOS is oldest-to-newest
+//        for (int i = history.size() - 1; i >= 0; i--) {
+//            Revision rev = history.get(i);
+//            Status status = database.loadRevisionBody(rev, EnumSet.of(TDContentOptions.TDIncludeLocalSeq, TDContentOptions.TDIncludeConflicts));
+//            result.add(new RevisionProxy(this, history.get(i)));
+//        }
         return result.toArray(EMPTY_REVISION_PROXY_ARRAY);
     }
 
     @Kroll.method
     public RevisionProxy getRevisionWithID(String id) {
-        CBLRevision rev = database.getDocumentWithIDAndRev(this.docid, id, EnumSet.of(TDContentOptions.TDIncludeConflicts));
+        Revision rev = document.getRevision(id);
         return rev != null ? new RevisionProxy(this, rev) : null;
     }
 
     @Kroll.getProperty(name = "userProperties")
     public KrollDict getUserProperties() {
-        CBLRevision rev = getCurrentCBLRevision();
-        if (rev == null) {
-            return null;
-        }
         KrollDict result = new KrollDict();
-        Map<String, Object> props = rev.getProperties();
+        Map<String, Object> props = document.getProperties();
         for (Map.Entry<String, Object> e : props.entrySet()) {
             if (!e.getKey().startsWith("_")) {
                 result.put(e.getKey(), e.getValue());
@@ -151,19 +136,17 @@ public class DocumentProxy extends KrollProxy {
 
     @Kroll.getProperty(name = "deleted")
     public boolean isDeleted() {
-        CBLRevision rev = getCurrentCBLRevision();
-        return rev != null ? rev.isDeleted() : false;
+        return document.isDeleted();
     }
 
     @Kroll.method
-    public NewRevisionProxy newRevision() {
-        return new NewRevisionProxy(this, getCurrentCBLRevision());
+    public UnsavedRevisionProxy newRevision() {
+        return new UnsavedRevisionProxy(this, document.getCurrentRevision());
     }
 
     @Kroll.method
     public Object propertyForKey(String key) {
-        CBLRevision rev = getCurrentCBLRevision();
-        return rev != null && rev.getProperties() != null ? rev.getProperties().get(key) : null;
+        return document.getProperty(key);
     }
 
     @Kroll.method
@@ -178,7 +161,7 @@ public class DocumentProxy extends KrollProxy {
         this.lastError = null;
 
         String idprop = properties != null ? (String) properties.get("_id") : null;
-        if (idprop != null && !idprop.equals(this.docid)) {
+        if (idprop != null && !idprop.equals(document.getId())) {
             Log.w(LCAT, String.format("Trying to put wrong _id to %s: %s", this, idprop));
         }
 
@@ -190,42 +173,46 @@ public class DocumentProxy extends KrollProxy {
             properties.remove("_rev");
         }
 
-        CBLRevision tostore = new CBLRevision(this.docid, null, false);
-        tostore.setProperties(properties);
-
-        CBLStatus resultStatus = new CBLStatus();
-        CBLRevision rev = this.database.putRevision(tostore, prevRevId, false, resultStatus);
+        Revision tostore = document.createRevision();
+        tostore.getProperties().putAll(properties);
+        
+        /*
+        
+        Status resultStatus = new Status();
+        Revision rev = this.database.putRevision(tostore, prevRevId, false, resultStatus);
         if (rev == null) {
-            this.lastError = TitouchdbModule.convertCBLStatusToErrorDict(resultStatus);
+            this.lastError = TitouchdbModule.convertStatusToErrorDict(resultStatus);
             Log.w(LCAT, "putRevision failed: " + resultStatus.getCode());
             return null;
         }
 
-        setCurrentCBLRevision(rev);
-        return new RevisionProxy(this, rev);
+        setCurrentRevision(rev);
+        */
+        return new RevisionProxy(this, tostore);
     }
 
-    protected CBLRevision putRevision(CBLRevision revision, String prevRevId, boolean allowConflict, CBLStatus resultStatus) {
-        CBLRevision result = database.putRevision(revision, prevRevId, allowConflict, resultStatus);
-        setCurrentCBLRevision(result);
+    /*
+    protected Revision putRevision(Revision revision, String prevRevId, boolean allowConflict, Status resultStatus) {
+        Revision result = database.putRevision(revision, prevRevId, allowConflict, resultStatus);
+        setCurrentRevision(result);
         return result;
     }
 
-    private void setCurrentCBLRevision(CBLRevision rev) {
+    private void setCurrentRevision(Revision rev) {
         this.currentRevision = rev;
     }
 
-    protected CBLRevision updateAttachment(String filename, InputStream contentStream, String contentType) {
-        CBLRevision current = getCurrentCBLRevision();
-        CBLStatus status = new CBLStatus();
-        CBLRevision result = database.updateAttachment(filename, contentStream, contentType, this.docid, current.getRevId(), status);
+    protected Revision updateAttachment(String filename, InputStream contentStream, String contentType) {
+        Revision current = getCurrentRevision();
+        Status status = new Status();
+        Revision result = database.updateAttachment(filename, contentStream, contentType, this.docid, current.getRevId(), status);
         if (!status.isSuccessful()) {
-            lastError = TitouchdbModule.convertCBLStatusToErrorDict(status);
+            lastError = TitouchdbModule.convertStatusToErrorDict(status);
             return null;
         }
         return result;
     }
-
-
+*/
+    
     // TODO document changes
 }

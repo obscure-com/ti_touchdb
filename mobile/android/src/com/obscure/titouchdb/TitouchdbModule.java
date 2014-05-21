@@ -17,7 +17,7 @@ import org.appcelerator.kroll.annotations.Kroll;
 import android.app.Activity;
 import android.util.Log;
 
-import com.couchbase.cblite.CBLStatus;
+import com.couchbase.lite.Status;
 
 @Kroll.module(name = "Titouchdb", id = "com.obscure.titouchdb")
 public class TitouchdbModule extends KrollModule {
@@ -50,23 +50,23 @@ public class TitouchdbModule extends KrollModule {
     static {
         System.loadLibrary("function-utils");
         
-        codeToMessage.put(CBLStatus.BAD_JSON, "Invalid JSON");
-        codeToMessage.put(CBLStatus.BAD_REQUEST, "bad_request");
-        codeToMessage.put(CBLStatus.CONFLICT, "conflict");
-        codeToMessage.put(CBLStatus.CREATED, "created");
-        codeToMessage.put(CBLStatus.DB_ERROR, "Database error!");
-        codeToMessage.put(CBLStatus.FORBIDDEN, "forbidden");
-        codeToMessage.put(CBLStatus.INTERNAL_SERVER_ERROR, "Internal error");
-        codeToMessage.put(CBLStatus.METHOD_NOT_ALLOWED, "method_not_allowed");
-        codeToMessage.put(CBLStatus.NOT_ACCEPTABLE, "not_acceptable");
-        codeToMessage.put(CBLStatus.NOT_FOUND, "not_found");
-        codeToMessage.put(CBLStatus.NOT_MODIFIED, "not_modified");
-        codeToMessage.put(CBLStatus.OK, "ok");
-        codeToMessage.put(CBLStatus.PRECONDITION_FAILED, "precondition_failed");
-        codeToMessage.put(CBLStatus.UNKNOWN, "unknown");
+        codeToMessage.put(Status.BAD_JSON, "Invalid JSON");
+        codeToMessage.put(Status.BAD_REQUEST, "bad_request");
+        codeToMessage.put(Status.CONFLICT, "conflict");
+        codeToMessage.put(Status.CREATED, "created");
+        codeToMessage.put(Status.DB_ERROR, "Database error!");
+        codeToMessage.put(Status.FORBIDDEN, "forbidden");
+        codeToMessage.put(Status.INTERNAL_SERVER_ERROR, "Internal error");
+        codeToMessage.put(Status.METHOD_NOT_ALLOWED, "method_not_allowed");
+        codeToMessage.put(Status.NOT_ACCEPTABLE, "not_acceptable");
+        codeToMessage.put(Status.NOT_FOUND, "not_found");
+        codeToMessage.put(Status.NOT_MODIFIED, "not_modified");
+        codeToMessage.put(Status.OK, "ok");
+        codeToMessage.put(Status.PRECONDITION_FAILED, "precondition_failed");
+        codeToMessage.put(Status.UNKNOWN, "unknown");
     }
 
-    protected static KrollDict convertCBLStatusToErrorDict(CBLStatus status) {
+    protected static KrollDict convertStatusToErrorDict(Status status) {
         return generateErrorDict(status.getCode(), "TiTouchDB", codeToMessage.get(status.getCode()));
     }
 

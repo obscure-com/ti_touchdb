@@ -7,9 +7,10 @@ import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 
-import com.couchbase.cblite.CBLAttachment;
-import com.couchbase.cblite.CBLDatabase;
-import com.couchbase.cblite.CBLStatus;
+import com.couchbase.lite.Attachment;
+import com.couchbase.lite.CouchbaseLiteException;
+import com.couchbase.lite.Database;
+import com.couchbase.lite.Status;
 
 @Kroll.proxy(creatableInModule = TitouchdbModule.class)
 public abstract class AbstractRevisionProxy extends KrollProxy {
@@ -51,13 +52,17 @@ public abstract class AbstractRevisionProxy extends KrollProxy {
             KrollDict rev = getRevisionProperties();
             long seq = getRevisionSequence();
             if (rev != null && seq > -1 && rev.containsKey("_attachments")) {
-                CBLDatabase db = document.getDatabase();
+                Database db = document.getDatabase();
                 KrollDict atts = rev.getKrollDict("_attachments");
-                CBLStatus status = new CBLStatus();
                 for (String filename : atts.keySet()) {
-                    CBLAttachment att = db.getAttachmentForSequence(seq, filename, status);
-                    if (att != null) {
-                        attachmentProxies.put(filename, new AttachmentProxy(document, filename, att, -1));
+                    try {
+                        Attachment att = db.getAttachmentForSequence(seq, filename);
+                        if (att != null) {
+                            attachmentProxies.put(filename, new AttachmentProxy(document, filename, att, -1));
+                        }
+                    }
+                    catch (CouchbaseLiteException e) {
+                        // TODO
                     }
                 }
             }

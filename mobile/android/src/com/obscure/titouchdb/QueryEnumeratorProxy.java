@@ -2,27 +2,25 @@ package com.obscure.titouchdb;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 
-import android.util.Log;
-
-import com.couchbase.cblite.CBLDatabase;
+import com.couchbase.lite.Database;
+import com.couchbase.lite.QueryRow;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)
 public class QueryEnumeratorProxy extends KrollProxy {
 
     private static final String           LCAT = "QueryEnumeratorProxy";
 
-    private List<Map<String, Object>>     rows;
+    private List<QueryRow>     rows;
 
-    private Iterator<Map<String, Object>> rowIterator;
+    private Iterator<QueryRow> rowIterator;
 
-    private CBLDatabase                   database;
+    private Database                   database;
 
-    public QueryEnumeratorProxy(CBLDatabase database, List<Map<String, Object>> rows) {
+    public QueryEnumeratorProxy(Database database, List<QueryRow> rows) {
         assert database != null;
         assert rows != null;
 

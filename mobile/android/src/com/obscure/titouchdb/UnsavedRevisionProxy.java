@@ -9,17 +9,18 @@ import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.titanium.TiBlob;
 
-import com.couchbase.cblite.CBLAttachment;
-import com.couchbase.cblite.CBLRevision;
-import com.couchbase.cblite.CBLStatus;
+import com.couchbase.lite.Attachment;
+import com.couchbase.lite.Revision;
+import com.couchbase.lite.Status;
+import com.couchbase.lite.UnsavedRevision;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)
-public class NewRevisionProxy extends AbstractRevisionProxy {
+public class UnsavedRevisionProxy extends AbstractRevisionProxy {
 
     private static final String LCAT = "NewRevisionProxy";
     
 
-    private CBLRevision         parentRevision;
+    private Revision         parentRevision;
 
     private Map<String, Object> properties = new HashMap<String, Object>();
     
@@ -27,7 +28,7 @@ public class NewRevisionProxy extends AbstractRevisionProxy {
 
     private Set<String> attachmentsToSave = new HashSet<String>();
 
-    public NewRevisionProxy(DocumentProxy document, CBLRevision parentRevision) {
+    public UnsavedRevisionProxy(DocumentProxy document, Revision parentRevision) {
         super(document);
         assert document != null;
 
@@ -43,8 +44,9 @@ public class NewRevisionProxy extends AbstractRevisionProxy {
         assert contentType != null;
         assert content != null;
 
-        CBLAttachment att = new CBLAttachment(content.getInputStream(), contentType);
-        AttachmentProxy proxy = new AttachmentProxy(document, name, att, content.getLength());
+        UnsavedRevision rev = parentRevision.getDocument().createRevision();
+        rev.setAttachment(name, contentType, content.getInputStream());
+        AttachmentProxy proxy = new AttachmentProxy(document, name, rev.getAttachment(name), content.getLength());
         getAttachmentProxies().put(name,  proxy);
         attachmentsToSave.add(name);
         return proxy;
@@ -57,7 +59,7 @@ public class NewRevisionProxy extends AbstractRevisionProxy {
 
     @Kroll.getProperty(name = "parentRevisionID")
     public String getParentRevisionID() {
-        return parentRevision != null ? parentRevision.getRevId() : null;
+        return parentRevision != null ? parentRevision.getId() : null;
     }
 
     @Override
@@ -80,7 +82,7 @@ public class NewRevisionProxy extends AbstractRevisionProxy {
         String prevRevId = null;
 
         if (parentRevision != null) {
-            prevRevId = parentRevision.getRevId();
+            prevRevId = parentRevision.getId();
         }
 
         // TODO convert attachments to atts dictionary
@@ -100,14 +102,19 @@ public class NewRevisionProxy extends AbstractRevisionProxy {
         
         properties.put("_attachments", atts);
         
-        CBLStatus status = new CBLStatus();
-        CBLRevision revision = new CBLRevision(properties);
+        // TODO!!!
         
-        CBLRevision updated = document.putRevision(revision, prevRevId, false, status);
+        /*
+        Status status = new Status();
+        Revision revision = new Revision(properties);
+        
+        Revision updated = document.putRevision(revision, prevRevId, false, status);
 
         // TODO reselect the revision?
         
         return updated != null ? new RevisionProxy(document, updated) : null;
+        */
+        return null;
     }
 
     @Kroll.setProperty(name = "isDeleted")

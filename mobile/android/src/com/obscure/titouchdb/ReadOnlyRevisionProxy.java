@@ -3,23 +3,18 @@ package com.obscure.titouchdb;
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.annotations.Kroll;
 
-import com.couchbase.cblite.CBLRevision;
+import com.couchbase.lite.Revision;
 
 @Kroll.proxy(creatableInModule = TitouchdbModule.class)
 public class ReadOnlyRevisionProxy extends AbstractRevisionProxy {
 
-    private CBLRevision revision;
+    private Revision revision;
 
-    public ReadOnlyRevisionProxy(CBLRevision rev) {
+    public ReadOnlyRevisionProxy(Revision rev) {
         super(null);
         assert rev != null;
 
         this.revision = rev;
-    }
-
-    @Override
-    protected long getRevisionSequence() {
-        return revision.getSequence();
     }
 
     @Override
@@ -31,7 +26,7 @@ public class ReadOnlyRevisionProxy extends AbstractRevisionProxy {
     @Override
     @Kroll.getProperty(name = "revisionID")
     public String getRevisionID() {
-        return revision.getRevId();
+        return revision.getId();
     }
 
 }

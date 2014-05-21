@@ -14,8 +14,10 @@ import org.appcelerator.kroll.annotations.Kroll;
 import android.app.Activity;
 import android.util.Log;
 
-import com.couchbase.cblite.CBLDatabase;
-import com.couchbase.cblite.CBLServer;
+import com.couchbase.lite.Context;
+import com.couchbase.lite.CouchbaseLiteException;
+import com.couchbase.lite.Database;
+import com.couchbase.lite.Manager;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)
 public class DatabaseManagerProxy extends KrollProxy {
@@ -26,7 +28,7 @@ public class DatabaseManagerProxy extends KrollProxy {
 
     private KrollDict                  lastError          = null;
 
-    private CBLServer                  server             = null;
+    private Manager                    manager            = null;
 
     private Map<String, DatabaseProxy> databaseProxyCache = new HashMap<String, DatabaseProxy>();
 
@@ -35,7 +37,8 @@ public class DatabaseManagerProxy extends KrollProxy {
     public DatabaseManagerProxy(Activity activity) {
         assert activity != null;
         try {
-            server = new CBLServer(activity.getFilesDir().getAbsolutePath());
+            Context context = new AndroidContext(activity);
+            manager = new Manager(context, Manager.DEFAULT_OPTIONS);
         }
         catch (IOException e) {
             Log.e(LCAT, "Unable to create TDServer", e);
@@ -43,7 +46,7 @@ public class DatabaseManagerProxy extends KrollProxy {
     }
 
     public DatabaseProxy getCachedDatabaseNamed(String name, boolean create) {
-        if (server == null) return null;
+        if (manager == null) return null;
         lastError = null;
 
         // check validity of name and set the error object if there is a problem
@@ -54,10 +57,15 @@ public class DatabaseManagerProxy extends KrollProxy {
 
         DatabaseProxy result = databaseProxyCache.get(name);
         if (result == null) {
-            CBLDatabase db = server.getDatabaseNamed(name, create);
-            if (db != null && db.open()) {
-                result = new DatabaseProxy(server, db);
-                databaseProxyCache.put(name, result);
+            try {
+                Database db = manager.getDatabase(name);
+                if (db != null && db.open()) {
+                    result = new DatabaseProxy(manager, db);
+                    databaseProxyCache.put(name, result);
+                }
+            }
+            catch (CouchbaseLiteException e) {
+                // TODO
             }
         }
         return databaseProxyCache.get(name);
@@ -77,7 +85,7 @@ public class DatabaseManagerProxy extends KrollProxy {
     public String[] getAllDatabaseNames() {
         lastError = null;
 
-        List<String> names = server.allDatabaseNames();
+        List<String> names = manager.getAllDatabaseNames();
         return names != null ? names.toArray(EMPTY_STRING_ARRAY) : EMPTY_STRING_ARRAY;
     }
 

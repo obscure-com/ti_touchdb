@@ -6,16 +6,16 @@ import org.appcelerator.kroll.KrollFunction;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 
-import com.couchbase.cblite.CBLViewReduceBlock;
+import com.couchbase.lite.Reducer;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)
-public class KrollViewReduceBlock extends KrollProxy implements CBLViewReduceBlock {
+public class KrollReducer extends KrollProxy implements Reducer {
 
     private static final String LCAT = "KrollViewReduceBlock";
 
     private KrollFunction       reduce;
 
-    public KrollViewReduceBlock(KrollFunction reduce) {
+    public KrollReducer(KrollFunction reduce) {
         assert reduce != null;
         this.reduce = reduce;
     }

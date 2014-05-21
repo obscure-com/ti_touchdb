@@ -14,8 +14,9 @@ import org.appcelerator.titanium.TiBlob;
 
 import android.util.Log;
 
-import com.couchbase.cblite.CBLAttachment;
-import com.couchbase.cblite.CBLRevision;
+import com.couchbase.lite.Attachment;
+import com.couchbase.lite.CouchbaseLiteException;
+import com.couchbase.lite.Revision;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)
 public class AttachmentProxy extends KrollProxy {
@@ -24,7 +25,7 @@ public class AttachmentProxy extends KrollProxy {
 
     private KrollDict           lastError = null;
 
-    private CBLAttachment       attachment;
+    private Attachment       attachment;
 
     private DocumentProxy       documentProxy;
 
@@ -36,7 +37,7 @@ public class AttachmentProxy extends KrollProxy {
 
     private TiBlob              blob;
 
-    public AttachmentProxy(DocumentProxy documentProxy, String name, CBLAttachment attachment, long length) {
+    public AttachmentProxy(DocumentProxy documentProxy, String name, Attachment attachment, long length) {
         // TODO is documentProxy required?
         assert name != null;
         assert attachment != null;
@@ -80,7 +81,7 @@ public class AttachmentProxy extends KrollProxy {
             try {
                 int count;
                 byte[] buffer = new byte[1024];
-                InputStream in = attachment.getContentStream();
+                InputStream in = attachment.getContent();
                 ByteArrayOutputStream out = new ByteArrayOutputStream();
                 while ((count = in.read(buffer, 0, buffer.length)) > 0) {
                     out.write(buffer, 0, count);
@@ -90,6 +91,10 @@ public class AttachmentProxy extends KrollProxy {
             }
             catch (IOException e) {
                 Log.e(LCAT, "error reading attachment data: " + e.getMessage());
+            }
+            catch (CouchbaseLiteException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
             }
         }
         return blob;
@@ -109,12 +114,15 @@ public class AttachmentProxy extends KrollProxy {
         this.length = blob != null ? blob.getLength() : -1;
 
         if (documentProxy != null) {
-            CBLRevision rev = documentProxy.updateAttachment(name, blob != null ? blob.getInputStream() : null, this.contentType);
+            // TODO
+            /*
+            Revision rev = documentProxy.updateAttachment(name, blob != null ? blob.getInputStream() : null, this.contentType);
             if (rev == null) {
                 lastError = documentProxy.getError();
                 return null;
             }
             result = new RevisionProxy(documentProxy, rev);
+            */
         }
         return result;
     }

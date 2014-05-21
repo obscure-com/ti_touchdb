@@ -1,7 +1,6 @@
 package com.obscure.titouchdb;
 
 import java.util.Observable;
-import java.util.Observer;
 
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
@@ -12,11 +11,13 @@ import org.appcelerator.titanium.TiApplication;
 
 import android.os.Message;
 
-import com.couchbase.cblite.replicator.CBLPusher;
-import com.couchbase.cblite.replicator.CBLReplicator;
+import com.couchbase.lite.replicator.Pusher;
+import com.couchbase.lite.replicator.Replication;
+import com.couchbase.lite.replicator.Replication.ChangeEvent;
+import com.couchbase.lite.replicator.Replication.ChangeListener;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)
-public class ReplicationProxy extends KrollProxy implements Observer {
+public class ReplicationProxy extends KrollProxy implements ChangeListener {
 
     private static final String LCAT                          = "ReplicationProxy";
 
@@ -26,18 +27,18 @@ public class ReplicationProxy extends KrollProxy implements Observer {
 
     private KrollDict           lastError                     = null;
 
-    private CBLReplicator       replicator;
+    private Replication       replicator;
 
-    public ReplicationProxy(CBLReplicator replicator) {
+    public ReplicationProxy(Replication replicator) {
         assert replicator != null;
         this.replicator = replicator;
 
-        replicator.addObserver(this);
+        replicator.addChangeListener(this);
     }
 
     @Kroll.getProperty(name = "completed")
     public int getCompleted() {
-        return replicator.getChangesProcessed();
+        return replicator.getCompletedChangesCount();
     }
 
     @Kroll.getProperty(name = "continuous")
@@ -47,7 +48,7 @@ public class ReplicationProxy extends KrollProxy implements Observer {
 
     @Kroll.getProperty(name = "create_target")
     public boolean getCreateTarget() {
-        return (replicator instanceof CBLPusher) ? ((CBLPusher) replicator).isCreateTarget() : false;
+        return (replicator instanceof Pusher) ? ((Pusher) replicator).shouldCreateTarget() : false;
     }
 
     @Kroll.getProperty(name = "doc_ids")
@@ -63,7 +64,7 @@ public class ReplicationProxy extends KrollProxy implements Observer {
 
     @Kroll.getProperty(name = "filter")
     public String getFilter() {
-        return replicator.getFilterName();
+        return replicator.getFilter();
     }
 
     @Kroll.getProperty(name = "filterParams")
@@ -91,12 +92,12 @@ public class ReplicationProxy extends KrollProxy implements Observer {
 
     @Kroll.getProperty(name = "pull")
     public boolean getPull() {
-        return !replicator.isPush();
+        return replicator.isPull();
     }
 
     @Kroll.getProperty(name = "remoteURL")
     public String getRemoteURL() {
-        return replicator.getRemote().toString();
+        return replicator.getRemoteUrl().toString();
     }
 
     @Kroll.getProperty(name = "running")
@@ -106,7 +107,7 @@ public class ReplicationProxy extends KrollProxy implements Observer {
 
     @Kroll.getProperty(name = "total")
     public int getTotal() {
-        return replicator.getChangesTotal();
+        return replicator.getChangesCount();
     }
 
     @Override
@@ -133,8 +134,8 @@ public class ReplicationProxy extends KrollProxy implements Observer {
 
     @Kroll.setProperty(name = "create_target")
     public void setCreateTarget(boolean createTarget) {
-        if (replicator instanceof CBLPusher) {
-            ((CBLPusher) replicator).setCreateTarget(createTarget);
+        if (replicator instanceof Pusher) {
+            ((Pusher) replicator).setCreateTarget(createTarget);
         }
     }
 
@@ -145,7 +146,7 @@ public class ReplicationProxy extends KrollProxy implements Observer {
 
     @Kroll.setProperty(name = "filter")
     public void setFilter(String filter) {
-        replicator.setFilterName(filter);
+        replicator.setFilter(filter);
     }
 
     @Kroll.setProperty(name = "filterParams")
@@ -174,13 +175,14 @@ public class ReplicationProxy extends KrollProxy implements Observer {
     }
 
     @Override
-    public void update(Observable o, Object arg) {
+    public void changed(ChangeEvent e) {
         if (!TiApplication.isUIThread()) {
-            TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_HANDLE_REPLICATION_UPDATE), arg);
+            TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_HANDLE_REPLICATION_UPDATE), e);
         }
         else {
-            handleReplicationUpdate(arg);
+            handleReplicationUpdate(e);
         }
+        
     }
 
 }

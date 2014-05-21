@@ -5,21 +5,16 @@ import java.util.Map;
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.annotations.Kroll;
 
-import com.couchbase.cblite.CBLRevision;
+import com.couchbase.lite.Revision;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)
 public class RevisionProxy extends AbstractRevisionProxy {
 
-    @Override
-    protected long getRevisionSequence() {
-        return revision.getSequence();
-    }
-
     private static final String LCAT = "RevisionProxy";
 
-    private CBLRevision revision;
+    private Revision revision;
 
-    public RevisionProxy(DocumentProxy document, CBLRevision rev) {
+    public RevisionProxy(DocumentProxy document, Revision rev) {
         super(document);
         assert document != null;
         assert rev != null;
@@ -30,8 +25,7 @@ public class RevisionProxy extends AbstractRevisionProxy {
     @Kroll.method
     public RevisionProxy deleteDocument() {
         if (document.deleteDocument()) {
-            CBLRevision rev = document.getCurrentCBLRevision();
-            return new RevisionProxy(document, rev);
+            return document.getCurrentRevision();
         }
         else {
             this.lastError = document.getError();
@@ -41,7 +35,7 @@ public class RevisionProxy extends AbstractRevisionProxy {
     
     @Kroll.getProperty(name = "isDeleted")
     public boolean isDeleted() {
-        return revision.isDeleted();
+        return revision.isDeletion();
     }
 
     @Kroll.getProperty(name = "propertiesAreLoaded")
@@ -57,7 +51,7 @@ public class RevisionProxy extends AbstractRevisionProxy {
     @Override
     @Kroll.getProperty(name = "revisionID")
     public String getRevisionID() {
-        return revision.getRevId();
+        return revision.getId();
     }
 
     @Override
@@ -67,8 +61,8 @@ public class RevisionProxy extends AbstractRevisionProxy {
     }
 
     @Kroll.method
-    public NewRevisionProxy newRevision() {
-        return new NewRevisionProxy(document, this.revision);
+    public UnsavedRevisionProxy newRevision() {
+        return new UnsavedRevisionProxy(document, this.revision);
     }
 
     /*
