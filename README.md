@@ -27,6 +27,10 @@ See the Wiki pages for usage instructions and the samples directory for example 
 
 Prebuilt modules are hosted on Amazon S3:
 
+* [com.obscure.titouchdb-iphone-1.0.zip](https://pegli.github.s3.amazonaws.com/com.obscure.titouchdb-iphone-1.0.zip), built 21 May 2014
+
+Archived builds
+
 * [com.obscure.titouchdb-android-0.9.zip](https://pegli.github.s3.amazonaws.com/com.obscure.titouchdb-android-0.9.zip),
   built 6 Jun 2013
 * [com.obscure.titouchdb-iphone-0.9.zip](https://pegli.github.s3.amazonaws.com/com.obscure.titouchdb-iphone-0.9.zip),
@@ -38,6 +42,17 @@ Prebuilt modules are hosted on Amazon S3:
 * Couchbase Lite is under the Apache License 2.0. See that project for additional licenses.
 
 ## Development Status - iOS
+
+**1.0**
+
+2014-05-21
+
+Release day for iOS!
+
+[CouchbaseLite 1.0.0](http://www.couchbase.com/download#cb-mobile) has been released.  I've
+updated the module to use the prebuilt frameworks provided by Couchbase and merged the `cblite_api_changes`
+branch into master.  Please see the wiki for updated installation instructions and the
+documentation for the new API.
 
 **1.0-beta**
 
