@@ -17,39 +17,52 @@ import org.appcelerator.kroll.annotations.Kroll;
 import android.app.Activity;
 import android.util.Log;
 
+import com.couchbase.lite.Query;
 import com.couchbase.lite.Status;
 
 @Kroll.module(name = "Titouchdb", id = "com.obscure.titouchdb")
 public class TitouchdbModule extends KrollModule {
 
-    private static final Map<Integer, String> codeToMessage            = new HashMap<Integer, String>();
+    private static final Map<Integer, String> codeToMessage             = new HashMap<Integer, String>();
 
-    public static final String                LCAT                     = "TiTouchDB";
-
-    @Kroll.constant
-    public static final int                   REPLICATION_MODE_ACTIVE  = 3;
+    public static final String                LCAT                      = "TiTouchDB";
 
     @Kroll.constant
-    public static final int                   REPLICATION_MODE_IDLE    = 2;
+    public static final int                   QUERY_ALL_DOCS            = Query.AllDocsMode.ALL_DOCS.ordinal();
 
     @Kroll.constant
-    public static final int                   REPLICATION_MODE_OFFLINE = 1;
+    public static final int                   QUERY_INCLUDE_DELETED     = Query.AllDocsMode.INCLUDE_DELETED.ordinal();
 
     @Kroll.constant
-    public static final int                   REPLICATION_MODE_STOPPED = 0;
+    public static final int                   QUERY_ONLY_CONFLICTS      = Query.AllDocsMode.ONLY_CONFLICTS.ordinal();
 
     @Kroll.constant
-    public static final int                   STALE_QUERY_NEVER        = 0;
+    public static final int                   QUERY_SHOW_CONFLICTS      = Query.AllDocsMode.SHOW_CONFLICTS.ordinal();
 
     @Kroll.constant
-    public static final int                   STALE_QUERY_OK           = 1;
+    public static final int                   QUERY_UPDATE_INDEX_AFTER  = Query.IndexUpdateMode.AFTER.ordinal();
 
     @Kroll.constant
-    public static final int                   STALE_QUERY_UPDATE_AFTER = 2;
+    public static final int                   QUERY_UPDATE_INDEX_BEFORE = Query.IndexUpdateMode.BEFORE.ordinal();
+
+    @Kroll.constant
+    public static final int                   QUERY_UPDATE_INDEX_NEVER  = Query.IndexUpdateMode.NEVER.ordinal();
+
+    @Kroll.constant
+    public static final int                   REPLICATION_MODE_ACTIVE   = 3;
+
+    @Kroll.constant
+    public static final int                   REPLICATION_MODE_IDLE     = 2;
+
+    @Kroll.constant
+    public static final int                   REPLICATION_MODE_OFFLINE  = 1;
+
+    @Kroll.constant
+    public static final int                   REPLICATION_MODE_STOPPED  = 0;
 
     static {
         System.loadLibrary("function-utils");
-        
+
         codeToMessage.put(Status.BAD_JSON, "Invalid JSON");
         codeToMessage.put(Status.BAD_REQUEST, "bad_request");
         codeToMessage.put(Status.CONFLICT, "conflict");
@@ -79,6 +92,8 @@ public class TitouchdbModule extends KrollModule {
         return result;
     }
 
+    public static native void registerGlobalFunction(Object target, String name, String signature);
+
     private DatabaseManagerProxy databaseManagerProxy;
 
     public TitouchdbModule() {
@@ -95,6 +110,4 @@ public class TitouchdbModule extends KrollModule {
         super.initActivity(activity);
         this.databaseManagerProxy = new DatabaseManagerProxy(activity);
     }
-    
-    public static native void registerGlobalFunction(Object target, String name, String signature);
 }
