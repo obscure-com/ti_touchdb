@@ -1,11 +1,10 @@
 package com.obscure.titouchdb;
 
+import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
@@ -18,6 +17,7 @@ import com.couchbase.lite.Context;
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.Database;
 import com.couchbase.lite.Manager;
+import com.couchbase.lite.Status;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)
 public class DatabaseManagerProxy extends KrollProxy {
@@ -26,13 +26,11 @@ public class DatabaseManagerProxy extends KrollProxy {
 
     public static final String         LCAT               = "DatabaseManagerProxy";
 
+    private Map<String, DatabaseProxy> databaseProxyCache = new HashMap<String, DatabaseProxy>();
+
     private KrollDict                  lastError          = null;
 
     private Manager                    manager            = null;
-
-    private Map<String, DatabaseProxy> databaseProxyCache = new HashMap<String, DatabaseProxy>();
-
-    private static final String        DATABASE_NAME      = "^[a-zA-Z][a-zA-Z0-9_$\\(\\)\\+\\-\\/]*";
 
     public DatabaseManagerProxy(Activity activity) {
         assert activity != null;
@@ -45,40 +43,9 @@ public class DatabaseManagerProxy extends KrollProxy {
         }
     }
 
-    public DatabaseProxy getCachedDatabaseNamed(String name, boolean create) {
-        if (manager == null) return null;
-        lastError = null;
-
-        // check validity of name and set the error object if there is a problem
-        if (name == null || name.length() < 1 || !Pattern.matches(DATABASE_NAME, name)) {
-            lastError = TitouchdbModule.generateErrorDict(100, "TouchDB", String.format("could not create database '%s'", name));
-            return null;
-        }
-
-        DatabaseProxy result = databaseProxyCache.get(name);
-        if (result == null) {
-            try {
-                Database db = manager.getDatabase(name);
-                if (db != null && db.open()) {
-                    result = new DatabaseProxy(manager, db);
-                    databaseProxyCache.put(name, result);
-                }
-            }
-            catch (CouchbaseLiteException e) {
-                // TODO
-            }
-        }
-        return databaseProxyCache.get(name);
-    }
-
     @Kroll.method
-    public DatabaseProxy createDatabaseNamed(String name) {
-        return getCachedDatabaseNamed(name, true);
-    }
-
-    @Kroll.method
-    public DatabaseProxy databaseNamed(String name) {
-        return getCachedDatabaseNamed(name, false);
+    public void close() {
+        manager.close();
     }
 
     @Kroll.getProperty(name = "allDatabaseNames")
@@ -89,11 +56,47 @@ public class DatabaseManagerProxy extends KrollProxy {
         return names != null ? names.toArray(EMPTY_STRING_ARRAY) : EMPTY_STRING_ARRAY;
     }
 
-    @Kroll.getProperty(name = "internalURL")
-    public URL getInternalURL() {
+    public DatabaseProxy getCachedDatabaseNamed(String name, boolean create) {
+        if (manager == null) return null;
         lastError = null;
-        // TODO
-        return null;
+
+        DatabaseProxy result = databaseProxyCache.get(name);
+        if (result == null) {
+            try {
+                Database db = create ? manager.getDatabase(name) : manager.getExistingDatabase(name);
+                if (db != null && db.open()) {
+                    result = new DatabaseProxy(manager, db);
+                    databaseProxyCache.put(name, result);
+                }
+                else {
+                    lastError = TitouchdbModule.generateErrorDict(Status.NOT_FOUND, "TouchDB", String.format("database %s not found", name));
+                }
+            }
+            catch (CouchbaseLiteException e) {
+                lastError = TitouchdbModule.generateErrorDict(e.getCBLStatus().getCode(), "TouchDB", String.format("could not get database '%s'", name));
+            }
+        }
+        return databaseProxyCache.get(name);
+    }
+
+    @Kroll.method
+    public DatabaseProxy getDatabase(String name) {
+        return getCachedDatabaseNamed(name, true);
+    }
+
+    @Kroll.getProperty(name = "defaultDirectory")
+    public String getDefaultDirectory() {
+        return "file:/" + manager.getContext().getFilesDir().getAbsolutePath();
+    }
+
+    @Kroll.getProperty(name = "directory")
+    public String getDirectory() {
+        return "file:/" + manager.getDirectory().getAbsolutePath();
+    }
+
+    @Kroll.method
+    public DatabaseProxy getExistingDatabase(String name) {
+        return getCachedDatabaseNamed(name, false);
     }
 
     @Kroll.getProperty(name = "error")
@@ -104,7 +107,11 @@ public class DatabaseManagerProxy extends KrollProxy {
     @Kroll.method
     public boolean installDatabase(String name, String pathToDatabase, String pathToAttachments) {
         lastError = null;
-        // TODO
-        return false;
+        throw new UnsupportedOperationException("installDatabase not implemented");
+    }
+
+    @Kroll.method
+    public boolean isValidDatabaseName(String name) {
+        return Manager.isValidDatabaseName(name);
     }
 }

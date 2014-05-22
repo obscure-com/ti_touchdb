@@ -9,16 +9,18 @@ import com.couchbase.lite.NetworkReachabilityManager;
 
 public class AndroidContext implements Context {
 
+    public static final String         LCAT               = "AndroidContext";
+
     private Activity                   activity;
 
     private NetworkReachabilityManager networkReachabilityManager = new NetworkReachabilityManager() {
         
         @Override
-        public void stopListening() {
+        public void startListening() {
         }
         
         @Override
-        public void startListening() {
+        public void stopListening() {
         }
     };
 
@@ -29,7 +31,7 @@ public class AndroidContext implements Context {
 
     @Override
     public File getFilesDir() {
-        return new File(activity.getFilesDir().getAbsolutePath());
+        return activity.getFilesDir();
     }
 
     @Override
