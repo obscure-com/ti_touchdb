@@ -2,12 +2,12 @@
 # this is your module manifest and used by Titanium
 # during compilation, packaging, distribution, etc.
 #
-version: 0.9
+version: 1.0
 apiversion: 2
 description: TouchDB for Titanium
 author: Paul Mietz Egli
 license: Apache License 2.0
-copyright: Copyright (c) 2012 by Paul Mietz Egli
+copyright: Copyright (c) 2014 by Paul Mietz Egli
 
 
 # these should not be edited
