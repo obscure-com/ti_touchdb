@@ -2,12 +2,9 @@ package com.obscure.titouchdb;
 
 import java.util.Map;
 
-import javax.xml.bind.TypeConstraintException;
-
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 
-import com.couchbase.lite.Database;
 import com.couchbase.lite.QueryRow;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)
@@ -15,17 +12,16 @@ public class QueryRowProxy extends KrollProxy {
 
     private static final String LCAT = "QueryRowProxy";
 
-    private QueryRow row;
-    
-    private Database         database;
+    private QueryRow            row;
 
-    @SuppressWarnings({ "unchecked" })
-    public QueryRowProxy(Database database, final QueryRow row) {
-        assert database != null;
+    private DatabaseProxy       databaseProxy;
+
+    public QueryRowProxy(DatabaseProxy databaseProxy, final QueryRow row) {
+        assert databaseProxy != null;
         assert row != null;
         assert row.getKey() != null;
 
-        this.database = database;
+        this.databaseProxy = databaseProxy;
         this.row = row;
     }
 
@@ -34,7 +30,7 @@ public class QueryRowProxy extends KrollProxy {
         if (row.getDocumentId() == null) {
             return null;
         }
-        return new DocumentProxy(database, row.getDocumentId());
+        return new DocumentProxy(databaseProxy, row.getDocument());
     }
 
     @Kroll.getProperty(name = "documentID")

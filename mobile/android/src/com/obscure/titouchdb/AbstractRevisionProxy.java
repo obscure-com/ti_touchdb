@@ -23,13 +23,13 @@ public abstract class AbstractRevisionProxy extends KrollProxy {
 
     private Map<String, AttachmentProxy>   attachmentProxies            = null;
 
-    protected DocumentProxy                document;
+    protected DocumentProxy                documentProxy;
 
     protected KrollDict                    lastError                    = null;
 
-    public AbstractRevisionProxy(DocumentProxy document) {
+    public AbstractRevisionProxy(DocumentProxy documentProxy) {
         // document object is optional in this class
-        this.document = document;
+        this.documentProxy = documentProxy;
     }
 
     @Kroll.method
@@ -52,13 +52,13 @@ public abstract class AbstractRevisionProxy extends KrollProxy {
             KrollDict rev = getRevisionProperties();
             long seq = getRevisionSequence();
             if (rev != null && seq > -1 && rev.containsKey("_attachments")) {
-                Database db = document.getDatabase();
+                Database db = documentProxy.getDatabaseProxy().getDatabase();
                 KrollDict atts = rev.getKrollDict("_attachments");
                 for (String filename : atts.keySet()) {
                     try {
                         Attachment att = db.getAttachmentForSequence(seq, filename);
                         if (att != null) {
-                            attachmentProxies.put(filename, new AttachmentProxy(document, filename, att, -1));
+                            attachmentProxies.put(filename, new AttachmentProxy(documentProxy, filename, att, -1));
                         }
                     }
                     catch (CouchbaseLiteException e) {

@@ -2,30 +2,25 @@ package com.obscure.titouchdb;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.appcelerator.kroll.KrollDict;
+import org.appcelerator.kroll.KrollEventCallback;
 import org.appcelerator.kroll.KrollFunction;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
-import org.appcelerator.kroll.common.AsyncResult;
-import org.appcelerator.kroll.common.TiMessenger;
-import org.appcelerator.titanium.TiApplication;
 
-import android.os.Message;
-import android.util.Log;
-
+import com.couchbase.lite.AsyncTask;
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.Database;
 import com.couchbase.lite.Database.ChangeEvent;
 import com.couchbase.lite.Database.ChangeListener;
-import com.couchbase.lite.Manager;
-import com.couchbase.lite.Revision;
-import com.couchbase.lite.Validator;
+import com.couchbase.lite.Document;
+import com.couchbase.lite.TransactionalTask;
 import com.couchbase.lite.View;
-import com.couchbase.lite.replicator.Puller;
-import com.couchbase.lite.replicator.Pusher;
 import com.couchbase.lite.replicator.Replication;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)
@@ -37,64 +32,109 @@ public class DatabaseProxy extends KrollProxy implements ChangeListener {
 
     private static final int           MSG_HANDLE_DATABASE_CHANGE = MSG_FIRST_ID + 1200;
 
-    private Database                database                   = null;
+    private Database                   database                   = null;
 
     private Map<String, DocumentProxy> documentProxyCache         = new HashMap<String, DocumentProxy>();
 
+    private Map<String, ReplicationFilterProxy> filterCallbackCache = new HashMap<String, ReplicationFilterProxy>();
+
     private KrollDict                  lastError;
 
-    private Manager                  manager                     = null;
+    private DatabaseManagerProxy       managerProxy               = null;
+
+    private Map<String, KrollValidator> validationCallbackCache = new HashMap<String, KrollValidator>();
 
     private Map<String, ViewProxy>     viewProxyCache             = new HashMap<String, ViewProxy>();
 
-    public DatabaseProxy(Manager manager, Database database) {
-        assert manager != null;
+    public DatabaseProxy(DatabaseManagerProxy managerProxy, Database database) {
+        assert managerProxy != null;
         assert database != null;
-        this.manager = manager;
+        this.managerProxy = managerProxy;
         this.database = database;
 
         database.addChangeListener(this);
     }
 
     @Kroll.method
-    public DocumentProxy cachedDocumentWithID(String docid) {
-        return this.documentWithID(docid);
+    public void addChangeListener(KrollEventCallback cb) {
+        // TODO
+    }
+
+    @Override
+    public void changed(ChangeEvent e) {
+        // TODO Auto-generated method stub
     }
 
     @Kroll.method
-    public void clearDocumentCache() {
-        // noop on android
-    }
-
-    @Kroll.method
-    public void compact() {
+    public boolean compact() {
         try {
             database.compact();
         }
         catch (CouchbaseLiteException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
     @Kroll.method
-    public void defineFilter(String name, @Kroll.argument(optional = true) KrollFunction filter) {
-        database.setFilter(name, filter != null ? new KrollReplicationFilter(filter) : null);
+    public QueryProxy createAllDocumentsQuery() {
+        return new QueryProxy(this, database.createAllDocumentsQuery());
     }
 
     @Kroll.method
-    public void defineValidation(String name, @Kroll.argument(optional = true) KrollFunction validation) {
-        Validator validator = null;
-        if (validation != null) {
-            validator = new KrollValidator(this, validation);
+    public DocumentProxy createDocument() {
+        return new DocumentProxy(this, database.createDocument());
+    }
+
+    @Kroll.method
+    public ReplicationProxy createPullReplication(String url) {
+        ReplicationProxy result = null;
+        try {
+            Replication replication = database.createPullReplication(new URL(url));
+            result = new ReplicationProxy(replication);
         }
-        database.setValidation(name, validator);
+        catch (MalformedURLException e) {
+            // TODO set error
+        }
+        return result;
     }
 
     @Kroll.method
-    public void deleteDatabase() {
+    public ReplicationProxy createPushReplication(String url) {
+        ReplicationProxy result = null;
+        try {
+            Replication replication = database.createPushReplication(new URL(url));
+            result = new ReplicationProxy(replication);
+        }
+        catch (MalformedURLException e) {
+            // TODO set error
+        }
+        return result;
+    }
+
+    @Kroll.method
+    public boolean deleteDatabase() {
         try {
             database.delete();
+            return true;
+        }
+        catch (CouchbaseLiteException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
+    protected void removeDocumentFromCache(String id) {
+        documentProxyCache.remove(id);
+    }
+
+    @Kroll.method
+    public void deleteLocalDocument(String id) {
+        try {
+            database.deleteLocalDocument(id);
         }
         catch (CouchbaseLiteException e) {
             // TODO Auto-generated catch block
@@ -102,18 +142,27 @@ public class DatabaseProxy extends KrollProxy implements ChangeListener {
         }
     }
 
-    @Kroll.method
-    public DocumentProxy documentWithID(@Kroll.argument(optional = true) String docid) {
-        if (docid == null || docid.length() < 1) {
-            docid = Database.generateDocumentId();
+    @Kroll.getProperty(name = "allReplications")
+    public ReplicationProxy[] getAllReplications() {
+        List<ReplicationProxy> proxies = new ArrayList<ReplicationProxy>();
+        for (Replication replication : database.getAllReplications()) {
+            proxies.add(new ReplicationProxy(replication));
         }
+        return proxies.toArray(new ReplicationProxy[0]);
+    }
 
-        DocumentProxy result = documentProxyCache.get(docid);
-        if (result == null) {
-            result = new DocumentProxy(this.database, docid);
-            documentProxyCache.put(docid, result);
+    protected Database getDatabase() {
+        return database;
+    }
+
+    @Kroll.method
+    public DocumentProxy getDocument(String id) {
+        DocumentProxy proxy = documentProxyCache.get(id);
+        if (proxy == null) {
+            proxy = new DocumentProxy(this, database.getDocument(id));
+            documentProxyCache.put(id,  proxy);
         }
-        return result;
+        return documentProxyCache.get(id);
     }
 
     @Kroll.getProperty(name = "documentCount")
@@ -121,14 +170,34 @@ public class DatabaseProxy extends KrollProxy implements ChangeListener {
         return database.getDocumentCount();
     }
 
-    @Kroll.getProperty(name = "internalURL")
-    public URL getInternalURL() {
-        return null;
+    @Kroll.method
+    public DocumentProxy getExistingDocument(String id) {
+        DocumentProxy proxy = documentProxyCache.get(id);
+        if (proxy == null) {
+            Document doc = database.getExistingDocument(id);
+            if (doc == null) {
+                return null;
+            }
+            documentProxyCache.put(id,  new DocumentProxy(this, doc));
+        }
+        return documentProxyCache.get(id);
     }
 
-    @Kroll.getProperty(name = "lastError")
-    public KrollDict getLastError() {
-        return this.lastError;
+    @Kroll.method
+    public KrollDict getExistingLocalDocument(String id) {
+        Map<String, Object> doc = database.getExistingLocalDocument(id);
+        return doc != null ? new KrollDict(doc) : null;
+    }
+
+    @Kroll.method
+    public ViewProxy getExistingView(String name) {
+        View view = database.getExistingView(name);
+        return view != null ? new ViewProxy(this, view) : null;
+    }
+
+    @Kroll.method
+    public KrollFunction getFilter(String name) {
+        return filterCallbackCache.get(name).getKrollFunction();
     }
 
     @Kroll.getProperty(name = "lastSequenceNumber")
@@ -136,130 +205,79 @@ public class DatabaseProxy extends KrollProxy implements ChangeListener {
         return database.getLastSequenceNumber();
     }
 
+    @Kroll.getProperty(name = "manager")
+    public DatabaseManagerProxy getManager() {
+        return managerProxy;
+    }
+
     @Kroll.getProperty(name = "name")
     public String getName() {
         return database.getName();
     }
 
-    @SuppressWarnings("unchecked")
-    private void handleDatabaseChange(Object arg) {
-        // database change notification is { "rev": Revision, "seq": int }
-        Map<String, Object> change = (Map<String, Object>) arg;
-        KrollDict params = new KrollDict();
-        params.put("seq", change.get("seq"));
-        params.put("rev", new ReadOnlyRevisionProxy((Revision) change.get("rev")));
-        fireEvent("change", params);
-    }
-
-    @Override
-    public boolean handleMessage(Message msg) {
-        switch (msg.what) {
-        case MSG_HANDLE_DATABASE_CHANGE:
-            AsyncResult result = (AsyncResult) msg.obj;
-            handleDatabaseChange(result.getArg());
-            result.setResult(null);
-        default: {
-            return super.handleMessage(msg);
-        }
-        }
-    }
-
-    private View makeAnonymousView() {
-        for (int i = 0; true; i++) {
-            String name = String.format("$anon$%s", i);
-            if (database.getView(name) == null) {
-                return database.getView(name);
-            }
-        }
-        // TODO what happens to all of these anonymous views?
+    @Kroll.method
+    public KrollFunction getValidation(String name) {
+        return validationCallbackCache.get(name).getKrollFunction();
     }
 
     @Kroll.method
-    public ReplicationProxy pullFromURL(String url) {
+    public ViewProxy getView(String name) {
+        return new ViewProxy(this, database.getView(name));
+    }
+
+    @Kroll.method
+    public void putLocalDocument(String id, KrollDict doc) {
         try {
-            Replication pull = database.getReplicator(url);
-            if (pull == null) {
-                pull = new Puller(database, new URL(url), false, manager.getWorkExecutor());
+            database.putLocalDocument(id, doc);
+        }
+        catch (CouchbaseLiteException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    @Kroll.method
+    public void removeChangeListener(KrollEventCallback cb) {
+        // TODO
+    }
+
+    @Kroll.method
+    public void runAsync(final KrollFunction f) {
+        database.runAsync(new AsyncTask() {
+
+            @Override
+            public void run(Database db) {
+                f.call(null, new Object[] { new DatabaseProxy(managerProxy, db) });
             }
-            return new ReplicationProxy(pull);
-        }
-        catch (MalformedURLException e) {
-            Log.e(LCAT, "malformed pull replication URL: " + url);
-        }
-        return null;
+
+        });
     }
 
     @Kroll.method
-    public ReplicationProxy pushToURL(String url) {
-        try {
-            Replication push = database.getReplicator(url);
-            if (push == null) {
-                push = new Pusher(database, new URL(url), false, manager.getWorkExecutor());
+    public void runInTransaction(final KrollFunction f) {
+        database.runInTransaction(new TransactionalTask() {
+
+            @Override
+            public boolean run() {
+                f.call(null, new Object[0]);
+                return true; // TODO get truthy return value from call
             }
-            return new ReplicationProxy(push);
-        }
-        catch (MalformedURLException e) {
-            Log.e(LCAT, "malformed push replication URL: " + url);
-        }
-        return null;
+
+        });
     }
 
     @Kroll.method
-    public QueryProxy queryAllDocuments() {
-        return new QueryProxy(this.database, null);
+    public void setFilter(String name, KrollFunction f) {
+        ReplicationFilterProxy filter = new ReplicationFilterProxy(this, f);
+        database.setFilter(name, filter);
+        filterCallbackCache.put(name, filter);
     }
 
     @Kroll.method
-    public ReplicationProxy[] replicateWithURL(String url, @Kroll.argument(optional = true) boolean exclusive) {
-        try {
-            if (exclusive) {
-                // stop and clear old replications
-                for (Boolean b : new Boolean[] { true, false }) {
-                    Replication pull = database.getReplicator(url);
-                    if (pull != null) {
-                        pull.stop();
-                        database.getActiveReplications().remove(pull);
-                    }
-                }
-            }
-            return new ReplicationProxy[] { pushToURL(url), pullFromURL(url) };
-        }
-        catch (Exception e) {
-            Log.e(LCAT, "malformed replication URL: " + url);
-        }
-        return null;
+    public void setValidation(String name, KrollFunction f) {
+        KrollValidator validator = new KrollValidator(this, f);
+        database.setValidation(name, validator);
+        validationCallbackCache.put(name, validator);
     }
 
-    @Kroll.method
-    public QueryProxy slowQueryWithMap(KrollFunction map) {
-        View view = makeAnonymousView();
-        view.setMapReduce(new KrollMapper(map), null, "1");
-        return new QueryProxy(this.database, view.getName());
-    }
-
-    @Kroll.method
-    public DocumentProxy untitledDocument() {
-        return documentWithID(Database.generateDocumentId());
-    }
-
-    @Kroll.method
-    public ViewProxy viewNamed(String name) {
-        if (!viewProxyCache.containsKey(name)) {
-            View view = database.getView(name);
-            if (view != null) {
-                viewProxyCache.put(name, new ViewProxy(view));
-            }
-        }
-        return viewProxyCache.get(name);
-    }
-
-    @Override
-    public void changed(ChangeEvent e) {
-        if (!TiApplication.isUIThread()) {
-            TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_HANDLE_DATABASE_CHANGE), e);
-        }
-        else {
-            handleDatabaseChange(e);
-        }
-    }
 }

@@ -18,13 +18,13 @@ public class QueryEnumeratorProxy extends KrollProxy {
 
     private Iterator<QueryRow> rowIterator;
 
-    private Database                   database;
+    private DatabaseProxy                   databaseProxy;
 
-    public QueryEnumeratorProxy(Database database, List<QueryRow> rows) {
-        assert database != null;
+    public QueryEnumeratorProxy(DatabaseProxy databaseProxy, List<QueryRow> rows) {
+        assert databaseProxy != null;
         assert rows != null;
 
-        this.database = database;
+        this.databaseProxy = databaseProxy;
         this.rows = rows;
     }
 
@@ -43,7 +43,7 @@ public class QueryEnumeratorProxy extends KrollProxy {
         if (rowIterator == null) {
             rowIterator = rows.iterator();
         }
-        return rowIterator.hasNext() ? new QueryRowProxy(database, rowIterator.next()) : null;
+        return rowIterator.hasNext() ? new QueryRowProxy(databaseProxy, rowIterator.next()) : null;
     }
 
     @Kroll.method
@@ -51,6 +51,6 @@ public class QueryEnumeratorProxy extends KrollProxy {
         if (index < 0 || index > rows.size()) {
             return null;
         }
-        return new QueryRowProxy(database, rows.get(index));
+        return new QueryRowProxy(databaseProxy, rows.get(index));
     }
 }

@@ -11,11 +11,16 @@ public class ViewProxy extends KrollProxy {
 
     private View view;
 
-    public ViewProxy(View view) {
+    private DatabaseProxy databaseProxy;
+    
+    public ViewProxy(DatabaseProxy databaseProxy, View view) {
+        assert databaseProxy != null;
         assert view != null;
+        
+        this.databaseProxy = databaseProxy;
         this.view = view;
     }
-
+    
     @Kroll.getProperty(name = "name")
     public String getName() {
         return view.getName();
@@ -36,6 +41,6 @@ public class ViewProxy extends KrollProxy {
 
     @Kroll.method
     public QueryProxy query() {
-        return new QueryProxy(view.getDatabase(), view.getName());
+        return new QueryProxy(databaseProxy, view.createQuery());
     }
 }

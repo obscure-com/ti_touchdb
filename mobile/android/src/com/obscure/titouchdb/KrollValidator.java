@@ -31,4 +31,7 @@ public class KrollValidator extends KrollProxy implements Validator {
         validate.call(this.getKrollObject(), new Object[] { new ReadOnlyRevisionProxy(newRevision), null });
     }
 
+    protected KrollFunction getKrollFunction() {
+        return validate;
+    }
 }

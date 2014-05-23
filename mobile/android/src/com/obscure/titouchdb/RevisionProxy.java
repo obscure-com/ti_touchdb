@@ -1,7 +1,5 @@
 package com.obscure.titouchdb;
 
-import java.util.Map;
-
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.annotations.Kroll;
 
@@ -24,11 +22,11 @@ public class RevisionProxy extends AbstractRevisionProxy {
 
     @Kroll.method
     public RevisionProxy deleteDocument() {
-        if (document.deleteDocument()) {
-            return document.getCurrentRevision();
+        if (documentProxy.deleteDocument()) {
+            return documentProxy.getCurrentRevision();
         }
         else {
-            this.lastError = document.getError();
+            this.lastError = documentProxy.getLastError();
             return null;
         }
     }
@@ -45,7 +43,7 @@ public class RevisionProxy extends AbstractRevisionProxy {
 
     @Kroll.method
     public RevisionProxy[] getRevisionHistory() {
-        return document.getRevisionHistory();
+        return documentProxy.getRevisionHistory();
     }
 
     @Override
@@ -62,7 +60,7 @@ public class RevisionProxy extends AbstractRevisionProxy {
 
     @Kroll.method
     public UnsavedRevisionProxy newRevision() {
-        return new UnsavedRevisionProxy(document, this.revision);
+        return new UnsavedRevisionProxy(documentProxy, this.revision);
     }
 
     /*
@@ -71,7 +69,7 @@ public class RevisionProxy extends AbstractRevisionProxy {
      * modified copy of this document's .properties property.)
      */
     @Kroll.method
-    public RevisionProxy putProperties(Map<String, Object> properties) {
-        return document.putProperties(properties);
+    public RevisionProxy putProperties(KrollDict properties) {
+        return documentProxy.putProperties(properties);
     }
 }

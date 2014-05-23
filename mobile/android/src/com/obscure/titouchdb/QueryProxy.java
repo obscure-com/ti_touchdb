@@ -2,16 +2,13 @@ package com.obscure.titouchdb;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 
-import android.util.Log;
-
 import com.couchbase.lite.CouchbaseLiteException;
-import com.couchbase.lite.Database;
+import com.couchbase.lite.Query;
 import com.couchbase.lite.QueryOptions;
 import com.couchbase.lite.QueryRow;
 import com.couchbase.lite.View;
@@ -25,17 +22,18 @@ public class QueryProxy extends KrollProxy {
 
     private KrollDict             lastError;
 
-    private Database           database;
+    private DatabaseProxy         databaseProxy;
 
-    private String                view;
+    private Query query;
+    
+    private QueryOptions          queryOptions       = new QueryOptions();
 
-    private QueryOptions       queryOptions       = new QueryOptions();
+    public QueryProxy(DatabaseProxy databaseProxy, Query query) {
+        assert databaseProxy != null;
+        assert query != null;
 
-    public QueryProxy(Database database, String view) {
-        assert database != null;
-
-        this.database = database;
-        this.view = view;
+        this.databaseProxy = databaseProxy;
+        this.query = query;
     }
 
     @Kroll.getProperty(name = "limit")
@@ -164,33 +162,29 @@ public class QueryProxy extends KrollProxy {
     public QueryEnumeratorProxy rows() {
         List<QueryRow> rows = null;
         try {
-        if (view == null) {
-            // _all_docs
-            rows = (List<QueryRow>) database.getAllDocs(this.queryOptions).get("rows");
-        }
-        else {
-            View v = database.getExistingView(view);
-            v.updateIndex();
-            /*
-            
-            if (status == null || !status.isSuccessful()) {
-                Log.e(LCAT, "Error updating view: " + view);
-                return null;
+            if (query == null) {
+                // _all_docs
+                rows = (List<QueryRow>) databaseProxy.getDatabase().getAllDocs(this.queryOptions).get("rows");
             }
-            */
-            rows = v.queryWithOptions(this.queryOptions);
-            /*
-            if (status == null || !status.isSuccessful()) {
-                Log.e(LCAT, "Error getting rows from view: " + view);
-                return null;
+            else {
+                View v = query.getView();
+//                v.updateIndex();
+                /*
+                 * 
+                 * if (status == null || !status.isSuccessful()) { Log.e(LCAT,
+                 * "Error updating view: " + view); return null; }
+                 */
+                rows = v.queryWithOptions(this.queryOptions);
+                /*
+                 * if (status == null || !status.isSuccessful()) { Log.e(LCAT,
+                 * "Error getting rows from view: " + view); return null; }
+                 */
             }
-            */
-        }
         }
         catch (CouchbaseLiteException e) {
             // TODO
         }
-        return rows != null ? new QueryEnumeratorProxy(database, rows) : null;
+        return rows != null ? new QueryEnumeratorProxy(databaseProxy, rows) : null;
     }
 
     @Kroll.method

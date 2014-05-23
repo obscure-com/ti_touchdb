@@ -46,7 +46,7 @@ public class UnsavedRevisionProxy extends AbstractRevisionProxy {
 
         UnsavedRevision rev = parentRevision.getDocument().createRevision();
         rev.setAttachment(name, contentType, content.getInputStream());
-        AttachmentProxy proxy = new AttachmentProxy(document, name, rev.getAttachment(name), content.getLength());
+        AttachmentProxy proxy = new AttachmentProxy(documentProxy, name, rev.getAttachment(name), content.getLength());
         getAttachmentProxies().put(name,  proxy);
         attachmentsToSave.add(name);
         return proxy;
@@ -54,7 +54,7 @@ public class UnsavedRevisionProxy extends AbstractRevisionProxy {
 
     @Kroll.getProperty(name = "parentRevision")
     public RevisionProxy getParentRevision() {
-        return parentRevision != null ? new RevisionProxy(document, parentRevision) : null;
+        return parentRevision != null ? new RevisionProxy(documentProxy, parentRevision) : null;
     }
 
     @Kroll.getProperty(name = "parentRevisionID")

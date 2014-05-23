@@ -1,6 +1,5 @@
 package com.obscure.titouchdb;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -42,7 +41,7 @@ public class DatabaseManagerProxy extends KrollProxy {
             Log.e(LCAT, "Unable to create TDServer", e);
         }
     }
-
+    
     @Kroll.method
     public void close() {
         manager.close();
@@ -65,7 +64,7 @@ public class DatabaseManagerProxy extends KrollProxy {
             try {
                 Database db = create ? manager.getDatabase(name) : manager.getExistingDatabase(name);
                 if (db != null && db.open()) {
-                    result = new DatabaseProxy(manager, db);
+                    result = new DatabaseProxy(this, db);
                     databaseProxyCache.put(name, result);
                 }
                 else {
