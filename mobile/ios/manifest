@@ -4,7 +4,7 @@
 #
 version: 1.0
 apiversion: 2
-description: TiTouchDB
+description: Titanium wrapper for Couchbase Mobile
 author: Paul Mietz Egli
 license: Apache License 2.0
 copyright: Copyright (c) 2014 by Paul Mietz Egli
