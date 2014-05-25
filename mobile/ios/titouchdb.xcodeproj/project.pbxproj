@@ -47,6 +47,8 @@
 		DAA36893167F9BB6004A514D /* TDAttachmentProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = DABFA05116779B4100A58019 /* TDAttachmentProxy.m */; };
 		DABFA05216779B4200A58019 /* TDAttachmentProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = DABFA05016779B4100A58019 /* TDAttachmentProxy.h */; };
 		DAE72A37152E66C900622013 /* TiProxy+Errors.h in Headers */ = {isa = PBXBuildFile; fileRef = DAE72A35152E66C800622013 /* TiProxy+Errors.h */; };
+		DAEE1D1A1932850500ABEF1D /* libCouchbaseLite.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DA77FA4B1932849500D85AEE /* libCouchbaseLite.a */; };
+		DAEE1D1B1932850500ABEF1D /* libCouchbaseLiteListener.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DA77FA571932849500D85AEE /* libCouchbaseLiteListener.a */; };
 		DAF6E66E1680F84D003217C3 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAF6E66D1680F84D003217C3 /* CFNetwork.framework */; };
 		DAF6E6701680F854003217C3 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAF6E66F1680F854003217C3 /* SystemConfiguration.framework */; };
 		DAF6E6721680F85B003217C3 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DAF6E6711680F85B003217C3 /* libz.dylib */; };
@@ -60,6 +62,104 @@
 			proxyType = 1;
 			remoteGlobalIDString = D2AAC07D0554694100DB518D;
 			remoteInfo = titouchdb;
+		};
+		DA77FA461932849500D85AEE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DA77FA351932849400D85AEE /* CouchbaseLite.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 270B3DEA1489359000E0A926;
+			remoteInfo = "CBL Mac";
+		};
+		DA77FA481932849500D85AEE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DA77FA351932849400D85AEE /* CouchbaseLite.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 27B0B7E71492BB6B00A817AD;
+			remoteInfo = "CBL iOS";
+		};
+		DA77FA4A1932849500D85AEE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DA77FA351932849400D85AEE /* CouchbaseLite.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 27B0B7A91492B83B00A817AD;
+			remoteInfo = "CBL iOS library";
+		};
+		DA77FA4C1932849500D85AEE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DA77FA351932849400D85AEE /* CouchbaseLite.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 27C70694148864BA00F0F099;
+			remoteInfo = "CBL Mac Demo";
+		};
+		DA77FA4E1932849500D85AEE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DA77FA351932849400D85AEE /* CouchbaseLite.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 27B0B80B1492C16300A817AD;
+			remoteInfo = "Grocery Sync iOS Demo";
+		};
+		DA77FA501932849500D85AEE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DA77FA351932849400D85AEE /* CouchbaseLite.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 27731F2A1495CFEF00815D67;
+			remoteInfo = "CBL iOS Empty App";
+		};
+		DA77FA521932849500D85AEE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DA77FA351932849400D85AEE /* CouchbaseLite.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 275315D514ACF0A10065964D;
+			remoteInfo = "CBL Listener Mac";
+		};
+		DA77FA541932849500D85AEE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DA77FA351932849400D85AEE /* CouchbaseLite.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = DA147C3614BCAC3B0052DA4D;
+			remoteInfo = "CBL Listener iOS";
+		};
+		DA77FA561932849500D85AEE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DA77FA351932849400D85AEE /* CouchbaseLite.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = DA023B6414BCA94C008184BB;
+			remoteInfo = "Listener iOS Library";
+		};
+		DA77FA581932849500D85AEE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DA77FA351932849400D85AEE /* CouchbaseLite.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 270FE0C814C5008C005FF647;
+			remoteInfo = LiteServ;
+		};
+		DA77FA5A1932849500D85AEE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DA77FA351932849400D85AEE /* CouchbaseLite.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 27538F5017F13B03004C3BFD;
+			remoteInfo = "LiteServ App";
+		};
+		DA77FA5C1932849500D85AEE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DA77FA351932849400D85AEE /* CouchbaseLite.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 792867BF178DE01900248AF0;
+			remoteInfo = CBLJSViewCompiler;
+		};
+		DAEE1D07193284F100ABEF1D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DA77FA351932849400D85AEE /* CouchbaseLite.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 27B0B7A81492B83B00A817AD;
+			remoteInfo = "CBL iOS library";
+		};
+		DAEE1D09193284F100ABEF1D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DA77FA351932849400D85AEE /* CouchbaseLite.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = DA023B2614BCA94C008184BB;
+			remoteInfo = "Listener iOS Library";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -89,6 +189,7 @@
 		DA4919431676B78A00ECCB83 /* TDReplicationProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TDReplicationProxy.m; path = Classes/TDReplicationProxy.m; sourceTree = "<group>"; };
 		DA53C6DF15EE8BAE0065CA47 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		DA5837CB15B09030005CA068 /* ComObscureTitouchdb_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ComObscureTitouchdb_Prefix.pch; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		DA77FA351932849400D85AEE /* CouchbaseLite.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CouchbaseLite.xcodeproj; path = "vendor/couchbase-lite-ios/CouchbaseLite.xcodeproj"; sourceTree = "<group>"; };
 		DABFA05016779B4100A58019 /* TDAttachmentProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TDAttachmentProxy.h; path = Classes/TDAttachmentProxy.h; sourceTree = "<group>"; };
 		DABFA05116779B4100A58019 /* TDAttachmentProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TDAttachmentProxy.m; path = Classes/TDAttachmentProxy.m; sourceTree = "<group>"; };
 		DAE72A35152E66C800622013 /* TiProxy+Errors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "TiProxy+Errors.h"; path = "Classes/TiProxy+Errors.h"; sourceTree = "<group>"; };
@@ -104,6 +205,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DAEE1D1A1932850500ABEF1D /* libCouchbaseLite.a in Frameworks */,
+				DAEE1D1B1932850500ABEF1D /* libCouchbaseLiteListener.a in Frameworks */,
 				DAF6E6741680F862003217C3 /* libsqlite3.dylib in Frameworks */,
 				DAF6E6721680F85B003217C3 /* libz.dylib in Frameworks */,
 				DAF6E6701680F854003217C3 /* SystemConfiguration.framework in Frameworks */,
@@ -127,6 +230,7 @@
 		0867D691FE84028FC02AAC07 /* titouchdb */ = {
 			isa = PBXGroup;
 			children = (
+				DA77FA351932849400D85AEE /* CouchbaseLite.xcodeproj */,
 				08FB77AEFE84172EC02AAC07 /* Classes */,
 				32C88DFF0371C24200C91783 /* Other Sources */,
 				0867D69AFE84028FC02AAC07 /* Frameworks */,
@@ -188,6 +292,25 @@
 			name = "Other Sources";
 			sourceTree = "<group>";
 		};
+		DA77FA361932849400D85AEE /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				DA77FA471932849500D85AEE /* CouchbaseLite.framework */,
+				DA77FA491932849500D85AEE /* CouchbaseLite.framework */,
+				DA77FA4B1932849500D85AEE /* libCouchbaseLite.a */,
+				DA77FA4D1932849500D85AEE /* Couchbase Lite Demo.app */,
+				DA77FA4F1932849500D85AEE /* Grocery Sync.app */,
+				DA77FA511932849500D85AEE /* Couchbase Lite Empty App.app */,
+				DA77FA531932849500D85AEE /* CouchbaseLiteListener.framework */,
+				DA77FA551932849500D85AEE /* CouchbaseLiteListener.framework */,
+				DA77FA571932849500D85AEE /* libCouchbaseLiteListener.a */,
+				DA77FA591932849500D85AEE /* LiteServ */,
+				DA77FA5B1932849500D85AEE /* LiteServ.app */,
+				DA77FA5D1932849500D85AEE /* libCBLJSViewCompiler.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -224,6 +347,8 @@
 			buildRules = (
 			);
 			dependencies = (
+				DAEE1D08193284F100ABEF1D /* PBXTargetDependency */,
+				DAEE1D0A193284F100ABEF1D /* PBXTargetDependency */,
 			);
 			name = titouchdb;
 			productName = titouchdb;
@@ -252,6 +377,12 @@
 			mainGroup = 0867D691FE84028FC02AAC07 /* titouchdb */;
 			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = DA77FA361932849400D85AEE /* Products */;
+					ProjectRef = DA77FA351932849400D85AEE /* CouchbaseLite.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				D2AAC07D0554694100DB518D /* titouchdb */,
@@ -259,6 +390,93 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		DA77FA471932849500D85AEE /* CouchbaseLite.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = CouchbaseLite.framework;
+			remoteRef = DA77FA461932849500D85AEE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		DA77FA491932849500D85AEE /* CouchbaseLite.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = CouchbaseLite.framework;
+			remoteRef = DA77FA481932849500D85AEE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		DA77FA4B1932849500D85AEE /* libCouchbaseLite.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libCouchbaseLite.a;
+			remoteRef = DA77FA4A1932849500D85AEE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		DA77FA4D1932849500D85AEE /* Couchbase Lite Demo.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = "Couchbase Lite Demo.app";
+			remoteRef = DA77FA4C1932849500D85AEE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		DA77FA4F1932849500D85AEE /* Grocery Sync.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = "Grocery Sync.app";
+			remoteRef = DA77FA4E1932849500D85AEE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		DA77FA511932849500D85AEE /* Couchbase Lite Empty App.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = "Couchbase Lite Empty App.app";
+			remoteRef = DA77FA501932849500D85AEE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		DA77FA531932849500D85AEE /* CouchbaseLiteListener.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = CouchbaseLiteListener.framework;
+			remoteRef = DA77FA521932849500D85AEE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		DA77FA551932849500D85AEE /* CouchbaseLiteListener.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = CouchbaseLiteListener.framework;
+			remoteRef = DA77FA541932849500D85AEE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		DA77FA571932849500D85AEE /* libCouchbaseLiteListener.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libCouchbaseLiteListener.a;
+			remoteRef = DA77FA561932849500D85AEE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		DA77FA591932849500D85AEE /* LiteServ */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = LiteServ;
+			remoteRef = DA77FA581932849500D85AEE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		DA77FA5B1932849500D85AEE /* LiteServ.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = LiteServ.app;
+			remoteRef = DA77FA5A1932849500D85AEE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		DA77FA5D1932849500D85AEE /* libCBLJSViewCompiler.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libCBLJSViewCompiler.a;
+			remoteRef = DA77FA5C1932849500D85AEE /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXShellScriptBuildPhase section */
 		24416B8011C4CA220047AFDD /* ShellScript */ = {
@@ -302,6 +520,16 @@
 			isa = PBXTargetDependency;
 			target = D2AAC07D0554694100DB518D /* titouchdb */;
 			targetProxy = 24416B8411C4CA280047AFDD /* PBXContainerItemProxy */;
+		};
+		DAEE1D08193284F100ABEF1D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "CBL iOS library";
+			targetProxy = DAEE1D07193284F100ABEF1D /* PBXContainerItemProxy */;
+		};
+		DAEE1D0A193284F100ABEF1D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "Listener iOS Library";
+			targetProxy = DAEE1D09193284F100ABEF1D /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
