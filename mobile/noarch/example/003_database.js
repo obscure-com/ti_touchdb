@@ -113,7 +113,7 @@ module.exports = function() {
     it('must not save a document until a call to putProperties', function() {
       var db2 = manager.getDatabase('writable');
       var c1 = db2.documentCount;
-      var doc = db2.getDocument();
+      var doc = db2.createDocument();
       var c2 = db2.documentCount;
       c1.should.be.exactly(c2);
       doc.putProperties({foo:10});
