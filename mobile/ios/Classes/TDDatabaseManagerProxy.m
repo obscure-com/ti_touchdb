@@ -97,7 +97,7 @@
             return nil;
         }
     }
-    return result;
+    return [self.databaseProxyCache objectForKey:name];
 }
 
 /**
@@ -108,27 +108,27 @@
 - (id)getExistingDatabase:(id)args {
     NSString * name;
     ENSURE_ARG_AT_INDEX(name, args, 0, NSString);
-
+    
     self.lastError = nil;
 
-    TDDatabaseProxy * result = [self.databaseProxyCache objectForKey:name];
+    TDDatabaseProxy * cached = [self.databaseProxyCache objectForKey:name];
 
-    if (!result) {
+    if (!cached) {
         NSError * error = nil;
         CBLDatabase * db = [self.databaseManager existingDatabaseNamed:name error:&error];
         
         if (!db) {
             self.lastError = [NSError errorWithDomain:@"TouchDB" code:kCBLDatabaseCreationError userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"could not find database '%@'", name] forKey:NSLocalizedDescriptionKey]];
-            return nil;
         }
-        
-        result = [TDDatabaseProxy proxyWithManager:self database:db];
-        if (result) {
-            [self.databaseProxyCache setObject:result forKey:name];
+        else {
+            TDDatabaseProxy * proxy = [TDDatabaseProxy proxyWithManager:self database:db];
+            if (proxy) {
+                [self.databaseProxyCache setObject:proxy forKey:name];
+            }
         }
     }
     
-    return result;
+    return [self.databaseProxyCache objectForKey:name];
 }
 
 /** Replaces or installs a database from a file.
