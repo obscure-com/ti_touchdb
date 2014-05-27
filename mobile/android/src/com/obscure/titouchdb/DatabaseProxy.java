@@ -13,6 +13,8 @@ import org.appcelerator.kroll.KrollFunction;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 
+import android.util.Log;
+
 import com.couchbase.lite.AsyncTask;
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.Database;
@@ -51,7 +53,7 @@ public class DatabaseProxy extends KrollProxy implements ChangeListener {
         assert database != null;
         this.managerProxy = managerProxy;
         this.database = database;
-
+        
         database.addChangeListener(this);
     }
 
@@ -117,6 +119,7 @@ public class DatabaseProxy extends KrollProxy implements ChangeListener {
     @Kroll.method
     public boolean deleteDatabase() {
         try {
+            managerProxy.removeFromCache(database.getName());
             database.delete();
             return true;
         }

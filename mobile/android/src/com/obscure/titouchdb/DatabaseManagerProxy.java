@@ -12,7 +12,6 @@ import org.appcelerator.kroll.annotations.Kroll;
 import android.app.Activity;
 import android.util.Log;
 
-import com.couchbase.lite.Context;
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.Database;
 import com.couchbase.lite.Manager;
@@ -44,6 +43,7 @@ public class DatabaseManagerProxy extends KrollProxy {
     
     @Kroll.method
     public void close() {
+        lastError = null;
         manager.close();
     }
 
@@ -55,12 +55,16 @@ public class DatabaseManagerProxy extends KrollProxy {
         return names != null ? names.toArray(EMPTY_STRING_ARRAY) : EMPTY_STRING_ARRAY;
     }
 
-    public DatabaseProxy getCachedDatabaseNamed(String name, boolean create) {
+    protected void removeFromCache(String name) {
+        databaseProxyCache.remove(name);
+    }
+    
+    private DatabaseProxy getCachedDatabaseNamed(String name, boolean create) {
         if (manager == null) return null;
         lastError = null;
 
         DatabaseProxy result = databaseProxyCache.get(name);
-        if (result == null) {
+        if (result == null || !result.getDatabase().isOpen()) {
             try {
                 Database db = create ? manager.getDatabase(name) : manager.getExistingDatabase(name);
                 if (db != null && db.open()) {
@@ -80,22 +84,55 @@ public class DatabaseManagerProxy extends KrollProxy {
 
     @Kroll.method
     public DatabaseProxy getDatabase(String name) {
-        return getCachedDatabaseNamed(name, true);
+        lastError = null;
+        try {
+            Database db = manager.getDatabase(name);
+            if (db == null) {
+                lastError = TitouchdbModule.generateErrorDict(Status.NOT_FOUND, "TouchDB", String.format("database %s not found", name));
+                return null;
+            }
+            else {
+                return  new DatabaseProxy(this, db);
+            }
+        }
+        catch (CouchbaseLiteException e) {
+            lastError = TitouchdbModule.generateErrorDict(e.getCBLStatus().getCode(), "TiTouchDB", "error getting existing database: "+e.getMessage());
+        }
+        return null;
+//        return getCachedDatabaseNamed(name, true);
     }
 
     @Kroll.getProperty(name = "defaultDirectory")
     public String getDefaultDirectory() {
+        lastError = null;
         return "file:/" + manager.getContext().getFilesDir().getAbsolutePath();
     }
 
     @Kroll.getProperty(name = "directory")
     public String getDirectory() {
+        lastError = null;
         return "file:/" + manager.getDirectory().getAbsolutePath();
     }
 
     @Kroll.method
     public DatabaseProxy getExistingDatabase(String name) {
-        return getCachedDatabaseNamed(name, false);
+        lastError = null;
+        try {
+            Database db = manager.getExistingDatabase(name);
+            if (db == null) {
+                lastError = TitouchdbModule.generateErrorDict(Status.NOT_FOUND, "TouchDB", String.format("database %s not found", name));
+                Log.i(LCAT, "lastError is "+lastError);
+                return null;
+            }
+            else {
+                return  new DatabaseProxy(this, db);
+            }
+        }
+        catch (CouchbaseLiteException e) {
+            lastError = TitouchdbModule.generateErrorDict(e.getCBLStatus().getCode(), "TiTouchDB", "error getting existing database: "+e.getMessage());
+        }
+        return null;
+//        return getCachedDatabaseNamed(name, false);
     }
 
     @Kroll.getProperty(name = "error")
