@@ -53,8 +53,8 @@ public class UnsavedRevisionProxy extends AbstractRevisionProxy {
     }
 
     @Kroll.getProperty(name = "parentRevision")
-    public RevisionProxy getParentRevision() {
-        return parentRevision != null ? new RevisionProxy(documentProxy, parentRevision) : null;
+    public SavedRevisionProxy getParentRevision() {
+        return parentRevision != null ? new SavedRevisionProxy(documentProxy, parentRevision) : null;
     }
 
     @Kroll.getProperty(name = "parentRevisionID")
@@ -78,7 +78,7 @@ public class UnsavedRevisionProxy extends AbstractRevisionProxy {
 
     @Kroll.method
     @SuppressWarnings("unchecked")
-    public RevisionProxy save() {
+    public SavedRevisionProxy save() {
         String prevRevId = null;
 
         if (parentRevision != null) {

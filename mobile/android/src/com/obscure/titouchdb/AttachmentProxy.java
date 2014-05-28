@@ -107,8 +107,8 @@ public class AttachmentProxy extends KrollProxy {
     }
 
     @Kroll.method
-    public RevisionProxy updateBody(TiBlob blob, @Kroll.argument(optional = true) String contentType) {
-        RevisionProxy result = null;
+    public SavedRevisionProxy updateBody(TiBlob blob, @Kroll.argument(optional = true) String contentType) {
+        SavedRevisionProxy result = null;
         this.blob = blob;
         this.contentType = contentType != null ? contentType : (blob != null ? blob.getMimeType() : null);
         this.length = blob != null ? blob.getLength() : -1;

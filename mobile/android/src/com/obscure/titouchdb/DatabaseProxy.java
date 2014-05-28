@@ -232,7 +232,8 @@ public class DatabaseProxy extends KrollProxy implements ChangeListener {
 
     @Kroll.method
     public KrollFunction getValidation(String name) {
-        return validationCallbackCache.get(name).getKrollFunction();
+        KrollValidator validator = validationCallbackCache.get(name);
+        return validator != null ? validator.getKrollFunction() : null;
     }
 
     @Kroll.method
@@ -289,9 +290,15 @@ public class DatabaseProxy extends KrollProxy implements ChangeListener {
 
     @Kroll.method
     public void setValidation(String name, KrollFunction f) {
-        KrollValidator validator = new KrollValidator(this, f);
-        database.setValidation(name, validator);
-        validationCallbackCache.put(name, validator);
+        if (f != null) {
+            KrollValidator validator = new KrollValidator(this, f);
+            database.setValidation(name, validator);
+            validationCallbackCache.put(name, validator);
+        }
+        else {
+            database.setValidation(name, null);
+            validationCallbackCache.remove(name);
+        }
     }
 
 }

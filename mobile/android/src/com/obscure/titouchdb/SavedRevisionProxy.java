@@ -9,7 +9,7 @@ import com.couchbase.lite.Attachment;
 import com.couchbase.lite.Revision;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)
-public class RevisionProxy extends AbstractRevisionProxy {
+public class SavedRevisionProxy extends AbstractRevisionProxy {
 
     private static final String LCAT = "RevisionProxy";
 
@@ -17,7 +17,7 @@ public class RevisionProxy extends AbstractRevisionProxy {
 
     private Revision revision;
 
-    public RevisionProxy(DocumentProxy document, Revision rev) {
+    public SavedRevisionProxy(DocumentProxy document, Revision rev) {
         super(document);
         assert document != null;
         assert rev != null;
@@ -26,7 +26,7 @@ public class RevisionProxy extends AbstractRevisionProxy {
     }
     
     @Kroll.method
-    public RevisionProxy deleteDocument() {
+    public SavedRevisionProxy deleteDocument() {
         if (documentProxy.deleteDocument()) {
             return documentProxy.getCurrentRevision();
         }
@@ -47,7 +47,7 @@ public class RevisionProxy extends AbstractRevisionProxy {
     }
 
     @Kroll.method
-    public RevisionProxy[] getRevisionHistory() {
+    public SavedRevisionProxy[] getRevisionHistory() {
         return documentProxy.getRevisionHistory();
     }
 
@@ -74,7 +74,7 @@ public class RevisionProxy extends AbstractRevisionProxy {
      * modified copy of this document's .properties property.)
      */
     @Kroll.method
-    public RevisionProxy putProperties(KrollDict properties) {
+    public SavedRevisionProxy putProperties(KrollDict properties) {
         return documentProxy.putProperties(properties);
     }
 }
