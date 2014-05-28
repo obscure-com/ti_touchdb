@@ -82,6 +82,19 @@ module.exports = function() {
       should(query).have.property('startKeyDocID');
     });
     
+    it('must have a run function', function() {
+      should(query.run).be.a.Function;
+    });
+    
+    it.skip('must have a runAsync function', function() {
+      should(query.runAsync).be.a.Function;
+    });
+    
+    it.skip('must have a toLiveQuery function', function() {
+      should(query.toLiveQuery).be.a.Function;
+    });
+    
+    
   });
   
   describe('query (subsets)', function() {
