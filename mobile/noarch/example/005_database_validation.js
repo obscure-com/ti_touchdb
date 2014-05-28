@@ -13,6 +13,7 @@ module.exports = function() {
     var dummy_fn = function() {};
     
     before(function() {
+      utils.delete_nonsystem_databases(manager)
       db = manager.getDatabase('test005_validation');
       db.setValidation('require_tag', function(rev, context) {
         if (rev.properties.tag == null) {
