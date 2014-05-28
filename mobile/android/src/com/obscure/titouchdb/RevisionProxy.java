@@ -1,14 +1,19 @@
 package com.obscure.titouchdb;
 
+import java.util.List;
+
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.annotations.Kroll;
 
+import com.couchbase.lite.Attachment;
 import com.couchbase.lite.Revision;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)
 public class RevisionProxy extends AbstractRevisionProxy {
 
     private static final String LCAT = "RevisionProxy";
+
+    private static final String[] EMPTY_STRING_ARRAY = new String[0];
 
     private Revision revision;
 
@@ -19,7 +24,7 @@ public class RevisionProxy extends AbstractRevisionProxy {
 
         this.revision = rev;
     }
-
+    
     @Kroll.method
     public RevisionProxy deleteDocument() {
         if (documentProxy.deleteDocument()) {

@@ -36,7 +36,7 @@ public class DocumentProxy extends KrollProxy {
         this.databaseProxy = databaseProxy;
         this.document = document;
     }
-
+    
     @Kroll.method
     public RevisionProxy createRevision() {
         return new RevisionProxy(this, document.createRevision());
@@ -180,6 +180,10 @@ public class DocumentProxy extends KrollProxy {
             result.add(new RevisionProxy(this, revision));
         }
         return result.toArray(EMPTY_REVISION_PROXY_ARRAY);
+    }
+
+    public String toString() {
+        return String.format("DocumentProxy: [ id=%s ]", document.getId());
     }
 
 }

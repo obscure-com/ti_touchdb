@@ -32,6 +32,11 @@ public abstract class AbstractRevisionProxy extends KrollProxy {
         this.documentProxy = documentProxy;
     }
 
+    @Kroll.getProperty(name = "document")
+    public DocumentProxy getDocument() {
+        return documentProxy;
+    }
+    
     @Kroll.method
     public AttachmentProxy attachmentNamed(String name) {
         return getAttachmentProxies().get(name);
