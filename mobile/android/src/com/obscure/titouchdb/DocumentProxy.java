@@ -45,11 +45,11 @@ public class DocumentProxy extends KrollProxy {
     @Kroll.method
     public boolean deleteDocument() {
         try {
-            databaseProxy.removeDocumentFromCache(document.getId());
+            databaseProxy.forgetDocumentProxy(this);
             return document.delete();
         }
         catch (CouchbaseLiteException e) {
-            // TODO
+            lastError = TitouchdbModule.convertStatusToErrorDict(e.getCBLStatus());
         }
         return false;
     }
@@ -60,7 +60,7 @@ public class DocumentProxy extends KrollProxy {
             return toRevisionProxyArray(document.getConflictingRevisions());
         }
         catch (CouchbaseLiteException e) {
-            // TODO set error
+            lastError = TitouchdbModule.convertStatusToErrorDict(e.getCBLStatus());
         }
         return EMPTY_REVISION_PROXY_ARRAY;
     }
@@ -85,14 +85,18 @@ public class DocumentProxy extends KrollProxy {
         return document.getId();
     }
 
+    @Kroll.getProperty(name = "error")
+    public KrollDict getLastError() {
+        return this.lastError;
+    }
+
     @Kroll.getProperty(name = "leafRevisions")
     public RevisionProxy[] getLeafRevisions() {
         try {
             return toRevisionProxyArray(document.getLeafRevisions());
         }
         catch (CouchbaseLiteException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            lastError = TitouchdbModule.convertStatusToErrorDict(e.getCBLStatus());
         }
         return EMPTY_REVISION_PROXY_ARRAY;
     }
@@ -121,7 +125,7 @@ public class DocumentProxy extends KrollProxy {
             return toRevisionProxyArray(document.getRevisionHistory());
         }
         catch (CouchbaseLiteException e) {
-            // TODO
+            lastError = TitouchdbModule.convertStatusToErrorDict(e.getCBLStatus());
         }
 
         return EMPTY_REVISION_PROXY_ARRAY;
@@ -152,15 +156,9 @@ public class DocumentProxy extends KrollProxy {
             return true;
         }
         catch (CouchbaseLiteException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            lastError = TitouchdbModule.convertStatusToErrorDict(e.getCBLStatus());
         }
         return false;
-    }
-    
-    @Kroll.getProperty(name = "error")
-    public KrollDict getLastError() {
-        return this.lastError;
     }
 
     @Kroll.method
@@ -170,8 +168,7 @@ public class DocumentProxy extends KrollProxy {
             return new RevisionProxy(this, revision);
         }
         catch (CouchbaseLiteException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            lastError = TitouchdbModule.convertStatusToErrorDict(e.getCBLStatus());
         }
         return null;
     }

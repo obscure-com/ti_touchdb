@@ -47,16 +47,18 @@ public class DatabaseManagerProxy extends KrollProxy {
         manager.close();
     }
 
+    protected void forgetDatabaseProxy(DatabaseProxy proxy) {
+        if (proxy != null) {
+            databaseProxyCache.remove(proxy.getName());
+        }
+    }
+
     @Kroll.getProperty(name = "allDatabaseNames")
     public String[] getAllDatabaseNames() {
         lastError = null;
 
         List<String> names = manager.getAllDatabaseNames();
         return names != null ? names.toArray(EMPTY_STRING_ARRAY) : EMPTY_STRING_ARRAY;
-    }
-
-    protected void removeFromCache(String name) {
-        databaseProxyCache.remove(name);
     }
     
     private DatabaseProxy getCachedDatabaseNamed(String name, boolean create) {
@@ -84,22 +86,7 @@ public class DatabaseManagerProxy extends KrollProxy {
 
     @Kroll.method
     public DatabaseProxy getDatabase(String name) {
-        lastError = null;
-        try {
-            Database db = manager.getDatabase(name);
-            if (db == null) {
-                lastError = TitouchdbModule.generateErrorDict(Status.NOT_FOUND, "TouchDB", String.format("database %s not found", name));
-                return null;
-            }
-            else {
-                return  new DatabaseProxy(this, db);
-            }
-        }
-        catch (CouchbaseLiteException e) {
-            lastError = TitouchdbModule.generateErrorDict(e.getCBLStatus().getCode(), "TiTouchDB", "error getting existing database: "+e.getMessage());
-        }
-        return null;
-//        return getCachedDatabaseNamed(name, true);
+        return getCachedDatabaseNamed(name, true);
     }
 
     @Kroll.getProperty(name = "defaultDirectory")
@@ -116,23 +103,7 @@ public class DatabaseManagerProxy extends KrollProxy {
 
     @Kroll.method
     public DatabaseProxy getExistingDatabase(String name) {
-        lastError = null;
-        try {
-            Database db = manager.getExistingDatabase(name);
-            if (db == null) {
-                lastError = TitouchdbModule.generateErrorDict(Status.NOT_FOUND, "TouchDB", String.format("database %s not found", name));
-                Log.i(LCAT, "lastError is "+lastError);
-                return null;
-            }
-            else {
-                return  new DatabaseProxy(this, db);
-            }
-        }
-        catch (CouchbaseLiteException e) {
-            lastError = TitouchdbModule.generateErrorDict(e.getCBLStatus().getCode(), "TiTouchDB", "error getting existing database: "+e.getMessage());
-        }
-        return null;
-//        return getCachedDatabaseNamed(name, false);
+        return getCachedDatabaseNamed(name, false);
     }
 
     @Kroll.getProperty(name = "error")

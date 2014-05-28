@@ -21,6 +21,7 @@ import com.couchbase.lite.Database;
 import com.couchbase.lite.Database.ChangeEvent;
 import com.couchbase.lite.Database.ChangeListener;
 import com.couchbase.lite.Document;
+import com.couchbase.lite.Status;
 import com.couchbase.lite.TransactionalTask;
 import com.couchbase.lite.View;
 import com.couchbase.lite.replicator.Replication;
@@ -28,37 +29,38 @@ import com.couchbase.lite.replicator.Replication;
 @Kroll.proxy(parentModule = TitouchdbModule.class)
 public class DatabaseProxy extends KrollProxy implements ChangeListener {
 
-    private static final String        LCAT                       = "DatabaseProxy";
+    private static final String                 LCAT                       = "DatabaseProxy";
 
-    private static final int           MSG_FIRST_ID               = KrollProxy.MSG_LAST_ID + 1;
+    private static final int                    MSG_FIRST_ID               = KrollProxy.MSG_LAST_ID + 1;
 
-    private static final int           MSG_HANDLE_DATABASE_CHANGE = MSG_FIRST_ID + 1200;
+    private static final int                    MSG_HANDLE_DATABASE_CHANGE = MSG_FIRST_ID + 1200;
 
-    private Database                   database                   = null;
+    private Database                            database                   = null;
 
-    private Map<String, DocumentProxy> documentProxyCache         = new HashMap<String, DocumentProxy>();
+    private Map<String, DocumentProxy>          documentProxyCache         = new HashMap<String, DocumentProxy>();
 
-    private Map<String, ReplicationFilterProxy> filterCallbackCache = new HashMap<String, ReplicationFilterProxy>();
+    private Map<String, ReplicationFilterProxy> filterCallbackCache        = new HashMap<String, ReplicationFilterProxy>();
 
-    private KrollDict                  lastError;
+    private KrollDict                           lastError;
 
-    private DatabaseManagerProxy       managerProxy               = null;
+    private DatabaseManagerProxy                managerProxy               = null;
 
-    private Map<String, KrollValidator> validationCallbackCache = new HashMap<String, KrollValidator>();
+    private Map<String, KrollValidator>         validationCallbackCache    = new HashMap<String, KrollValidator>();
 
-    private Map<String, ViewProxy>     viewProxyCache             = new HashMap<String, ViewProxy>();
+    private Map<String, ViewProxy>              viewProxyCache             = new HashMap<String, ViewProxy>();
 
     public DatabaseProxy(DatabaseManagerProxy managerProxy, Database database) {
         assert managerProxy != null;
         assert database != null;
         this.managerProxy = managerProxy;
         this.database = database;
-        
+
         database.addChangeListener(this);
     }
 
     @Kroll.method
     public void addChangeListener(KrollEventCallback cb) {
+        lastError = null;
         // TODO
     }
 
@@ -69,12 +71,12 @@ public class DatabaseProxy extends KrollProxy implements ChangeListener {
 
     @Kroll.method
     public boolean compact() {
+        lastError = null;
         try {
             database.compact();
         }
         catch (CouchbaseLiteException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            lastError = TitouchdbModule.convertStatusToErrorDict(e.getCBLStatus());
             return false;
         }
         return true;
@@ -82,56 +84,56 @@ public class DatabaseProxy extends KrollProxy implements ChangeListener {
 
     @Kroll.method
     public QueryProxy createAllDocumentsQuery() {
+        lastError = null;
         return new QueryProxy(this, database.createAllDocumentsQuery());
     }
 
     @Kroll.method
     public DocumentProxy createDocument() {
+        lastError = null;
         return new DocumentProxy(this, database.createDocument());
     }
 
     @Kroll.method
     public ReplicationProxy createPullReplication(String url) {
+        lastError = null;
         ReplicationProxy result = null;
         try {
             Replication replication = database.createPullReplication(new URL(url));
             result = new ReplicationProxy(replication);
         }
         catch (MalformedURLException e) {
-            // TODO set error
+            lastError = TitouchdbModule.generateErrorDict(Status.BAD_REQUEST, "TiTouchdb", "invalid URL: " + e.getMessage());
         }
         return result;
     }
 
     @Kroll.method
     public ReplicationProxy createPushReplication(String url) {
+        lastError = null;
         ReplicationProxy result = null;
         try {
             Replication replication = database.createPushReplication(new URL(url));
             result = new ReplicationProxy(replication);
         }
         catch (MalformedURLException e) {
-            // TODO set error
+            lastError = TitouchdbModule.generateErrorDict(Status.BAD_REQUEST, "TiTouchdb", "invalid URL: " + e.getMessage());
         }
         return result;
     }
 
     @Kroll.method
     public boolean deleteDatabase() {
+        lastError = null;
         try {
-            managerProxy.removeFromCache(database.getName());
+            managerProxy.forgetDatabaseProxy(this);
             database.delete();
             return true;
         }
         catch (CouchbaseLiteException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            lastError = TitouchdbModule.convertStatusToErrorDict(e.getCBLStatus());
         }
         return false;
-    }
-    
-    protected void removeDocumentFromCache(String id) {
-        documentProxyCache.remove(id);
     }
 
     @Kroll.method
@@ -140,8 +142,13 @@ public class DatabaseProxy extends KrollProxy implements ChangeListener {
             database.deleteLocalDocument(id);
         }
         catch (CouchbaseLiteException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            lastError = TitouchdbModule.convertStatusToErrorDict(e.getCBLStatus());
+        }
+    }
+
+    protected void forgetDocumentProxy(DocumentProxy proxy) {
+        if (proxy != null) {
+            documentProxyCache.remove(proxy.getDocumentID());
         }
     }
 
@@ -163,7 +170,7 @@ public class DatabaseProxy extends KrollProxy implements ChangeListener {
         DocumentProxy proxy = documentProxyCache.get(id);
         if (proxy == null) {
             proxy = new DocumentProxy(this, database.getDocument(id));
-            documentProxyCache.put(id,  proxy);
+            documentProxyCache.put(id, proxy);
         }
         return documentProxyCache.get(id);
     }
@@ -181,7 +188,7 @@ public class DatabaseProxy extends KrollProxy implements ChangeListener {
             if (doc == null) {
                 return null;
             }
-            documentProxyCache.put(id,  new DocumentProxy(this, doc));
+            documentProxyCache.put(id, new DocumentProxy(this, doc));
         }
         return documentProxyCache.get(id);
     }
@@ -201,6 +208,11 @@ public class DatabaseProxy extends KrollProxy implements ChangeListener {
     @Kroll.method
     public KrollFunction getFilter(String name) {
         return filterCallbackCache.get(name).getKrollFunction();
+    }
+
+    @Kroll.getProperty(name = "error")
+    public KrollDict getLastError() {
+        return lastError;
     }
 
     @Kroll.getProperty(name = "lastSequenceNumber")
@@ -234,8 +246,7 @@ public class DatabaseProxy extends KrollProxy implements ChangeListener {
             database.putLocalDocument(id, doc);
         }
         catch (CouchbaseLiteException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            lastError = TitouchdbModule.convertStatusToErrorDict(e.getCBLStatus());
         }
     }
 
