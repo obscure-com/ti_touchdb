@@ -4,9 +4,8 @@ import org.appcelerator.kroll.KrollFunction;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 
-import android.util.Log;
-
 import com.couchbase.lite.Revision;
+import com.couchbase.lite.SavedRevision;
 import com.couchbase.lite.ValidationContext;
 import com.couchbase.lite.Validator;
 
@@ -15,9 +14,9 @@ public class KrollValidator extends KrollProxy implements Validator {
 
     private static final String LCAT = "KrollValidator";
 
-    private KrollFunction validate;
+    private KrollFunction       validate;
 
-    private DatabaseProxy databaseProxy;
+    private DatabaseProxy       databaseProxy;
 
     public KrollValidator(DatabaseProxy databaseProxy, KrollFunction validate) {
         assert databaseProxy != null;
@@ -29,7 +28,8 @@ public class KrollValidator extends KrollProxy implements Validator {
     @Override
     public void validate(Revision newRevision, ValidationContext context) {
         DocumentProxy documentProxy = databaseProxy.getDocument(newRevision.getDocument().getId());
-        validate.call(this.getKrollObject(), new Object[] { new UnsavedRevisionProxy(documentProxy, newRevision), new ValidationContextProxy(documentProxy, context) });
+        validate.call(this.getKrollObject(), new Object[] { new SavedRevisionProxy(documentProxy, (SavedRevision) newRevision),
+                new ValidationContextProxy(documentProxy, context) });
     }
 
     protected KrollFunction getKrollFunction() {

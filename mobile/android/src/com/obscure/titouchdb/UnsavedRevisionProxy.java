@@ -1,135 +1,90 @@
 package com.obscure.titouchdb;
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.titanium.TiBlob;
 
-import com.couchbase.lite.Attachment;
-import com.couchbase.lite.Revision;
-import com.couchbase.lite.Status;
+import com.couchbase.lite.CouchbaseLiteException;
+import com.couchbase.lite.SavedRevision;
 import com.couchbase.lite.UnsavedRevision;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)
 public class UnsavedRevisionProxy extends AbstractRevisionProxy {
 
     private static final String LCAT = "NewRevisionProxy";
+
+    private DocumentProxy documentProxy;
+
+    private UnsavedRevision revision;
+
+    public UnsavedRevisionProxy(DocumentProxy documentProxy, UnsavedRevision revision) {
+        super(documentProxy);
+        assert documentProxy != null;
+        assert revision != null;
+
+        this.documentProxy = documentProxy;
+        this.revision = revision;
+    }
+
     
-
-    private Revision         parentRevision;
-
-    private Map<String, Object> properties = new HashMap<String, Object>();
-    
-    private Set<AttachmentProxy> attachmentsToRemove = new HashSet<AttachmentProxy>();
-
-    private Set<String> attachmentsToSave = new HashSet<String>();
-
-    public UnsavedRevisionProxy(DocumentProxy document, Revision parentRevision) {
-        super(document);
-        assert document != null;
-
-        this.parentRevision = parentRevision;
-        if (parentRevision != null && parentRevision.getProperties() != null) {
-            properties.putAll(parentRevision.getProperties());
-        }
-    }
-
-    @Kroll.method
-    public AttachmentProxy addAttachment(String name, String contentType, TiBlob content) {
-        assert name != null;
-        assert contentType != null;
-        assert content != null;
-
-        UnsavedRevision rev = parentRevision.getDocument().createRevision();
-        rev.setAttachment(name, contentType, content.getInputStream());
-        AttachmentProxy proxy = new AttachmentProxy(documentProxy, name, rev.getAttachment(name), content.getLength());
-        getAttachmentProxies().put(name,  proxy);
-        attachmentsToSave.add(name);
-        return proxy;
-    }
-
-    @Kroll.getProperty(name = "parentRevision")
-    public SavedRevisionProxy getParentRevision() {
-        return parentRevision != null ? new SavedRevisionProxy(documentProxy, parentRevision) : null;
-    }
-
-    @Kroll.getProperty(name = "parentRevisionID")
-    public String getParentRevisionID() {
-        return parentRevision != null ? parentRevision.getId() : null;
-    }
-
     @Override
+    @SuppressWarnings("unchecked")
     @Kroll.getProperty(name = "properties")
     public KrollDict getRevisionProperties() {
-        return new KrollDict(properties);
+        return new KrollDict((Map<? extends String, ? extends Object>) TypePreprocessor.preprocess(revision.getProperties()));
+    }
+    
+    @Override
+    @SuppressWarnings("unchecked")
+    @Kroll.getProperty(name = "userProperties")
+    public KrollDict getUserProperties() {
+        return new KrollDict((Map<? extends String, ? extends Object>) TypePreprocessor.preprocess(revision.getUserProperties()));
+    }
+    
+    @Kroll.getProperty(name = "isDeletion")
+    public boolean isDeletion() {
+        return revision.isDeletion();
     }
 
     @Kroll.method
     public void removeAttachment(String name) {
-        AttachmentProxy proxy = getAttachmentProxies().remove(name);
-        if (proxy != null) {
-            attachmentsToRemove.add(proxy);
-        }
+        revision.removeAttachment(name);
+        // TODO attachment cache
     }
-
+    
     @Kroll.method
-    @SuppressWarnings("unchecked")
-    public SavedRevisionProxy save() {
-        String prevRevId = null;
-
-        if (parentRevision != null) {
-            prevRevId = parentRevision.getId();
+    public SavedRevisionProxy save(@Kroll.argument(optional=true) boolean allowConflict) {
+        lastError = null;
+        try {
+            SavedRevision saved = revision.save(allowConflict);
+            return new SavedRevisionProxy(documentProxy, saved);
         }
-
-        // TODO convert attachments to atts dictionary
-        Map<String,Object> atts = properties.containsKey("_attachments") ? (Map<String,Object>) properties.get("_attachments") : new HashMap<String,Object>();
-        for (AttachmentProxy proxy : attachmentsToRemove) {
-            atts.remove(proxy.getName());
+        catch (CouchbaseLiteException e) {
+            lastError = TitouchdbModule.convertStatusToErrorDict(e.getCBLStatus());
         }
-        attachmentsToRemove.clear();
-        
-        for (String name : attachmentsToSave) {
-            AttachmentProxy proxy = attachmentNamed(name);
-            if (proxy != null) {
-                atts.put(proxy.getName(), proxy.toAttachmentDictionary());
-            }
-        }
-        attachmentsToSave.clear();
-        
-        properties.put("_attachments", atts);
-        
-        // TODO!!!
-        
-        /*
-        Status status = new Status();
-        Revision revision = new Revision(properties);
-        
-        Revision updated = document.putRevision(revision, prevRevId, false, status);
-
-        // TODO reselect the revision?
-        
-        return updated != null ? new RevisionProxy(document, updated) : null;
-        */
         return null;
     }
 
-    @Kroll.setProperty(name = "isDeleted")
-    public void setIsDeleted(boolean isDeleted) {
-        properties.put("_deleted", true);
+    @Kroll.method
+    public void setAttachment(String name, String contentType, TiBlob content) {
+        revision.setAttachment(name, contentType, content.getInputStream());
     }
 
-    @Kroll.method
-    public void setProperties(Map<String, Object> properties) {
-        assert properties != null;
-        this.properties = properties;
+    @Kroll.setProperty(name = "isDeletion")
+    public void setDeletion(boolean deletion) {
+        revision.setIsDeletion(deletion);
     }
 
-    @Kroll.method
-    public void setPropertyForKey(String key, Object value) {
-        properties.put(key, value);
+    @Kroll.setProperty(name = "properties")
+    public void setRevisionProperties(KrollDict properties) {
+        revision.setProperties(properties);
     }
+
+    @Kroll.setProperty(name = "userProperties")
+    public void setUserProperties(KrollDict properties) {
+        revision.setUserProperties(properties);
+    }
+    
 }

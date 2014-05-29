@@ -1,28 +1,64 @@
 package com.obscure.titouchdb;
 
-import java.util.List;
+import java.util.Map;
 
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.annotations.Kroll;
 
-import com.couchbase.lite.Attachment;
-import com.couchbase.lite.Revision;
+import com.couchbase.lite.CouchbaseLiteException;
+import com.couchbase.lite.SavedRevision;
+import com.couchbase.lite.UnsavedRevision;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)
 public class SavedRevisionProxy extends AbstractRevisionProxy {
 
     private static final String LCAT = "RevisionProxy";
 
-    private static final String[] EMPTY_STRING_ARRAY = new String[0];
+    private SavedRevision revision;
 
-    private Revision revision;
+    public SavedRevisionProxy(DocumentProxy documentProxy, SavedRevision revision) {
+        super(documentProxy);
+        assert documentProxy != null;
+        assert revision != null;
 
-    public SavedRevisionProxy(DocumentProxy document, Revision rev) {
-        super(document);
-        assert document != null;
-        assert rev != null;
-
-        this.revision = rev;
+        this.revision = revision;
+    }
+    
+    @Kroll.method
+    public AbstractRevisionProxy createRevision(@Kroll.argument(optional=true) KrollDict properties) {
+        lastError = null;
+        try {
+        if (properties != null) {
+            revision.createRevision(properties);
+            documentProxy.forgetCurrentRevisionProxy();
+            return documentProxy.getCurrentRevision();
+        }
+        else {
+            UnsavedRevision unsaved = revision.createRevision();
+            return new UnsavedRevisionProxy(documentProxy, unsaved);
+        }
+        }
+        catch (CouchbaseLiteException e) {
+            lastError = TitouchdbModule.convertStatusToErrorDict(e.getCBLStatus());
+        }
+        return  null;
+        
+        /*
+        UnsavedRevisionProxy unsaved = documentProxy.createRevision();
+        if (properties != null) {
+            // Creates and saves a new Revision with the specified properties.
+            unsaved.setRevisionProperties(properties);
+            return unsaved.save(false);
+        }
+        else {
+            // Creates a new UnsavedRevision whose properties and attachments are initially identical to this one.
+            unsaved.setRevisionProperties(this.getRevisionProperties());
+            for (AttachmentProxy attachmentProxy : getAttachments()) {
+                unsaved.setAttachment(attachmentProxy.getName(), attachmentProxy.getContentType(), attachmentProxy.getBody());
+            }
+            return unsaved;
+        }
+        */
     }
     
     @Kroll.method
@@ -58,14 +94,17 @@ public class SavedRevisionProxy extends AbstractRevisionProxy {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     @Kroll.getProperty(name = "properties")
     public KrollDict getRevisionProperties() {
-        return new KrollDict(revision.getProperties());
+        return new KrollDict((Map<? extends String, ? extends Object>) TypePreprocessor.preprocess(revision.getProperties()));
     }
-
-    @Kroll.method
-    public UnsavedRevisionProxy newRevision() {
-        return new UnsavedRevisionProxy(documentProxy, this.revision);
+    
+    @Override
+    @SuppressWarnings("unchecked")
+    @Kroll.getProperty(name = "userProperties")
+    public KrollDict getUserProperties() {
+        return new KrollDict((Map<? extends String, ? extends Object>) TypePreprocessor.preprocess(revision.getUserProperties()));
     }
 
     /*

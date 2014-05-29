@@ -91,7 +91,9 @@ public class DatabaseProxy extends KrollProxy implements ChangeListener {
     @Kroll.method
     public DocumentProxy createDocument() {
         lastError = null;
-        return new DocumentProxy(this, database.createDocument());
+        DocumentProxy proxy = new DocumentProxy(this, database.createDocument());
+        documentProxyCache.put(proxy.getDocumentID(), proxy);
+        return proxy;
     }
 
     @Kroll.method

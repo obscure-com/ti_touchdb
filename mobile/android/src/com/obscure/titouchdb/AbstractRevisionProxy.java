@@ -98,18 +98,7 @@ public abstract class AbstractRevisionProxy extends KrollProxy {
     }
 
     @Kroll.getProperty(name = "userProperties")
-    public KrollDict getUserProperties() {
-        KrollDict rev = getRevisionProperties();
-        if (rev == null) return null;
-
-        KrollDict result = new KrollDict();
-        for (String key : result.keySet()) {
-            if (!key.startsWith("_")) {
-                result.put(key, rev.get(key));
-            }
-        }
-        return result;
-    }
+    public abstract KrollDict getUserProperties();
 
     @Kroll.method
     public Object propertyForKey(String key) {

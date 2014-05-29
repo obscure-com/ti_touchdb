@@ -13,7 +13,7 @@ module.exports = function() {
     before(function() {
       utils.delete_nonsystem_databases(manager);
       db = manager.getDatabase('test006_docgeneral');
-      doc = db.getDocument();
+      doc = db.createDocument();
       rev = doc.putProperties({ name: "generic doc", tag: 5 });
     });
     
@@ -96,13 +96,12 @@ module.exports = function() {
     it.skip('must have an removeChangeListener function', function() {
       should(doc.removeChangeListener).be.a.Function;
     });
-    
+
     it.skip('must have an update function', function() {
       should(doc.update).be.a.Function;
     });
   });
   
-    
   describe('document (lifecycle)', function() {
     var db;
     
@@ -112,15 +111,15 @@ module.exports = function() {
     });
     
     it('must create a revision', function() {
-      var doc = db.getDocument();
+      var doc = db.createDocument();
       doc.putProperties({ a: 10 });
       doc.deleted.should.eql(false);
       var existing = db.getExistingDocument(doc.documentID);
-      should(existing).be.exactly(doc);
+      should(existing === doc).be.true;
     });
     
     it('must delete a document', function() {
-      var doc = db.getDocument();
+      var doc = db.createDocument();
       var rev = doc.putProperties({name: 'short lived'});
       doc.deleted.should.eql(false);
       var deleted = doc.deleteDocument();
@@ -133,7 +132,7 @@ module.exports = function() {
     });
     
     it('must purge a document', function() {
-      var doc = db.getDocument();
+      var doc = db.createDocument();
       var rev = doc.putProperties({name: 'purgatory'});
       var result = doc.purgeDocument();
       result.should.be.ok;
@@ -149,9 +148,10 @@ module.exports = function() {
       
       var redoc = db.getExistingDocument('document-with-id');
       should.exist(redoc);
-      should(redoc).be.exactly(doc);
+      should(redoc === doc).be.true;
     });
   });
+
   
   describe('document (properties)', function() {
     var db, doc;
@@ -160,7 +160,7 @@ module.exports = function() {
       utils.delete_nonsystem_databases(manager);
       db = manager.getDatabase('test006_docprops');
       
-      doc = db.getDocument();
+      doc = db.createDocument();
       doc.putProperties({
         name: 'Paul', 
         born: 1967,
@@ -186,7 +186,8 @@ module.exports = function() {
     });
 
   });
-  
+
+
   describe('document (revisions)', function() {
     var db, doc;
     
@@ -196,20 +197,20 @@ module.exports = function() {
     });
     
     it('must not return a current revision for a new document', function() {
-      var doc = db.getDocument();
+      var doc = db.createDocument();
       should(doc.currentRevision).eql(null);
     });
-    
+
     it('must return an unsaved revision from createRevision in a new document', function() {
-      var doc = db.getDocument();
+      var doc = db.createDocument();
       var rev = doc.createRevision();
       should.exist(rev);
       rev.properties.should.have.properties(['_id']);
-      should(rev.save).be.a.Function; // indicates SavedRevision
+      should(rev.save).be.a.Function; // indicates UnsavedRevision
     });
     
     it('must create a single revision', function() {
-      var doc = db.getDocument();
+      var doc = db.createDocument();
       var rev = doc.putProperties({
         a: 10,
         b: false,
@@ -217,25 +218,26 @@ module.exports = function() {
       });
       should.exist(rev);
       should.exist(doc.documentID);
-      should(doc.currentRevision).be.exactly(rev);
+      should(doc.currentRevision === rev).be.true;
       should(doc.properties).have.properties({
         a: 10,
         b: false,
         c: 'a string'
       });
     });
-    
+
     it('must return null for currentRevision after deletion', function() {
       // https://github.com/couchbase/couchbase-lite-ios/issues/265
-      var doc = db.getDocument();
+      var doc = db.createDocument();
       var rev1 = doc.putProperties({ foo:'bar' });
       doc.deleteDocument();
       var rev2 = doc.currentRevision;
       should.not.exist(rev2);
     });
+
     
     it('must not update a document without a _rev', function() {
-      var doc = db.getDocument();
+      var doc = db.createDocument();
       var rev1 = doc.putProperties({ x: 3.14 });
       should.exist(rev1);
       
@@ -243,16 +245,16 @@ module.exports = function() {
       should(rev2).eql(null);
       should(doc.error).be.an.Object;
       doc.error.code.should.eql(409);
-      should(doc.currentRevision).be.exactly(rev1);
+      should(doc.currentRevision === rev1).be.true;
     });
     
     it('must track multiple revisions', function() {
-      var doc = db.getDocument();
+      var doc = db.createDocument();
       var rev1 = doc.putProperties({ i: 1 });
       var rev2 = doc.putProperties({ _rev: rev1.revisionID, name: "foo" });
       var rev3 = doc.putProperties({ _rev: rev2.revisionID, i: 2, location: "Santa Cruz" });
       
-      should(doc.currentRevision).be.exactly(rev3);
+      should(doc.currentRevision === rev3).be.true;
       doc.currentRevisionID.should.eql(rev3.revisionID);
       doc.properties.should.have.properties({
         i: 2,
@@ -262,7 +264,7 @@ module.exports = function() {
     });
     
     it('must return a list of leaf revisions', function() {
-      var doc = db.getDocument();
+      var doc = db.createDocument();
       var rev1 = doc.putProperties({ i: 1 });
       var rev2 = doc.putProperties({ _rev: rev1.revisionID, i: 2 });
       var rev3 = doc.putProperties({ _rev: rev2.revisionID, i: 3 });
@@ -274,7 +276,7 @@ module.exports = function() {
     });
     
     it('must return a revision history', function() {
-      var doc = db.getDocument();
+      var doc = db.createDocument();
       var rev1 = doc.putProperties({ i: 1 });
       var rev2 = doc.putProperties({ _rev: rev1.revisionID, i: 2 });
       var rev3 = doc.putProperties({ _rev: rev2.revisionID, i: 3 });
@@ -292,7 +294,7 @@ module.exports = function() {
     });
     
     it('must return revisions by revid', function() {
-      var doc = db.getDocument();
+      var doc = db.createDocument();
       var rev1 = doc.putProperties({ i: 1 });
       var rev2 = doc.putProperties({ _rev: rev1.revisionID, i: 2 });
       var rev3 = doc.putProperties({ _rev: rev2.revisionID, i: 3 });
@@ -302,7 +304,7 @@ module.exports = function() {
     });
     
     it('must create a new unsaved revision', function() {
-      var doc = db.getDocument();
+      var doc = db.createDocument();
       var rev1 = doc.putProperties({ name: "Paul" });
       var rev2 = doc.createRevision();
       var props = rev2.properties;
@@ -317,7 +319,7 @@ module.exports = function() {
     });
     
     it('must return currentRevision from conflictingRevisions when there are no conflicts', function() {
-      var doc = db.getDocument();
+      var doc = db.createDocument();
       doc.putProperties({ i: 1 });
 
       should(doc.conflictingRevisions).be.an.Array;
@@ -326,7 +328,7 @@ module.exports = function() {
     });
     
     it('must return a list of conflicting revisions', function() {
-      var doc = db.getDocument();
+      var doc = db.createDocument();
       var rev1 = doc.putProperties({ name: "Paul", birth_year: 1977 });
       
       // create a revision with a new property
@@ -348,10 +350,10 @@ module.exports = function() {
       var conflict_ids = [rev2a.revisionID, rev2b.revisionID];
       
       should(doc.conflictingRevisions).be.an.Array;
+
       doc.conflictingRevisions.length.should.eql(2);
       conflict_ids.should.containEql(doc.conflictingRevisions[0].revisionID);
       conflict_ids.should.containEql(doc.conflictingRevisions[1].revisionID);
     });
   });
-  
 };
