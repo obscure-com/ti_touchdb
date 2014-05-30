@@ -83,10 +83,10 @@ module.exports = function() {
       db.setValidation('tag_must_be_int', null);
     });
     
-    it('must support calling rejectWithMessage', function() {
+    it('must support calling reject with a message', function() {
       db.setValidation('with_message', function(rev, context) {
         if (rev.properties.foogle == null) {
-          context.rejectWithMessage('you need a foogle, fool!');
+          context.reject('you need a foogle, fool!');
         }
       });
       
