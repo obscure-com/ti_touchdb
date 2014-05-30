@@ -12,15 +12,40 @@ import com.couchbase.lite.Reducer;
 @Kroll.proxy(parentModule = TitouchdbModule.class)
 public class KrollReducer extends KrollProxy implements Reducer {
 
+    public static final Reducer COUNT = new Reducer() {
+                                          @Override
+                                          public Object reduce(List<Object> keys, List<Object> values, boolean rereduce) {
+                                              return count(values, rereduce);
+                                          }
+                                      };
+
     private static final String LCAT = "KrollReducer";
 
-    private static double sum(List<Object> values) {
-        double sum = 0;
-        for (Object value : values) {
-            sum += ((Number) value).doubleValue();
-        }
-        return sum;
-    }
+    public static final Reducer STATS = new Reducer() {
+                                          @Override
+                                          public Object reduce(List<Object> keys, List<Object> values, boolean rereduce) {
+                                              double min = Double.MAX_VALUE, max = -Double.MAX_VALUE;
+                                              for (Object value : values) {
+                                                  double v = ((Number) value).doubleValue();
+                                                  min = Math.min(min, v);
+                                                  max = Math.max(max, v);
+                                              }
+
+                                              KrollDict result = new KrollDict();
+                                              result.put("sum", sum(values));
+                                              result.put("min", min);
+                                              result.put("max", max);
+                                              result.put("count", count(values, rereduce));
+                                              return result;
+                                          }
+                                      };
+
+    public static final Reducer SUM   = new Reducer() {
+                                          @Override
+                                          public Object reduce(List<Object> keys, List<Object> values, boolean rereduce) {
+                                              return sum(values);
+                                          }
+                                      };
 
     private static double count(List<Object> values, boolean rereduce) {
         long count = 0;
@@ -34,39 +59,14 @@ public class KrollReducer extends KrollProxy implements Reducer {
         }
         return count;
     }
-    
-    public static final Reducer COUNT = new Reducer() {
-                                          @Override
-                                          public Object reduce(List<Object> keys, List<Object> values, boolean rereduce) {
-                                              return count(values, rereduce);
-                                          }
-                                      };
 
-    public static final Reducer SUM   = new Reducer() {
-                                          @Override
-                                          public Object reduce(List<Object> keys, List<Object> values, boolean rereduce) {
-                                              return sum(values);
-                                          }
-                                      };
-
-    public static final Reducer STATS = new Reducer() {
-                                          @Override
-                                          public Object reduce(List<Object> keys, List<Object> values, boolean rereduce) {
-                                              double min = Double.MAX_VALUE, max = -Double.MAX_VALUE;
-                                              for (Object value : values) {
-                                                  double v = ((Number) value).doubleValue();
-                                                  min = Math.min(min, v);
-                                                  max = Math.max(max, v);
-                                              }
-                                              
-                                              KrollDict result = new KrollDict();
-                                              result.put("sum", sum(values));
-                                              result.put("min", min);
-                                              result.put("max", max);
-                                              result.put("count", count(values, rereduce));
-                                              return result;
-                                          }
-                                      };
+    private static double sum(List<Object> values) {
+        double sum = 0;
+        for (Object value : values) {
+            sum += ((Number) value).doubleValue();
+        }
+        return sum;
+    }
 
     private KrollFunction       reduce;
 
