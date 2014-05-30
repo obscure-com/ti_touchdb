@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import android.util.Log;
+import org.appcelerator.kroll.KrollDict;
 
 public class TypePreprocessor {
 
@@ -25,7 +25,7 @@ public class TypePreprocessor {
         if (obj == null) {
             return null;
         }
-        
+
         // short circuit
         if (!(obj instanceof Collection || obj instanceof Map)) {
             return obj;
@@ -49,6 +49,14 @@ public class TypePreprocessor {
         else {
             return obj;
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static KrollDict toKrollDict(Map<String, Object> properties) {
+        if (properties == null) {
+            return null;
+        }
+        return new KrollDict((Map<String, Object>) preprocess(properties));
     }
 
 }

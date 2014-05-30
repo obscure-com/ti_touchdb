@@ -2,7 +2,6 @@ package com.obscure.titouchdb;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
@@ -10,7 +9,6 @@ import org.appcelerator.kroll.annotations.Kroll;
 
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.Document;
-import com.couchbase.lite.Revision;
 import com.couchbase.lite.SavedRevision;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)
@@ -18,15 +16,15 @@ public class DocumentProxy extends KrollProxy {
 
     private static final SavedRevisionProxy[] EMPTY_REVISION_PROXY_ARRAY = new SavedRevisionProxy[0];
 
-    private static final String          LCAT                       = "DocumentProxy";
+    private static final String               LCAT                       = "DocumentProxy";
 
-    private SavedRevisionProxy currentRevisionProxy = null;
+    private SavedRevisionProxy                currentRevisionProxy       = null;
 
-    private DatabaseProxy                databaseProxy;
+    private DatabaseProxy                     databaseProxy;
 
-    private Document                     document;
-    
-    private KrollDict                    lastError                  = null;
+    private Document                          document;
+
+    private KrollDict                         lastError                  = null;
 
     public DocumentProxy(DatabaseProxy databaseProxy, Document document) {
         assert databaseProxy != null;
@@ -35,12 +33,12 @@ public class DocumentProxy extends KrollProxy {
         this.databaseProxy = databaseProxy;
         this.document = document;
     }
-    
+
     @Kroll.method
     public UnsavedRevisionProxy createRevision() {
         return new UnsavedRevisionProxy(this, document.createRevision());
     }
-    
+
     @Kroll.method
     public boolean deleteDocument() {
         try {
@@ -52,7 +50,7 @@ public class DocumentProxy extends KrollProxy {
         }
         return false;
     }
-    
+
     protected void forgetCurrentRevisionProxy() {
         currentRevisionProxy = null;
     }
@@ -114,11 +112,9 @@ public class DocumentProxy extends KrollProxy {
         return EMPTY_REVISION_PROXY_ARRAY;
     }
 
-    @SuppressWarnings("unchecked")
     @Kroll.getProperty(name = "properties")
     public KrollDict getProperties() {
-        Map<String, Object> props = (Map<String, Object>) TypePreprocessor.preprocess(document.getProperties());
-        return props != null ? new KrollDict(props) : null;
+        return TypePreprocessor.toKrollDict(document.getProperties());
     }
 
     @Kroll.method
@@ -143,12 +139,10 @@ public class DocumentProxy extends KrollProxy {
 
         return EMPTY_REVISION_PROXY_ARRAY;
     }
-    
-    @SuppressWarnings("unchecked")
+
     @Kroll.getProperty(name = "userProperties")
     public KrollDict getUserProperties() {
-        Map<String, Object> props = (Map<String, Object>) TypePreprocessor.preprocess(document.getUserProperties());
-        return props != null ? new KrollDict(props) : null;
+        return TypePreprocessor.toKrollDict(document.getUserProperties());
     }
 
     @Kroll.getProperty(name = "deleted")
@@ -183,11 +177,13 @@ public class DocumentProxy extends KrollProxy {
     }
 
     private SavedRevisionProxy[] toRevisionProxyArray(List<? extends SavedRevision> revisions) {
-        if (revisions == null) return new SavedRevisionProxy[0];
+        if (revisions == null) return EMPTY_REVISION_PROXY_ARRAY;
+        
         List<SavedRevisionProxy> result = new ArrayList<SavedRevisionProxy>();
         for (SavedRevision revision : revisions) {
             result.add(new SavedRevisionProxy(this, revision));
         }
+        
         return result.toArray(EMPTY_REVISION_PROXY_ARRAY);
     }
 

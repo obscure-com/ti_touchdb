@@ -197,8 +197,7 @@ public class DatabaseProxy extends KrollProxy implements ChangeListener {
 
     @Kroll.method
     public KrollDict getExistingLocalDocument(String id) {
-        Map<String, Object> doc = database.getExistingLocalDocument(id);
-        return doc != null ? new KrollDict(doc) : null;
+        return TypePreprocessor.toKrollDict(database.getExistingLocalDocument(id));
     }
 
     @Kroll.method

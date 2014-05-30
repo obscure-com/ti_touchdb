@@ -69,7 +69,7 @@ public class ReplicationProxy extends KrollProxy implements ChangeListener {
 
     @Kroll.getProperty(name = "filterParams")
     public KrollDict getFilterParams() {
-        return new KrollDict(replicator.getFilterParams());
+        return TypePreprocessor.toKrollDict(replicator.getFilterParams());
     }
 
     @Kroll.getProperty(name = "headers")

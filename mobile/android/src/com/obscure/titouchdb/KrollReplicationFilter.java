@@ -21,9 +21,8 @@ public class KrollReplicationFilter extends KrollProxy implements ReplicationFil
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public boolean filter(SavedRevision revision, Map<String, Object> params) {
-        KrollDict props = new KrollDict((Map<String, Object>) TypePreprocessor.preprocess(revision.getProperties()));
+        KrollDict props = TypePreprocessor.toKrollDict(revision.getProperties());
         return (Boolean) filter.call(this.getKrollObject(), new Object[] { props, null });
     }
 
