@@ -80,13 +80,18 @@ public class AttachmentProxy extends KrollProxy {
     public long getLength() {
         return attachment.getLength();
     }
-
+    
     @Kroll.getProperty(name = "metadata")
     public KrollDict getMetadata() {
         return TypePreprocessor.toKrollDict(attachment.getMetadata());
     }
 
-    @Kroll.getProperty(name = "revision")
+    @Kroll.getProperty(name = "name")
+    public String getName() {
+        return attachment.getName();
+    }
+
+    @Kroll.method
     public AbstractRevisionProxy getRevision() {
         return revisionProxy;
     }
