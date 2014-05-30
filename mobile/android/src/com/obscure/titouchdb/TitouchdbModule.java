@@ -7,7 +7,9 @@
  */
 package com.obscure.titouchdb;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.appcelerator.kroll.KrollDict;
@@ -18,47 +20,50 @@ import android.app.Activity;
 import android.util.Log;
 
 import com.couchbase.lite.Query;
+import com.couchbase.lite.SavedRevision;
 import com.couchbase.lite.Status;
 
 @Kroll.module(name = "Titouchdb", id = "com.obscure.titouchdb")
 public class TitouchdbModule extends KrollModule {
 
-    private static final Map<Integer, String> codeToMessage             = new HashMap<Integer, String>();
+    private static final Map<Integer, String> codeToMessage              = new HashMap<Integer, String>();
 
-    public static final String                LCAT                      = "TiTouchDB";
+    public static final SavedRevisionProxy[]  EMPTY_REVISION_PROXY_ARRAY = new SavedRevisionProxy[0];
 
-    @Kroll.constant
-    public static final int                   QUERY_ALL_DOCS            = Query.AllDocsMode.ALL_DOCS.ordinal();
-
-    @Kroll.constant
-    public static final int                   QUERY_INCLUDE_DELETED     = Query.AllDocsMode.INCLUDE_DELETED.ordinal();
+    public static final String                LCAT                       = "TiTouchDB";
 
     @Kroll.constant
-    public static final int                   QUERY_ONLY_CONFLICTS      = Query.AllDocsMode.ONLY_CONFLICTS.ordinal();
+    public static final int                   QUERY_ALL_DOCS             = Query.AllDocsMode.ALL_DOCS.ordinal();
 
     @Kroll.constant
-    public static final int                   QUERY_SHOW_CONFLICTS      = Query.AllDocsMode.SHOW_CONFLICTS.ordinal();
+    public static final int                   QUERY_INCLUDE_DELETED      = Query.AllDocsMode.INCLUDE_DELETED.ordinal();
 
     @Kroll.constant
-    public static final int                   QUERY_UPDATE_INDEX_AFTER  = Query.IndexUpdateMode.AFTER.ordinal();
+    public static final int                   QUERY_ONLY_CONFLICTS       = Query.AllDocsMode.ONLY_CONFLICTS.ordinal();
 
     @Kroll.constant
-    public static final int                   QUERY_UPDATE_INDEX_BEFORE = Query.IndexUpdateMode.BEFORE.ordinal();
+    public static final int                   QUERY_SHOW_CONFLICTS       = Query.AllDocsMode.SHOW_CONFLICTS.ordinal();
 
     @Kroll.constant
-    public static final int                   QUERY_UPDATE_INDEX_NEVER  = Query.IndexUpdateMode.NEVER.ordinal();
+    public static final int                   QUERY_UPDATE_INDEX_AFTER   = Query.IndexUpdateMode.AFTER.ordinal();
 
     @Kroll.constant
-    public static final int                   REPLICATION_MODE_ACTIVE   = 3;
+    public static final int                   QUERY_UPDATE_INDEX_BEFORE  = Query.IndexUpdateMode.BEFORE.ordinal();
 
     @Kroll.constant
-    public static final int                   REPLICATION_MODE_IDLE     = 2;
+    public static final int                   QUERY_UPDATE_INDEX_NEVER   = Query.IndexUpdateMode.NEVER.ordinal();
 
     @Kroll.constant
-    public static final int                   REPLICATION_MODE_OFFLINE  = 1;
+    public static final int                   REPLICATION_MODE_ACTIVE    = 3;
 
     @Kroll.constant
-    public static final int                   REPLICATION_MODE_STOPPED  = 0;
+    public static final int                   REPLICATION_MODE_IDLE      = 2;
+
+    @Kroll.constant
+    public static final int                   REPLICATION_MODE_OFFLINE   = 1;
+
+    @Kroll.constant
+    public static final int                   REPLICATION_MODE_STOPPED   = 0;
 
     static {
         System.loadLibrary("function-utils");
@@ -93,6 +98,17 @@ public class TitouchdbModule extends KrollModule {
     }
 
     public static native void registerGlobalFunction(Object target, String name, String signature);
+
+    public static SavedRevisionProxy[] toRevisionProxyArray(DocumentProxy documentProxy, List<? extends SavedRevision> revisions) {
+        if (revisions == null) return EMPTY_REVISION_PROXY_ARRAY;
+
+        List<SavedRevisionProxy> result = new ArrayList<SavedRevisionProxy>();
+        for (SavedRevision revision : revisions) {
+            result.add(new SavedRevisionProxy(documentProxy, revision));
+        }
+
+        return result.toArray(EMPTY_REVISION_PROXY_ARRAY);
+    }
 
     private DatabaseManagerProxy databaseManagerProxy;
 
