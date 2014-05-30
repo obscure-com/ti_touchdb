@@ -26,6 +26,16 @@ public class UnsavedRevisionProxy extends AbstractRevisionProxy {
          */
         return super.getRevisionProperties();
     }
+    
+    @Kroll.getProperty(name = "userProperties")
+    public KrollDict getUserProperties() {
+        return super.getUserProperties();
+    }
+    
+    @Kroll.getProperty(name = "isDeletion")
+    public boolean isDeletion() {
+        return super.isDeletion();
+    }
 
     @Kroll.method
     public void removeAttachment(String name) {
