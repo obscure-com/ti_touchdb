@@ -46,7 +46,7 @@ exports.create_test_documents = function(db, n) {
           testName: 'someTest',
           sequence: i
       });
-      result.push(rev.document);
+      result.push(rev.getDocument());
   }
   return result;
 };
