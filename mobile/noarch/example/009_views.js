@@ -94,6 +94,11 @@ module.exports = function() {
       view.name.should.eql(viewreselect.name);
     });
     
+    it('must not return a nonexistant view', function() {
+      var missing = db.getExistingView('does-not-exist');
+      should.not.exist(missing);
+    });
+    
     it('must be stale if it has not been queried', function() {
       var view = db.getExistingView('test1');
       utils.create_test_documents(db, 4);
