@@ -13,7 +13,7 @@ module.exports = function() {
     before(function() {
       utils.delete_nonsystem_databases(manager);
       db = manager.getDatabase('test007_savedrevgeneral');
-      doc = db.getDocument();
+      doc = db.createDocument();
       rev = doc.putProperties({ name: "saved rev", x: 15, foo: false });
     });
     
@@ -37,7 +37,7 @@ module.exports = function() {
     before(function() {
       utils.delete_nonsystem_databases(manager);
       db = manager.getDatabase('test007_savedrevgeneral');
-      doc = db.getDocument();
+      doc = db.createDocument();
       
       rev1 = doc.putProperties({
         title: 'There is Nothing Left to Lose',
@@ -72,7 +72,7 @@ module.exports = function() {
     before(function() {
       utils.delete_nonsystem_databases(manager);
       db = manager.getDatabase('test007_savedrevcreate');
-      doc = db.getDocument();
+      doc = db.createDocument();
       rev1 = doc.putProperties({ name: "woot", x: 15, foo: false });
     });
 
@@ -94,12 +94,13 @@ module.exports = function() {
     before(function() {
       utils.delete_nonsystem_databases(manager);
       db = manager.getDatabase('test007_savedrevdelete');
-      doc = db.getDocument();
+      doc = db.createDocument();
       rev1 = doc.putProperties({ name: "woot", x: 15, foo: false });
     });
 
     it('must create a doc deletion revision', function() {
       var rev2 = rev1.deleteDocument();
+      should.exist(rev2);
       rev2.isDeletion.should.be.true;
       // rev2.document.deleted.should.be.true;
     });

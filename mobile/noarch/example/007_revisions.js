@@ -13,7 +13,7 @@ module.exports = function() {
     before(function() {
       utils.delete_nonsystem_databases(manager);
       db = manager.getDatabase('test007_revgeneral');
-      doc = db.getDocument();
+      doc = db.createDocument();
       rev = doc.putProperties({ name: "generic doc", tag: 5 });
     });
     
@@ -27,10 +27,6 @@ module.exports = function() {
     
     it('must have a database property', function() {
       should(rev).have.property('database', db);
-    });
-    
-    it('must have a document property', function() {
-      should(rev).have.property('document', doc);
     });
     
     it('must have a revisionID property', function() {
@@ -65,6 +61,11 @@ module.exports = function() {
       should(rev.getAttachment).be.a.Function;
     });
     
+    it('must have a getDocument method', function() {
+      should(rev.getDocument).be.a.Function;
+      should(rev.getDocument()).be.exactly(doc);
+    });
+    
     it('must have a getProperty method', function() {
       should(rev.getProperty).be.a.Function;
     });
@@ -76,7 +77,7 @@ module.exports = function() {
     before(function() {
       utils.delete_nonsystem_databases(manager);
       db = manager.getDatabase('test007_revhistory');
-      doc = db.getDocument();
+      doc = db.createDocument();
       rev1 = doc.putProperties({
         title: 'There is Nothing Left to Lose',
         artist: 'Foo Fighters'        
@@ -151,7 +152,7 @@ module.exports = function() {
     });
 
     it('must have a parentID 1', function() {
-      should(rev1.parentID).be.type('undefined');
+      should(rev1.parentID).not.be.ok;
     });
     
     it('must have a parentID 2', function() {
@@ -161,7 +162,6 @@ module.exports = function() {
     it('must have a parentID 3', function() {
       rev3.parentID.should.eql(rev2.revisionID);
     });
-    
   });
   
   describe('base revision (props)', function() {
@@ -170,7 +170,7 @@ module.exports = function() {
     before(function() {
       utils.delete_nonsystem_databases(manager);
       db = manager.getDatabase('test007_revprops');
-      doc = db.getDocument();
+      doc = db.createDocument();
     });
 
     it('must get a property by name', function() {
@@ -193,7 +193,7 @@ module.exports = function() {
       rev.getProperty('latitude').should.be.approximately(-66.062228, 0.0001);
       
       // nonexistant properties
-      should(rev.getProperty('does-not-exist')).be.type('undefined');
+      should(rev.getProperty('does-not-exist')).not.be.ok;
     });
   });
   
@@ -232,7 +232,7 @@ module.exports = function() {
     
     it('must return null from getAttachment() when an attachment does not exist', function() {
       var rev = doc_no_atts.currentRevision;
-      should(rev.getAttachment('image.jpg')).be.type('undefined');
+      should(rev.getAttachment('image.jpg')).not.be.ok;
     });
 
     it('must return an object from getAttachment() when an attachment exists', function() {
@@ -240,5 +240,5 @@ module.exports = function() {
       should(rev.getAttachment('image.jpg')).be.an.Object;
     });
   });
-  
+
 };
