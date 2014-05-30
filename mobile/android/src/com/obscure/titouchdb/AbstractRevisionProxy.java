@@ -11,6 +11,7 @@ import org.appcelerator.kroll.annotations.Kroll;
 import android.util.Log;
 
 import com.couchbase.lite.Attachment;
+import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.Revision;
 import com.couchbase.lite.SavedRevision;
 
@@ -38,8 +39,16 @@ public abstract class AbstractRevisionProxy extends KrollProxy {
     }
 
     @Kroll.method
-    public AttachmentProxy getAttachment() {
-        // TODO
+    public AttachmentProxy getAttachment(String name) {
+        try {
+            // doesn't return null after an attachment is deleted; see
+            // https://github.com/couchbase/couchbase-lite-java-core/issues/218
+            Attachment attachment = revision.getAttachment(name);
+            return attachment != null && attachment.getContent() != null ? new AttachmentProxy(this, attachment) : null;
+        }
+        catch (CouchbaseLiteException e) {
+            // ignore
+        }
         return null;
     }
 
@@ -91,7 +100,13 @@ public abstract class AbstractRevisionProxy extends KrollProxy {
 
     @Kroll.getProperty(name = "revisionHistory")
     public SavedRevisionProxy[] getRevisionHistory() {
-        return documentProxy.getRevisionHistory();
+        try {
+            return TitouchdbModule.toRevisionProxyArray(documentProxy, revision.getRevisionHistory());
+        }
+        catch (CouchbaseLiteException e) {
+            lastError = TitouchdbModule.convertStatusToErrorDict(e.getCBLStatus());
+        }
+        return TitouchdbModule.EMPTY_REVISION_PROXY_ARRAY;
     }
 
     @Kroll.getProperty(name = "revisionID")
