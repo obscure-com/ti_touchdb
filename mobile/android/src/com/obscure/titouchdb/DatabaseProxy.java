@@ -203,7 +203,7 @@ public class DatabaseProxy extends KrollProxy implements ChangeListener {
     @Kroll.method
     public ViewProxy getExistingView(String name) {
         View view = database.getExistingView(name);
-        return view != null ? new ViewProxy(this, view) : null;
+        return view != null && view.getViewId() != 0 ? new ViewProxy(this, view) : null;
     }
 
     @Kroll.method
