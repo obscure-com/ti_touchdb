@@ -3,6 +3,8 @@ package com.obscure.titouchdb;
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.annotations.Kroll;
 
+import android.util.Log;
+
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.SavedRevision;
 import com.couchbase.lite.UnsavedRevision;
@@ -38,13 +40,15 @@ public class SavedRevisionProxy extends AbstractRevisionProxy {
 
     @Kroll.method
     public SavedRevisionProxy deleteDocument() {
-        if (documentProxy.deleteDocument()) {
-            return documentProxy.getCurrentRevision();
+        lastError = null;
+        try {
+            SavedRevision tombstone = ((SavedRevision) revision).deleteDocument();
+            return new SavedRevisionProxy(documentProxy, tombstone);
         }
-        else {
-            this.lastError = documentProxy.getLastError();
-            return null;
+        catch (CouchbaseLiteException e) {
+            lastError = TitouchdbModule.convertStatusToErrorDict(e.getCBLStatus());
         }
+        return null;
     }
 
     @Kroll.getProperty(name = "propertiesAvailable")
