@@ -1,13 +1,11 @@
 package com.obscure.titouchdb;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
-
-import android.util.Log;
 
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.Query;
@@ -158,9 +156,9 @@ public class QueryProxy extends KrollProxy {
     }
 
     @Kroll.setProperty(name = "keys")
-    public void setKeys(List<Object> keys) {
+    public void setKeys(Object[] keys) {
         if (keys != null) {
-            query.setKeys(new ArrayList<Object>(keys));
+            query.setKeys(Arrays.asList(keys));
         }
     }
 
