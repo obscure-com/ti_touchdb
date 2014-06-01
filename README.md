@@ -27,7 +27,7 @@ See the Wiki pages for usage instructions and the samples directory for example 
 
 Prebuilt modules are hosted on Amazon S3:
 
-* [com.obscure.titouchdb-iphone-1.0.zip](https://pegli.github.s3.amazonaws.com/com.obscure.titouchdb-iphone-1.0.zip), built 21 May 2014
+* [com.obscure.titouchdb-iphone-1.0.zip](https://github.com/pegli/ti_touchdb/blob/master/mobile/ios/dist/com.obscure.titouchdb-iphone-1.0.zip?raw=true), built 21 May 2014
 
 Archived builds
 
