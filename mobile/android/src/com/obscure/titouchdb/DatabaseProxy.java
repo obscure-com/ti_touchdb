@@ -102,7 +102,7 @@ public class DatabaseProxy extends KrollProxy implements ChangeListener {
         ReplicationProxy result = null;
         try {
             Replication replication = database.createPullReplication(new URL(url));
-            result = new ReplicationProxy(replication);
+            result = new ReplicationProxy(this, replication);
         }
         catch (MalformedURLException e) {
             lastError = TitouchdbModule.generateErrorDict(Status.BAD_REQUEST, "TiTouchdb", "invalid URL: " + e.getMessage());
@@ -116,7 +116,7 @@ public class DatabaseProxy extends KrollProxy implements ChangeListener {
         ReplicationProxy result = null;
         try {
             Replication replication = database.createPushReplication(new URL(url));
-            result = new ReplicationProxy(replication);
+            result = new ReplicationProxy(this, replication);
         }
         catch (MalformedURLException e) {
             lastError = TitouchdbModule.generateErrorDict(Status.BAD_REQUEST, "TiTouchdb", "invalid URL: " + e.getMessage());
@@ -158,7 +158,7 @@ public class DatabaseProxy extends KrollProxy implements ChangeListener {
     public ReplicationProxy[] getAllReplications() {
         List<ReplicationProxy> proxies = new ArrayList<ReplicationProxy>();
         for (Replication replication : database.getAllReplications()) {
-            proxies.add(new ReplicationProxy(replication));
+            proxies.add(new ReplicationProxy(this, replication));
         }
         return proxies.toArray(new ReplicationProxy[0]);
     }
