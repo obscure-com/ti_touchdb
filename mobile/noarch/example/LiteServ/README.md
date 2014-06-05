@@ -64,3 +64,7 @@ copies the "elements" database to that directory, and runs the LiteServ executab
 Once the server is running, you can execute the ti_touchdb unit tests in another
 window.  When you are done running tests, use control-C to stop the LiteServ server.
 
+_Android users note:_
+
+If you are testing the Android version of the module with LiteServ, change the `host`
+property in `replication_config.json` file to "10.0.2.2".
