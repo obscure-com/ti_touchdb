@@ -17,6 +17,7 @@ import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.Database;
 import com.couchbase.lite.Manager;
 import com.couchbase.lite.Status;
+import com.couchbase.lite.android.AndroidContext;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)
 public class DatabaseManagerProxy extends KrollProxy {
@@ -38,7 +39,7 @@ public class DatabaseManagerProxy extends KrollProxy {
             manager = new Manager(context, Manager.DEFAULT_OPTIONS);
         }
         catch (IOException e) {
-            Log.e(LCAT, "Unable to create TDServer", e);
+            Log.e(LCAT, "Unable to create Manager", e);
         }
     }
     
