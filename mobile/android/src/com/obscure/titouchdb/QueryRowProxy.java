@@ -1,7 +1,6 @@
 package com.obscure.titouchdb;
 
-import java.util.Map;
-
+import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 
@@ -12,9 +11,9 @@ public class QueryRowProxy extends KrollProxy {
 
     private static final String LCAT = "QueryRowProxy";
 
-    private QueryRow            row;
-
     private DatabaseProxy       databaseProxy;
+
+    private QueryRow            row;
 
     public QueryRowProxy(DatabaseProxy databaseProxy, final QueryRow row) {
         assert databaseProxy != null;
@@ -25,7 +24,18 @@ public class QueryRowProxy extends KrollProxy {
         this.row = row;
     }
 
-    @Kroll.getProperty(name = "document")
+    @Kroll.getProperty(name = "conflictingRevisions")
+    public SavedRevisionProxy[] getConflictingRevisions() {
+        // TODO
+        return null;
+    }
+
+    @Kroll.getProperty(name = "database")
+    public DatabaseProxy getDatabase() {
+        return databaseProxy;
+    }
+
+    @Kroll.method
     public DocumentProxy getDocument() {
         if (row.getDocumentId() == null) {
             return null;
@@ -39,11 +49,11 @@ public class QueryRowProxy extends KrollProxy {
     }
 
     @Kroll.getProperty(name = "documentProperties")
-    public Map<String, Object> getDocumentProperties() {
-        return row.getDocumentProperties();
+    public KrollDict getDocumentProperties() {
+        return TypePreprocessor.toKrollDict(row.getDocumentProperties());
     }
 
-    @Kroll.getProperty(name = "documentRevision")
+    @Kroll.getProperty(name = "documentRevisionID")
     public String getDocumentRevision() {
         return row.getDocumentRevisionId();
     }
@@ -53,28 +63,8 @@ public class QueryRowProxy extends KrollProxy {
         return row.getKey();
     }
 
-    @Kroll.getProperty(name = "key0")
-    public Object getKey0() {
-        return keyAtIndex(0);
-    }
-
-    @Kroll.getProperty(name = "key1")
-    public Object getKey1() {
-        return keyAtIndex(1);
-    }
-
-    @Kroll.getProperty(name = "key2")
-    public Object getKey2() {
-        return keyAtIndex(2);
-    }
-
-    @Kroll.getProperty(name = "key3")
-    public Object getKey3() {
-        return keyAtIndex(3);
-    }
-
-    @Kroll.getProperty(name = "localSequence")
-    public long getLocalSequence() {
+    @Kroll.getProperty(name = "sequenceNumber")
+    public long getSequenceNumber() {
         return row.getSequenceNumber();
     }
 

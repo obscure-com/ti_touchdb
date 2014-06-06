@@ -262,7 +262,7 @@
     return self.row.documentRevisionID;
 }
 
-- (id)document {
+- (id)getDocument:(id)args {
     return self.row.document ? [self.queryEnumerator.query.database _existingDocumentWithID:self.row.documentID] : nil;
 }
 
