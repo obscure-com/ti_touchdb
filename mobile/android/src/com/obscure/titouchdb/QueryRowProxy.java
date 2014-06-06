@@ -60,7 +60,7 @@ public class QueryRowProxy extends KrollProxy {
 
     @Kroll.getProperty(name = "key")
     public Object getKey() {
-        return row.getKey();
+        return TypePreprocessor.preprocess(row.getKey());
     }
 
     @Kroll.getProperty(name = "sequenceNumber")
