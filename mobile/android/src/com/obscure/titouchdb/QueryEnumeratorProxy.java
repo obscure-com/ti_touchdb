@@ -30,6 +30,10 @@ public class QueryEnumeratorProxy extends KrollProxy {
 
     @Kroll.method
     public QueryRowProxy getRow(int index) {
+        if (index < 0 || index >= enumerator.getCount()) {
+            return null;
+        }
+        
         QueryRow row = enumerator.getRow(index);
         if (row != null) {
             return new QueryRowProxy(databaseProxy, row);
