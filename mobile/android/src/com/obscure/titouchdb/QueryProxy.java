@@ -7,11 +7,14 @@ import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 
+import android.util.Log;
+
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.Query;
 import com.couchbase.lite.Query.AllDocsMode;
 import com.couchbase.lite.Query.IndexUpdateMode;
 import com.couchbase.lite.QueryEnumerator;
+import com.couchbase.lite.Status;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)
 public class QueryProxy extends KrollProxy {
@@ -117,6 +120,9 @@ public class QueryProxy extends KrollProxy {
             QueryEnumerator enumerator = query.run();
             if (enumerator != null) {
                 return new QueryEnumeratorProxy(databaseProxy, enumerator);
+            }
+            else {
+                lastError = TitouchdbModule.generateErrorDict(Status.INTERNAL_SERVER_ERROR, "TiTouchDb", "could not run query");
             }
         }
         catch (CouchbaseLiteException e) {

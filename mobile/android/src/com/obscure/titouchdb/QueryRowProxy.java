@@ -4,6 +4,8 @@ import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 
+import android.util.Log;
+
 import com.couchbase.lite.QueryRow;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)

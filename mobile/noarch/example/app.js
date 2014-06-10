@@ -7,6 +7,8 @@ require('003_database')();
 require('004_all_documents_query')();
 require('005_database_validation')();
 require('006_document')();
+require('006_document_lifecycle')();
+require('006_document_revisions')();
 require('007_revisions')();
 require('007_savedrevision')();
 require('007_unsavedrevision')();
@@ -25,6 +27,6 @@ var window = Ti.UI.createWindow({
 
 window.addEventListener('open', function() {
   mocha.run();
-})
+});
 
 window.open();
