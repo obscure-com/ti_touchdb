@@ -5,30 +5,31 @@ import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 
 import com.couchbase.lite.Revision;
+import com.couchbase.lite.SavedRevision;
 import com.couchbase.lite.ValidationContext;
 import com.couchbase.lite.Validator;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)
 public class KrollValidator extends KrollProxy implements Validator {
 
-    private KrollFunction validate;
+    private static final String LCAT = "KrollValidator";
 
-    private DatabaseProxy database;
+    private KrollFunction       validate;
 
-    public KrollValidator(DatabaseProxy database, KrollFunction validate) {
-        assert database != null;
+    private DatabaseProxy       databaseProxy;
+
+    public KrollValidator(DatabaseProxy databaseProxy, KrollFunction validate) {
+        assert databaseProxy != null;
         assert validate != null;
-        this.database = database;
+        this.databaseProxy = databaseProxy;
         this.validate = validate;
     }
 
     @Override
     public void validate(Revision newRevision, ValidationContext context) {
-        // TODO create validation context proxy; this is where we will need the
-        // database
-
-        // use a read-only revision proxy for validation
-        validate.call(this.getKrollObject(), new Object[] { new ReadOnlyRevisionProxy(newRevision), null });
+        DocumentProxy documentProxy = databaseProxy.getDocument(newRevision.getDocument().getId());
+        validate.call(this.getKrollObject(), new Object[] { new SavedRevisionProxy(documentProxy, (SavedRevision) newRevision),
+                new ValidationContextProxy(documentProxy, context) });
     }
 
     protected KrollFunction getKrollFunction() {

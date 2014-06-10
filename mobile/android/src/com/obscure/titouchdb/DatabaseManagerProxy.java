@@ -12,7 +12,6 @@ import org.appcelerator.kroll.annotations.Kroll;
 import android.app.Activity;
 import android.util.Log;
 
-import com.couchbase.lite.Context;
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.Database;
 import com.couchbase.lite.Manager;
@@ -35,8 +34,7 @@ public class DatabaseManagerProxy extends KrollProxy {
     public DatabaseManagerProxy(Activity activity) {
         assert activity != null;
         try {
-            Context context = new AndroidContext(activity);
-            manager = new Manager(context, Manager.DEFAULT_OPTIONS);
+            manager = new Manager(new AndroidContext(activity), Manager.DEFAULT_OPTIONS);
         }
         catch (IOException e) {
             Log.e(LCAT, "Unable to create Manager", e);
@@ -45,7 +43,14 @@ public class DatabaseManagerProxy extends KrollProxy {
     
     @Kroll.method
     public void close() {
+        lastError = null;
         manager.close();
+    }
+
+    protected void forgetDatabaseProxy(DatabaseProxy proxy) {
+        if (proxy != null) {
+            databaseProxyCache.remove(proxy.getName());
+        }
     }
 
     @Kroll.getProperty(name = "allDatabaseNames")
@@ -55,13 +60,13 @@ public class DatabaseManagerProxy extends KrollProxy {
         List<String> names = manager.getAllDatabaseNames();
         return names != null ? names.toArray(EMPTY_STRING_ARRAY) : EMPTY_STRING_ARRAY;
     }
-
-    public DatabaseProxy getCachedDatabaseNamed(String name, boolean create) {
+    
+    private DatabaseProxy getCachedDatabaseNamed(String name, boolean create) {
         if (manager == null) return null;
         lastError = null;
 
         DatabaseProxy result = databaseProxyCache.get(name);
-        if (result == null) {
+        if (result == null || !result.getDatabase().isOpen()) {
             try {
                 Database db = create ? manager.getDatabase(name) : manager.getExistingDatabase(name);
                 if (db != null && db.open()) {
@@ -86,11 +91,13 @@ public class DatabaseManagerProxy extends KrollProxy {
 
     @Kroll.getProperty(name = "defaultDirectory")
     public String getDefaultDirectory() {
+        lastError = null;
         return "file:/" + manager.getContext().getFilesDir().getAbsolutePath();
     }
 
     @Kroll.getProperty(name = "directory")
     public String getDirectory() {
+        lastError = null;
         return "file:/" + manager.getDirectory().getAbsolutePath();
     }
 

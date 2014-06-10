@@ -1,56 +1,67 @@
 package com.obscure.titouchdb;
 
-import java.util.Iterator;
-import java.util.List;
-
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 
-import com.couchbase.lite.Database;
+import com.couchbase.lite.QueryEnumerator;
 import com.couchbase.lite.QueryRow;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)
 public class QueryEnumeratorProxy extends KrollProxy {
 
-    private static final String           LCAT = "QueryEnumeratorProxy";
+    private static final String LCAT = "QueryEnumeratorProxy";
 
-    private List<QueryRow>     rows;
+    private DatabaseProxy       databaseProxy;
 
-    private Iterator<QueryRow> rowIterator;
+    private QueryEnumerator     enumerator;
 
-    private DatabaseProxy                   databaseProxy;
-
-    public QueryEnumeratorProxy(DatabaseProxy databaseProxy, List<QueryRow> rows) {
+    public QueryEnumeratorProxy(DatabaseProxy databaseProxy, QueryEnumerator enumerator) {
         assert databaseProxy != null;
-        assert rows != null;
+        assert enumerator != null;
 
         this.databaseProxy = databaseProxy;
-        this.rows = rows;
+        this.enumerator = enumerator;
     }
 
     @Kroll.getProperty(name = "count")
     public int getCount() {
-        return rows.size();
+        return enumerator.getCount();
+    }
+
+    @Kroll.method
+    public QueryRowProxy getRow(int index) {
+        if (index < 0 || index >= enumerator.getCount()) {
+            return null;
+        }
+        
+        QueryRow row = enumerator.getRow(index);
+        if (row != null) {
+            return new QueryRowProxy(databaseProxy, row);
+        }
+        return null;
     }
 
     @Kroll.getProperty(name = "sequenceNumber")
-    public int getSequenceNumber() {
-        return 0;
+    public long getSequenceNumber() {
+        return enumerator.getSequenceNumber();
+    }
+
+    @Kroll.getProperty(name = "stale")
+    public boolean isStale() {
+        return enumerator.isStale();
     }
 
     @Kroll.method
-    public QueryRowProxy nextRow() {
-        if (rowIterator == null) {
-            rowIterator = rows.iterator();
+    public QueryRowProxy next() {
+        QueryRow row = enumerator.next();
+        if (row != null) {
+            return new QueryRowProxy(databaseProxy, row);
         }
-        return rowIterator.hasNext() ? new QueryRowProxy(databaseProxy, rowIterator.next()) : null;
+        return null;
     }
 
     @Kroll.method
-    public QueryRowProxy rowAtIndex(int index) {
-        if (index < 0 || index > rows.size()) {
-            return null;
-        }
-        return new QueryRowProxy(databaseProxy, rows.get(index));
+    public void reset() {
+        enumerator.reset();
     }
 }

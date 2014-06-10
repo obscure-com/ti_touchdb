@@ -1,17 +1,13 @@
 package com.obscure.titouchdb;
 
-import java.util.Observable;
+import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
 
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
-import org.appcelerator.kroll.common.AsyncResult;
-import org.appcelerator.kroll.common.TiMessenger;
-import org.appcelerator.titanium.TiApplication;
 
-import android.os.Message;
-
-import com.couchbase.lite.replicator.Pusher;
 import com.couchbase.lite.replicator.Replication;
 import com.couchbase.lite.replicator.Replication.ChangeEvent;
 import com.couchbase.lite.replicator.Replication.ChangeListener;
@@ -19,45 +15,42 @@ import com.couchbase.lite.replicator.Replication.ChangeListener;
 @Kroll.proxy(parentModule = TitouchdbModule.class)
 public class ReplicationProxy extends KrollProxy implements ChangeListener {
 
-    private static final String LCAT                          = "ReplicationProxy";
+    private static final String[] EMPTY_STRING_ARRAY            = new String[0];
 
-    private static final int    MSG_FIRST_ID                  = KrollProxy.MSG_LAST_ID + 1;
+    private static final String   LCAT                          = "ReplicationProxy";
 
-    private static final int    MSG_HANDLE_REPLICATION_UPDATE = MSG_FIRST_ID + 1100;
+    private DatabaseProxy         databaseProxy;
 
-    private KrollDict           lastError                     = null;
+    private KrollDict             lastError                     = null;
 
-    private Replication       replicator;
+    private Replication           replicator;
 
-    public ReplicationProxy(Replication replicator) {
+    public ReplicationProxy(DatabaseProxy databaseProxy, Replication replicator) {
+        assert databaseProxy != null;
         assert replicator != null;
+        this.databaseProxy = databaseProxy;
         this.replicator = replicator;
-
+        
         replicator.addChangeListener(this);
     }
 
-    @Kroll.getProperty(name = "completed")
-    public int getCompleted() {
+    @Kroll.getProperty(name = "changesCount")
+    public int getChangesCount() {
+        return replicator.getChangesCount();
+    }
+
+    @Kroll.getProperty(name = "completedChangesCount")
+    public int getCompletedChangesCount() {
         return replicator.getCompletedChangesCount();
     }
 
-    @Kroll.getProperty(name = "continuous")
-    public boolean getContinuous() {
-        return replicator.isContinuous();
+    @Kroll.getProperty(name = "docIds")
+    public String[] getDocIds() {
+        List<String> docids = replicator.getDocIds();
+        return docids != null ? docids.toArray(EMPTY_STRING_ARRAY) : EMPTY_STRING_ARRAY;
     }
 
-    @Kroll.getProperty(name = "create_target")
-    public boolean getCreateTarget() {
-        return (replicator instanceof Pusher) ? ((Pusher) replicator).shouldCreateTarget() : false;
-    }
-
-    @Kroll.getProperty(name = "doc_ids")
-    public String[] getDocIDs() {
-        // TODO
-        return null;
-    }
-
-    @Kroll.getProperty(name = "error")
+    @Kroll.getProperty(name = "lastError")
     public KrollDict getError() {
         return lastError;
     }
@@ -69,7 +62,7 @@ public class ReplicationProxy extends KrollProxy implements ChangeListener {
 
     @Kroll.getProperty(name = "filterParams")
     public KrollDict getFilterParams() {
-        return new KrollDict(replicator.getFilterParams());
+        return TypePreprocessor.toKrollDict(replicator.getFilterParams());
     }
 
     @Kroll.getProperty(name = "headers")
@@ -78,53 +71,45 @@ public class ReplicationProxy extends KrollProxy implements ChangeListener {
         return null;
     }
 
-    @Kroll.getProperty(name = "mode")
-    public int getMode() {
-        // TODO idle, offline
-        return replicator.isRunning() ? TitouchdbModule.REPLICATION_MODE_ACTIVE : TitouchdbModule.REPLICATION_MODE_STOPPED;
+    @Kroll.getProperty(name = "localDatabase")
+    public DatabaseProxy getLocalDatabase() {
+        return databaseProxy;
     }
 
-    @Kroll.getProperty(name = "persistent")
-    public boolean getPersistent() {
-        // TODO
-        return false;
+    @Kroll.getProperty(name = "remoteUrl")
+    public String getRemoteUrl() {
+        URL url = replicator.getRemoteUrl();
+        return url != null ? url.toString() : null;
     }
 
-    @Kroll.getProperty(name = "pull")
-    public boolean getPull() {
+    @Kroll.getProperty(name = "status")
+    public int getStatus() {
+        return replicator.getStatus().ordinal();
+    }
+
+    @Kroll.getProperty(name = "continuous")
+    public boolean isContinuous() {
+        return replicator.isContinuous();
+    }
+
+    @Kroll.getProperty(name = "createTarget")
+    public boolean isCreateTarget() {
+        return replicator.shouldCreateTarget();
+    }
+
+    @Kroll.getProperty(name = "isPull")
+    public boolean isPull() {
         return replicator.isPull();
     }
 
-    @Kroll.getProperty(name = "remoteURL")
-    public String getRemoteURL() {
-        return replicator.getRemoteUrl().toString();
-    }
-
-    @Kroll.getProperty(name = "running")
-    public boolean getRunning() {
+    @Kroll.getProperty(name = "isRunning")
+    public boolean isRunning() {
         return replicator.isRunning();
     }
 
-    @Kroll.getProperty(name = "total")
-    public int getTotal() {
-        return replicator.getChangesCount();
-    }
-
-    @Override
-    public boolean handleMessage(Message msg) {
-        switch (msg.what) {
-        case MSG_HANDLE_REPLICATION_UPDATE:
-            AsyncResult result = (AsyncResult) msg.obj;
-            handleReplicationUpdate(result.getArg());
-            result.setResult(null);
-        default: {
-            return super.handleMessage(msg);
-        }
-        }
-    }
-
-    private void handleReplicationUpdate(Object arg) {
-        fireEvent("change", arg);
+    @Kroll.method(runOnUiThread=true)
+    public void restart() {
+        replicator.restart();
     }
 
     @Kroll.setProperty(name = "continuous")
@@ -132,16 +117,19 @@ public class ReplicationProxy extends KrollProxy implements ChangeListener {
         replicator.setContinuous(continuous);
     }
 
-    @Kroll.setProperty(name = "create_target")
+    @Kroll.setProperty(name = "createTarget")
     public void setCreateTarget(boolean createTarget) {
-        if (replicator instanceof Pusher) {
-            ((Pusher) replicator).setCreateTarget(createTarget);
-        }
+        replicator.setCreateTarget(createTarget);
     }
 
-    @Kroll.setProperty(name = "doc_ids")
-    public void setDocIDs(KrollDict docIDs) {
+    @Kroll.method
+    public void setCredential(KrollDict credential) {
         // TODO
+    }
+
+    @Kroll.setProperty(name = "docIds")
+    public void setDocIds(String[] docids) {
+        replicator.setDocIds(Arrays.asList(docids));
     }
 
     @Kroll.setProperty(name = "filter")
@@ -150,39 +138,32 @@ public class ReplicationProxy extends KrollProxy implements ChangeListener {
     }
 
     @Kroll.setProperty(name = "filterParams")
-    public void setFilterParams(KrollDict params) {
-        replicator.setFilterParams(params);
+    public void setFilterParams(String filterParams) {
+        // TODO
     }
 
     @Kroll.setProperty(name = "headers")
-    public void setHeaders(KrollDict headers) {
+    public void setHeaders(String headers) {
         // TODO
     }
 
-    @Kroll.setProperty(name = "persistent")
-    public void setPersistent(boolean persistent) {
-        // TODO
-    }
-
-    @Kroll.method
+    @Kroll.method(runOnUiThread=true)
     public void start() {
         replicator.start();
     }
 
-    @Kroll.method
+    @Kroll.method(runOnUiThread= true)
     public void stop() {
         replicator.stop();
     }
 
     @Override
     public void changed(ChangeEvent e) {
-        if (!TiApplication.isUIThread()) {
-            TiMessenger.sendBlockingMainMessage(getMainHandler().obtainMessage(MSG_HANDLE_REPLICATION_UPDATE), e);
-        }
-        else {
-            handleReplicationUpdate(e);
-        }
+        KrollDict params = new KrollDict();
+        params.put("source", this);
+        params.put("status", replicator.getStatus().ordinal());
         
+        fireEvent("status", params);
     }
 
 }

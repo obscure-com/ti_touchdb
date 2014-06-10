@@ -13,7 +13,7 @@ module.exports = function() {
     before(function() {
       utils.delete_nonsystem_databases(manager);
       db = manager.getDatabase('test007_unsavedrevgeneral');
-      doc = db.getDocument();
+      doc = db.createDocument();
       doc.putProperties({ name: 'unsaved rev', x: 15, foo: false });
       rev = doc.createRevision();
     });
@@ -53,7 +53,7 @@ module.exports = function() {
     before(function() {
       utils.delete_nonsystem_databases(manager);
       db = manager.getDatabase('test007_unsavedrevdeletion');
-      doc = db.getDocument();
+      doc = db.createDocument();
       doc.putProperties({ name: 'doomed document' });
     });
     
@@ -68,13 +68,14 @@ module.exports = function() {
     });
   });
 
+
   describe('unsaved revision (properties)', function() {
     var db, doc;
     
     before(function() {
       utils.delete_nonsystem_databases(manager);
       db = manager.getDatabase('test007_unsavedrevprops');
-      doc = db.getDocument();
+      doc = db.createDocument();
     });
     
     it('must be able to set properties', function() {
@@ -105,6 +106,7 @@ module.exports = function() {
     });
   });
 
+
   describe('unsaved revision (save)', function() {
     var db;
     
@@ -114,7 +116,7 @@ module.exports = function() {
     });
     
     it('must allow conflicts for save(true)', function() {
-      var doc = db.getDocument();
+      var doc = db.createDocument();
       var rev1 = doc.putProperties({ name: "Paul", birth_year: 1977 });
       
       var rev2a = rev1.createRevision();
@@ -129,7 +131,7 @@ module.exports = function() {
     });
     
     it('must prevent conflicts for save(false)', function() {
-      var doc = db.getDocument();
+      var doc = db.createDocument();
       var rev1 = doc.putProperties({ name: "Paul", birth_year: 1977 });
       
       var rev2a = rev1.createRevision();
@@ -166,9 +168,9 @@ module.exports = function() {
       var att = doc.currentRevision.getAttachment('serenity.jpg');
       should(att).be.an.Object;
     });
-
+    
     it.skip('must add an attachment from a file URL', function() {
-      var doc = db.getDocument();
+      var doc = db.createDocument();
       var rev = doc.createRevision();
       
       rev.setAttachment('animal.jpg', 'image/jpeg', 'file:///modules/com.obscure.titouchdb/1.0-beta/example/assets/serenity.jpg');
@@ -180,7 +182,7 @@ module.exports = function() {
       var att = doc.currentRevision.getAttachment('animal.jpg');
       should(att).be.an.Object;
     });
-
+    
     it('must remove an attachment', function() {
       var doc = db.getDocument('doc-with-attachment');
       var rev = doc.createRevision();
@@ -190,11 +192,11 @@ module.exports = function() {
     
       doc.currentRevision.attachmentNames.length.should.eql(0);
       doc.currentRevision.attachments.length.should.eql(0);
-      should(doc.currentRevision.getAttachment('serenity.jpg')).be.type('undefined');
+      should(doc.currentRevision.getAttachment('serenity.jpg')).not.be.ok;
     });
     
     it('must add inline attachments', function() {
-      var doc = db.getDocument();
+      var doc = db.createDocument();
       var rev = doc.createRevision();
       rev.properties = inline;
       rev.save();
@@ -206,7 +208,6 @@ module.exports = function() {
       should(att).be.an.Object;
     });
     
-    // TODO inline attachments
   });
 };
 

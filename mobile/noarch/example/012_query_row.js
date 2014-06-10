@@ -32,10 +32,6 @@ module.exports = function() {
       should(row).have.property('database', db);
     });
     
-    it('must have a document property', function() {
-      should(row).have.property('document', doc);
-    });
-    
     it('must have a documentID property', function() {
       should(row).have.property('documentID', doc.documentID);
     });
@@ -63,6 +59,10 @@ module.exports = function() {
     
     it('must have a value property', function() {
       should(row).have.property('value', 'someTest');
+    });
+    
+    it('must have a getDocument() method', function() {
+      should(row.getDocument).be.a.Function;
     });
     
   });

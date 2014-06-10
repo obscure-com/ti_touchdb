@@ -1,11 +1,13 @@
 package com.obscure.titouchdb;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import android.util.Log;
+import org.appcelerator.kroll.KrollDict;
 
 public class TypePreprocessor {
 
@@ -20,47 +22,41 @@ public class TypePreprocessor {
      */
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public static Object preprocess(Object obj) {
+        if (obj == null) {
+            return null;
+        }
+
         // short circuit
         if (!(obj instanceof Collection || obj instanceof Map)) {
             return obj;
         }
 
         if (obj instanceof List || obj instanceof Set) {
-            Collection converted = null;
-            try {
-                converted = (Collection) obj.getClass().newInstance();
-                for (Object el : (Collection) obj) {
-                    converted.add(preprocess(el));
-                }
-            }
-            catch (InstantiationException e) {
-                Log.e(LCAT, "error creating new collection: " + e.getMessage());
-            }
-            catch (IllegalAccessException e) {
-                Log.e(LCAT, "error creating new collection: " + e.getMessage());
+            Collection converted = new ArrayList();
+            for (Object el : (Collection) obj) {
+                converted.add(preprocess(el));
             }
             return converted.toArray();
         }
         else if (obj instanceof Map) {
-            Map converted = null;
-            try {
-                Map map = (Map) obj;
-                converted = (Map) obj.getClass().newInstance();
-                for (Object key : map.keySet()) {
-                    converted.put(preprocess(key), preprocess(map.get(key)));
-                }
-            }
-            catch (InstantiationException e) {
-                Log.e(LCAT, "error creating new map: " + e.getMessage());
-            }
-            catch (IllegalAccessException e) {
-                Log.e(LCAT, "error creating new map: " + e.getMessage());
+            Map converted = new HashMap();
+            Map map = (Map) obj;
+            for (Object key : map.keySet()) {
+                converted.put(preprocess(key), preprocess(map.get(key)));
             }
             return converted;
         }
         else {
             return obj;
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static KrollDict toKrollDict(Map<String, Object> properties) {
+        if (properties == null) {
+            return null;
+        }
+        return new KrollDict((Map<String, Object>) preprocess(properties));
     }
 
 }

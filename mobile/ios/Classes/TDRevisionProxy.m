@@ -31,10 +31,6 @@
     return self.doc.db;
 }
 
-- (id)document {
-    return self.doc;
-}
-
 - (id)isDeletion {
     return NUMBOOL(self.revision.isDeletion);
 }
@@ -45,7 +41,7 @@
 
 - (id)parent {
     CBLSavedRevision * rev = self.revision.parentRevision;
-    return rev ? [TDSavedRevisionProxy proxyWithDocument:self.document savedRevision:rev] : nil;
+    return rev ? [TDSavedRevisionProxy proxyWithDocument:self.doc savedRevision:rev] : nil;
 }
 
 - (id)parentID {
@@ -58,6 +54,10 @@
 
 - (id)userProperties {
     return self.revision.userProperties;
+}
+
+- (id)getDocument:(id)args {
+    return self.doc;
 }
 
 - (id)getProperty:(id)args {
@@ -77,7 +77,7 @@
     
     NSMutableArray * result = [NSMutableArray arrayWithCapacity:[revs count]];
     for (CBLSavedRevision * rev in revs) {
-        [result addObject:[TDSavedRevisionProxy proxyWithDocument:self.document savedRevision:rev]];
+        [result addObject:[TDSavedRevisionProxy proxyWithDocument:self.doc savedRevision:rev]];
     }
     return result;
 }
@@ -145,11 +145,11 @@
         CBLSavedRevision * rev = [self.revision createRevisionWithProperties:props error:&lastError];
         [lastError retain];
 
-        return rev ? [TDSavedRevisionProxy proxyWithDocument:self.document savedRevision:rev] : nil;
+        return rev ? [TDSavedRevisionProxy proxyWithDocument:self.doc savedRevision:rev] : nil;
     }
     else {
         CBLUnsavedRevision * rev = [self.revision createRevision];
-        return [TDUnsavedRevisionProxy proxyWithDocument:self.document unsavedRevision:rev];
+        return [TDUnsavedRevisionProxy proxyWithDocument:self.doc unsavedRevision:rev];
     }
 
     return nil;
@@ -164,7 +164,7 @@
     CBLSavedRevision * rev = [self.revision createRevisionWithProperties:props error:&lastError];
     [lastError retain];
     
-    return rev ? [TDSavedRevisionProxy proxyWithDocument:self.document savedRevision:rev] : nil;
+    return rev ? [TDSavedRevisionProxy proxyWithDocument:self.doc savedRevision:rev] : nil;
 }
 
 - (id)deleteDocument:(id)args {
@@ -173,7 +173,7 @@
     CBLSavedRevision * rev = [self.revision deleteDocument:&lastError];
     [lastError retain];
     
-    return rev ? [TDSavedRevisionProxy proxyWithDocument:self.document savedRevision:rev] : nil;
+    return rev ? [TDSavedRevisionProxy proxyWithDocument:self.doc savedRevision:rev] : nil;
 }
 
 @end
@@ -228,7 +228,7 @@
     CBLSavedRevision * rev = [allowConflicts boolValue] ? [self.revision saveAllowingConflict:&lastError] : [self.revision save:&lastError];
     [lastError retain];
     
-    return rev ? [TDSavedRevisionProxy proxyWithDocument:self.document savedRevision:rev] : nil;
+    return rev ? [TDSavedRevisionProxy proxyWithDocument:self.doc savedRevision:rev] : nil;
 }
 
 - (void)setAttachment:(id)args {

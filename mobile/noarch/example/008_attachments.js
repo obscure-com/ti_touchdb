@@ -28,7 +28,8 @@ module.exports = function() {
     });
     
     it('must have a document property', function() {
-      should(att).have.property('document', doc);
+      should(att).have.property('document');
+      should(att.document).be.exactly(doc);
     });
 
     it('must have a length property', function() {
@@ -42,11 +43,13 @@ module.exports = function() {
     });
     
     it('must have a name property', function() {
-      should(att).have.property('name', 'image.jpg');
+      should(att).have.property('name');
+      att.name.should.eql('image.jpg');
     });
-    
-    it('must have a revision property', function() {
-      should(att).have.property('revision', doc.currentRevision);
+
+    it('must have a getRevision method', function() {
+      should(att.getRevision).be.a.Function;
+      should(att.getRevision()).be.exactly(doc.currentRevision);
     });
     
   });

@@ -14,12 +14,12 @@ public class ReplicationFilterProxy extends KrollProxy implements ReplicationFil
 
     private KrollFunction validate;
 
-    private DatabaseProxy database;
+    private DatabaseProxy databaseProxy;
 
-    public ReplicationFilterProxy(DatabaseProxy database, KrollFunction validate) {
-        assert database != null;
+    public ReplicationFilterProxy(DatabaseProxy databaseProxy, KrollFunction validate) {
+        assert databaseProxy != null;
         assert validate != null;
-        this.database = database;
+        this.databaseProxy = databaseProxy;
         this.validate = validate;
     }
 
@@ -28,8 +28,9 @@ public class ReplicationFilterProxy extends KrollProxy implements ReplicationFil
     }
 
     @Override
-    public boolean filter(SavedRevision rev, Map<String, Object> props) {
-        Object result = validate.call(this.getKrollObject(), new Object[] { new ReadOnlyRevisionProxy(rev), props });
+    public boolean filter(SavedRevision revision, Map<String, Object> props) {
+        DocumentProxy documentProxy = databaseProxy.getDocument(revision.getDocument().getId());
+        Object result = validate.call(this.getKrollObject(), new Object[] { new SavedRevisionProxy(documentProxy, revision), props });
         return result != null && ((Boolean) result).booleanValue();
     }
 }

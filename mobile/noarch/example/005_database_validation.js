@@ -13,6 +13,7 @@ module.exports = function() {
     var dummy_fn = function() {};
     
     before(function() {
+      utils.delete_nonsystem_databases(manager)
       db = manager.getDatabase('test005_validation');
       db.setValidation('require_tag', function(rev, context) {
         if (rev.properties.tag == null) {
@@ -82,10 +83,10 @@ module.exports = function() {
       db.setValidation('tag_must_be_int', null);
     });
     
-    it('must support calling rejectWithMessage', function() {
+    it('must support calling reject with a message', function() {
       db.setValidation('with_message', function(rev, context) {
         if (rev.properties.foogle == null) {
-          context.rejectWithMessage('you need a foogle, fool!');
+          context.reject('you need a foogle, fool!');
         }
       });
       

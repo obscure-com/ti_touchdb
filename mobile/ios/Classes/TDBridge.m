@@ -41,14 +41,15 @@
 }
 
 - (void)reject:(id)args {
-    [self.context reject];
-}
-
-- (void)rejectWithMessage:(id)args {
     NSString * message;
-    ENSURE_ARG_AT_INDEX(message, args, 0, NSString)
+    ENSURE_ARG_OR_NIL_AT_INDEX(message, args, 0, NSString)
     
-    [self.context rejectWithMessage:message];
+    if (message) {
+        [self.context rejectWithMessage:message];
+    }
+    else {
+        [self.context reject];
+    }
 }
 
 - (id)validateChanges:(id)args {

@@ -46,7 +46,7 @@ exports.create_test_documents = function(db, n) {
           testName: 'someTest',
           sequence: i
       });
-      result.push(rev.document);
+      result.push(rev.getDocument());
   }
   return result;
 };
@@ -55,7 +55,7 @@ exports.create_test_documents = function(db, n) {
 function createDocWithProperties(db, props, id) {
     var doc;
     if (id) {
-      doc = db.documentWithID(id);
+      doc = db.getDocument(id);
     }
     else {
       doc = db.createDocument();
