@@ -25,16 +25,7 @@ See the Wiki pages for usage instructions and the samples directory for example 
 
 ## Downloads
 
-Prebuilt modules are hosted on Amazon S3:
-
-* [com.obscure.titouchdb-iphone-1.0.zip](https://github.com/pegli/ti_touchdb/blob/master/mobile/ios/dist/com.obscure.titouchdb-iphone-1.0.zip?raw=true), built 21 May 2014
-
-Archived builds
-
-* [com.obscure.titouchdb-android-0.9.zip](https://pegli.github.s3.amazonaws.com/com.obscure.titouchdb-android-0.9.zip),
-  built 6 Jun 2013
-* [com.obscure.titouchdb-iphone-0.9.zip](https://pegli.github.s3.amazonaws.com/com.obscure.titouchdb-iphone-0.9.zip),
-  built 6 Jun 2013
+Prebuilt modules can be found in the Releases section of this repo.
 
 ## License
 
@@ -120,6 +111,12 @@ Latest build of the project uses the head of TouchDB-iOS to get a JSON view coll
 fix.
 
 ## Development Status - Android
+
+**1.0**
+
+2014-06-10
+
+Android is finally at functional parity with iOS!
 
 **0.9**
 
