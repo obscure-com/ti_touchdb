@@ -86,3 +86,8 @@ if (OS_IOS) {
   addButton.addEventListener('click', addBook);
   $.win.rightNavButton = addButton;
 }
+else if (OS_ANDROID) {
+  exports.open = function() {
+    $.win.open();
+  };
+}

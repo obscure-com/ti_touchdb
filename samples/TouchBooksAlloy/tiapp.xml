@@ -47,11 +47,11 @@
         <theme>default</theme>
     </mobileweb>
     <modules>
-        <module platform="android" version="1.0">ti.physicalSizeCategory</module>
+        <module platform="android" version="1.0">ti.physicalsizecategory</module>
         <module platform="iphone">com.obscure.titouchdb</module>
         <module platform="android">com.obscure.titouchdb</module>
     </modules>
     <plugins>
-        <plugin version="1.0">ti.alloy</plugin>
+        <plugin>ti.alloy</plugin>
     </plugins>
 </ti:app>
