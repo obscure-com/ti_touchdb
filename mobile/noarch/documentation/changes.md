@@ -1,3 +1,8 @@
+2014-06-10
+
+Initial release of module based on [couchbase-lite-ios](https://github.com/couchbase/couchbase-lite-ios)
+and [couchbase-lite-android](https://github.com/couchbase/couchbase-lite-android) version 1.0.0.
+
 2014-01-20
 
 The couchbase-lite-ios project is undergoing another set of API changes, which
