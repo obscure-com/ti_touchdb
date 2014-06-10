@@ -24,7 +24,7 @@ exports.definition = {
   extendCollection: function(Collection) {
     _.extend(Collection.prototype, {
       map_row: function(Model, row) {
-        var result = new Model(row.document.properties);
+        var result = new Model(row.documentProperties);
         // add custom properties here, if any
         return result;
       }
