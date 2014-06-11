@@ -10,7 +10,7 @@ Ti.App.Properties.setBool("LogSyncVerbose", true);
 var server = require('com.obscure.titouchdb'),
     db = server.databaseManager.getDatabase(Alloy.CFG.books_db_name || 'books');
 
-db.setFilter('books_only', function(doc,req) {
+db.setFilter('books_only', function(doc, req) {
   return doc.modelname === "book";
 });
 
@@ -19,19 +19,24 @@ if (Alloy.CFG.remote_couchdb_server) {
   var push = db.createPushReplication(Alloy.CFG.remote_couchdb_server);
   
   pull.continuous = true;
-  pull.addEventListener('change', function(e) {
-    Ti.API.info(String.format("pull: running: %d, total: %d, completed: %d", !!pull.running, pull.total, pull.completed));
-    // if (pull.total > 0 && pull.completed === pull.total) {
+  pull.addEventListener('status', function(e) {
+    Ti.API.info(String.format("pull: running: %d, total: %d, completed: %d", !!pull.isRunning, pull.changesCount, pull.completedChangesCount));
+    if (pull.status == server.REPLICATION_MODE_IDLE) {
       Ti.App.fireEvent('books:update_from_server');
-    // }
+      Ti.API.info("idle pull replication; fired update event");
+    }
   });
   pull.start();
 
   push.continuous = true;
   // push.filter = 'books_only'; // TODO push filter not working?
   
-  push.addEventListener('change', function(e) {
-    Ti.API.info(String.format("push: running: %d, total: %d, completed: %d", !!pull.running, pull.total, pull.completed));
+  push.addEventListener('status', function(e) {
+    Ti.API.info(String.format("push: running: %d, total: %d, completed: %d", !!pull.isRunning, pull.changesCount, pull.completedChangesCount));
+    if (pull.status == server.REPLICATION_MODE_IDLE) {
+      Ti.App.fireEvent('books:update_from_server');
+      Ti.API.info("idle push replication; fired update event");
+    }
   });
   push.start();
 
