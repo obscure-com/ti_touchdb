@@ -123,7 +123,7 @@ function Sync(method, model, options) {
       }
       else {
         // object
-        var obj = db.getDocument(model.id)
+        var obj = db.getDocument(model.id);
         model.set(obj.properties);
         model.id = obj.documentID;
         model.trigger('fetch');
@@ -134,7 +134,7 @@ function Sync(method, model, options) {
       var props = model.toJSON();
       props.modelname = model.config.adapter.modelname;
       var doc = db.getDocument(model.id);
-      doc.putProperties(model.toJSON());
+      doc.putProperties(props);
       model.trigger('update');
       break;
     
