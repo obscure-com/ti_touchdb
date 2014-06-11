@@ -1,6 +1,5 @@
 "Window": {
   backgroundColor: "white",
-  fullscreen: true,
 },
 
 "ScrollView": {
