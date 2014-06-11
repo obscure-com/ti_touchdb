@@ -29,7 +29,7 @@ if (Alloy.CFG.remote_couchdb_server) {
   pull.start();
 
   push.continuous = true;
-  // push.filter = 'books_only'; // TODO push filter not working?
+  push.filter = 'books_only'; // TODO push filter not working?
   
   push.addEventListener('status', function(e) {
     Ti.API.info(String.format("push: running: %d, total: %d, completed: %d", !!pull.isRunning, pull.changesCount, pull.completedChangesCount));
