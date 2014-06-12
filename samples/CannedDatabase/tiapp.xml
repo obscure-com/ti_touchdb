@@ -38,14 +38,15 @@
         <theme>default</theme>
     </mobileweb>
     <modules>
-      <module platform="iphone">com.obscure.titouchdb</module>
+        <module platform="iphone">com.obscure.titouchdb</module>
     </modules>
     <deployment-targets>
+        <target device="tizen">false</target>
         <target device="blackberry">false</target>
         <target device="android">true</target>
         <target device="ipad">true</target>
         <target device="iphone">true</target>
         <target device="mobileweb">false</target>
     </deployment-targets>
-    <sdk-version>3.0.2.GA</sdk-version>
+    <sdk-version>3.2.3.GA</sdk-version>
 </ti:app>
