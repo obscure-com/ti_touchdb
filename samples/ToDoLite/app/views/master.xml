@@ -1,0 +1,17 @@
+<Alloy>
+  <Window title="Todo Lists">
+    <RightNavButton>
+      <Button systemButton="ADD" onClick="insertNewObject">
+    </RightNavButton>
+    <ListView>
+      <Templates>
+        <ItemTemplate name="todo_item">
+          <Label id="title" bindId="title"/>
+        </ItemTemplate>
+      </Templates>
+      <ListSection template="todo_item" dataCollection="list">
+        <ListItem title:text="PLACEHOLDER">
+      </ListSection>
+    </ListView>
+  </Window>
+</Alloy>
