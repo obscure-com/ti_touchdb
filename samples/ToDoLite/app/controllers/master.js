@@ -24,8 +24,8 @@ function insertNewObject(e) {
     title: "New To-Do List",
     message: "Title for new list:",
     style: Ti.UI.iPhone.AlertDialogStyle.PLAIN_TEXT_INPUT,
-    buttonNames: ['Create', 'Cancel'],
-    cancel: 1,
+    buttonNames: ['Cancel', 'Create'],
+    cancel: 0,
   });
   dialog.addEventListener('click', function(e) {
     if (e.index !== e.source.cancel) {

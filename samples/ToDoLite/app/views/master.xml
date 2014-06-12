@@ -9,7 +9,7 @@
     </RightNavButton>
     <ListView onItemclick="didSelectRow">
       <ListSection dataCollection="list">
-        <ListItem title="{title}" itemId="{_id}">
+        <ListItem title="{title}" itemId="{_id}" accessoryType="Ti.UI.LIST_ACCESSORY_TYPE_DISCLOSURE"/>
       </ListSection>
     </ListView>
   </Window>
