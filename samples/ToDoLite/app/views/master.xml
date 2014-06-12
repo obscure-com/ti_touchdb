@@ -1,16 +1,15 @@
 <Alloy>
-  <Window title="Todo Lists">
+  <Collection src="list"/>
+  <Window title="Todo Lists" onOpen="windowOpen" onClose="windowClose">
+    <LeftNavButton>
+      <Button title="Login" onClick="doLogin">
+    </LeftNavButton>
     <RightNavButton>
       <Button systemButton="ADD" onClick="insertNewObject">
     </RightNavButton>
-    <ListView>
-      <Templates>
-        <ItemTemplate name="todo_item">
-          <Label id="title" bindId="title"/>
-        </ItemTemplate>
-      </Templates>
-      <ListSection template="todo_item" dataCollection="list">
-        <ListItem title:text="PLACEHOLDER">
+    <ListView onItemclick="didSelectRow">
+      <ListSection dataCollection="list">
+        <ListItem title="{title}" itemId="{_id}">
       </ListSection>
     </ListView>
   </Window>
