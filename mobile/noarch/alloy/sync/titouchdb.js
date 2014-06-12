@@ -82,7 +82,7 @@ function Sync(method, model, options) {
   switch (method) {
     case 'create':
         var props = model.toJSON();
-        props.modelname = model.config.adapter.modelname;
+        _.extend(props, model.config.adapter.static_properties || {});
         var doc = model.id ? db.getDocument(model.id) : db.createDocument();
         doc.putProperties(props);
         model.id = doc.documentID;
@@ -132,7 +132,7 @@ function Sync(method, model, options) {
 
     case 'update':
       var props = model.toJSON();
-      props.modelname = model.config.adapter.modelname;
+      _.extend(props, model.config.adapter.static_properties || {});
       var doc = db.getDocument(model.id);
       doc.putProperties(props);
       model.trigger('update');
