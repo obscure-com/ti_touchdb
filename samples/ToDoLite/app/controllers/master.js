@@ -38,7 +38,7 @@ function insertNewObject(e) {
 }
 
 function didSelectRow(e) {
-  alert("selected row "+e.itemId);
+  Ti.App.fireEvent('list:select', { list_id: e.itemId });
 }
 
 function windowOpen(e) {

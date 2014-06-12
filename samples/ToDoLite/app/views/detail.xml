@@ -1,0 +1,21 @@
+<Alloy>
+  <Collection id="tasks" src="task" instance="true"/>
+  <Window onOpen="windowOpen" onClose="windowClose">
+    <RightNavButton>
+      <Button title="Share" onClick="shareButtonAction"/>
+    </RightNavButton>
+    <ListView>
+      <ListSection dataCollection="$.tasks">
+        <HeaderView>
+          <Toolbar>
+            <Items>
+              <Button systemButton="CAMERA" onClick="addImageButtonAction"/>
+              <TextField id="addItemTextField" borderStyle="NONE" hintText="Add Task" onReturn="textFieldShouldReturn"/>
+            </Items>
+          </Toolbar>
+        </HeaderView>
+        <ListItem title="{title}"/>
+      </ListSection>
+    </ListView>
+  </Window>
+</Alloy>
