@@ -1,8 +1,12 @@
+var lists = Alloy.Collections.list;
 
 function createListWithTitle(title) {
   var list = Alloy.createModel('List');
   // TODO if there is a userID set, add it to the list
   list.save({ title: title }, {
+    success: function() {
+      lists.fetch();
+    },
     error: function(e) {
       Ti.UI.createAlertDialog({
         title: "Error",
@@ -42,7 +46,7 @@ function didSelectRow(e) {
 }
 
 function windowOpen(e) {
-  Alloy.Collections.instance('list').fetch();
+  lists.fetch();
 }
 
 function windowClose(e) {

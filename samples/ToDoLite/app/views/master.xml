@@ -1,5 +1,4 @@
 <Alloy>
-  <Collection src="list"/>
   <Window title="Todo Lists" onOpen="windowOpen" onClose="windowClose">
     <LeftNavButton>
       <Button title="Login" onClick="doLogin">

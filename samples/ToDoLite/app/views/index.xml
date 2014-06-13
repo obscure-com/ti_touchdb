@@ -1,4 +1,6 @@
 <Alloy>
+  <Collection src="list"/>
+ 
   <!-- iPhone -->
   <NavigationWindow platform="ios" formFactor="handheld">
     <Require src="master"/>
