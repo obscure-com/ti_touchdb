@@ -26,8 +26,15 @@ exports.definition = {
 
   extendModel: function(Model) {
     _.extend(Model.prototype, {
-      addTask: function(title, image, imageContentType) {
-        // TODO
+      addTask: function(title, image) {
+        var list_id = this.id;
+        var task = Alloy.createModel('task', {
+          title: title,
+          created_at: new Date().getTime(),
+          list_id: list_id
+        });
+        task.save();
+        return task;
       }
     });
     return Model;

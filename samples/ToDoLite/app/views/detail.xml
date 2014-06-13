@@ -9,8 +9,8 @@
         <HeaderView>
           <Toolbar>
             <Items>
-              <Button systemButton="CAMERA" onClick="addImageButtonAction"/>
-              <TextField id="addItemTextField" borderStyle="NONE" hintText="Add Task" onReturn="textFieldShouldReturn"/>
+              <Button id="addImageButton" systemButton="CAMERA" onClick="addImageButtonAction"/>
+              <TextField id="addItemTextField" width="220" borderStyle="NONE" hintText="Add Task" onReturn="textFieldShouldReturn"/>
             </Items>
           </Toolbar>
         </HeaderView>
