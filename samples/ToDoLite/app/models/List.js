@@ -34,6 +34,9 @@ exports.definition = {
           list_id: list_id
         });
         task.save();
+        if (image) {
+          task.addAttachment('image.jpg', image.mimeType, image);
+        }
         return task;
       }
     });

@@ -3,8 +3,21 @@ var args = arguments[0] || {};
 var imageForNewTask = null;
 var list = null;
 
+// data binding
+
+function transform(model) {
+   var result = model.toJSON();
+   var att = model.attachmentNamed('image.jpg');
+   result.image = (att && att.content) || "/images/Camera-Light.png";
+   result.class = "incomplete";
+   Ti.API.info(JSON.stringify(result));
+   return result;
+}
+
+// helper functions
+
 function updateAddImageButtonWithImage(img) {
-  $.addImageButton.image = img;
+  $.addImageButton.image = img || '/images/Camera.png';
 }
 
 function takePicture() {
@@ -29,6 +42,7 @@ function chooseExistingPhoto() {
 // event handlers
 
 function windowOpen(e) {
+  updateAddImageButtonWithImage();
   $.tasks.fetch({ startKey: [args.list_id], endKey: [args.list_id, {}] });
   list = Alloy.createModel('list');
   list.fetch({ id: args.list_id });

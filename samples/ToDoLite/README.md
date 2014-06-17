@@ -15,3 +15,11 @@ example provided by Couchbase.
 ## Known Issues
 
 TODO list differences between Couchbase ToDoLite and this app
+
+## FAQ
+
+*Why are the event handler names so weird?  It's almost like I'm reading Objective-C!*
+
+I named views, methods, and classes based on their correspondance with the original ToDoLite
+application.  For example, `detail.js` contains an event handler named `shareButtonAction`,
+which performs the same function as `shareButtonAction:` in `DetailViewController`. 

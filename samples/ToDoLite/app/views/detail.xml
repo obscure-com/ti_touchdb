@@ -4,17 +4,23 @@
     <RightNavButton>
       <Button title="Share" onClick="shareButtonAction"/>
     </RightNavButton>
-    <ListView>
-      <ListSection dataCollection="$.tasks">
+    <ListView defaultItemTemplate="default">
+      <Templates>
+        <ItemTemplate name="default">
+          <View layout="horizontal">
+            <ImageView bindId="setImageButton" left="10" top="10" bottom="10" width="44" height="44" onClick="addImageButtonAction"/>
+            <Label bindId="title" left="4" top="10" bottom="10"/>
+          </View>
+        </ItemTemplate>
+      </Templates>
+      <ListSection dataCollection="$.tasks" dataTransform="transform">
         <HeaderView>
-          <Toolbar>
-            <Items>
-              <Button id="addImageButton" systemButton="CAMERA" onClick="addImageButtonAction"/>
-              <TextField id="addItemTextField" width="220" borderStyle="NONE" hintText="Add Task" onReturn="textFieldShouldReturn"/>
-            </Items>
-          </Toolbar>
+          <View layout="horizontal" height="52">
+            <ImageView id="addImageButton" left="10" top="10" bottom="10" width="44" height="44" onClick="addImageButtonAction"/>
+            <TextField id="addItemTextField" left="4" right="16" top="10" bottom="10" borderStyle="NONE" hintText="Add Task" onReturn="textFieldShouldReturn"/>
+          </View>
         </HeaderView>
-        <ListItem title="{title}"/>
+        <ListItem height="64" title:text="{title}" title:class="{class}" setImageButton:image="{image}"/>
       </ListSection>
     </ListView>
   </Window>
