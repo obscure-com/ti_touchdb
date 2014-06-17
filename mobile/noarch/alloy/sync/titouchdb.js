@@ -103,6 +103,7 @@ function Sync(method, model, options) {
           model.set(obj.properties);
           model.id = obj.documentID;
           !opts.silent && model.trigger('fetch', { fromAdapter: true });
+          resp = model.toJSON(); 
         }
         err = db.error;
       }    
