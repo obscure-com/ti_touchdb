@@ -8,7 +8,7 @@
       <Templates>
         <ItemTemplate name="default">
           <View layout="horizontal">
-            <ImageView bindId="setImageButton" left="10" top="10" bottom="10" width="44" height="44" onClick="addImageButtonAction"/>
+            <MaskedImage bindId="setImageButton" left="10" top="10" bottom="10" width="44" height="44" onClick="imageButtonAction" mask="/images/task_image_mask.png" mode="Ti.UI.iOS.BLEND_MODE_SOURCE_IN"/>
             <Label bindId="title" left="4" top="10" bottom="10"/>
           </View>
         </ItemTemplate>
@@ -16,8 +16,8 @@
       <ListSection dataCollection="$.tasks" dataTransform="transform">
         <HeaderView>
           <View layout="horizontal" height="52">
-            <ImageView id="addImageButton" left="10" top="10" bottom="10" width="44" height="44" onClick="addImageButtonAction"/>
-            <TextField id="addItemTextField" left="4" right="16" top="10" bottom="10" borderStyle="NONE" hintText="Add Task" onReturn="textFieldShouldReturn"/>
+            <MaskedImage id="addImageButton" left="10" top="10" bottom="10" width="44" height="44" onClick="addImageButtonAction"/>
+            <TextField id="addItemTextField" left="4" right="16" top="10" bottom="10" borderStyle="NONE" hintText="Add Task" onReturn="textFieldShouldReturn" mask="/images/task_image_mask.png" mode="Ti.UI.iOS.BLEND_MODE_SOURCE_IN"/>
           </View>
         </HeaderView>
         <ListItem height="64" title:text="{title}" title:class="{class}" setImageButton:image="{image}"/>

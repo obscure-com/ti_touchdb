@@ -10,11 +10,41 @@ function transform(model) {
    var att = model.attachmentNamed('image.jpg');
    result.image = (att && att.content) || "/images/Camera-Light.png";
    result.class = "incomplete";
-   Ti.API.info(JSON.stringify(result));
    return result;
 }
 
 // helper functions
+
+function displayAddImageActionSheet(task) {
+  // TODO add image for existing task
+  var options = [];
+  if (Ti.Media.isCameraSupported) {
+    options.push("Take Picture");
+  }
+  options.push("Choose Existing");
+  if (imageForNewTask) {
+    options.push("Delete");
+  }
+  options.push("Cancel");
+  var dialog = Ti.UI.createOptionDialog({
+    options: options,
+    cancel: options.length - 1,
+  });
+  dialog.addEventListener('click', function(e) {
+    var selected = options[e.index];
+    if (selected === 'Take Picture') {
+      takePicture();
+    }
+    else if (selected == 'Choose Existing') {
+      chooseExistingPhoto();
+    }
+    else if (selected == 'Delete') {
+      imageForNewTask = null;
+      updateAddImageButtonWithImage(null);
+    }
+  });
+  dialog.show();  
+}
 
 function updateAddImageButtonWithImage(img) {
   $.addImageButton.image = img || '/images/Camera.png';
@@ -56,35 +86,21 @@ function shareButtonAction(e) {
   alert('TODO share');
 }
 
+// set image for new task
 function addImageButtonAction(e) {
-  // show the add image action sheet
-  var options = [];
-  if (Ti.Media.isCameraSupported) {
-    options.push("Take Picture");
+  displayAddImageActionSheet();
+}
+
+// set image for existing task
+function imageButtonAction(e) {
+  var task = $.tasks.at(e.itemIndex);
+  if (task.attachmentNamed('image.jpg')) {
+    var controller = Alloy.createController('image', { task_id: task.id });
+    controller.getView().open({ modal:true });
   }
-  options.push("Choose Existing");
-  if (imageForNewTask) {
-    options.push("Delete");
+  else {
+    displayAddImageActionSheet(task);
   }
-  options.push("Cancel");
-  var dialog = Ti.UI.createOptionDialog({
-    options: options,
-    cancel: options.length - 1,
-  });
-  dialog.addEventListener('click', function(e) {
-    var selected = options[e.index];
-    if (selected === 'Take Picture') {
-      takePicture();
-    }
-    else if (selected == 'Choose Existing') {
-      chooseExistingPhoto();
-    }
-    else if (selected == 'Delete') {
-      imageForNewTask = null;
-      updateAddImageButtonWithImage(null);
-    }
-  });
-  dialog.show();
 }
 
 function textFieldShouldReturn(e) {
