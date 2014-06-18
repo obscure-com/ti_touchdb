@@ -9,20 +9,22 @@ function transform(model) {
    var result = model.toJSON();
    var att = model.attachmentNamed('image.jpg');
    result.image = (att && att.content) || "/images/Camera-Light.png";
-   result.class = "incomplete";
+   result.accessoryType = result.checked ? Ti.UI.LIST_ACCESSORY_TYPE_CHECKMARK : Ti.UI.LIST_ACCESSORY_TYPE_NONE;
+   result.titleClass = result.checked ? 'complete' : 'incomplete';
    return result;
 }
 
 // helper functions
 
-function displayAddImageActionSheet(task) {
-  // TODO add image for existing task
+function displayAddImageActionSheet(listItem) {
+  var task = listItem ? $.tasks.get(listItem.itemId) : null;
+  
   var options = [];
   if (Ti.Media.isCameraSupported) {
     options.push("Take Picture");
   }
   options.push("Choose Existing");
-  if (imageForNewTask) {
+  if (imageForNewTask || (task && task.attachmentNamed('image.jpg'))) {
     options.push("Delete");
   }
   options.push("Cancel");
@@ -33,14 +35,19 @@ function displayAddImageActionSheet(task) {
   dialog.addEventListener('click', function(e) {
     var selected = options[e.index];
     if (selected === 'Take Picture') {
-      takePicture();
+      takePicture(listItem);
     }
     else if (selected == 'Choose Existing') {
-      chooseExistingPhoto();
+      chooseExistingPhoto(listItem);
     }
     else if (selected == 'Delete') {
-      imageForNewTask = null;
-      updateAddImageButtonWithImage(null);
+      if (task) {
+        task.removeAttachment('image.jpg');
+      }
+      else {
+        imageForNewTask = null;
+        updateAddImageButtonWithImage(null);        
+      }
     }
   });
   dialog.show();  
@@ -50,20 +57,34 @@ function updateAddImageButtonWithImage(img) {
   $.addImageButton.image = img || '/images/Camera.png';
 }
 
-function takePicture() {
+function takePicture(listItem) {
   Ti.Media.showCamera({
     success: function(e) {
-      imageForNewTask = e.media;
-      updateAddImageButtonWithImage(imageForNewTask);
+      if (listItem) {
+        var task = $.tasks.get(listItem.itemId);
+        task.addAttachment('image.jpg', e.media.mimeType, e.media);
+        listItem.image = e.media;
+      }
+      else {
+        imageForNewTask = e.media;
+        updateAddImageButtonWithImage(imageForNewTask);
+      }
     }
   });
 }
 
-function chooseExistingPhoto() {
+function chooseExistingPhoto(listItem) {
   Ti.Media.openPhotoGallery({
     success: function(e) {
-      imageForNewTask = e.media;
-      updateAddImageButtonWithImage(imageForNewTask);
+      if (listItem) {
+        var task = $.tasks.get(listItem.itemId);
+        task.addAttachment('image.jpg', e.media.mimeType, e.media);
+        listItem.image = e.media;
+      }
+      else {
+        imageForNewTask = e.media;
+        updateAddImageButtonWithImage(imageForNewTask);
+      }
     }
   });
 }
@@ -99,7 +120,7 @@ function imageButtonAction(e) {
     controller.getView().open({ modal:true });
   }
   else {
-    displayAddImageActionSheet(task);
+    displayAddImageActionSheet(e.source);
   }
 }
 
@@ -117,4 +138,16 @@ function textFieldShouldReturn(e) {
     $.addItemTextField.value = '';
     $.tasks.add(task);
   }
+}
+
+function didSelectRow(e) {
+  var task = $.tasks.at(e.itemIndex);
+  task.set({ checked: !task.get('checked') });
+  task.save();
+  
+  var checked = task.get('checked');
+  
+  var listItem = e.source.sections[e.sectionIndex].items[e.itemIndex];
+  listItem.accessoryType = checked ? Ti.UI.LIST_ACCESSORY_TYPE_CHECKMARK : Ti.UI.LIST_ACCESSORY_TYPE_NONE;
+  listItem.title.class = checked ? 'complete' : 'incomplete';
 }
