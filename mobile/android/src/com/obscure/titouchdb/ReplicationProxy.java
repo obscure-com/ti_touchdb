@@ -8,6 +8,8 @@ import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 
+import com.couchbase.lite.auth.Authenticator;
+import com.couchbase.lite.auth.AuthenticatorFactory;
 import com.couchbase.lite.replicator.Replication;
 import com.couchbase.lite.replicator.Replication.ChangeEvent;
 import com.couchbase.lite.replicator.Replication.ChangeListener;
@@ -15,13 +17,13 @@ import com.couchbase.lite.replicator.Replication.ChangeListener;
 @Kroll.proxy(parentModule = TitouchdbModule.class)
 public class ReplicationProxy extends KrollProxy implements ChangeListener {
 
-    private static final String[] EMPTY_STRING_ARRAY            = new String[0];
+    private static final String[] EMPTY_STRING_ARRAY = new String[0];
 
-    private static final String   LCAT                          = "ReplicationProxy";
+    private static final String   LCAT               = "ReplicationProxy";
 
     private DatabaseProxy         databaseProxy;
 
-    private KrollDict             lastError                     = null;
+    private KrollDict             lastError          = null;
 
     private Replication           replicator;
 
@@ -30,7 +32,7 @@ public class ReplicationProxy extends KrollProxy implements ChangeListener {
         assert replicator != null;
         this.databaseProxy = databaseProxy;
         this.replicator = replicator;
-        
+
         replicator.addChangeListener(this);
     }
 
@@ -67,8 +69,7 @@ public class ReplicationProxy extends KrollProxy implements ChangeListener {
 
     @Kroll.getProperty(name = "headers")
     public KrollDict getHeaders() {
-        // TODO
-        return null;
+        return TypePreprocessor.toKrollDict(replicator.getHeaders());
     }
 
     @Kroll.getProperty(name = "localDatabase")
@@ -107,7 +108,7 @@ public class ReplicationProxy extends KrollProxy implements ChangeListener {
         return replicator.isRunning();
     }
 
-    @Kroll.method(runOnUiThread=true)
+    @Kroll.method(runOnUiThread = true)
     public void restart() {
         replicator.restart();
     }
@@ -124,7 +125,13 @@ public class ReplicationProxy extends KrollProxy implements ChangeListener {
 
     @Kroll.method
     public void setCredential(KrollDict credential) {
-        // TODO
+        if (credential == null) {
+            replicator.setAuthenticator(null);
+        }
+        else {
+            Authenticator authenticator = AuthenticatorFactory.createBasicAuthenticator(credential.getString("user"), credential.getString("pass"));
+            replicator.setAuthenticator(authenticator);
+        }
     }
 
     @Kroll.setProperty(name = "docIds")
@@ -138,21 +145,21 @@ public class ReplicationProxy extends KrollProxy implements ChangeListener {
     }
 
     @Kroll.setProperty(name = "filterParams")
-    public void setFilterParams(String filterParams) {
-        // TODO
+    public void setFilterParams(KrollDict filterParams) {
+        replicator.setFilterParams(filterParams);
     }
 
     @Kroll.setProperty(name = "headers")
-    public void setHeaders(String headers) {
-        // TODO
+    public void setHeaders(KrollDict headers) {
+        replicator.setHeaders(headers);
     }
 
-    @Kroll.method(runOnUiThread=true)
+    @Kroll.method(runOnUiThread = true)
     public void start() {
         replicator.start();
     }
 
-    @Kroll.method(runOnUiThread= true)
+    @Kroll.method(runOnUiThread = true)
     public void stop() {
         replicator.stop();
     }
@@ -162,7 +169,7 @@ public class ReplicationProxy extends KrollProxy implements ChangeListener {
         KrollDict params = new KrollDict();
         params.put("source", this);
         params.put("status", replicator.getStatus().ordinal());
-        
+
         fireEvent("status", params);
     }
 
