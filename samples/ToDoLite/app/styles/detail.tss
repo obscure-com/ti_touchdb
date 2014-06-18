@@ -1,0 +1,9 @@
+
+
+".complete": {
+  color: 'grey',
+}
+
+".incomplete": {
+  color: 'black',
+}

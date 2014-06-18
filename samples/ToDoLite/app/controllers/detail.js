@@ -9,8 +9,7 @@ function transform(model) {
    var result = model.toJSON();
    var att = model.attachmentNamed('image.jpg');
    result.image = (att && att.content) || "/images/Camera-Light.png";
-   result.accessoryType = result.checked ? Ti.UI.LIST_ACCESSORY_TYPE_CHECKMARK : Ti.UI.LIST_ACCESSORY_TYPE_NONE;
-   result.titleClass = result.checked ? 'complete' : 'incomplete';
+   result.template = result.checked ? 'complete' : 'incomplete';
    return result;
 }
 
@@ -147,7 +146,7 @@ function didSelectRow(e) {
   
   var checked = task.get('checked');
   
-  var listItem = e.source.sections[e.sectionIndex].items[e.itemIndex];
-  listItem.accessoryType = checked ? Ti.UI.LIST_ACCESSORY_TYPE_CHECKMARK : Ti.UI.LIST_ACCESSORY_TYPE_NONE;
-  listItem.title.class = checked ? 'complete' : 'incomplete';
+  var listItem = e.section.items[e.itemIndex];
+  listItem.template = checked ? 'complete' : 'incomplete';
+  e.section.updateItemAt(e.itemIndex, listItem);
 }
