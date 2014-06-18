@@ -148,5 +148,5 @@ function didSelectRow(e) {
   
   var listItem = e.section.items[e.itemIndex];
   listItem.template = checked ? 'complete' : 'incomplete';
-  e.section.updateItemAt(e.itemIndex, listItem);
+  e.section.updateItemAt(e.itemIndex, listItem, { animated: true });
 }

@@ -6,13 +6,13 @@
     </RightNavButton>
     <ListView defaultItemTemplate="default" onItemclick="didSelectRow">
       <Templates>
-        <ItemTemplate name="incomplete" >
+        <ItemTemplate name="incomplete" selectionStyle="Ti.UI.iPhone.ListViewCellSelectionStyle.NONE">
           <View layout="horizontal">
             <MaskedImage bindId="setImageButton" left="10" top="10" bottom="10" width="44" height="44" onClick="imageButtonAction" mask="/images/task_image_mask.png" mode="Ti.UI.iOS.BLEND_MODE_SOURCE_IN"/>
             <Label bindId="title" left="4" top="10" bottom="10"/>
           </View>
         </ItemTemplate>
-        <ItemTemplate name="complete" accessoryType="Ti.UI.LIST_ACCESSORY_TYPE_CHECKMARK">
+        <ItemTemplate name="complete" selectionStyle="Ti.UI.iPhone.ListViewCellSelectionStyle.NONE" accessoryType="Ti.UI.LIST_ACCESSORY_TYPE_CHECKMARK">
           <View layout="horizontal">
             <MaskedImage bindId="setImageButton" left="10" top="10" bottom="10" width="44" height="44" onClick="imageButtonAction" mask="/images/task_image_mask.png" mode="Ti.UI.iOS.BLEND_MODE_SOURCE_IN"/>
             <Label bindId="title" left="4" top="10" bottom="10" color="#ccc"/>
