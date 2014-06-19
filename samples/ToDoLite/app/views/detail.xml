@@ -4,7 +4,7 @@
     <RightNavButton>
       <Button title="Share" onClick="shareButtonAction"/>
     </RightNavButton>
-    <ListView defaultItemTemplate="default" onItemclick="didSelectRow">
+    <ListView defaultItemTemplate="incomplete" onItemclick="didSelectRow" onDelete="didDelete">
       <Templates>
         <ItemTemplate name="incomplete" selectionStyle="Ti.UI.iPhone.ListViewCellSelectionStyle.NONE">
           <View layout="horizontal">
@@ -26,7 +26,7 @@
             <TextField id="addItemTextField" left="4" right="16" top="10" bottom="10" borderStyle="NONE" hintText="Add Task" onReturn="textFieldShouldReturn" mask="/images/task_image_mask.png" mode="Ti.UI.iOS.BLEND_MODE_SOURCE_IN"/>
           </View>
         </HeaderView>
-        <ListItem height="64" itemId="{id}" title:text="{title}" template="{template}" setImageButton:image="{image}"/>
+        <ListItem height="64" itemId="{_id}" title:text="{title}" template="{template}" setImageButton:image="{image}" canEdit="true"/>
       </ListSection>
     </ListView>
   </Window>

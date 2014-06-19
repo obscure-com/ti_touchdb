@@ -16,8 +16,8 @@ function transform(model) {
 // helper functions
 
 function displayAddImageActionSheet(listItem) {
-  var task = listItem ? $.tasks.get(listItem.itemId) : null;
-  
+  var task = listItem ? $.tasks.at(listItem.itemIndex) : null;
+
   var options = [];
   if (Ti.Media.isCameraSupported) {
     options.push("Take Picture");
@@ -60,7 +60,7 @@ function takePicture(listItem) {
   Ti.Media.showCamera({
     success: function(e) {
       if (listItem) {
-        var task = $.tasks.get(listItem.itemId);
+        var task = $.tasks.at(listItem.itemIndex);
         task.addAttachment('image.jpg', e.media.mimeType, e.media);
         listItem.image = e.media;
       }
@@ -76,7 +76,7 @@ function chooseExistingPhoto(listItem) {
   Ti.Media.openPhotoGallery({
     success: function(e) {
       if (listItem) {
-        var task = $.tasks.get(listItem.itemId);
+        var task = $.tasks.at(listItem.itemIndex);
         task.addAttachment('image.jpg', e.media.mimeType, e.media);
         listItem.image = e.media;
       }
@@ -88,14 +88,17 @@ function chooseExistingPhoto(listItem) {
   });
 }
 
+function updateModels() {
+  $.tasks.fetch({ startKey: [args.list_id], endKey: [args.list_id, {}] });
+  list = Alloy.createModel('list');
+  list.fetch({ id: args.list_id });
+}
 
 // event handlers
 
 function windowOpen(e) {
   updateAddImageButtonWithImage();
-  $.tasks.fetch({ startKey: [args.list_id], endKey: [args.list_id, {}] });
-  list = Alloy.createModel('list');
-  list.fetch({ id: args.list_id });
+  updateModels();
 }
 
 function windowClose(e) {
@@ -108,18 +111,20 @@ function shareButtonAction(e) {
 
 // set image for new task
 function addImageButtonAction(e) {
+  e.cancelBubble = true;
   displayAddImageActionSheet();
 }
 
 // set image for existing task
 function imageButtonAction(e) {
+  e.cancelBubble = true;
   var task = $.tasks.at(e.itemIndex);
   if (task.attachmentNamed('image.jpg')) {
     var controller = Alloy.createController('image', { task_id: task.id });
     controller.getView().open({ modal:true });
   }
   else {
-    displayAddImageActionSheet(e.source);
+    displayAddImageActionSheet(task);
   }
 }
 
@@ -149,4 +154,11 @@ function didSelectRow(e) {
   var listItem = e.section.items[e.itemIndex];
   listItem.template = checked ? 'complete' : 'incomplete';
   e.section.updateItemAt(e.itemIndex, listItem, { animated: true });
+}
+
+function didDelete(e) {
+  alert('delete '+e.itemId);
+  var doomed = $.tasks.at(e.itemIndex);
+  doomed.deleteTask();
+  updateModels();
 }

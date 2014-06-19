@@ -26,6 +26,9 @@ exports.definition = {
 
   extendModel: function(Model) {
     _.extend(Model.prototype, {
+      deleteTask: function() {
+        this.database.getExistingDocument(this.id).deleteDocument();
+      }
     });
     return Model;
   },

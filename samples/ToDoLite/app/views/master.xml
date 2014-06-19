@@ -6,9 +6,9 @@
     <RightNavButton>
       <Button systemButton="ADD" onClick="insertNewObject"/>
     </RightNavButton>
-    <ListView onItemclick="didSelectRow">
-      <ListSection dataCollection="list">
-        <ListItem title="{title}" itemId="{_id}" accessoryType="Ti.UI.LIST_ACCESSORY_TYPE_DISCLOSURE"/>
+    <ListView onItemclick="didSelectRow" onDelete="didDelete">
+      <ListSection dataCollection="list" canEdit="true">
+        <ListItem title="{title}" itemId="{_id}" accessoryType="Ti.UI.LIST_ACCESSORY_TYPE_DISCLOSURE" canEdit="true"/>
       </ListSection>
     </ListView>
   </Window>

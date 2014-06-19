@@ -45,6 +45,12 @@ function didSelectRow(e) {
   Ti.App.fireEvent('list:select', { list_id: e.itemId });
 }
 
+function didDelete(e) {
+  var doomed = lists.get(e.itemId);
+  doomed.deleteList();
+  lists.fetch();
+}
+
 function windowOpen(e) {
   lists.fetch();
 }
