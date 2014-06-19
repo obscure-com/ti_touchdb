@@ -5,8 +5,7 @@
 var _ = require('alloy/underscore'),
     titouchdb = require('com.obscure.titouchdb'),
     manager = titouchdb.databaseManager,
-    db,
-    modelname;
+    db;
 
 
 /**
@@ -78,64 +77,84 @@ function InitAdapter(config) {
 
 function Sync(method, model, options) {
   var opts = options || {};
+  var resp = null, err = null;
   
   switch (method) {
     case 'create':
         var props = model.toJSON();
-        props.modelname = model.config.adapter.modelname;
+        _.extend(props, model.config.adapter.static_properties || {});
         var doc = model.id ? db.getDocument(model.id) : db.createDocument();
         doc.putProperties(props);
-        model.id = doc.documentID;
-        model.trigger('create');
+        err = doc.error;
+        if (!err) {
+          model.set(doc.properties, { silent: true });
+          model.id = doc.documentID;
+          resp = model.toJSON();
+          !opts.silent && model.trigger('change', { fromAdapter: true });
+        }
+        
         break;
 
     case 'read':
-      if (opts.parse) {
+      if (model.idAttribute) {
+        // fetch a single model
+        var obj = opts.id ? db.getDocument(opts.id) : db.createDocument();
+        if (obj) {
+          model.set(obj.properties);
+          model.id = obj.documentID;
+          !opts.silent && model.trigger('fetch', { fromAdapter: true });
+          resp = model.toJSON(); 
+        }
+        err = db.error;
+      }    
+      else {
         var collection = model; // just to clear things up 
         
         // collection
         var view = opts.view || collection.config.adapter.views[0]["name"];
-        
+        collection.view = view;
+
         // add default view options from model
         opts = _.defaults(opts, collection.config.adapter.view_options);
         var query = query_view(db, view, opts);
         if (!query) {
+          err = { error: 'missing view' };
           break;
         }
         
         var rows = query.run();
-
-        // do not use Collection methods!
-        var len = 0;
-        if (!opts.add) {
-          collection.models = [];
+        if (rows.error) {
+          err = rows.error;
+          break;
         }
+        
+        var len = 0, values = [];
         while (row = rows.next()) {
           var m = collection.map_row(collection.model, row);
           if (m) {
-            collection.models.push(m);
+            values.push(m);
             ++len;
           }
         }
-        collection.view = view;
-        collection.length = len;
-        collection.trigger('fetch');
-      }
-      else {
-        // object
-        var obj = db.getDocument(model.id)
-        model.set(obj.properties);
-        model.id = obj.documentID;
-        model.trigger('fetch');
+        
+        resp = 1 === len ? values[0] : values;
+        !opts.silent && collection.trigger('fetch', { fromAdapter: true });
       }
       break;
 
     case 'update':
       var props = model.toJSON();
-      props.modelname = model.config.adapter.modelname;
+      _.extend(props, model.config.adapter.static_properties || {});
       var doc = db.getDocument(model.id);
-      doc.putProperties(model.toJSON());
-      model.trigger('update');
+      doc.putProperties(props);
+      err = doc.error;
+      if (!err) {
+        model.set(doc.properties, { silent: true });
+        model.id = doc.documentID;
+        resp = model.toJSON();
+        !opts.silent && model.trigger('change', { fromAdapter: true });
+      }
+      
       break;
     
     case 'delete':
@@ -143,10 +162,20 @@ function Sync(method, model, options) {
         var doc = db.getDocument(model.id);
         doc.deleteDocument();
         model.id = null;
-        model.trigger('destroy');
+        err = doc.error;
+        if (!err) {
+          resp = model.toJSON();
+          !opts.silent && model.trigger('destroy', { fromAdapter: true });
+        }
       }
       break;
-  }  
+  }
+  
+  if (resp) {
+    _.isFunction(opts.success) && opts.success(resp);
+  } else {
+    _.isFunction(opts.error) && opts.error(resp);
+  }
 }
 
 module.exports.sync = Sync;
@@ -164,6 +193,7 @@ module.exports.afterModelCreate = function(Model) {
   
   Model.prototype.idAttribute = '_id'; // true for all TouchDB documents
   Model.prototype.config.Model = Model; // needed for fetch operations to initialize the collection from persistent store
+  Model.prototype.database = db;
 
   Model.prototype.attachmentNamed = function(name) {
     var doc = db.getDocument(this.id);
