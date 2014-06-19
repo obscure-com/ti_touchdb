@@ -117,7 +117,7 @@ function addImageButtonAction(e) {
 
 // set image for existing task
 function imageButtonAction(e) {
-  e.cancelBubble = true;
+  e.cancelBubble = true;  // doesn't work: https://jira.appcelerator.org/browse/TIMOB-16898
   var task = $.tasks.at(e.itemIndex);
   if (task.attachmentNamed('image.jpg')) {
     var controller = Alloy.createController('image', { task_id: task.id });
