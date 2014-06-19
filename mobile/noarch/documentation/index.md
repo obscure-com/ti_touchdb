@@ -310,7 +310,7 @@ pull replication.)
 
 ### Events
 
-**change**: fired when modifications are made to the documents in the database.
+**status**: fired when modifications are made to the documents in the database.
 
 <a name="document"/>
 ## Document
@@ -422,7 +422,7 @@ object or null if the put failed.
 
 ### Events
 
-**change**: fired when modifications are made to the document.
+**status**: fired when modifications are made to the document.
 
 
 <a name="attachment"/>
@@ -981,7 +981,7 @@ Stops a running replication process.
 
 ### Events
 
-**change**
+**status**
 
 Fired when any of these properties change: {mode, running, error, completed, total}.
 
