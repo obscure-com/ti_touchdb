@@ -124,12 +124,15 @@ public class ReplicationProxy extends KrollProxy implements ChangeListener {
     }
 
     @Kroll.method
-    public void setCredential(KrollDict credential) {
+    public void setCredential(@Kroll.argument(optional=true) KrollDict credential) {
         if (credential == null) {
             replicator.setAuthenticator(null);
         }
         else {
-            Authenticator authenticator = AuthenticatorFactory.createBasicAuthenticator(credential.getString("user"), credential.getString("pass"));
+            // oddly enough, KrollDict.getString() crashes...
+            String user = (String) credential.get("user");
+            String pass = (String) credential.get("pass");
+            Authenticator authenticator = AuthenticatorFactory.createBasicAuthenticator(user, pass);
             replicator.setAuthenticator(authenticator);
         }
     }
