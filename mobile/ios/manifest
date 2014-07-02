@@ -2,7 +2,7 @@
 # this is your module manifest and used by Titanium
 # during compilation, packaging, distribution, etc.
 #
-version: 1.0.1
+version: 1.0.2
 apiversion: 2
 description: Titanium wrapper for Couchbase Mobile
 author: Paul Mietz Egli
