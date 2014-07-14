@@ -1,5 +1,7 @@
 {
-	"global": {}, 
+	"global": {
+	 "dbname": "todos4"
+	}, 
 	"env:development": {}, 
 	"env:test": {}, 
 	"env:production": {}, 

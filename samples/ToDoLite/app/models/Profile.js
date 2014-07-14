@@ -4,31 +4,15 @@ exports.definition = {
     adapter: {
       type: "titouchdb",
       dbname: Alloy.CFG.dbname,
-      views: [
-        {
-          name: "tasksByDate",
-          version: '1',
-          map: function(doc) {
-            if (doc.type == 'task') {
-              emit([doc.list_id, doc.created_at], null);
-            }
-          }
-        }
-      ],
-      view_options: {
-        prefetch: true
-      },
       static_properties: {
-        type: 'task'
+        type: 'profile'
       }
     }
   },
 
   extendModel: function(Model) {
     _.extend(Model.prototype, {
-      deleteTask: function() {
-        this.database.getExistingDocument(this.id).deleteDocument();
-      }
+      // TODO maybe set all tasks and lists to this profile?
     });
     return Model;
   },

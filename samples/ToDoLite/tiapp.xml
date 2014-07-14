@@ -13,6 +13,10 @@
     <analytics>true</analytics>
     <guid>e3a3af0d-f278-4470-a207-fefb2ed69b37</guid>
     <property name="ti.ui.defaultunit" type="string">dp</property>
+    <property name="ti.facebook.appid">501518809925546</property>
+    <!--
+    <property name="com.couchbase.todolite.syncurl">http://sync.couchbasecloud.com:4984/todos4/</property>
+    -->
     <ios>
         <plist>
             <dict>
@@ -50,6 +54,8 @@
     <modules>
         <module platform="iphone">com.obscure.titouchdb</module>
         <module platform="android">com.obscure.titouchdb</module>
+        <module platform="android">facebook</module>
+        <module platform="iphone">facebook</module>
     </modules>
     <deployment-targets>
         <target device="android">true</target>

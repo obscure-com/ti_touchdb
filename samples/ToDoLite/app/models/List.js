@@ -3,7 +3,7 @@ exports.definition = {
   config: {
     adapter: {
       type: 'titouchdb',
-      dbname: 'todos4',
+      dbname: Alloy.CFG.dbname,
       views: [
         {
           name: 'lists',

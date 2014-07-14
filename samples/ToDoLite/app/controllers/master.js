@@ -19,7 +19,9 @@ function createListWithTitle(title) {
 // event handlers
 
 function doLogin(e) {
-  alert("TODO");
+  Alloy.Globals.loginAndSync(function() {
+    Ti.API.info("called complete loginAndSync");
+  });
 }
 
 function insertNewObject(e) {
