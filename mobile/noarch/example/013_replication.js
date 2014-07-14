@@ -192,4 +192,31 @@ module.exports = function() {
     });
   });
   
+  describe('pull replication with authenticator', function() {
+    var conf, repl;
+    
+    before(function(done) {
+      utils.delete_nonsystem_databases(manager);
+      conf = utils.verify_couchdb_server('replication_config.json', done);
+    });
+  
+    // currently returning a 400 error due to a request for /elements/_session
+    it('must replicate with a basic authenticator', function(done) {
+      this.timeout(10000);
+      var db = manager.getDatabase('repl4');
+      repl = db.createPullReplication('http://'+conf.host+':'+conf.port+'/'+conf.dbname);
+      repl.setAuthenticator(titouchdb.createBasicAuthenticator('scott', 'tiger'));
+      repl.addEventListener('status', function(e) {
+        if (e.status == titouchdb.REPLICATION_MODE_STOPPED) {
+          should.not.exist(repl.lastError);
+          db.documentCount.should.eql(118);
+          repl.isRunning.should.eql(false);
+          done();
+        }
+      });
+      repl.start();
+    });
+  });
+  
+  
 };

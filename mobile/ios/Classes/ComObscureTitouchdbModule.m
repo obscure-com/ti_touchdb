@@ -14,6 +14,7 @@
 #import "TiUtils.h"
 #import "TiProxy+Errors.h"
 #import "TDDatabaseManagerProxy.h"
+#import "TDAuthenticatorProxy.h"
 
 extern BOOL EnableLog(BOOL enable);
 
@@ -121,6 +122,33 @@ extern BOOL EnableLog(BOOL enable);
 - (id)stopListener:(id)args {
     [self.listener stop];
 }
+
+#pragma mark -
+#pragma mark CBLAuthenticator
+
+- (id)createBasicAuthenticator:(id)args {
+    NSString * user;
+    NSString * pass;
+    ENSURE_ARG_AT_INDEX(user, args, 0, NSString)
+    ENSURE_ARG_AT_INDEX(pass, args, 1, NSString)
+    
+    return [TDAuthenticatorProxy proxyWithAuthenticator:[CBLAuthenticator basicAuthenticatorWithName:user password:pass]];
+}
+
+- (id)createFacebookAuthenticator:(id)args {
+    NSString * token;
+    ENSURE_ARG_AT_INDEX(token, args, 0, NSString)
+    
+    return [TDAuthenticatorProxy proxyWithAuthenticator:[CBLAuthenticator facebookAuthenticatorWithToken:token]];
+}
+
+- (id)createPersonaAuthenticator:(id)args {
+    NSString * assertion;
+    ENSURE_ARG_AT_INDEX(assertion, args, 0, NSString)
+    
+    return [TDAuthenticatorProxy proxyWithAuthenticator:[CBLAuthenticator personaAuthenticatorWithAssertion:assertion]];
+}
+
 
 #pragma mark -
 #pragma mark Constants

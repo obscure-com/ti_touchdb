@@ -8,6 +8,7 @@
 
 #import "TDReplicationProxy.h"
 #import "TDDatabaseProxy.h"
+#import "TDAuthenticatorProxy.h"
 #import "TiProxy+Errors.h"
 
 extern NSString * CBL_ReplicatorProgressChangedNotification;
@@ -16,6 +17,7 @@ extern NSString * CBL_ReplicatorStoppedNotification;
 @interface TDReplicationProxy ()
 @property (nonatomic, assign) TDDatabaseProxy * database;
 @property (nonatomic, strong) CBLReplication * replication;
+@property (nonatomic, strong) TDAuthenticatorProxy * authenticatorProxy;
 - (void)startObservingReplication:(CBLReplication*)repl;
 - (void)stopObservingReplication:(CBLReplication*)repl;
 @end
@@ -119,6 +121,15 @@ extern NSString * CBL_ReplicatorStoppedNotification;
 }
 
 #pragma mark Authentication
+
+- (void)setAuthenticator:(id)value {
+    self.authenticatorProxy = value;
+    self.replication.authenticator = self.authenticatorProxy.authenticator;
+}
+
+- (id)authenticator {
+    return self.authenticatorProxy;
+}
 
 - (void)setCredential:(id)value {
     ENSURE_DICT(value)
