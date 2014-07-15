@@ -45,5 +45,4 @@
     });
   }
   
-  Ti.API.info("finished sync setup");
 })();

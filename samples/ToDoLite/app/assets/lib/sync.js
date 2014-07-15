@@ -26,7 +26,10 @@ function SyncManager(dbname, url, userID) {
   this.runBeforeSyncStart = _runBeforeSyncStart;
   this.replicationProgress = _replicationProgress;
   
-  // TODO store user ID before first sync
+  this.beforeFirstSync(function(uid, userData) {
+    Ti.App.Properties.setString('sync_manager.userid', uid);
+    Ti.API.info("stored userid "+uid);
+  });
 }
 
 // PUBLIC METHODS
@@ -51,17 +54,20 @@ SyncManager.prototype.restartSync = function() {
   Ti.API.info("restartSync");
 };
 
-SyncManager.prototype.setAuthenticator = function(authenticator) {
-  this.authenticator = authenticator;
-  authenticator.setSyncManager(this);
-};
-
 SyncManager.prototype.beforeFirstSync = function(cb) {
   this.beforeSyncBlocks = (this.beforeSyncBlocks || []).concat([cb]);
 };
 
 SyncManager.prototype.onSyncConnected = function(cb) {
   this.onSyncStartedBlocks = (this.onSyncStartedBlocks || []).concat([cb]);
+};
+
+SyncManager.prototype.setAuthenticator = function(authenticator) {
+  this.authenticator = authenticator;
+  authenticator.setSyncManager(this);
+  if (this.lastAuthError) {
+    this.runAuthenticator();
+  }
 };
 
 // PRIVATE METHODS
@@ -71,7 +77,6 @@ function _setupNewUser(cb) {
   
   var self = this;
   this.authenticator && this.authenticator.getCredentials(function(uid, userData) {
-    Ti.API.info("got userID "+uid);
     self.userID = uid;
     var err = self.runBeforeSyncStart(uid, userData);
     if (err) {
@@ -80,8 +85,38 @@ function _setupNewUser(cb) {
     else {
       _.isFunction(cb) && cb();
     }
-    Ti.API.info("setupNewUser");
   });
+}
+
+function _runBeforeSyncStart(uid, userData) {
+  var err;
+  _.each(this.beforeSyncBlocks, function(b) {
+    if (_.isFunction(b)) {
+      err = b(uid, userData);
+    }
+    if (err) return err;
+  });
+
+  return err;
+}
+
+function _runAuthenticator() {
+  this.authenticator && this.authenticator.getCredentials(function(uid, userData) {
+    if (uid !== this.userID) {
+      throw("cannot change userID from " + this.userID + " to " + uid + "; need to reinstall");
+    }
+    this.restartSync();
+  });
+}
+
+function _launchSync() {
+  this.defineSync();
+  if (this.lastAuthError) {
+    this.runAuthenticator();
+  }
+  else {
+    this.restartSync();
+  }
 }
 
 function _defineSync() {
@@ -94,48 +129,46 @@ function _defineSync() {
   this.push.addEventListener('change', this.replicationProgress);
   
   this.authenticator.registerCredentialsWithReplications([this.pull, this.push]);
-  
-  Ti.API.info("defineSync");
-}
-
-function _runAuthenticator() {
-  this.authenticator && this.authenticator.getCredentials(function(uid, userData) {
-    if (uid !== this.userID) {
-      throw("cannot change userID from " + this.userID + " to " + uid + "; need to reinstall");
-    }
-    this.restartSync();
-    Ti.API.info("runAuthenticator");
-  });
-}
-
-function _launchSync() {
-  this.defineSync();
-  if (this.lastAuthError) {
-    this.runAuthenticator();
-  }
-  else {
-    this.restartSync();
-  }
-  Ti.API.info("launchSync");
-}
-
-function _runBeforeSyncStart(uid, userData) {
-  var err;
-  _.each(this.beforeSyncBlocks, function(b) {
-    if (_.isFunction(b)) {
-      err = b(uid, userData);
-      Ti.API.info("ran pre-sync block");
-    }
-    if (err) return err;
-  });
-
-  Ti.API.info("runBeforeSyncStart");
-  return err;
 }
 
 function _replicationProgress(e) {
-  // TODO
-  Ti.API.info("replication progress "+JSON.stringify(e));
+  var active = false;
+  var completed = 0, total = 0;
+  var status = titouchdb.REPLICATION_MODE_STOPPED;
+  var error;
+
+  var repls = [this.pull, this.push];  
+  for (i in repls) {
+    var repl = repls[i];
+    status = Math.max(status, repl.status);
+    if (!error) {
+      error = repl.lastError;
+    }
+    if (repl.status === titouchdb.REPLICATION_MODE_ACTIVE) {
+      active = true;
+      completed += repl.completedChangesCount;
+      total += repl.changesCount;
+    }
+  }
+  
+  if (error && error.code === 401) {
+    if (!this.authenticator) {
+      this.lastAuthError = error;
+      return;
+    }
+    this.runAuthenticator();
+  }
+  
+  if (active !== this.active || completed !== this.completed || total !== this.total || error !== this.error) {
+    this.active = active;
+    this.completed = completed;
+    this.total = total;
+    this.error = error;
+    this.progress = (completed / Math.max(total, 1));
+    
+    Ti.API.info(String.format("SyncManager: active=%d; status=%d; %f/%f; %s", active, status, completed, total, error));
+  }
+  
 }
 
 // FACEBOOK AUTHENTICATOR
@@ -143,6 +176,7 @@ function _replicationProgress(e) {
 function FacebookAuthenticator(appid) {
   fb.appid = appid;
   fb.permissions = ["public_profile", "user_friends", "email"];
+  fb.forceDialogAuth = false;
 }
 
 FacebookAuthenticator.prototype.setSyncManager = function(syncManager) {
@@ -151,14 +185,27 @@ FacebookAuthenticator.prototype.setSyncManager = function(syncManager) {
 
 
 FacebookAuthenticator.prototype.getCredentials = function(cb) {
-  var f = function(e) {
-    if (e.success) {
-      _.isFunction(cb) && cb(e.data.email, e.data);
-    }
-    fb.removeEventListener('login', f);
-  };
-  fb.addEventListener('login', f);
-  fb.authorize();
+  // if the user is logged in, the Ti Facebook module skips the
+  // call to authorize().  In this case, we make a graph API call
+  // to get the user data.
+  if (fb.loggedIn) {
+    fb.requestWithGraphPath('/me', { fields: "id,name,email" }, 'GET', function(e) {
+      if (e.success) {
+        var data = JSON.parse(e.result);
+        _.isFunction(cb) && cb(data.email, data);
+      }
+    });
+  }
+  else {
+    var f = function(e) {
+      if (e.success) {
+        _.isFunction(cb) && cb(e.data.email, e.data);
+      }
+      fb.removeEventListener('login', f);
+    };
+    fb.addEventListener('login', f);
+    fb.authorize();
+  }
 };
 
 FacebookAuthenticator.prototype.registerCredentialsWithReplications = function(repls) {
