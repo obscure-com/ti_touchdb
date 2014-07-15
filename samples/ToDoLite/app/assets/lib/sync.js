@@ -14,7 +14,7 @@ var fb = require('facebook');
 // SYNC MANAGER
 
 function SyncManager(dbname, url, userID) {
-  this.database = manager.getExistingDatabase(dbname);
+  this.database = manager.getDatabase(dbname);
   this.userID = userID || Ti.App.Properties.getString('sync_manager.userid');
   this.replicationURL = url;
   
@@ -69,21 +69,19 @@ SyncManager.prototype.onSyncConnected = function(cb) {
 function _setupNewUser(cb) {
   if (this.userID) return;
   
+  var self = this;
   this.authenticator && this.authenticator.getCredentials(function(uid, userData) {
     Ti.API.info("got userID "+uid);
-    this.userID = uid;
-    var err = this.runBeforeSyncStart(uid, userData);
+    self.userID = uid;
+    var err = self.runBeforeSyncStart(uid, userData);
     if (err) {
       Ti.API.error(err);
     }
     else {
       _.isFunction(cb) && cb();
     }
+    Ti.API.info("setupNewUser");
   });
-  
-  _.isFunction(cb) && cb();
-
-  Ti.API.info("setupNewUser");
 }
 
 function _defineSync() {
@@ -144,6 +142,7 @@ function _replicationProgress(e) {
 
 function FacebookAuthenticator(appid) {
   fb.appid = appid;
+  fb.permissions = ["public_profile", "user_friends", "email"];
 }
 
 FacebookAuthenticator.prototype.setSyncManager = function(syncManager) {
@@ -153,18 +152,24 @@ FacebookAuthenticator.prototype.setSyncManager = function(syncManager) {
 
 FacebookAuthenticator.prototype.getCredentials = function(cb) {
   var f = function(e) {
-    Ti.API.info("facebook login "+JSON.stringify(e));
     if (e.success) {
       _.isFunction(cb) && cb(e.data.email, e.data);
     }
-    fb.removeEventListener('login', this);
+    fb.removeEventListener('login', f);
   };
   fb.addEventListener('login', f);
   fb.authorize();
 };
 
 FacebookAuthenticator.prototype.registerCredentialsWithReplications = function(repls) {
-  // TODO
+  if (fb.loggedIn) {
+    _.each(repls, function(r) {
+      r.authenticator = titouchdb.createFacebookAuthenticator(fb.accessToken);
+    });
+  }
+  else {
+    Ti.API.warn("could not set authenticators for replications: not logged in");
+  }
 };
 
 // PUBLIC API
