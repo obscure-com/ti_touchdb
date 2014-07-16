@@ -9,9 +9,12 @@
    */
   
   function updateMyLists(userID, userData) {
-    // TODO set up a profile document
-    // TODO tag all lists created before login with the userID
-    Ti.API.info("update my lists");
+    // create a new profile document
+    // TODO figure out a way to construct the _id value in the sync adapter
+    var profile = Alloy.createModel('profile', { name: userData.name, user_id: userID });
+    profile.id = "p:" + userID;
+    Alloy.Collections.list.updateAllListsWithOwner(profile.id);
+    profile.save();
   }  
 
   // public 
@@ -44,5 +47,8 @@
       updateMyLists(userID, userData);
     });
   }
+  
+  // equivalent to adding a property to AppDelegate
+  Alloy.Globals.cblSync = cblSync;
   
 })();

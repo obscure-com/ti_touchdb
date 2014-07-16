@@ -1,8 +1,5 @@
 <Alloy>
   <Window title="Todo Lists" onOpen="windowOpen" onClose="windowClose">
-    <LeftNavButton>
-      <Button title="Login" onClick="doLogin"/>
-    </LeftNavButton>
     <RightNavButton>
       <Button systemButton="ADD" onClick="insertNewObject"/>
     </RightNavButton>

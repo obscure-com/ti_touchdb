@@ -228,3 +228,8 @@ module.exports.afterModelCreate = function(Model) {
   return Model;
 };
 
+module.exports.afterCollectionCreate = function(Collection) {
+  Collection = Collection || {};
+
+  Collection.prototype.database = db;
+};

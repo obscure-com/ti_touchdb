@@ -70,6 +70,15 @@ exports.definition = {
         var result = new Model(row.documentProperties);
         // add custom properties here, if any
         return result;
+      },
+      updateAllListsWithOwner: function(owner) {
+        var view = this.database.getExistingView('lists');
+        var query = view.createQuery();
+        var rows = query.run();
+        while (row = rows.next()) {
+          var doc = row.getDocument();
+          doc.putProperties(_.extend(doc.properties, { owner: owner }));
+        }
       }
     });
     return Collection;

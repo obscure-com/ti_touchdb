@@ -18,12 +18,6 @@ function createListWithTitle(title) {
 
 // event handlers
 
-function doLogin(e) {
-  Alloy.Globals.loginAndSync(function() {
-    Ti.API.info("called complete loginAndSync");
-  });
-}
-
 function insertNewObject(e) {
   // TODO use androidView property for Android
   var dialog = Ti.UI.createAlertDialog({
@@ -54,6 +48,17 @@ function didDelete(e) {
 }
 
 function windowOpen(e) {
+  if (!Alloy.Globals.cblSync.userID) {
+    var loginButton = Ti.UI.createButton({
+      title: "Login",
+    });
+    loginButton.addEventListener('click', function() {
+      Alloy.Globals.loginAndSync(function() {
+        $.master.leftNavButton = null;
+      });
+    });
+    $.master.leftNavButton = loginButton;
+  }
   lists.fetch();
 }
 

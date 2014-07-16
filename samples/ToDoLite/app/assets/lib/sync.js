@@ -132,6 +132,8 @@ function _defineSync() {
 }
 
 function _replicationProgress(e) {
+  // this is run for pull and push independently
+  /*
   var active = false;
   var completed = 0, total = 0;
   var status = titouchdb.REPLICATION_MODE_STOPPED;
@@ -168,7 +170,7 @@ function _replicationProgress(e) {
     
     Ti.API.info(String.format("SyncManager: active=%d; status=%d; %f/%f; %s", active, status, completed, total, error));
   }
-  
+  */
 }
 
 // FACEBOOK AUTHENTICATOR
