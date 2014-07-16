@@ -133,24 +133,20 @@ function _defineSync() {
 
 function _replicationProgress(e) {
   // this is run for pull and push independently
-  /*
   var active = false;
   var completed = 0, total = 0;
   var status = titouchdb.REPLICATION_MODE_STOPPED;
   var error;
 
-  var repls = [this.pull, this.push];  
-  for (i in repls) {
-    var repl = repls[i];
-    status = Math.max(status, repl.status);
-    if (!error) {
-      error = repl.lastError;
-    }
-    if (repl.status === titouchdb.REPLICATION_MODE_ACTIVE) {
-      active = true;
-      completed += repl.completedChangesCount;
-      total += repl.changesCount;
-    }
+  var repl = e.source;
+  status = Math.max(status, repl.status);
+  if (!error) {
+    error = repl.lastError;
+  }
+  if (repl.status === titouchdb.REPLICATION_MODE_ACTIVE) {
+    active = true;
+    completed += repl.completedChangesCount;
+    total += repl.changesCount;
   }
   
   if (error && error.code === 401) {
@@ -168,9 +164,10 @@ function _replicationProgress(e) {
     this.error = error;
     this.progress = (completed / Math.max(total, 1));
     
-    Ti.API.info(String.format("SyncManager: active=%d; status=%d; %f/%f; %s", active, status, completed, total, error));
+    Ti.API.info(String.format("SyncManager: active=%d; status=%d; %d/%d; "+error, active, status, completed, total));
   }
-  */
+  
+  // TODO fire an event to notify the app?
 }
 
 // FACEBOOK AUTHENTICATOR
