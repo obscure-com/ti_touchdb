@@ -53,4 +53,24 @@ module.exports = function() {
     });
     
   });
+  
+  // properties and methods that are not part of the common API
+  describe('attachment (extended)', function() {
+    var db, doc, att;
+    
+    before(function() {
+      utils.delete_nonsystem_databases(manager);
+      db = utils.install_elements_database(manager);
+      
+      doc = db.getExistingDocument('Bi');
+      att = doc.currentRevision.getAttachment('image.jpg');
+    });
+
+    it('must have a contentURL property', function() {
+      should(att).have.property('contentURL');
+      var f = Ti.Filesystem.getFile(att.contentURL);
+      should.exist(f);
+      f.exists().should.be.ok;
+    });
+  });
 };
