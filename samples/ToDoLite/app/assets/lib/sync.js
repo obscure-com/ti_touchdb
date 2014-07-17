@@ -164,7 +164,7 @@ function _replicationProgress(e) {
     this.error = error;
     this.progress = (completed / Math.max(total, 1));
     
-    Ti.API.info(String.format("SyncManager: active=%d; status=%d; %d/%d; "+error, active, status, completed, total));
+    Ti.API.info(String.format("SyncManager: active=%s; status=%d; %d/%d; " + (error ? JSON.stringify(error) : ""), active ? "true" : "false", status, completed, total));
 
     // fire an event to notify the app that the data may have changed
     Ti.App.fireEvent('sync:change', {});
