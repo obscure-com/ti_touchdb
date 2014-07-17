@@ -106,7 +106,9 @@ function windowClose(e) {
 }
 
 function shareButtonAction(e) {
-  alert('TODO share');
+  Alloy.Globals.loginAndSync(function() {
+    Ti.App.fireEvent('list:share', { list_id: args.list_id });
+  });
 }
 
 // set image for new task

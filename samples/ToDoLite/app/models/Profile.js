@@ -4,6 +4,20 @@ exports.definition = {
     adapter: {
       type: "titouchdb",
       dbname: Alloy.CFG.dbname,
+      views: [
+        {
+          name: 'profiles',
+          version: '1',
+          map: function(doc) {
+            if (doc.type == 'profile') {
+              emit(doc.name, null);
+            }
+          }
+        }
+      ],
+      view_options: {
+        prefetch: true
+      },
       static_properties: {
         type: 'profile'
       }

@@ -1,0 +1,10 @@
+<Alloy>
+  <Collection id="profiles" src="profile" instance="true"/>
+  <Window onOpen="windowOpen" onClose="windowClose">
+    <ListView onItemclick="didSelectRow">
+      <ListSection dataCollection="$.profiles" dataTransform="transform">
+        <ListItem title="{name}" itemId="{_id}" accessoryType="{accessoryType}"/>
+      </ListSection>
+    </ListView>
+  </Window>
+</Alloy>

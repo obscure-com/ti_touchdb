@@ -4,4 +4,9 @@ Ti.App.addEventListener('list:select', function(e) {
   $.index.openWindow(controller.getView());
 });
 
+Ti.App.addEventListener('list:share', function(e) {
+  var controller = Alloy.createController('share', e);
+  $.index.openWindow(controller.getView());
+});
+
 $.index.open();
