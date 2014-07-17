@@ -35,7 +35,20 @@ function windowClose() {
 }
 
 function didSelectRow(e) {
+  var toggleMemberId = e.itemId;
+  var members = list.get('members') || [];
+  var x = members.indexOf(toggleMemberId);
+  if (x < 0) {
+    // add to array
+    members.push(toggleMemberId);
+  }
+  else {
+    // remove from array
+    members.splice(x, 1);
+  }
+  list.save({ members: members });
   
+  // don't need to call configureView() again
 }
 
 function configureView() {
