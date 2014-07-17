@@ -13,13 +13,12 @@
     <analytics>true</analytics>
     <guid>e3a3af0d-f278-4470-a207-fefb2ed69b37</guid>
     <property name="ti.ui.defaultunit" type="string">dp</property>
-    <property name="ti.facebook.appid">294790714032073</property>
-    <!-- Couchbase app
+    <!-- Couchbase app -->
     <property name="ti.facebook.appid">501518809925546</property>
-    <property name="com.couchbase.todolite.syncurl">http://sync.couchbasecloud.com:4984/todos4/</property>
-    -->
+    <property name="com.couchbase.todolite.syncurl">http://sync.couchbasecloud.com:4984/todos4</property>
     <!-- my app>
     <property name="ti.facebook.appid">294790714032073</property>
+    <property name="com.couchbase.todolite.syncurl">http://localhost:4984/todos/</property>
     -->
     <ios>
         <plist>
