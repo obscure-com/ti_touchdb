@@ -165,9 +165,11 @@ function _replicationProgress(e) {
     this.progress = (completed / Math.max(total, 1));
     
     Ti.API.info(String.format("SyncManager: active=%d; status=%d; %d/%d; "+error, active, status, completed, total));
+
+    // fire an event to notify the app that the data may have changed
+    Ti.App.fireEvent('sync:change', {});
   }
   
-  // TODO fire an event to notify the app?
 }
 
 // FACEBOOK AUTHENTICATOR

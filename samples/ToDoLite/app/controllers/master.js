@@ -59,9 +59,15 @@ function windowOpen(e) {
     });
     $.master.leftNavButton = loginButton;
   }
+  Ti.App.addEventListener('sync:change', syncChanged);
   lists.fetch();
 }
 
 function windowClose(e) {
+  Ti.App.removeEventListener('sync:change', syncChanged);
   $.destroy();
+}
+
+function syncChanged(e) {
+  lists.fetch();
 }
