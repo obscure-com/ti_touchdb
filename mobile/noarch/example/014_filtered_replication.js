@@ -29,8 +29,10 @@ module.exports = function() {
       repl.filter = 'noble_gases';
       repl.createTarget = true;
       
+      var hasStopped = false;
       repl.addEventListener('change', function(e) {
-        if (e.property == 'status' && e.source.status == titouchdb.REPLICATION_MODE_STOPPED) {
+        if (!hasStopped && e.source.status == titouchdb.REPLICATION_MODE_STOPPED) {
+          hasStopped = true;
           should.not.exist(repl.lastError);
           repl.isRunning.should.eql(false);
           

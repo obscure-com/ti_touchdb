@@ -126,9 +126,11 @@ module.exports = function() {
     it('must replicate an entire db', function(done) {
       this.timeout(10000);
       var db = manager.getDatabase('repl1');
+      var hasStopped = false;
       repl = db.createPullReplication('http://'+conf.host+':'+conf.port+'/'+conf.dbname);
       repl.addEventListener('change', function(e) {
-        if (e.property == 'status' && e.source.status == titouchdb.REPLICATION_MODE_STOPPED) {
+        if (!hasStopped && e.source.status == titouchdb.REPLICATION_MODE_STOPPED) {
+          hasStopped = true;
           should.not.exist(repl.lastError);
           db.documentCount.should.eql(118);
           repl.isRunning.should.eql(false);
@@ -152,10 +154,12 @@ module.exports = function() {
     it('must replicate an entire db', function(done) {
       this.timeout(10000);
       var dbname = "repl2_" + Ti.Platform.createUUID().substring(0, 8).toLowerCase();
+      var hasStopped = false;
       repl = db.createPushReplication('http://'+conf.host+':'+conf.port+'/'+dbname);
       repl.createTarget = true;
       repl.addEventListener('change', function(e) {
-        if (e.property == 'status' && e.source.status == titouchdb.REPLICATION_MODE_STOPPED) {
+        if (!hasStopped && e.source.status == titouchdb.REPLICATION_MODE_STOPPED) {
+          hasStopped = true;
           should.not.exist(repl.lastError);
           repl.completedChangesCount.should.eql(12);
           repl.isRunning.should.eql(false);
@@ -178,10 +182,12 @@ module.exports = function() {
     it.skip('must replicate with credentials', function(done) {
       this.timeout(10000);
       var db = manager.getDatabase('repl3');
+      var hasStopped = false;
       repl = db.createPullReplication('http://'+conf.host+':'+conf.port+'/'+conf.dbname);
       repl.setCredential({ user: 'scott', pass: 'tiger' });
       repl.addEventListener('change', function(e) {
-        if (e.property == 'status' && e.source.status == titouchdb.REPLICATION_MODE_STOPPED) {
+        if (!hasStopped && e.source.status == titouchdb.REPLICATION_MODE_STOPPED) {
+          hasStopped = true;
           should.not.exist(repl.lastError);
           db.documentCount.should.eql(118);
           repl.isRunning.should.eql(false);
@@ -204,16 +210,12 @@ module.exports = function() {
     it('must replicate with a basic authenticator', function(done) {
       this.timeout(10000);
       var db = manager.getDatabase('repl4');
+      var hasStopped = false;
       repl = db.createPullReplication('http://'+conf.host+':'+conf.port+'/'+conf.dbname);
-<<<<<<< HEAD
       repl.authenticator = titouchdb.createBasicAuthenticator('scott', 'tiger');
-      repl.addEventListener('status', function(e) {
-        if (e.status == titouchdb.REPLICATION_MODE_STOPPED) {
-=======
-      repl.setAuthenticator(titouchdb.createBasicAuthenticator('scott', 'tiger'));
       repl.addEventListener('change', function(e) {
-        if (e.property == 'status' && e.source.status == titouchdb.REPLICATION_MODE_STOPPED) {
->>>>>>> feature/todolite_example
+        if (!hasStopped && e.source.status == titouchdb.REPLICATION_MODE_STOPPED) {
+          hasStopped = true;
           should.not.exist(repl.lastError);
           db.documentCount.should.eql(118);
           repl.isRunning.should.eql(false);
@@ -223,6 +225,5 @@ module.exports = function() {
       repl.start();
     });
   });
-  
   
 };
