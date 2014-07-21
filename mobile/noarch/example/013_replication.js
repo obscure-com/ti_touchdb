@@ -205,7 +205,7 @@ module.exports = function() {
       this.timeout(10000);
       var db = manager.getDatabase('repl4');
       repl = db.createPullReplication('http://'+conf.host+':'+conf.port+'/'+conf.dbname);
-      repl.setAuthenticator(titouchdb.createBasicAuthenticator('scott', 'tiger'));
+      repl.authenticator = titouchdb.createBasicAuthenticator('scott', 'tiger');
       repl.addEventListener('status', function(e) {
         if (e.status == titouchdb.REPLICATION_MODE_STOPPED) {
           should.not.exist(repl.lastError);

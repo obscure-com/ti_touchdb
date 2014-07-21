@@ -22,6 +22,7 @@ import android.util.Log;
 import com.couchbase.lite.Query;
 import com.couchbase.lite.SavedRevision;
 import com.couchbase.lite.Status;
+import com.couchbase.lite.auth.AuthenticatorFactory;
 
 @Kroll.module(name = "Titouchdb", id = "com.obscure.titouchdb")
 public class TitouchdbModule extends KrollModule {
@@ -116,11 +117,26 @@ public class TitouchdbModule extends KrollModule {
         Log.i(LCAT, this.toString() + " loaded");
     }
 
+    @Kroll.method
+    public AuthenticatorProxy createBasicAuthenticator(String username, String password) {
+        return new AuthenticatorProxy(AuthenticatorFactory.createBasicAuthenticator(username, password));
+    }
+
+    @Kroll.method
+    public AuthenticatorProxy createFacebookAuthenticator(String token) {
+        return new AuthenticatorProxy(AuthenticatorFactory.createFacebookAuthenticator(token));
+    }
+    
+    @Kroll.method
+    public AuthenticatorProxy createPersonaAuthenticator(String assertion, @Kroll.argument(optional=true) String email) {
+        return new AuthenticatorProxy(AuthenticatorFactory.createPersonaAuthenticator(assertion, email));
+    }
+    
     @Kroll.getProperty(name = "databaseManager")
     public DatabaseManagerProxy getDatabaseManager() {
         return this.databaseManagerProxy;
     }
-
+    
     @Override
     protected void initActivity(Activity activity) {
         super.initActivity(activity);
