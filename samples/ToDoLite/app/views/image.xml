@@ -1,0 +1,5 @@
+<Alloy>
+  <Window id="win" onOpen="windowOpen" onClick="dismissWindow" backgroundColor="black">
+    <ImageView id="imageView"/>
+  </Window>
+</Alloy>

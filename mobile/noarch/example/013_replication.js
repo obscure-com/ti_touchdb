@@ -127,8 +127,8 @@ module.exports = function() {
       this.timeout(10000);
       var db = manager.getDatabase('repl1');
       repl = db.createPullReplication('http://'+conf.host+':'+conf.port+'/'+conf.dbname);
-      repl.addEventListener('status', function(e) {
-        if (e.status == titouchdb.REPLICATION_MODE_STOPPED) {
+      repl.addEventListener('change', function(e) {
+        if (e.property == 'status' && e.source.status == titouchdb.REPLICATION_MODE_STOPPED) {
           should.not.exist(repl.lastError);
           db.documentCount.should.eql(118);
           repl.isRunning.should.eql(false);
@@ -154,8 +154,8 @@ module.exports = function() {
       var dbname = "repl2_" + Ti.Platform.createUUID().substring(0, 8).toLowerCase();
       repl = db.createPushReplication('http://'+conf.host+':'+conf.port+'/'+dbname);
       repl.createTarget = true;
-      repl.addEventListener('status', function(e) {
-        if (e.status == titouchdb.REPLICATION_MODE_STOPPED) {
+      repl.addEventListener('change', function(e) {
+        if (e.property == 'status' && e.source.status == titouchdb.REPLICATION_MODE_STOPPED) {
           should.not.exist(repl.lastError);
           repl.completedChangesCount.should.eql(12);
           repl.isRunning.should.eql(false);
@@ -180,8 +180,8 @@ module.exports = function() {
       var db = manager.getDatabase('repl3');
       repl = db.createPullReplication('http://'+conf.host+':'+conf.port+'/'+conf.dbname);
       repl.setCredential({ user: 'scott', pass: 'tiger' });
-      repl.addEventListener('status', function(e) {
-        if (e.status == titouchdb.REPLICATION_MODE_STOPPED) {
+      repl.addEventListener('change', function(e) {
+        if (e.property == 'status' && e.source.status == titouchdb.REPLICATION_MODE_STOPPED) {
           should.not.exist(repl.lastError);
           db.documentCount.should.eql(118);
           repl.isRunning.should.eql(false);
@@ -205,9 +205,15 @@ module.exports = function() {
       this.timeout(10000);
       var db = manager.getDatabase('repl4');
       repl = db.createPullReplication('http://'+conf.host+':'+conf.port+'/'+conf.dbname);
+<<<<<<< HEAD
       repl.authenticator = titouchdb.createBasicAuthenticator('scott', 'tiger');
       repl.addEventListener('status', function(e) {
         if (e.status == titouchdb.REPLICATION_MODE_STOPPED) {
+=======
+      repl.setAuthenticator(titouchdb.createBasicAuthenticator('scott', 'tiger'));
+      repl.addEventListener('change', function(e) {
+        if (e.property == 'status' && e.source.status == titouchdb.REPLICATION_MODE_STOPPED) {
+>>>>>>> feature/todolite_example
           should.not.exist(repl.lastError);
           db.documentCount.should.eql(118);
           repl.isRunning.should.eql(false);

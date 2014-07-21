@@ -1,0 +1,33 @@
+<Alloy>
+  <Collection id="tasks" src="task" instance="true"/>
+  <Window onOpen="windowOpen" onClose="windowClose">
+    <RightNavButton>
+      <Button title="Share" onClick="shareButtonAction"/>
+    </RightNavButton>
+    <ListView defaultItemTemplate="incomplete" onItemclick="didSelectRow" onDelete="didDelete">
+      <Templates>
+        <ItemTemplate name="incomplete" selectionStyle="Ti.UI.iPhone.ListViewCellSelectionStyle.NONE">
+          <View layout="horizontal">
+            <MaskedImage bindId="setImageButton" left="10" top="10" bottom="10" width="44" height="44" onClick="imageButtonAction" mask="/images/task_image_mask.png" mode="Ti.UI.iOS.BLEND_MODE_SOURCE_IN"/>
+            <Label bindId="title" left="4" top="10" bottom="10"/>
+          </View>
+        </ItemTemplate>
+        <ItemTemplate name="complete" selectionStyle="Ti.UI.iPhone.ListViewCellSelectionStyle.NONE" accessoryType="Ti.UI.LIST_ACCESSORY_TYPE_CHECKMARK">
+          <View layout="horizontal">
+            <MaskedImage bindId="setImageButton" left="10" top="10" bottom="10" width="44" height="44" onClick="imageButtonAction" mask="/images/task_image_mask.png" mode="Ti.UI.iOS.BLEND_MODE_SOURCE_IN"/>
+            <Label bindId="title" left="4" top="10" bottom="10" color="#ccc"/>
+          </View>
+        </ItemTemplate>
+      </Templates>
+      <ListSection dataCollection="$.tasks" dataTransform="transform">
+        <HeaderView>
+          <View layout="horizontal" height="52">
+            <MaskedImage id="addImageButton" left="10" top="10" bottom="10" width="44" height="44" onClick="addImageButtonAction"/>
+            <TextField id="addItemTextField" left="4" right="16" top="10" bottom="10" borderStyle="NONE" hintText="Add Task" onReturn="textFieldShouldReturn" mask="/images/task_image_mask.png" mode="Ti.UI.iOS.BLEND_MODE_SOURCE_IN"/>
+          </View>
+        </HeaderView>
+        <ListItem height="64" itemId="{_id}" title:text="{title}" template="{template}" setImageButton:image="{image}" canEdit="true"/>
+      </ListSection>
+    </ListView>
+  </Window>
+</Alloy>

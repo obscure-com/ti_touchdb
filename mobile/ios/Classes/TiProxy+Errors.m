@@ -10,15 +10,15 @@
 
 @implementation TiProxy (Errors)
 
-- (NSDictionary *)errorDict:(NSError *)error {
-    NSMutableDictionary * result = nil;
+- (id)errorDict:(NSError *)error {
+    NSDictionary * result = nil;
     if (error) {
-        result = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                  NUMBOOL(YES), @"error",
-                  NUMINT(error.code), @"code",
-                  error.domain, @"domain",
-                  error.localizedDescription, @"description",
-                  nil];
+        result = @{
+            @"error": NUMBOOL(YES),
+            @"code": NUMLONG(error.code),
+            @"domain": error.domain,
+            @"description": error.localizedDescription
+        };
         /*
         // who knows what evil lurks in the hearts of error.userInfo?
         // whatever it is, it can't be serialized to javascript...
@@ -27,12 +27,7 @@
         }
         */
     }
-    /*
-    else {
-        result = [NSMutableDictionary dictionaryWithObject:NUMBOOL(NO) forKey:@"error"];
-    }
-    */
-    return result;
+    return result ? [result autorelease] : [NSNull null];
 }
 
 @end
