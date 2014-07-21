@@ -44,7 +44,7 @@ public class ReplicationProxy extends KrollProxy implements ChangeListener {
         params.put("source", this);
         params.put("status", replicator.getStatus().ordinal());
 
-        fireEvent("status", params);
+        fireEvent("change", params);
     }
     
     @Kroll.getProperty(name="authenticator")
