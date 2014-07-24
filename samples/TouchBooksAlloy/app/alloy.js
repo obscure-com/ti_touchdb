@@ -19,7 +19,7 @@ if (Alloy.CFG.remote_couchdb_server) {
   var push = db.createPushReplication(Alloy.CFG.remote_couchdb_server);
   
   pull.continuous = true;
-  pull.addEventListener('status', function(e) {
+  pull.addEventListener('change', function(e) {
     Ti.API.info(String.format("pull: running: %d, total: %d, completed: %d", !!pull.isRunning, pull.changesCount, pull.completedChangesCount));
     if (pull.status == server.REPLICATION_MODE_IDLE) {
       Ti.App.fireEvent('books:update_from_server');
@@ -31,7 +31,7 @@ if (Alloy.CFG.remote_couchdb_server) {
   push.continuous = true;
   push.filter = 'books_only'; // TODO push filter not working?
   
-  push.addEventListener('status', function(e) {
+  push.addEventListener('change', function(e) {
     Ti.API.info(String.format("push: running: %d, total: %d, completed: %d", !!pull.isRunning, pull.changesCount, pull.completedChangesCount));
     if (pull.status == server.REPLICATION_MODE_IDLE) {
       Ti.App.fireEvent('books:update_from_server');
