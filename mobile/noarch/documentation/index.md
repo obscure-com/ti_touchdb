@@ -216,6 +216,14 @@ object.  The returned object can be customized prior to the start of replication
 Set up a one-time replication from this database to a remote target database and return a [`replication`](#replication)
 object.  The returned object can be customized prior to the start of replication.
 
+**createSlowQuery**(map)
+
+* map (function(document)): the map function used to create the query
+
+Create a new [`query`](#query) object with the provided map function.  The query index will be created once
+when the query is run but not persisted.  This function is best used for development only or in cases where
+creating a persistent view is not desirable.
+
 **deleteDatabase**()
 
 Permanently delete this database and all of its documents.

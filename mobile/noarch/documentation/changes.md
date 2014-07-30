@@ -1,3 +1,9 @@
+2014-07-30
+
+### Database
+
+* added `createSlowQuery(mapfn)` method.
+
 2014-06-10
 
 Initial release of module based on [couchbase-lite-ios](https://github.com/couchbase/couchbase-lite-ios)
