@@ -56,4 +56,27 @@ module.exports = function() {
     
   });
   
+  describe('database (slow query)', function() {
+    var db;
+    
+    before(function() {
+      utils.delete_nonsystem_databases(manager);
+      db = utils.install_elements_database(manager);
+    });
+    
+    it('must run a slow query', function() {
+      var q = db.createSlowQuery(function(doc) {
+        if (['Pd', 'Ag', 'Pt', 'Au'].indexOf(doc.symbol) !== -1) {
+          emit(doc.symbol, null);
+        }
+      });
+      
+      var e = q.run();
+      e.count.should.eql(4);
+      e.getRow(0).key.should.eql('Ag');
+      e.getRow(1).key.should.eql('Au');
+      e.getRow(2).key.should.eql('Pd');
+      e.getRow(3).key.should.eql('Pt');
+    });
+  });
 };
