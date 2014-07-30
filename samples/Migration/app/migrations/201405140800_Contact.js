@@ -20,5 +20,18 @@ migration.up = function(migrator) {
 };
 
 migration.down = function(migrator) {
+  var db = migrator.database;
+  var q = db.createSlowQuery(function(doc) {
+    emit([doc.last, doc.first], null);
+  });
+  var e = q.run();
+  while (row = e.next()) {
+    var key = row.key;
+    if (_.find(preload_data, function(contact) {
+      return contact.last === key[0] && contact.first === key[1];
+    })) {
+      row.getDocument().deleteDocument();
+    }
+  }
   
 };

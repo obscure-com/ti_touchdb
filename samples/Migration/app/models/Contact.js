@@ -1,9 +1,16 @@
+/*
+ * To test down-migrations, run the app once to get both migration datasets
+ * inserted, then uncomment the "migration" property below and run again. The
+ * adapter should remove the data added in the 201406110800 migration file.
+ */
+
 exports.definition = {
 
   config: {
     adapter: {
       type: "titouchdb",
       dbname: "contacts",
+      // migration: "201405140800",
       views: [
         {
           name: "by_lastname",
