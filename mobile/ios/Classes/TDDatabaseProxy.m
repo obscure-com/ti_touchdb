@@ -189,7 +189,7 @@ extern NSString* const kCBLDatabaseChangeNotification;
     return [TDQueryProxy proxyWithDatabase:self query:query];
 }
 
-- (id)slowQueryWithMap:(id)args {
+- (id)createSlowQuery:(id)args {
     KrollCallback * callback;
     ENSURE_ARG_AT_INDEX(callback, args, 0, KrollCallback);
     

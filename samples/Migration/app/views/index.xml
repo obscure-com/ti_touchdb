@@ -1,0 +1,15 @@
+<Alloy>
+  <Collection src="contact"/>
+	<Window onOpen="window_open">
+	  <ListView defaultItemTemplate="by_name">
+	    <Templates>
+	      <ItemTemplate name="by_name">
+	        <Label bindId="name"/>
+	      </ItemTemplate>
+	    </Templates>
+	    <ListSection dataCollection="contact" dataTransform="transform">
+	      <ListItem name:text="{full_name}"/>
+	    </ListSection>
+	  </ListView>
+	</Window>
+</Alloy>

@@ -3,6 +3,7 @@
  */
 
 var _ = require('alloy/underscore'),
+    moment = require('alloy/moment'),
     titouchdb = require('com.obscure.titouchdb'),
     manager = titouchdb.databaseManager,
     db;
@@ -26,7 +27,7 @@ function query_view(db, name, options) {
     }
     return null;
   }
-  
+
   if (_.isBoolean(opts.prefetch)) { query.prefetch = opts.prefetch; }
   if (_.isFinite(opts.limit)) { query.limit = opts.limit; }
   if (_.isFinite(opts.skip)) { query.skip = opts.skip; }
@@ -82,7 +83,10 @@ function Sync(method, model, options) {
   switch (method) {
     case 'create':
         var props = model.toJSON();
-        _.extend(props, model.config.adapter.static_properties || {});
+        props = _.defaults(props,
+          model.config.adapter.static_properties || {},
+          model.config.adapter.modelname ? { modelname: model.config.adapter.modelname } : {}
+        );
         var doc = model.id ? db.getDocument(model.id) : db.createDocument();
         doc.putProperties(props);
         err = doc.error;
@@ -144,7 +148,10 @@ function Sync(method, model, options) {
 
     case 'update':
       var props = model.toJSON();
-      _.extend(props, model.config.adapter.static_properties || {});
+      props = _.defaults(props,
+        model.config.adapter.static_properties || {},
+        model.config.adapter.modelname ? { modelname: model.config.adapter.modelname } : {}
+      );
       var doc = db.getDocument(model.id);
       doc.putProperties(props);
       err = doc.error;
@@ -180,21 +187,139 @@ function Sync(method, model, options) {
 
 module.exports.sync = Sync;
 
-module.exports.beforeModelCreate = function(config) {
-  config = config || {};
-  
-  InitAdapter(config);
+// MIGRATIONS
 
+var migration_doc_name = 'titouchdb_migrations';
+
+function Migrator(config) {
+  this.dbname = config.adapter.db_name;
+  this.idAttribute = config.adapter.idAttribute;
+  this.database = db; // TODO ensure db is set?
+  
+  // ensure that the properties defined in the model config are set
+  this.createModel = function(props) {
+    var doc = props.id ? this.database.getDocument(props.id) : this.database.createDocument();
+    props = _.defaults(props,
+      config.adapter.static_properties || {},
+      config.adapter.modelname ? { modelname: config.adapter.modelname } : {}
+    );
+    doc.putProperties(props);
+  };
+}
+
+// Gets the current saved migration
+function GetLatestMigration(database) {
+  var mdoc = database.getExistingDocument(migration_doc_name);
+  return mdoc ? mdoc.userProperties.id : null;
+}
+
+function Migrate(Model) {
+  // get list of migrations for this model
+  var migrations = Model.migrations || [];
+
+  // get a reference to the last migration
+  var lastMigration = {};
+  if (migrations.length) { migrations[migrations.length-1](lastMigration); }
+  
+  // Get config reference
+  var config = Model.prototype.config;
+
+  // Set up the migration obejct
+  var migrator = new Migrator(config);
+
+  // Get the migration number from the config, or use the number of
+  // the last migration if it's not present. If we still don't have a
+  // migration number after that, that means there are none. There's
+  // no migrations to perform.
+  var targetNumber = typeof config.adapter.migration === 'undefined' ||
+    config.adapter.migration === null ? lastMigration.id : config.adapter.migration;
+  if (typeof targetNumber === 'undefined' || targetNumber === null) {
+    return;
+  }
+  targetNumber = targetNumber + ''; // ensure that it's a string
+
+  // Get the current saved migration number.
+  var currentNumber = GetLatestMigration(db);
+  
+  // If the current and requested migrations match, the data structures
+  // match and there is no need to run the migrations.
+  var direction;
+  if (currentNumber === targetNumber) {
+    return;
+  } else if (currentNumber && currentNumber > targetNumber) {
+    direction = 0; // rollback
+    migrations.reverse();
+  } else {
+    direction = 1;  // upgrade
+  }
+  
+  migrator.database = db;
+
+  // iterate through all migrations based on the current and requested state,
+  // applying all appropriate migrations, in order, to the database.
+  var lastContext;
+  if (migrations.length) {
+    for (var i = 0; i < migrations.length; i++) {
+      // create the migration context
+      var migration = migrations[i];
+      var context = {};
+      migration(context);
+
+      // if upgrading, skip migrations higher than the target
+      // if rolling back, skip migrations lower than the target
+      if (direction) {
+        if (context.id > targetNumber) { break; }
+        if (context.id <= currentNumber) { continue; }
+      } else {
+        if (context.id <= targetNumber) { break; }
+        if (context.id > currentNumber) { continue; }
+      }
+
+      // execute the appropriate migration function
+      var funcName = direction ? 'up' : 'down';
+      if (_.isFunction(context[funcName])) {
+        context[funcName](migrator);
+        lastContext = context;
+      }
+    }
+  }
+
+  // insert a doc to track this migration
+  if (lastContext) {
+    var mdoc = db.getDocument(migration_doc_name);
+    mdoc.putProperties({
+      id: lastContext.id,
+      name: lastContext.name,
+      applied: moment().unix() 
+    });
+  }
+  
+  migrator.db = null;
+}
+
+// EXPORTED FUNCTIONS
+
+var cache = {
+  config: {},
+  Model: {}
+};
+
+module.exports.beforeModelCreate = function(config, name) {
+  if (cache.config[name]) return cache.config[name];
+  config = config || {};
+  InitAdapter(config);
+  cache.config[name] = config;
   return config;
 };
 
-module.exports.afterModelCreate = function(Model) {
-  Model = Model || {};
+module.exports.afterModelCreate = function(Model, name) {
+  if (cache.Model[name]) {
+    return cache.Model[name];
+  }
   
+  Model = Model || {};
   Model.prototype.idAttribute = '_id'; // true for all TouchDB documents
-  Model.prototype.config.Model = Model; // needed for fetch operations to initialize the collection from persistent store
-  Model.prototype.database = db;
-
+  
   Model.prototype.attachmentNamed = function(name) {
     var doc = db.getDocument(this.id);
     if (doc) {
@@ -225,11 +350,19 @@ module.exports.afterModelCreate = function(Model) {
     return doc ? doc.currentRevision.attachmentNames : [];
   };
   
+  Migrate(Model);
+
+  cache.Model[name] = Model;
+
   return Model;
 };
 
+/*
 module.exports.afterCollectionCreate = function(Collection) {
   Collection = Collection || {};
 
   Collection.prototype.database = db;
+  
+  return Collection;
 };
+*/

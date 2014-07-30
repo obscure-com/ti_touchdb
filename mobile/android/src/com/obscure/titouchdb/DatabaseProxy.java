@@ -125,6 +125,12 @@ public class DatabaseProxy extends KrollProxy implements ChangeListener {
     }
 
     @Kroll.method
+    public QueryProxy createSlowQuery(KrollFunction map) {
+        lastError = null;
+        return new QueryProxy(this, database.slowQuery(new KrollMapper(map)));
+    }
+
+    @Kroll.method
     public boolean deleteDatabase() {
         lastError = null;
         try {
