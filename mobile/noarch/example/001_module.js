@@ -49,5 +49,5 @@ module.exports = function() {
     it('must have a createPersonaAuthenticator method', function() {
       should(titouchdb.createPersonaAuthenticator).be.a.Function;
     });
-  })
+  });
 };

@@ -13,7 +13,7 @@ module.exports = function() {
     var dummy_fn = function() {};
     
     before(function() {
-      utils.delete_nonsystem_databases(manager)
+      utils.delete_nonsystem_databases(manager);
       db = manager.getDatabase('test005_validation');
       db.setValidation('require_tag', function(rev, context) {
         if (rev.properties.tag == null) {
@@ -66,7 +66,7 @@ module.exports = function() {
     it('must allow validation functions that call other functions', function() {
       var is_int = function(n, v) {
         return n != null && v != null && !isNaN(parseInt(v));
-      }
+      };
       
       db.setValidation('tag_must_be_int', function(rev, context) {
         if (!is_int('tag', rev.properties.tag)) {

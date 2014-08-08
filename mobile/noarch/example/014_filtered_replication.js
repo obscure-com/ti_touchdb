@@ -45,7 +45,7 @@ module.exports = function() {
               done();
             },
             onerror: function(e) {
-              throw e
+              throw e;
             }
           });
           client.open("GET", target_url);

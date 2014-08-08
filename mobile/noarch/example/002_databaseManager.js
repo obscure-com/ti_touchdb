@@ -65,7 +65,7 @@ module.exports = function() {
       should(manager.getExistingDatabase).be.a.Function;
       var db = manager.getExistingDatabase('test_does_not_exist');
       should.not.exist(db);
-      should(manager.error).be.an.Object
+      should(manager.error).be.an.Object;
     });
     
     it('must return a previously created database', function() {

@@ -90,15 +90,15 @@ module.exports = function() {
     
     it.skip('must have a addChangeListener method', function() {
       should(repl.addChangeListener).be.a.Function;
-    })
+    });
     
     it.skip('must have a removeChangeListener method', function() {
       should(repl.removeChangeListener).be.a.Function;
-    })
+    });
     
     it('must have a restart method', function() {
       should(repl.restart).be.a.Function;
-    })
+    });
     
     it('must have a setCredential method', function() {
       should(repl.setCredential).be.a.Function;
@@ -106,11 +106,11 @@ module.exports = function() {
     
     it('must have a start method', function() {
       should(repl.start).be.a.Function;
-    })
+    });
     
     it('must have a stop method', function() {
       should(repl.stop).be.a.Function;
-    })
+    });
     
   });
 

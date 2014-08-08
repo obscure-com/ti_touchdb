@@ -109,6 +109,6 @@ module.exports = function() {
       e.reset();
       var r3 = e.next();
       r3.key.should.eql(0);
-    })
+    });
   });
 };
