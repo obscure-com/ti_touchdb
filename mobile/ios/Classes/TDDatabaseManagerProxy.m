@@ -182,4 +182,13 @@
     return self.lastError ? [self errorDict:self.lastError] : nil;
 }
 
+/** specify whether the CouchbaseLite directory should be backed up or not */
+- (void)setExcludedFromBackup:(id)value {
+    [self.databaseManager setExcludedFromBackup:[value boolValue]];
+}
+
+- (id)excludedFromBackup {
+    return NUMBOOL(self.databaseManager.excludedFromBackup);
+}
+
 @end
