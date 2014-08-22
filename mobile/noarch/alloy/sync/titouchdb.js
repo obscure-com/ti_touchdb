@@ -66,10 +66,11 @@ function InitAdapter(config) {
   db = manager.getDatabase(config.adapter.dbname);
   
   // register views
-  _.each(config.adapter.views, function(view) {
-    var v = db.getView(view.name);
-    v.setMapReduce(view.map, view.reduce, view.version || '1');
-    Ti.API.info("defined "+view.name);
+  _.each(_.keys(config.adapter.views), function(name) {
+    var def = config.adapter.views[name];
+    var v = db.getView(name);
+    v.setMapReduce(def.map, def.reduce, def.version || '1');
+    Ti.API.info("defined "+name);
   });
 
   return {};
@@ -115,12 +116,16 @@ function Sync(method, model, options) {
         var collection = model; // just to clear things up 
         
         // collection
-        var view = opts.view || collection.config.adapter.views[0]["name"];
+        var view = collection.config.adapter.views[opts.view];
+        if (!view) {
+          err = "missing view named " + opts.view;
+          break;
+        }
         collection.view = view;
 
         // add default view options from model
-        opts = _.defaults(opts, collection.config.adapter.view_options);
-        var query = query_view(db, view, opts);
+        opts = _.defaults(opts, view.query_options || {}, collection.config.adapter.default_query_options);
+        var query = query_view(db, opts.view, opts);
         if (!query) {
           err = { error: 'missing view' };
           break;

@@ -40,7 +40,7 @@ extern BOOL EnableLog(BOOL enable);
 -(void)startup {
 	[super startup];
     
-    EnableLog(YES);
+    [CBLManager enableLogging:nil];
 
 	NSLog(@"[INFO] %@ loaded", self);
     
