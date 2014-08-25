@@ -46,6 +46,10 @@
     return self;
 }
 
+- (void)dealloc {
+    self.query = nil;
+}
+
 #pragma mark Properties
 
 - (id)limit {
@@ -187,6 +191,10 @@
     return self;
 }
 
+- (void)dealloc {
+    self.enumerator = nil;
+}
+
 - (id)count {
     return NUMLONG(self.enumerator.count);
 }
@@ -236,6 +244,10 @@
         self.row = row;
     }
     return self;
+}
+
+- (void)dealloc {
+    self.row = nil;
 }
 
 - (id)database {
