@@ -48,6 +48,7 @@
 
 - (void)dealloc {
     self.query = nil;
+    [super dealloc];
 }
 
 #pragma mark Properties
@@ -193,6 +194,7 @@
 
 - (void)dealloc {
     self.enumerator = nil;
+    [super dealloc];
 }
 
 - (id)count {
@@ -248,6 +250,7 @@
 
 - (void)dealloc {
     self.row = nil;
+    [super dealloc];
 }
 
 - (id)database {
