@@ -1,3 +1,18 @@
+2014-08-26
+
+* Updated to Couchbase Mobile 1.0.2 release for Android and iOS
+* Fixed memory leak of CBL query objects (issue 80)
+* Modified the Alloy sync adapter configuration to allow specifying
+    query properties with the view definition.
+* Added data model migration support to the sync adapter.
+
+
+2014-07-30
+
+### Database
+
+* added `createSlowQuery(mapfn)` method.
+
 2014-06-10
 
 Initial release of module based on [couchbase-lite-ios](https://github.com/couchbase/couchbase-lite-ios)

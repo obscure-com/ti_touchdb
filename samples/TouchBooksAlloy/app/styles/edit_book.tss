@@ -1,6 +1,5 @@
 "Window": {
   backgroundColor: "white",
-  fullscreen: true,
 },
 
 "ScrollView": {
@@ -19,7 +18,7 @@
 ".label": {
   left: "2%",
   right: "2%",
-  top: "10dp",
+  top: 10,
   textAlign: 'left',
   font: {
     fontWeight: "bold"
@@ -29,17 +28,17 @@
 ".value": {
   left: "2%",
   right: "2%",
-  top: "6dp",
+  top: 6,
 },
 
 "#published": {
-  top: "6dp",
+  top: 6,
   type: Ti.UI.PICKER_TYPE_DATE  
 },
 
 "#coverImage": {
-  width: "64dp",
-  height: "64dp",
+  width: 64,
+  height: 64,
   left: "2%",
   right: "2%",
   top: "2%",
@@ -50,9 +49,9 @@
 "#save": {
   left: "2%",
   right: "2%",
-  top: "6dp",
-  bottom: "20dp",
-  height: "32dp",
+  top: 6,
+  bottom: 20,
+  height: 32,
   color: 'white',
   backgroundColor: '#0c0',
   borderRadius: 8,

@@ -18,6 +18,7 @@ require('010_queries')();
 require('011_query_enumerator')();
 require('012_query_row')();
 require('013_replication')();
+require('014_filtered_replication')();
 
 // create a window and run the tests
 var window = Ti.UI.createWindow({

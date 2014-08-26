@@ -21,6 +21,8 @@ public class ReplicationProxy extends KrollProxy implements ChangeListener {
 
     private static final String   LCAT               = "ReplicationProxy";
 
+    private AuthenticatorProxy    authenticatorProxy;
+
     private DatabaseProxy         databaseProxy;
 
     private KrollDict             lastError          = null;
@@ -36,6 +38,20 @@ public class ReplicationProxy extends KrollProxy implements ChangeListener {
         replicator.addChangeListener(this);
     }
 
+    @Override
+    public void changed(ChangeEvent e) {
+        KrollDict params = new KrollDict();
+        params.put("source", this);
+        params.put("status", replicator.getStatus().ordinal());
+
+        fireEvent("change", params);
+    }
+    
+    @Kroll.getProperty(name="authenticator")
+    public AuthenticatorProxy getAuthenticator() {
+        return authenticatorProxy;
+    }
+    
     @Kroll.getProperty(name = "changesCount")
     public int getChangesCount() {
         return replicator.getChangesCount();
@@ -113,6 +129,12 @@ public class ReplicationProxy extends KrollProxy implements ChangeListener {
         replicator.restart();
     }
 
+    @Kroll.setProperty(name="authenticator")
+    public void setAuthenticator(AuthenticatorProxy authenticatorProxy) {
+        this.authenticatorProxy = authenticatorProxy;
+        replicator.setAuthenticator(authenticatorProxy != null ? authenticatorProxy.getAuthenticator() : null);
+    }
+
     @Kroll.setProperty(name = "continuous")
     public void setContinuous(boolean continuous) {
         replicator.setContinuous(continuous);
@@ -124,7 +146,7 @@ public class ReplicationProxy extends KrollProxy implements ChangeListener {
     }
 
     @Kroll.method
-    public void setCredential(@Kroll.argument(optional=true) KrollDict credential) {
+    public void setCredential(@Kroll.argument(optional = true) KrollDict credential) {
         if (credential == null) {
             replicator.setAuthenticator(null);
         }
@@ -165,15 +187,6 @@ public class ReplicationProxy extends KrollProxy implements ChangeListener {
     @Kroll.method(runOnUiThread = true)
     public void stop() {
         replicator.stop();
-    }
-
-    @Override
-    public void changed(ChangeEvent e) {
-        KrollDict params = new KrollDict();
-        params.put("source", this);
-        params.put("status", replicator.getStatus().ordinal());
-
-        fireEvent("status", params);
     }
 
 }

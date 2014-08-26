@@ -23,11 +23,10 @@ book.on('update', function() {
 });
 
 exports.set_book_id = function(id) {
-  book.id = id;
   $.isbn.touchEnabled = false;
   $.isbn.borderStyle = Ti.UI.INPUT_BORDERSTYLE_NONE;
 
-  book.fetch();
+  book.fetch({ id: id });
 };
 
 function changePublished(e) {

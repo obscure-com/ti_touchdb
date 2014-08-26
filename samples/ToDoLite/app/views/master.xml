@@ -1,0 +1,12 @@
+<Alloy>
+  <Window title="Todo Lists" onOpen="windowOpen" onClose="windowClose">
+    <RightNavButton>
+      <Button systemButton="ADD" onClick="insertNewObject"/>
+    </RightNavButton>
+    <ListView onItemclick="didSelectRow" onDelete="didDelete">
+      <ListSection dataCollection="list" canEdit="true">
+        <ListItem title="{title}" itemId="{_id}" accessoryType="Ti.UI.LIST_ACCESSORY_TYPE_DISCLOSURE" canEdit="true"/>
+      </ListSection>
+    </ListView>
+  </Window>
+</Alloy>

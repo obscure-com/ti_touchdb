@@ -1,0 +1,13 @@
+{
+	"global": {
+	 "dbname": "todos4"
+	}, 
+	"env:development": {}, 
+	"env:test": {}, 
+	"env:production": {}, 
+	"os:android": {},
+	"os:blackberry": {},
+	"os:ios": {},
+	"os:mobileweb": {},
+	"dependencies": {}
+}

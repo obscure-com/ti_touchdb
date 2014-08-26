@@ -1,0 +1,19 @@
+<Alloy>
+  <Collection src="list"/>
+ 
+  <!-- iPhone -->
+  <NavigationWindow platform="ios" formFactor="handheld">
+    <Require src="master"/>
+  </NavigationWindow>
+  
+  <!-- iPad -->
+  <SplitWindow platform="ios" formFactor="tablet">
+    <NavigationWindow>
+      <Require src="master"/>
+    </NavigationWindow>
+    <Window>
+    </Window>
+  </SplitWindow>
+  
+  <!-- Android -->
+</Alloy>

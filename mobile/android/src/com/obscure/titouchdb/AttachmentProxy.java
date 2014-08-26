@@ -12,6 +12,8 @@ import org.appcelerator.titanium.TiBlob;
 import android.util.Log;
 
 import com.couchbase.lite.Attachment;
+import com.couchbase.lite.BlobStore;
+import com.couchbase.lite.BlobStoreWriter;
 import com.couchbase.lite.CouchbaseLiteException;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)
@@ -64,6 +66,12 @@ public class AttachmentProxy extends KrollProxy {
     @Kroll.getProperty(name = "contentType")
     public String getContentType() {
         return attachment.getContentType();
+    }
+    
+    @Kroll.getProperty(name = "contentURL")
+    public String getContentURL() {
+        BlobStore store = new BlobStore(attachment.getDocument().getDatabase().getAttachmentStorePath());
+        return "file:/" + store.pathForKey(BlobStore.keyForBlob(getContent().getBytes()));
     }
 
     @Kroll.getProperty(name = "document")

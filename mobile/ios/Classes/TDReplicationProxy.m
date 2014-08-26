@@ -8,6 +8,7 @@
 
 #import "TDReplicationProxy.h"
 #import "TDDatabaseProxy.h"
+#import "TDAuthenticatorProxy.h"
 #import "TiProxy+Errors.h"
 
 extern NSString * CBL_ReplicatorProgressChangedNotification;
@@ -16,6 +17,7 @@ extern NSString * CBL_ReplicatorStoppedNotification;
 @interface TDReplicationProxy ()
 @property (nonatomic, assign) TDDatabaseProxy * database;
 @property (nonatomic, strong) CBLReplication * replication;
+@property (nonatomic, strong) TDAuthenticatorProxy * authenticatorProxy;
 - (void)startObservingReplication:(CBLReplication*)repl;
 - (void)stopObservingReplication:(CBLReplication*)repl;
 @end
@@ -120,6 +122,15 @@ extern NSString * CBL_ReplicatorStoppedNotification;
 
 #pragma mark Authentication
 
+- (void)setAuthenticator:(id)value {
+    self.authenticatorProxy = value;
+    self.replication.authenticator = self.authenticatorProxy.authenticator;
+}
+
+- (id)authenticator {
+    return self.authenticatorProxy;
+}
+
 - (void)setCredential:(id)value {
     ENSURE_DICT(value)
     NSDictionary * cred = value;
@@ -163,34 +174,28 @@ extern NSString * CBL_ReplicatorStoppedNotification;
 #pragma mark Notifications
 
 #define kReplicationChangedEventName @"change"
-#define kReplicationStoppedEventName @"status"
 
 - (void)startObservingReplication:(CBLReplication*)repl {
     [repl addObserver:self forKeyPath:@"completedChangesCount" options:0 context:NULL];
     [repl addObserver:self forKeyPath:@"changesCount" options:0 context:NULL];
     [repl addObserver:self forKeyPath:@"status" options:0 context:NULL];
+    [repl addObserver:self forKeyPath:@"running" options:0 context:NULL];
+    [repl addObserver:self forKeyPath:@"lastError" options:0 context:NULL];
 }
 
 - (void)stopObservingReplication:(CBLReplication*)repl {
     [repl removeObserver:self forKeyPath:@"completedChangesCount"];
     [repl removeObserver:self forKeyPath:@"changesCount"];
     [repl removeObserver:self forKeyPath:@"status"];
+    [repl removeObserver:self forKeyPath:@"running"];
+    [repl removeObserver:self forKeyPath:@"lastError"];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     CBLReplication * repl = (CBLReplication *)object;
-    if ([@"status" isEqualToString:keyPath]) {
-        // fire status event
-        TiThreadPerformOnMainThread(^{
-            [self fireEvent:kReplicationStoppedEventName withObject:@{@"status":NUMINT(repl.status)} propagate:YES];
-        }, NO);
-    }
-    else {
-        // fire change event
-        TiThreadPerformOnMainThread(^{
-            [self fireEvent:kReplicationChangedEventName withObject:nil propagate:YES];
-        }, NO);
-    }
+    TiThreadPerformOnMainThread(^{
+        [self fireEvent:kReplicationChangedEventName withObject:@{@"property": keyPath, @"source": self} propagate:YES];
+    }, NO);
 }
 
 @end

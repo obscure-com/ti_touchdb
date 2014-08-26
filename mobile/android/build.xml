@@ -9,7 +9,6 @@
 	<import file="${titanium.platform}/../module/android/build.xml"/>
 	
 	<target name="pre.dist">
-	    <symlink link="." resource="../noarch/example" failonerror="no"/>
 	    <symlink link="." resource="../noarch/documentation" failonerror="no"/>
     </target>
 </project>

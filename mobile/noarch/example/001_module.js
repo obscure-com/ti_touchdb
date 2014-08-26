@@ -3,8 +3,9 @@ require('ti-mocha');
 var should = require('should');
 
 module.exports = function() {
+  var titouchdb = require('com.obscure.titouchdb');
+
   describe('module', function() {
-    var titouchdb = require('com.obscure.titouchdb');
   
     it('must exist', function() {
       should.exist(titouchdb);
@@ -36,4 +37,17 @@ module.exports = function() {
   
   });
 
+  describe('module (authenticators)', function() {
+    it('must have a createBasicAuthenticator method', function() {
+      should(titouchdb.createBasicAuthenticator).be.a.Function;
+    });
+    
+    it('must have a createFacebookAuthenticator method', function() {
+      should(titouchdb.createFacebookAuthenticator).be.a.Function;
+    });
+    
+    it('must have a createPersonaAuthenticator method', function() {
+      should(titouchdb.createPersonaAuthenticator).be.a.Function;
+    });
+  });
 };

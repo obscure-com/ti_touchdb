@@ -2,7 +2,7 @@
 var currentView = 'by_author';
 
 var books = Alloy.createCollection("Book");
-books.on('fetch', function(e) {
+books.on('reset', function(e) {
   $.tableView.refresh(books);
 });
 

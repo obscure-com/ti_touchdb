@@ -90,15 +90,15 @@ module.exports = function() {
     
     it.skip('must have a addChangeListener method', function() {
       should(repl.addChangeListener).be.a.Function;
-    })
+    });
     
     it.skip('must have a removeChangeListener method', function() {
       should(repl.removeChangeListener).be.a.Function;
-    })
+    });
     
     it('must have a restart method', function() {
       should(repl.restart).be.a.Function;
-    })
+    });
     
     it('must have a setCredential method', function() {
       should(repl.setCredential).be.a.Function;
@@ -106,11 +106,11 @@ module.exports = function() {
     
     it('must have a start method', function() {
       should(repl.start).be.a.Function;
-    })
+    });
     
     it('must have a stop method', function() {
       should(repl.stop).be.a.Function;
-    })
+    });
     
   });
 
@@ -126,9 +126,11 @@ module.exports = function() {
     it('must replicate an entire db', function(done) {
       this.timeout(10000);
       var db = manager.getDatabase('repl1');
+      var hasStopped = false;
       repl = db.createPullReplication('http://'+conf.host+':'+conf.port+'/'+conf.dbname);
-      repl.addEventListener('status', function(e) {
-        if (e.status == titouchdb.REPLICATION_MODE_STOPPED) {
+      repl.addEventListener('change', function(e) {
+        if (!hasStopped && e.source.status == titouchdb.REPLICATION_MODE_STOPPED) {
+          hasStopped = true;
           should.not.exist(repl.lastError);
           db.documentCount.should.eql(118);
           repl.isRunning.should.eql(false);
@@ -152,10 +154,12 @@ module.exports = function() {
     it('must replicate an entire db', function(done) {
       this.timeout(10000);
       var dbname = "repl2_" + Ti.Platform.createUUID().substring(0, 8).toLowerCase();
+      var hasStopped = false;
       repl = db.createPushReplication('http://'+conf.host+':'+conf.port+'/'+dbname);
       repl.createTarget = true;
-      repl.addEventListener('status', function(e) {
-        if (e.status == titouchdb.REPLICATION_MODE_STOPPED) {
+      repl.addEventListener('change', function(e) {
+        if (!hasStopped && e.source.status == titouchdb.REPLICATION_MODE_STOPPED) {
+          hasStopped = true;
           should.not.exist(repl.lastError);
           repl.completedChangesCount.should.eql(12);
           repl.isRunning.should.eql(false);
@@ -175,13 +179,43 @@ module.exports = function() {
     });
   
     // currently returning a 400 error due to a request for /elements/_session
-    it.skip('must replicate with credentials', function(done) {
+    it('must replicate with credentials', function(done) {
       this.timeout(10000);
       var db = manager.getDatabase('repl3');
+      var hasStopped = false;
       repl = db.createPullReplication('http://'+conf.host+':'+conf.port+'/'+conf.dbname);
       repl.setCredential({ user: 'scott', pass: 'tiger' });
-      repl.addEventListener('status', function(e) {
-        if (e.status == titouchdb.REPLICATION_MODE_STOPPED) {
+      repl.addEventListener('change', function(e) {
+        if (!hasStopped && e.source.status == titouchdb.REPLICATION_MODE_STOPPED) {
+          hasStopped = true;
+          should.not.exist(repl.lastError);
+          db.documentCount.should.eql(118);
+          repl.isRunning.should.eql(false);
+          done();
+        }
+      });
+      repl.start();
+    });
+  });
+  
+  describe('pull replication with authenticator', function() {
+    var conf, repl;
+    
+    before(function(done) {
+      utils.delete_nonsystem_databases(manager);
+      conf = utils.verify_couchdb_server('replication_config.json', done);
+    });
+  
+    // currently returning a 400 error due to a request for /elements/_session
+    it('must replicate with a basic authenticator', function(done) {
+      this.timeout(10000);
+      var db = manager.getDatabase('repl4');
+      var hasStopped = false;
+      repl = db.createPullReplication('http://'+conf.host+':'+conf.port+'/'+conf.dbname);
+      repl.authenticator = titouchdb.createBasicAuthenticator('scott', 'tiger');
+      repl.addEventListener('change', function(e) {
+        if (!hasStopped && e.source.status == titouchdb.REPLICATION_MODE_STOPPED) {
+          hasStopped = true;
           should.not.exist(repl.lastError);
           db.documentCount.should.eql(118);
           repl.isRunning.should.eql(false);
