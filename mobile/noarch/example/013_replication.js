@@ -179,7 +179,7 @@ module.exports = function() {
     });
   
     // currently returning a 400 error due to a request for /elements/_session
-    it.skip('must replicate with credentials', function(done) {
+    it('must replicate with credentials', function(done) {
       this.timeout(10000);
       var db = manager.getDatabase('repl3');
       var hasStopped = false;
