@@ -1,6 +1,8 @@
 require('ti-mocha');
 
 // import tests
+require('008_attachments')();
+/*
 require('001_module')();
 require('002_databaseManager')();
 require('003_database')();
@@ -19,6 +21,7 @@ require('011_query_enumerator')();
 require('012_query_row')();
 require('013_replication')();
 require('014_filtered_replication')();
+*/
 
 // create a window and run the tests
 var window = Ti.UI.createWindow({

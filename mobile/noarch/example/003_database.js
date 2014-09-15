@@ -203,6 +203,18 @@ module.exports = function() {
     });
     
     
-  });  
+  });
+  
+  describe('database (events)', function() {
+    
+    it('must fire a "change" notification when a document is changed', function(done) {
+      var db = manager.getDatabase('test003_events');
+      var doc = db.createDocument();
+      db.addEventListener('change', function() {
+        done();
+      });
+      doc.putProperties({ name: 'Paul', purpose: 'fire change event'});
+    });
+  })
   
 };
