@@ -305,7 +305,7 @@
 				DA77FA491932849500D85AEE /* CouchbaseLite.framework */,
 				DA77FA4B1932849500D85AEE /* libCouchbaseLite.a */,
 				DA77FA4D1932849500D85AEE /* Couchbase Lite Demo.app */,
-				DA77FA4F1932849500D85AEE /* Grocery Sync.app */,
+				DA77FA4F1932849500D85AEE /* CBL Test.app */,
 				DA77FA511932849500D85AEE /* Couchbase Lite Empty App.app */,
 				DA77FA531932849500D85AEE /* CouchbaseLiteListener.framework */,
 				DA77FA551932849500D85AEE /* CouchbaseLiteListener.framework */,
@@ -427,10 +427,10 @@
 			remoteRef = DA77FA4C1932849500D85AEE /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		DA77FA4F1932849500D85AEE /* Grocery Sync.app */ = {
+		DA77FA4F1932849500D85AEE /* CBL Test.app */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.application;
-			path = "Grocery Sync.app";
+			path = "CBL Test.app";
 			remoteRef = DA77FA4E1932849500D85AEE /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
