@@ -66,7 +66,7 @@ public class DatabaseProxy extends KrollProxy implements ChangeListener {
 
     @Override
     public void changed(ChangeEvent e) {
-        // TODO Auto-generated method stub
+        fireEvent("changed", null);
     }
 
     @Kroll.method
