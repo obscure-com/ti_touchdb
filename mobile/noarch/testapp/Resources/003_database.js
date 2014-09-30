@@ -213,6 +213,9 @@ module.exports = function() {
       db = manager.getDatabase('test003_events');
       var doc1 = db.getDocument('deleteme');
       doc1.putProperties({ name: 'doomed', purpose: 'to be deleted'});
+      
+      var doc2 = db.getDocument('editme');
+      doc2.putProperties({ name: 'editable', purpose: 'to be edited'});
     });
     
     it('must fire a "change" event when a document is added', function(done) {
@@ -239,6 +242,23 @@ module.exports = function() {
       
       var doc = db.createDocument();
       doc.putProperties({ name: 'Paul', purpose: 'fire change event'});
+    });
+    
+    it('must fire a "change" event when a new revision is added', function(done) {
+      var listener = function(e) {
+        done();
+        db.removeEventListener('change', listener);
+      };
+      db.addEventListener('change', listener);
+      
+      var doc = db.getExistingDocument('editme');
+      var rev = doc.createRevision();
+      /*
+      var props = rev.userProperties;
+      props.newprop = 42;
+      rev.userProperties = props;
+      rev.save();
+      */
     });
     
     it('must fire a "change" event when a document is deleted', function(done) {
