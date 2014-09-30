@@ -10,6 +10,7 @@
 #import "TiProxy+Errors.h"
 #import "TDDatabaseProxy.h"
 #import "TDRevisionProxy.h"
+#import "TDDocumentChangeProxy.h"
 
 @interface TDDocumentProxy ()
 @property (nonatomic, strong) CBLDocument * document;
@@ -193,17 +194,20 @@
 #define kDocumentChangedEventName @"change"
 
 - (void)documentChanged:(NSNotification *)notification {
-    [self fireEvent:kDocumentChangedEventName withObject:nil];
+    TDDocumentChangeProxy * change = [TDDocumentChangeProxy proxyWithDocument:self documentChange:notification.userInfo[@"change"]];
+    NSDictionary * e = @{ @"source": self, @"change": change };
+    
+    [self fireEvent:kDocumentChangedEventName withObject:e];
 }
 
 - (void)_listenerAdded:(NSString*)type count:(int)count {
-    if ([kDocumentChangedEventName isEqualToString:type] && count == 0) {
+    if ([kDocumentChangedEventName isEqualToString:type] && count == 1) {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(documentChanged:) name:kCBLDocumentChangeNotification object:nil];
     }
 }
 
 - (void)_listenerRemoved:(NSString*)type count:(int)count {
-    if ([kDocumentChangedEventName isEqualToString:type] && count == 0) {
+    if ([kDocumentChangedEventName isEqualToString:type] && count < 1) {
         [[NSNotificationCenter defaultCenter] removeObserver:self name:kCBLDocumentChangeNotification object:nil];
     }
 }

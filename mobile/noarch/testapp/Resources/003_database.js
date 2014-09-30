@@ -2,6 +2,7 @@ require('ti-mocha');
 
 var should = require('should');
 var utils = require('test_utils');
+var _ = require('underscore');
 
 module.exports = function() {
   var titouchdb = require('com.obscure.titouchdb'),
@@ -206,21 +207,73 @@ module.exports = function() {
   });
   
   describe('database (events)', function() {
+    var db;
     
-    it('must fire a "change" notification when a document is changed', function(done) {
-      // TODO the following code doesn't trigger a change on Android
-      if (Ti.Platform.osname === 'android') {
-        done();
-        return;
-      }
+    before(function() {
+      db = manager.getDatabase('test003_events');
+      var doc1 = db.getDocument('deleteme');
+      doc1.putProperties({ name: 'doomed', purpose: 'to be deleted'});
       
-      var db = manager.getDatabase('test003_events');
-      db.addEventListener('change', function() {
+      var doc2 = db.getDocument('editme');
+      doc2.putProperties({ name: 'editable', purpose: 'to be edited'});
+    });
+    
+    it('must fire a "change" event when a document is added', function(done) {
+      var listener = function(e) {
+        should(e).have.property("source");
+        should(e.source).eql(db);
+        should(e).have.property("isExternal");
+        should(e.isExternal).be.false;
+        should(e).have.property("changes");
+        should(e.changes).be.an.Array;
+        should(e.changes.length).eql(1);
+        
+        var change = e.changes[0];
+        should(change).have.property("documentId");
+        should(change).have.property("revisionId");
+        should(change).have.property("isCurrentRevision");
+        should(change).have.property("isConflict");
+        should(change).have.property("sourceUrl");
+
         done();
-      });
+        db.removeEventListener('change', listener);
+      };
+      db.addEventListener('change', listener);
+      
       var doc = db.createDocument();
       doc.putProperties({ name: 'Paul', purpose: 'fire change event'});
     });
+    
+    it('must fire a "change" event when a new revision is added', function(done) {
+      var listener = function(e) {
+        done();
+        db.removeEventListener('change', listener);
+      };
+      db.addEventListener('change', listener);
+      
+      var doc = db.getExistingDocument('editme');
+      var rev = doc.createRevision();
+      var props = rev.userProperties;
+      props.newprop = 42;
+      rev.userProperties = props;
+      rev.save();
+    });
+    
+    it('must fire a "change" event when a document is deleted', function(done) {
+      var listener = function(e) {
+        done();
+        db.removeEventListener('change', listener);
+      };
+      db.addEventListener('change', listener);
+      
+      var doc = db.getExistingDocument('deleteme');
+      doc.deleteDocument();      
+    });
+    
+    /*
+     * TODO: a change event should also be triggered when a new document is
+     * created through replication.
+     */  
   });
   
 };
