@@ -15,6 +15,33 @@
 #import "TDReplicationProxy.h"
 #import "TDBridge.h"
 
+@interface TDDatabaseChangeProxy : TiProxy
+@property (nonatomic, copy) NSString * documentId;
+@property (nonatomic, assign) BOOL isConflict;
+@property (nonatomic, assign) BOOL isCurrentRevision;
+@property (nonatomic, copy) NSString * revisionId;
+@property (nonatomic, copy) NSString * sourceUrl;
+
++ (instancetype)proxyWithManager:(TDDatabaseManagerProxy *)manager databaseChange:(CBLDatabaseChange *)change;
+@end
+
+@implementation TDDatabaseChangeProxy
++ (instancetype)proxyWithManager:(TDDatabaseManagerProxy *)manager databaseChange:(CBLDatabaseChange *)change {
+    return [[[TDDatabaseChangeProxy alloc] initWithManager:manager databaseChange:change] autorelease];
+}
+
+- (id)initWithManager:(TDDatabaseManagerProxy *)manager databaseChange:(CBLDatabaseChange *)change {
+    if (self = [super _initWithPageContext:manager.pageContext]) {
+        self.documentId = change.documentID;
+        self.revisionId = change.revisionID;
+        self.isCurrentRevision = change.isCurrentRevision;
+        self.isConflict = change.inConflict;
+        self.sourceUrl = [change.source absoluteString];
+    }
+    return self;
+}
+@end
+
 @interface TDDatabaseProxy ()
 @property (nonatomic, assign) TDDatabaseManagerProxy * managerProxy;
 @property (nonatomic, strong) CBLDatabase * database;
@@ -335,7 +362,13 @@ extern NSString* const kCBLDatabaseChangeNotification;
 #define kDatabaseChangedEventName @"change"
 
 - (void)databaseChanged:(NSNotification *)notification {
-    [self fireEvent:kDatabaseChangedEventName withObject:nil];
+    NSMutableArray * changes = [NSMutableArray array];
+    for (CBLDatabaseChange * change in notification.userInfo[@"changes"]) {
+        [changes addObject:[TDDatabaseChangeProxy proxyWithManager:self.managerProxy databaseChange:change]];
+    }
+    
+    NSDictionary * e = @{ @"database": self, @"isExternal": notification.userInfo[@"external"], @"changes": changes };
+    [self fireEvent:kDatabaseChangedEventName withObject:e];
 }
 
 - (void)_listenerAdded:(NSString*)type count:(int)count {
