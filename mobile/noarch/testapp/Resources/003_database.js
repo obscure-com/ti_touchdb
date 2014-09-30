@@ -253,12 +253,10 @@ module.exports = function() {
       
       var doc = db.getExistingDocument('editme');
       var rev = doc.createRevision();
-      /*
       var props = rev.userProperties;
       props.newprop = 42;
       rev.userProperties = props;
       rev.save();
-      */
     });
     
     it('must fire a "change" event when a document is deleted', function(done) {
