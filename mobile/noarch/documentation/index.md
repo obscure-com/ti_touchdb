@@ -323,7 +323,7 @@ an existing document, or a document is deleted.
 
 #### Properties
 
-**database**
+**source**
 
 [`database`](#database) object, read-only. The database where the change originated
 
@@ -477,7 +477,18 @@ object or null if the put failed.
 
 ### Events
 
-**status**: fired when modifications are made to the document.
+**change**: fired when a new revision is added to a document.
+
+#### Properties
+
+**source**
+
+[`document`](#document) object, read-only. The document where the change originated
+
+**change**
+
+[`DocumentChange`](#documentchange) object, read-only.  Object which describes the change
+to the document.
 
 
 <a name="attachment"/>

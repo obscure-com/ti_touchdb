@@ -8,23 +8,19 @@ import com.couchbase.lite.DocumentChange;
 @Kroll.proxy(parentModule = TitouchdbModule.class)
 public class DocumentChangeProxy extends KrollProxy {
 
-    private String               documentId;
+    private String  documentId;
 
-    private boolean              isConflict;
+    private boolean isConflict;
 
-    private boolean              isCurrentRevision;
+    private boolean isCurrentRevision;
 
-    private DatabaseManagerProxy managerProxy;
+    private String  revisionId;
 
-    private String               revisionId;
+    private String  sourceUrl;
 
-    private String sourceUrl;
-
-    public DocumentChangeProxy(DatabaseManagerProxy managerProxy, DocumentChange change) {
-        assert managerProxy != null;
+    public DocumentChangeProxy(DocumentChange change) {
         assert change != null;
 
-        this.managerProxy = managerProxy;
         this.isCurrentRevision = change.isCurrentRevision();
         this.isConflict = change.isConflict();
         this.sourceUrl = change.getSourceUrl() != null ? change.getSourceUrl().toString() : "";

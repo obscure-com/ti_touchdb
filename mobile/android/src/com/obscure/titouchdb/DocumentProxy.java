@@ -6,10 +6,11 @@ import org.appcelerator.kroll.annotations.Kroll;
 
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.Document;
+import com.couchbase.lite.Document.ChangeEvent;
 import com.couchbase.lite.SavedRevision;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)
-public class DocumentProxy extends KrollProxy {
+public class DocumentProxy extends KrollProxy implements Document.ChangeListener {
 
     private static final String LCAT                 = "DocumentProxy";
 
@@ -27,6 +28,17 @@ public class DocumentProxy extends KrollProxy {
 
         this.databaseProxy = databaseProxy;
         this.document = document;
+        
+        document.addChangeListener(this);
+    }
+
+    @Override
+    public void changed(ChangeEvent change) {
+        KrollDict dict = new KrollDict();
+        dict.put("document", this);
+        dict.put("change", new DocumentChangeProxy(change.getChange()));
+
+        fireEvent("change", dict);
     }
 
     @Kroll.method
@@ -109,12 +121,18 @@ public class DocumentProxy extends KrollProxy {
 
     @Kroll.getProperty(name = "properties")
     public KrollDict getProperties() {
-        return TypePreprocessor.toKrollDict(document.getProperties());
+        if (document.getCurrentRevision() != null) {
+            return TypePreprocessor.toKrollDict(document.getProperties());
+        }
+        else return null;
     }
 
     @Kroll.method
     public Object getProperty(String key) {
-        return TypePreprocessor.preprocess(document.getProperty(key));
+        if (document.getCurrentRevision() != null) {
+            return TypePreprocessor.preprocess(document.getProperty(key));
+        }
+        else return null;
     }
 
     @Kroll.method

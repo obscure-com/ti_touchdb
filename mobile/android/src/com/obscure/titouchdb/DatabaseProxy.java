@@ -65,7 +65,7 @@ public class DatabaseProxy extends KrollProxy implements ChangeListener {
 
         List<DocumentChangeProxy> changes = new ArrayList<DocumentChangeProxy>();
         for (DocumentChange change : e.getChanges()) {
-            changes.add(new DocumentChangeProxy(this.getManager(), change));
+            changes.add(new DocumentChangeProxy(change));
         }
 
         dict.put("changes", changes.toArray(new DocumentChangeProxy[0]));

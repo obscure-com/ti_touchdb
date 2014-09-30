@@ -220,8 +220,8 @@ module.exports = function() {
     
     it('must fire a "change" event when a document is added', function(done) {
       var listener = function(e) {
-        should(e).have.property("database");
-        should(e.database).eql(db);
+        should(e).have.property("source");
+        should(e.source).eql(db);
         should(e).have.property("isExternal");
         should(e.isExternal).be.false;
         should(e).have.property("changes");

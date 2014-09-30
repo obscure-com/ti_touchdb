@@ -35,6 +35,8 @@
 		DA4919441676B78B00ECCB83 /* TDReplicationProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = DA4919421676B78A00ECCB83 /* TDReplicationProxy.h */; };
 		DA53C6E215EE8BC40065CA47 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA53C6DF15EE8BAE0065CA47 /* Security.framework */; };
 		DA5837CC15B09030005CA068 /* ComObscureTitouchdb_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = DA5837CB15B09030005CA068 /* ComObscureTitouchdb_Prefix.pch */; };
+		DA73A73A19DB10DA00BA8581 /* TDDocumentChangeProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = DA73A73819DB10DA00BA8581 /* TDDocumentChangeProxy.h */; };
+		DA73A73B19DB10DA00BA8581 /* TDDocumentChangeProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = DA73A73919DB10DA00BA8581 /* TDDocumentChangeProxy.m */; };
 		DAA3688A167F9BB6004A514D /* TiProxy+Errors.m in Sources */ = {isa = PBXBuildFile; fileRef = DAE72A36152E66C800622013 /* TiProxy+Errors.m */; };
 		DAA3688B167F9BB6004A514D /* TDDatabaseManagerProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = DA4919231676776A00ECCB83 /* TDDatabaseManagerProxy.m */; };
 		DAA3688C167F9BB6004A514D /* TDDatabaseProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = DA491927167679B700ECCB83 /* TDDatabaseProxy.m */; };
@@ -191,6 +193,8 @@
 		DA4919431676B78A00ECCB83 /* TDReplicationProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TDReplicationProxy.m; path = Classes/TDReplicationProxy.m; sourceTree = "<group>"; };
 		DA53C6DF15EE8BAE0065CA47 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		DA5837CB15B09030005CA068 /* ComObscureTitouchdb_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ComObscureTitouchdb_Prefix.pch; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		DA73A73819DB10DA00BA8581 /* TDDocumentChangeProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TDDocumentChangeProxy.h; path = Classes/TDDocumentChangeProxy.h; sourceTree = "<group>"; };
+		DA73A73919DB10DA00BA8581 /* TDDocumentChangeProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TDDocumentChangeProxy.m; path = Classes/TDDocumentChangeProxy.m; sourceTree = "<group>"; };
 		DA77FA351932849400D85AEE /* CouchbaseLite.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CouchbaseLite.xcodeproj; path = "vendor/couchbase-lite-ios/CouchbaseLite.xcodeproj"; sourceTree = "<group>"; };
 		DABFA05016779B4100A58019 /* TDAttachmentProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TDAttachmentProxy.h; path = Classes/TDAttachmentProxy.h; sourceTree = "<group>"; };
 		DABFA05116779B4100A58019 /* TDAttachmentProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TDAttachmentProxy.m; path = Classes/TDAttachmentProxy.m; sourceTree = "<group>"; };
@@ -271,6 +275,8 @@
 				DA491927167679B700ECCB83 /* TDDatabaseProxy.m */,
 				DA49192A16768CB000ECCB83 /* TDDocumentProxy.h */,
 				DA49192B16768CB000ECCB83 /* TDDocumentProxy.m */,
+				DA73A73819DB10DA00BA8581 /* TDDocumentChangeProxy.h */,
+				DA73A73919DB10DA00BA8581 /* TDDocumentChangeProxy.m */,
 				DA49192E16768D6C00ECCB83 /* TDQueryProxy.h */,
 				DA49192F16768D6C00ECCB83 /* TDQueryProxy.m */,
 				DA4919321676A2D200ECCB83 /* TDBridge.h */,
@@ -332,6 +338,7 @@
 				DA49192C16768CB000ECCB83 /* TDDocumentProxy.h in Headers */,
 				DA49193016768D6C00ECCB83 /* TDQueryProxy.h in Headers */,
 				DA4919341676A2D200ECCB83 /* TDBridge.h in Headers */,
+				DA73A73A19DB10DA00BA8581 /* TDDocumentChangeProxy.h in Headers */,
 				DA49193C1676ADF100ECCB83 /* TDViewProxy.h in Headers */,
 				DA4919401676B32800ECCB83 /* TDRevisionProxy.h in Headers */,
 				DA4919441676B78B00ECCB83 /* TDReplicationProxy.h in Headers */,
@@ -510,6 +517,7 @@
 				DAA3688B167F9BB6004A514D /* TDDatabaseManagerProxy.m in Sources */,
 				DAA3688C167F9BB6004A514D /* TDDatabaseProxy.m in Sources */,
 				DAA3688D167F9BB6004A514D /* TDDocumentProxy.m in Sources */,
+				DA73A73B19DB10DA00BA8581 /* TDDocumentChangeProxy.m in Sources */,
 				DAA3688E167F9BB6004A514D /* TDQueryProxy.m in Sources */,
 				DAA3688F167F9BB6004A514D /* TDBridge.m in Sources */,
 				DAD03A8B197449FA00886829 /* TDAuthenticatorProxy.m in Sources */,
