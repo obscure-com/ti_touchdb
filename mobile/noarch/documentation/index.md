@@ -318,7 +318,54 @@ pull replication.)
 
 ### Events
 
-**status**: fired when modifications are made to the documents in the database.
+**change**: fired when a new document is added to the database, a new revision is added to
+an existing document, or a document is deleted.
+
+#### Properties
+
+**database**
+
+[`database`](#database) object, read-only. The database where the change originated
+
+**isExternal**
+
+boolean, read-only.  True if the database change came from an external source (replication)
+
+
+**changes**
+
+array of [`DocumentChange`](#documentchange) objects, read-only.  List of changes.
+
+<a name="documentchange"/>
+
+## DocumentChange
+
+`DocumentChange` objects are used in change events to supply metadata about modified documents.
+
+### Properties
+
+**documentId**
+
+string, read-only.  The identifier of the document that changed (iOS only)
+
+**revisionId**
+
+string, read-only.  The id of the newly-added revision (iOS only)
+
+**isCurrentRevision**
+
+boolean, read-only.  True if the new revision is the current revision for the document.
+
+**isConflict**
+
+boolean, read-only.  True if the document has conflicting revisions.  The conflict may have
+occurred before this change.
+
+**sourceUrl**
+
+string, read-only.  The URL of the remote database where this change was pulled if the
+change was a result of replication.
+
 
 <a name="document"/>
 ## Document
