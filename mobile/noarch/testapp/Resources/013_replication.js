@@ -139,6 +139,26 @@ module.exports = function() {
       });
       repl.start();
     });
+
+    /*
+     * Issue 54. To test, just replicate the same database again.
+     */    
+    it('must fire a "change" event even when there are no docs to replicate', function(done) {
+      this.timeout(10000);
+      var db = manager.getDatabase('repl1');
+      var hasStopped = false;
+      repl = db.createPullReplication('http://'+conf.host+':'+conf.port+'/'+conf.dbname);
+      repl.addEventListener('change', function(e) {
+        if (!hasStopped && e.source.status == titouchdb.REPLICATION_MODE_STOPPED) {
+          hasStopped = true;
+          should.not.exist(repl.lastError);
+          db.documentCount.should.eql(118);
+          repl.isRunning.should.eql(false);
+          done();
+        }
+      });
+      repl.start();
+    });
   });
   
   describe('push replication (one-shot)', function() {
