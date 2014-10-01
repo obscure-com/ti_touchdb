@@ -22,6 +22,10 @@ module.exports = function() {
       should(db).have.property('documentCount', 118);
     });
     
+    it('must have an internalURL property', function() {
+      should(db).have.property('internalURL');
+    });
+
     it('must have a lastSequenceNumber property', function() {
       should(db).have.property('lastSequenceNumber', 118);
     });

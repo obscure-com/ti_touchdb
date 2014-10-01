@@ -118,4 +118,47 @@ module.exports = function() {
       });
     }
   });
+  
+  
+  describe('database manager (listener)', function() {
+    var db;
+    
+    before(function() {
+      db = manager.getDatabase('test002_listener');
+    });
+    
+    after(function() {
+      manager.stopListener();
+    });
+
+    it('must have a startListener function', function() {
+      should(manager.startListener).be.a.Function;
+    });
+    
+    it('must have a stopListener function', function() {
+      should(manager.stopListener).be.a.Function;
+    });
+    
+    it('must start the listener', function() {
+      var err = manager.startListener({ port: 5985 });
+      should(err).be.null;
+    });
+    
+    it('must respond to a GET on the db URL', function(done) {
+      this.timeout(5000);
+      var client = Ti.Network.createHTTPClient({
+        onload: function(e) {
+          done();
+        },
+        onerror: function(e) {
+          Ti.API.error(e.error);
+        },
+        timeout: 5000,
+      });
+      
+      client.open("GET", db.internalURL);
+      client.send();
+    });
+        
+  });
 };

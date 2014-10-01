@@ -46,22 +46,6 @@ Global functions, properties, and constants.
 
 [`databaseManager`](#databaseManager) object, read-only.  The shared database manager instance.
 
-### Methods
-
-**startListener**(options)
-
-* options (dict): listener options (defaults shown below)
-    * port (number, 5984): listener port
-    * readOnly (bool, false): set to true to only allow reads
-
-Start a simple HTTP server that provides remote access to the REST API as documented in the
-[Couchbase Lite wiki](https://github.com/couchbase/couchbase-lite-ios/wiki/Guide%3A-REST).
-The listener can also be used to peer-to-peer replication.
-
-**stopListener**()
-
-Stop the listener if it is running.
-
 ### Constants
 
 #### Replication Mode
@@ -145,6 +129,20 @@ Replaces or installs a database from a file.  This is primarily used to install 
 launch of an app, in which case you should first check .exists to avoid replacing the database if it exists
 already.  Returns true if the database was copied successfully.
 
+**startListener**(options)
+
+* options (dict): listener options (defaults shown below)
+    * port (number, 5984): listener port
+    * readOnly (bool, false): set to true to only allow reads (iOS only)
+
+Start a simple HTTP server that provides remote access to the REST API as documented in the
+[Couchbase Lite wiki](https://github.com/couchbase/couchbase-lite-ios/wiki/Guide%3A-REST).
+The listener can also be used to peer-to-peer replication.
+
+**stopListener**()
+
+Stop the listener if it is running.
+
 <a name="database"/>
 ## Database
 
@@ -169,6 +167,11 @@ integer, read-only.  The number of documents in the database.
 **error**
 
 dictionary, read-only.  The most-recent error that occurred in the database.
+
+**internalURL**
+
+string, read-only.  The HTTP URL to this database.  A listener will be started with the default
+port if DatabaseManager.startListener() has not already been called.
 
 **lastSequenceNumber**
 

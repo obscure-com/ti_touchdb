@@ -17,6 +17,7 @@
 @property (nonatomic, strong) CBLManager * databaseManager;
 @property (nonatomic, strong) NSMutableDictionary * databaseProxyCache;
 @property (nonatomic, strong) NSError * lastError;
+@property (nonatomic, strong) CBLListener * listener;
 @end
 
 @implementation TDDatabaseManagerProxy
@@ -190,5 +191,39 @@
 - (id)excludedFromBackup {
     return NUMBOOL(self.databaseManager.excludedFromBackup);
 }
+
+#pragma mark CBLListener
+
+/** start an HTTP listener for the database.  Options and defaults are:
+ port: 5984,
+ readOnly: false
+ */
+#define DEFAULT_LISTENER_PORT 5984
+- (id)startListener:(id)args {
+    NSDictionary * opts;
+    ENSURE_ARG_OR_NIL_AT_INDEX(opts, args, 0, NSDictionary)
+    
+    if (self.listener) {
+        [self.listener stop];
+        self.listener = nil;
+    }
+    
+    __block NSError * error = nil;
+    NSUInteger port = [opts objectForKey:@"port"] ? [[opts objectForKey:@"port"] unsignedIntegerValue] : DEFAULT_LISTENER_PORT;
+    
+    self.listener = [[CBLListener alloc] initWithManager:[CBLManager sharedInstance] port:port];
+    self.listener.readOnly = [[opts objectForKey:@"readOnly"] boolValue];
+    
+    // TODO maybe add auth and Bonjour name?
+    
+    [self.listener start:&error];
+    
+    return [self errorDict:error];
+}
+
+- (id)stopListener:(id)args {
+    [self.listener stop];
+}
+
 
 @end

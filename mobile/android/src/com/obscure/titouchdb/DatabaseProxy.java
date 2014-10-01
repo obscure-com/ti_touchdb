@@ -278,6 +278,12 @@ public class DatabaseProxy extends KrollProxy implements ChangeListener {
 
         });
     }
+    
+    @Kroll.getProperty(name = "internalURL")
+    public String getInternalURL() {
+        // TODO URL encode name?
+        return String.format("%s/%s", managerProxy.getInternalURL(), database.getName());
+    }
 
     @Kroll.method
     public void runInTransaction(final KrollFunction f) {
