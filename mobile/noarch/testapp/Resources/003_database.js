@@ -68,6 +68,24 @@ module.exports = function() {
     it.skip('must have an runInTransaction function', function() {
       should(db.runInTransaction).be.a.Function;
     });
+    
+    it('must have a close function', function() {
+      should(db.close).be.a.Function;
+    });
+  });
+  
+  describe('database (lifecycle)', function() {
+    var db;
+    
+    before(function() {
+      db = manager.getExistingDatabase('elements');
+    });
+
+    it('must close the database', function() {
+      var result = db.close();
+      result.should.be.true;
+      should.not.exist(db.error);
+    });
   });
 
 
