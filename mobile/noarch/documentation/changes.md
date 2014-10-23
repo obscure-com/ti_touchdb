@@ -1,3 +1,8 @@
+2014-10-01
+
+* Moved HTTP listener management from the module to the DatabaseManager class.
+* Added listener support to Android 
+
 2014-08-26
 
 * Updated to Couchbase Mobile 1.0.2 release for Android and iOS

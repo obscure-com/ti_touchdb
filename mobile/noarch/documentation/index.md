@@ -46,22 +46,6 @@ Global functions, properties, and constants.
 
 [`databaseManager`](#databaseManager) object, read-only.  The shared database manager instance.
 
-### Methods
-
-**startListener**(options)
-
-* options (dict): listener options (defaults shown below)
-    * port (number, 5984): listener port
-    * readOnly (bool, false): set to true to only allow reads
-
-Start a simple HTTP server that provides remote access to the REST API as documented in the
-[Couchbase Lite wiki](https://github.com/couchbase/couchbase-lite-ios/wiki/Guide%3A-REST).
-The listener can also be used to peer-to-peer replication.
-
-**stopListener**()
-
-Stop the listener if it is running.
-
 ### Constants
 
 #### Replication Mode
@@ -145,6 +129,20 @@ Replaces or installs a database from a file.  This is primarily used to install 
 launch of an app, in which case you should first check .exists to avoid replacing the database if it exists
 already.  Returns true if the database was copied successfully.
 
+**startListener**(options)
+
+* options (dict): listener options (defaults shown below)
+    * port (number, 5984): listener port
+    * readOnly (bool, false): set to true to only allow reads (iOS only)
+
+Start a simple HTTP server that provides remote access to the REST API as documented in the
+[Couchbase Lite wiki](https://github.com/couchbase/couchbase-lite-ios/wiki/Guide%3A-REST).
+The listener can also be used to peer-to-peer replication.
+
+**stopListener**()
+
+Stop the listener if it is running.
+
 <a name="database"/>
 ## Database
 
@@ -169,6 +167,11 @@ integer, read-only.  The number of documents in the database.
 **error**
 
 dictionary, read-only.  The most-recent error that occurred in the database.
+
+**internalURL**
+
+string, read-only.  The HTTP URL to this database.  A listener will be started with the default
+port if DatabaseManager.startListener() has not already been called.
 
 **lastSequenceNumber**
 
@@ -318,7 +321,54 @@ pull replication.)
 
 ### Events
 
-**status**: fired when modifications are made to the documents in the database.
+**change**: fired when a new document is added to the database, a new revision is added to
+an existing document, or a document is deleted.
+
+#### Properties
+
+**source**
+
+[`database`](#database) object, read-only. The database where the change originated
+
+**isExternal**
+
+boolean, read-only.  True if the database change came from an external source (replication)
+
+
+**changes**
+
+array of [`DocumentChange`](#documentchange) objects, read-only.  List of changes.
+
+<a name="documentchange"/>
+
+## DocumentChange
+
+`DocumentChange` objects are used in change events to supply metadata about modified documents.
+
+### Properties
+
+**documentId**
+
+string, read-only.  The identifier of the document that changed (iOS only)
+
+**revisionId**
+
+string, read-only.  The id of the newly-added revision (iOS only)
+
+**isCurrentRevision**
+
+boolean, read-only.  True if the new revision is the current revision for the document.
+
+**isConflict**
+
+boolean, read-only.  True if the document has conflicting revisions.  The conflict may have
+occurred before this change.
+
+**sourceUrl**
+
+string, read-only.  The URL of the remote database where this change was pulled if the
+change was a result of replication.
+
 
 <a name="document"/>
 ## Document
@@ -430,7 +480,18 @@ object or null if the put failed.
 
 ### Events
 
-**status**: fired when modifications are made to the document.
+**change**: fired when a new revision is added to a document.
+
+#### Properties
+
+**source**
+
+[`document`](#document) object, read-only. The document where the change originated
+
+**change**
+
+[`DocumentChange`](#documentchange) object, read-only.  Object which describes the change
+to the document.
 
 
 <a name="attachment"/>

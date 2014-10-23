@@ -71,7 +71,7 @@ public class AttachmentProxy extends KrollProxy {
     @Kroll.getProperty(name = "contentURL")
     public String getContentURL() {
         BlobStore store = new BlobStore(attachment.getDocument().getDatabase().getAttachmentStorePath());
-        return "file:/" + store.pathForKey(BlobStore.keyForBlob(getContent().getBytes()));
+        return "file://" + store.pathForKey(BlobStore.keyForBlob(getContent().getBytes()));
     }
 
     @Kroll.getProperty(name = "document")

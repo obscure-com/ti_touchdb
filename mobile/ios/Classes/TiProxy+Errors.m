@@ -27,7 +27,7 @@
         }
         */
     }
-    return result ? [result autorelease] : [NSNull null];
+    return result ? result : [NSNull null];
 }
 
 @end

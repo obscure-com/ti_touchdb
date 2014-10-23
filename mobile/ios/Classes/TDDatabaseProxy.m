@@ -10,6 +10,7 @@
 #import "TiProxy+Errors.h"
 #import "TDDatabaseManagerProxy.h"
 #import "TDDocumentProxy.h"
+#import "TDDocumentChangeProxy.h"
 #import "TDQueryProxy.h"
 #import "TDViewProxy.h"
 #import "TDReplicationProxy.h"
@@ -88,6 +89,13 @@ extern NSString* const kCBLDatabaseChangeNotification;
     RELEASE_TO_NIL(lastError)
 
     BOOL result = [self.database compact:&lastError];
+    return NUMBOOL(result);
+}
+
+- (id)close:(id)args {
+    RELEASE_TO_NIL(lastError)
+    
+    BOOL result = [self.database close:&lastError];
     return NUMBOOL(result);
 }
 
@@ -306,26 +314,6 @@ extern NSString* const kCBLDatabaseChangeNotification;
     return [TDReplicationProxy proxyWithDatabase:self replication:replication];
 }
 
-/*
-- (id)replicateWithURL:(id)args {
-    NSString * urlstr;
-    NSNumber * exclusive;
-    ENSURE_ARG_AT_INDEX(urlstr, args, 0, NSString);
-    ENSURE_ARG_OR_NULL_AT_INDEX(exclusive, args, 1, NSNumber);
-    
-    RELEASE_TO_NIL(lastError)
-    
-    NSURL * url = [NSURL URLWithString:urlstr];
-    NSArray * repls = [self.database replicationsWithURL:url exclusively:[exclusive boolValue]];
-    
-    NSMutableArray * result = [NSMutableArray arrayWithCapacity:[repls count]];
-    for (CBLReplication * repl in repls) {
-        [result addObject:[[TDReplicationProxy alloc] initWithExecutionContext:[self executionContext] CBLReplication:repl]];
-    }
-    return result;
-}
-*/
-
 - (id)internalURL {
     return self.database.internalURL;
 }
@@ -335,7 +323,13 @@ extern NSString* const kCBLDatabaseChangeNotification;
 #define kDatabaseChangedEventName @"change"
 
 - (void)databaseChanged:(NSNotification *)notification {
-    [self fireEvent:kDatabaseChangedEventName withObject:nil];
+    NSMutableArray * changes = [NSMutableArray array];
+    for (CBLDatabaseChange * change in notification.userInfo[@"changes"]) {
+        [changes addObject:[TDDocumentChangeProxy proxyWithDatabase:self documentChange:change]];
+    }
+    
+    NSDictionary * e = @{ @"source": self, @"isExternal": notification.userInfo[@"external"], @"changes": changes };
+    [self fireEvent:kDatabaseChangedEventName withObject:e];
 }
 
 - (void)_listenerAdded:(NSString*)type count:(int)count {

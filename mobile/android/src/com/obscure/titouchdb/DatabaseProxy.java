@@ -13,14 +13,13 @@ import org.appcelerator.kroll.KrollFunction;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 
-import android.util.Log;
-
 import com.couchbase.lite.AsyncTask;
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.Database;
 import com.couchbase.lite.Database.ChangeEvent;
 import com.couchbase.lite.Database.ChangeListener;
 import com.couchbase.lite.Document;
+import com.couchbase.lite.DocumentChange;
 import com.couchbase.lite.Status;
 import com.couchbase.lite.TransactionalTask;
 import com.couchbase.lite.View;
@@ -58,15 +57,20 @@ public class DatabaseProxy extends KrollProxy implements ChangeListener {
         database.addChangeListener(this);
     }
 
-    @Kroll.method
-    public void addChangeListener(KrollEventCallback cb) {
-        lastError = null;
-        // TODO
-    }
-
     @Override
     public void changed(ChangeEvent e) {
-        // TODO Auto-generated method stub
+        KrollDict dict = new KrollDict();
+        dict.put("database", this);
+        dict.put("isExternal", e.isExternal());
+
+        List<DocumentChangeProxy> changes = new ArrayList<DocumentChangeProxy>();
+        for (DocumentChange change : e.getChanges()) {
+            changes.add(new DocumentChangeProxy(change));
+        }
+
+        dict.put("changes", changes.toArray(new DocumentChangeProxy[0]));
+
+        fireEvent("change", dict);
     }
 
     @Kroll.method
@@ -80,6 +84,12 @@ public class DatabaseProxy extends KrollProxy implements ChangeListener {
             return false;
         }
         return true;
+    }
+    
+    @Kroll.method
+    public boolean close() {
+        lastError = null;
+        return database.close();
     }
 
     @Kroll.method
@@ -273,6 +283,12 @@ public class DatabaseProxy extends KrollProxy implements ChangeListener {
             }
 
         });
+    }
+    
+    @Kroll.getProperty(name = "internalURL")
+    public String getInternalURL() {
+        // TODO URL encode name?
+        return String.format("%s/%s", managerProxy.getInternalURL(), database.getName());
     }
 
     @Kroll.method
