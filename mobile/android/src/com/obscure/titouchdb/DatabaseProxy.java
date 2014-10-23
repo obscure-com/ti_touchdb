@@ -85,6 +85,12 @@ public class DatabaseProxy extends KrollProxy implements ChangeListener {
         }
         return true;
     }
+    
+    @Kroll.method
+    public boolean close() {
+        lastError = null;
+        return database.close();
+    }
 
     @Kroll.method
     public QueryProxy createAllDocumentsQuery() {

@@ -92,6 +92,13 @@ extern NSString* const kCBLDatabaseChangeNotification;
     return NUMBOOL(result);
 }
 
+- (id)close:(id)args {
+    RELEASE_TO_NIL(lastError)
+    
+    BOOL result = [self.database close:&lastError];
+    return NUMBOOL(result);
+}
+
 - (id)deleteDatabase:(id)args {
     RELEASE_TO_NIL(lastError)
 

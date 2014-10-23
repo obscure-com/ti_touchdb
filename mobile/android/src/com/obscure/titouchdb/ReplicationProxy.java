@@ -64,7 +64,9 @@ public class ReplicationProxy extends KrollProxy implements ChangeListener {
 
     @Kroll.getProperty(name = "docIds")
     public String[] getDocIds() {
-        List<String> docids = replicator.getDocIds();
+        // TODO fix in 1.0.4+ ?
+        // https://github.com/couchbase/couchbase-lite-java-core/issues/307
+        List<String> docids = null; // replicator.getDocIds();
         return docids != null ? docids.toArray(EMPTY_STRING_ARRAY) : EMPTY_STRING_ARRAY;
     }
 
