@@ -327,7 +327,7 @@ module.exports.afterModelCreate = function(Model, name) {
   
   Model.prototype.attachmentNamed = function(name) {
     var doc = db.getDocument(this.id);
-    if (doc) {
+    if (doc && doc.currentRevision) {
       return doc.currentRevision.getAttachment(name);
     }
   };
@@ -352,7 +352,7 @@ module.exports.afterModelCreate = function(Model, name) {
   
   Model.prototype.attachmentNames = function() {
     var doc = db.getDocument(this.id);
-    return doc ? doc.currentRevision.attachmentNames : [];
+    return doc && doc.currentRevision ? doc.currentRevision.attachmentNames : [];
   };
   
   Migrate(Model);
