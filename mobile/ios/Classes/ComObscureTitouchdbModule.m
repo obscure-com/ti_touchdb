@@ -41,7 +41,7 @@ extern BOOL EnableLog(BOOL enable);
     
     [CBLManager enableLogging:nil];
 
-	NSLog(@"[INFO] %@ loaded", self);
+	NSLog(@"[INFO] TiTouchDB | Couchbase Mobile version %@", CBLVersion());
     
     if (__has_feature(objc_arc)) {
         NSLog(@"[INFO] ARC is enabled");
