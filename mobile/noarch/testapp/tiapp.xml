@@ -7,7 +7,7 @@
         <target device="blackberry">false</target>
         <target device="android">true</target>
     </deployment-targets>
-    <sdk-version>3.4.0.GA</sdk-version>
+    <sdk-version>3.4.1.GA</sdk-version>
     <id>com.obscure.titouchdb</id>
     <name>testapp</name>
     <version>1.0</version>
