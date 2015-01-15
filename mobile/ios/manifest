@@ -2,7 +2,7 @@
 # this is your module manifest and used by Titanium
 # during compilation, packaging, distribution, etc.
 #
-version: 1.2.0
+version: 1.2.1
 apiversion: 2
 description: Titanium wrapper for Couchbase Mobile
 author: Paul Mietz Egli
@@ -15,4 +15,5 @@ name: titouchdb
 moduleid: com.obscure.titouchdb
 guid: d7abdfb0-acc4-433e-aa74-f7e93063bb85
 platform: iphone
-minsdk: 3.1.0.GA
+minsdk: 3.5.0.GA
+architectures: armv7 arm64 i386 x86_64
