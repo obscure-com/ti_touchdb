@@ -2,7 +2,7 @@
 # this is your module manifest and used by Titanium
 # during compilation, packaging, distribution, etc.
 #
-version: 1.2.0
+version: 1.2.1
 apiversion: 2
 description: TouchDB for Titanium
 author: Paul Mietz Egli
@@ -15,4 +15,5 @@ name: titouchdb
 moduleid: com.obscure.titouchdb
 guid: 619bf01b-0c43-43c3-9a66-792ba1093b1f
 platform: android
-minsdk: 3.1.0.GA
+minsdk: 3.5.0.GA
+architectures: armeabi armeabi-v7a
