@@ -1,6 +1,7 @@
 package com.obscure.titouchdb;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -8,24 +9,29 @@ import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.titanium.TiBlob;
+import org.appcelerator.titanium.io.TiFile;
 
 import android.util.Log;
 
 import com.couchbase.lite.Attachment;
+import com.couchbase.lite.BlobKey;
 import com.couchbase.lite.BlobStore;
-import com.couchbase.lite.BlobStoreWriter;
 import com.couchbase.lite.CouchbaseLiteException;
 
 @Kroll.proxy(parentModule = TitouchdbModule.class)
 public class AttachmentProxy extends KrollProxy {
 
-    private static final String   LCAT      = "AttachmentProxy";
+    private static final String   LCAT         = "AttachmentProxy";
 
     private Attachment            attachment;
 
     private TiBlob                blob;
 
-    private KrollDict             lastError = null;
+    private String                blobFilePath = null;
+
+    private BlobStore             blobStore    = null;
+
+    private KrollDict             lastError    = null;
 
     private AbstractRevisionProxy revisionProxy;
 
@@ -35,30 +41,25 @@ public class AttachmentProxy extends KrollProxy {
 
         this.revisionProxy = revisionProxy;
         this.attachment = attachment;
+
+        // if there is a digest in the attachment metadata, attempt to pre-load
+        // the blob.
+        blobStore = new BlobStore(attachment.getDocument().getDatabase().getAttachmentStorePath());
+        String digest = (String) attachment.getMetadata().get("digest");
+        if (digest != null) {
+            blobFilePath = blobStore.pathForKey(new BlobKey(digest));
+            if (blobFilePath != null) {
+                blob = TiBlob.blobFromFile(new TiFile(new File(blobFilePath), blobFilePath, false), attachment.getContentType());
+            }
+        }
     }
 
     @Kroll.getProperty(name = "content")
     public TiBlob getContent() {
         lastError = null;
         if (blob == null) {
-            // sigh, have to read everything into memory to create a TiBlob...
-            try {
-                int count;
-                byte[] buffer = new byte[1024];
-                InputStream in = attachment.getContent();
-                ByteArrayOutputStream out = new ByteArrayOutputStream();
-                while ((count = in.read(buffer, 0, buffer.length)) > 0) {
-                    out.write(buffer, 0, count);
-                }
-                out.flush();
-                blob = TiBlob.blobFromData(out.toByteArray(), attachment.getContentType());
-            }
-            catch (IOException e) {
-                Log.e(LCAT, "error reading attachment data: " + e.getMessage());
-            }
-            catch (CouchbaseLiteException e) {
-                lastError = TitouchdbModule.convertStatusToErrorDict(e.getCBLStatus());
-            }
+            // blob was not pre-loaded as a file, so read in from stream
+            loadBlobFromStream();
         }
         return blob;
     }
@@ -67,11 +68,20 @@ public class AttachmentProxy extends KrollProxy {
     public String getContentType() {
         return attachment.getContentType();
     }
-    
+
     @Kroll.getProperty(name = "contentURL")
     public String getContentURL() {
-        BlobStore store = new BlobStore(attachment.getDocument().getDatabase().getAttachmentStorePath());
-        return "file://" + store.pathForKey(BlobStore.keyForBlob(getContent().getBytes()));
+        lastError = null;
+        if (blobFilePath != null) {
+            return "file://" + blobFilePath;
+        }
+        else {
+            if (blob == null) {
+                loadBlobFromStream();
+            }
+
+            return blob != null ? "file://" + blobStore.pathForKey(BlobStore.keyForBlob(blob.getBytes())) : null;
+        }
     }
 
     @Kroll.getProperty(name = "document")
@@ -88,7 +98,7 @@ public class AttachmentProxy extends KrollProxy {
     public long getLength() {
         return attachment.getLength();
     }
-    
+
     @Kroll.getProperty(name = "metadata")
     public KrollDict getMetadata() {
         return TypePreprocessor.toKrollDict(attachment.getMetadata());
@@ -102,6 +112,27 @@ public class AttachmentProxy extends KrollProxy {
     @Kroll.method
     public AbstractRevisionProxy getRevision() {
         return revisionProxy;
+    }
+
+    private void loadBlobFromStream() {
+        try {
+            int count;
+            byte[] buffer = new byte[1024];
+            InputStream in = attachment.getContent();
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            while ((count = in.read(buffer, 0, buffer.length)) > 0) {
+                out.write(buffer, 0, count);
+            }
+            out.flush();
+            blob = TiBlob.blobFromData(out.toByteArray(), attachment.getContentType());
+        }
+        catch (IOException e) {
+            Log.e(LCAT, "error reading attachment data: " + e.getMessage());
+        }
+        catch (CouchbaseLiteException e) {
+            lastError = TitouchdbModule.convertStatusToErrorDict(e.getCBLStatus());
+        }
+
     }
 
 }
