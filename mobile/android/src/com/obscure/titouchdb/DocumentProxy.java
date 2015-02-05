@@ -1,5 +1,7 @@
 package com.obscure.titouchdb;
 
+import java.lang.ref.WeakReference;
+
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
@@ -12,15 +14,15 @@ import com.couchbase.lite.SavedRevision;
 @Kroll.proxy(parentModule = TitouchdbModule.class)
 public class DocumentProxy extends KrollProxy implements Document.ChangeListener {
 
-    private static final String LCAT                 = "DocumentProxy";
+    private static final String               LCAT                     = "DocumentProxy";
 
-    private SavedRevisionProxy  currentRevisionProxy = null;
+    private WeakReference<SavedRevisionProxy> weakCurrentRevisionProxy = null;
 
-    private DatabaseProxy       databaseProxy;
+    private DatabaseProxy                     databaseProxy;
 
-    private Document            document;
+    private Document                          document;
 
-    private KrollDict           lastError            = null;
+    private KrollDict                         lastError                = null;
 
     public DocumentProxy(DatabaseProxy databaseProxy, Document document) {
         assert databaseProxy != null;
@@ -28,7 +30,7 @@ public class DocumentProxy extends KrollProxy implements Document.ChangeListener
 
         this.databaseProxy = databaseProxy;
         this.document = document;
-        
+
         document.addChangeListener(this);
     }
 
@@ -59,7 +61,7 @@ public class DocumentProxy extends KrollProxy implements Document.ChangeListener
     }
 
     protected void forgetCurrentRevisionProxy() {
-        currentRevisionProxy = null;
+        weakCurrentRevisionProxy = null;
     }
 
     @Kroll.getProperty(name = "conflictingRevisions")
@@ -75,11 +77,14 @@ public class DocumentProxy extends KrollProxy implements Document.ChangeListener
 
     @Kroll.getProperty(name = "currentRevision")
     public SavedRevisionProxy getCurrentRevision() {
+        SavedRevisionProxy currentRevisionProxy = weakCurrentRevisionProxy != null ? weakCurrentRevisionProxy.get() : null;
+
         // cache the current revision
         String currentRevisionID = document.getCurrentRevisionId();
         if (currentRevisionProxy == null || !currentRevisionProxy.getRevisionID().equals(currentRevisionID)) {
             SavedRevision revision = document.getCurrentRevision();
             currentRevisionProxy = revision != null ? new SavedRevisionProxy(this, revision) : null;
+            weakCurrentRevisionProxy = new WeakReference<SavedRevisionProxy>(currentRevisionProxy);
         }
         return currentRevisionProxy;
     }
@@ -180,7 +185,8 @@ public class DocumentProxy extends KrollProxy implements Document.ChangeListener
     public SavedRevisionProxy putProperties(KrollDict properties) {
         try {
             SavedRevision revision = document.putProperties(properties);
-            currentRevisionProxy = new SavedRevisionProxy(this, revision);
+            SavedRevisionProxy currentRevisionProxy = new SavedRevisionProxy(this, revision);
+            weakCurrentRevisionProxy = new WeakReference<SavedRevisionProxy>(currentRevisionProxy);
             return currentRevisionProxy;
         }
         catch (CouchbaseLiteException e) {
