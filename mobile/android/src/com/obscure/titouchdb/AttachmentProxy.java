@@ -2,8 +2,11 @@ package com.obscure.titouchdb;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollProxy;
@@ -35,6 +38,34 @@ public class AttachmentProxy extends KrollProxy {
 
     private AbstractRevisionProxy revisionProxy;
 
+    public static BlobKey keyForBlobFromStream(InputStream in) {
+        MessageDigest md;
+        try {
+            md = MessageDigest.getInstance("SHA-1");
+        }
+        catch (NoSuchAlgorithmException e) {
+            Log.e(LCAT, "Error, SHA-1 digest is unavailable.");
+            return null;
+        }
+        byte[] sha1hash = new byte[40];
+
+        try {
+            byte[] buffer = new byte[65536];
+            int lenRead = in.read(buffer);
+            while (lenRead > 0) {
+                md.update(buffer, 0, lenRead);
+                lenRead = in.read(buffer);
+            }
+        }
+        catch (IOException e) {
+            Log.e(LCAT, "Error readin tmp file to compute key");
+        }
+
+        sha1hash = md.digest();
+        BlobKey result = new BlobKey(sha1hash);
+        return result;
+    }
+
     public AttachmentProxy(AbstractRevisionProxy revisionProxy, Attachment attachment) {
         assert revisionProxy != null;
         assert attachment != null;
@@ -42,12 +73,26 @@ public class AttachmentProxy extends KrollProxy {
         this.revisionProxy = revisionProxy;
         this.attachment = attachment;
 
-        // if there is a digest in the attachment metadata, attempt to pre-load
-        // the blob.
-        blobStore = new BlobStore(attachment.getDocument().getDatabase().getAttachmentStorePath());
+        this.blobStore = new BlobStore(attachment.getDocument().getDatabase().getAttachmentStorePath());
+
+        // find the blob key for this attachment
+        BlobKey key = null;
         String digest = (String) attachment.getMetadata().get("digest");
-        if (digest != null) {
-            blobFilePath = blobStore.pathForKey(new BlobKey(digest));
+        if (digest != null && digest.startsWith("sha1-")) {
+            key = new BlobKey(digest);
+        }
+        else {
+            try {
+                key = AttachmentProxy.keyForBlobFromStream(attachment.getContent());
+            }
+            catch (CouchbaseLiteException e) {
+                Log.e(LCAT, e.getMessage());
+            }
+        }
+
+        // attempt to preload the blob using the key
+        if (key != null) {
+            blobFilePath = blobStore.pathForKey(key);
             if (blobFilePath != null) {
                 blob = TiBlob.blobFromFile(new TiFile(new File(blobFilePath), blobFilePath, false), attachment.getContentType());
             }
