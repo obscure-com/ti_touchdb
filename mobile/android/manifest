@@ -16,4 +16,4 @@ moduleid: com.obscure.titouchdb
 guid: 619bf01b-0c43-43c3-9a66-792ba1093b1f
 platform: android
 minsdk: 3.5.0.GA
-architectures: armeabi armeabi-v7a
+architectures: armeabi armeabi-v7a x86
