@@ -8,7 +8,6 @@
 
 #import "TDBridge.h"
 
-#import "TiCore.h"
 #import "KrollBridge.h"
 #import "KrollContext.h"
 #import "KrollMethod.h"
