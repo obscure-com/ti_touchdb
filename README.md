@@ -1,5 +1,7 @@
 # TiTouchDB
 
+[![Join the chat at https://gitter.im/pegli/ti_touchdb](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/pegli/ti_touchdb?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 by Paul Mietz Egli (paul@obscure.com)
 based on Couchbase Lite iOS by Jens Alfke (http://github.com/couchbase/couchbase-lite-ios)
 and Couchbase Lite Android by Traun Leyden (http://github.com/couchbase/couchbase-lite-android)
