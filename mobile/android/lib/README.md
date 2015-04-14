@@ -1,3 +1,8 @@
+2014-10-29
+
+The couchbase-lite-*-1.0.3.1a.jar files were built from my fork of the Couchbase
+repos and contain a fix for https://github.com/couchbase/couchbase-lite-java-core/issues/81.
+
 2014-05-22
 
 At the moment, installing the Couchbase Lite Android libraries isn't as simple as
