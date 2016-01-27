@@ -59,7 +59,7 @@ CBLMapEmitBlock _emitBlock;
 
 - (CBLMapBlock)compileMapFunction:(NSString*)mapSource language:(NSString*)language {
     if (![@"javascript" isEqualToString:language])
-        return nil;
+        return [NSNull null];
 
     CBLMapBlock result = nil;
     TiObjectRef fn = [self compile:mapSource context:_context];
@@ -84,7 +84,7 @@ CBLMapEmitBlock _emitBlock;
 
 - (CBLReduceBlock)compileReduceFunction:(NSString *)reduceSource language:(NSString *)language {
     if (![@"javascript" isEqualToString:language])
-        return nil;
+        return [NSNull null];
     
     CBLReduceBlock result = nil;
     TiObjectRef fn = [self compile:reduceSource context:_context];
@@ -119,7 +119,7 @@ CBLMapEmitBlock _emitBlock;
 
 - (CBLValidationBlock)compileValidationFunction:(NSString *)validationSource language:(NSString *)language database:(CBLDatabase *)db {
     if (![@"javascript" isEqualToString:language])
-        return nil;
+        return [NSNull null];
     
     CBLValidationBlock result = nil;
     TiObjectRef fn = [self compile:validationSource context:_context];
@@ -161,7 +161,7 @@ CBLMapEmitBlock _emitBlock;
 
 - (CBLFilterBlock) compileFilterFunction:(NSString *)filterSource language:(NSString *)language database:(CBLDatabase *)db {
     if (![@"javascript" isEqualToString:language])
-        return nil;
+        return [NSNull null];
     
     CBLFilterBlock result = nil;
     TiObjectRef fn = [self compile:filterSource context:_context];
@@ -220,7 +220,7 @@ CBLMapEmitBlock _emitBlock;
         NSLog(@"%@", exceptionCF);
         CFRelease(exceptionCF);
         TiStringRelease(exceptionIString);
-        return nil;
+        return [NSNull null];
     }
     
     TiValueRef compiled = TiEvalScript(context, code, NULL, NULL, 1, NULL);
@@ -236,7 +236,7 @@ CBLMapEmitBlock _emitBlock;
         NSLog(@"no result");
     }
     
-    return nil;
+    return [NSNull null];
 }
 
 #pragma mark Bindings
@@ -273,7 +273,7 @@ static TiValueRef EmitCallback(TiContextRef jsContext, TiObjectRef jsFunction, T
     
     _emitBlock(key, value);
     
-    return nil;
+    return [NSNull null];
 }
 
 

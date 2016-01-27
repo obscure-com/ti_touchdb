@@ -121,7 +121,7 @@ extern NSString* const kCBLDatabaseChangeNotification;
     if (!proxy) {
         CBLDocument * doc = [self.database documentWithID:docID];
         if (!doc) {
-            return nil;
+            return [NSNull null];
         }
         proxy = [TDDocumentProxy proxyWithDatabase:self document:doc];
         [self.documentProxyCache setObject:proxy forKey:docID];
@@ -160,7 +160,7 @@ extern NSString* const kCBLDatabaseChangeNotification;
 }
 
 - (id)error {
-    return lastError ? [self errorDict:lastError] : nil;
+    return [self errorDict:lastError];
 }
 
 - (id)createDocument:(id)args {
@@ -175,15 +175,15 @@ extern NSString* const kCBLDatabaseChangeNotification;
 #pragma mark Local Documents
 
 - (id)getExistingLocalDocumnet:(id)args {
-    return nil;
+    return [NSNull null];
 }
 
 - (id)deleteLocalDocument:(id)args {
-    return nil;
+    return [NSNull null];
 }
 
 - (id)putLocalDocument:(id)args {
-    return nil;
+    return [NSNull null];
 }
 
 
@@ -272,7 +272,7 @@ extern NSString* const kCBLDatabaseChangeNotification;
         [self.filterCallbackCache removeObjectForKey:name];
     }
     
-    return nil;
+    return [NSNull null];
 }
 
 - (id)getFilter:(id)args {

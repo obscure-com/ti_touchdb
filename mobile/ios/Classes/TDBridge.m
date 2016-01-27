@@ -282,7 +282,7 @@ static id TiValueToId(TiContextRef jsContext, TiValueRef v)
 					TiValueRef length = TiObjectGetProperty(jsContext, obj, kTiStringLength, NULL);
 					double len = TiValueToNumber(jsContext, length, NULL);
 					NSMutableArray* resultArray = [[NSMutableArray alloc] initWithCapacity:len];
-					for (size_t c=0; c<len; ++c)
+					for (unsigned int c=0; c<len; ++c)
 					{
 						TiValueRef valueRef = TiObjectGetPropertyAtIndex(jsContext, obj, c, NULL);
 						id value = TiValueToId(jsContext,valueRef);
@@ -322,6 +322,7 @@ static id TiValueToId(TiContextRef jsContext, TiValueRef v)
 	}
 	return result;
 }
+
 
 static TiValueRef IdToTiValue(TiContextRef jsContext, id obj)
 {

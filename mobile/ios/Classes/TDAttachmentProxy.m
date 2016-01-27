@@ -72,7 +72,7 @@
 }
 
 - (id)error {
-    return lastError ? [self errorDict:lastError] : nil;
+    return [self errorDict:lastError];
 }
 
 @end

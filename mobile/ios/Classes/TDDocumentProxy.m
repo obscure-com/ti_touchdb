@@ -42,7 +42,7 @@
 }
 
 - (id)error {
-    return lastError ? [self errorDict:lastError] : nil;
+    return [self errorDict:lastError];
 }
 
 - (id)documentID {
@@ -90,7 +90,7 @@
 }
 
 - (id)currentRevision {
-    if (!self.document.currentRevision) return nil;
+    if (!self.document.currentRevision) return [NSNull null];
     
     if (![[self.cachedCurrentRevision revisionID] isEqualToString:self.document.currentRevisionID]) {
         self.cachedCurrentRevision = [TDSavedRevisionProxy proxyWithDocument:self savedRevision:self.document.currentRevision];
@@ -109,7 +109,7 @@
         return [TDSavedRevisionProxy proxyWithDocument:self savedRevision:revision];
     }
     else {
-        return nil;
+        return [NSNull null];
     }
 }
 
@@ -183,7 +183,7 @@
     CBLSavedRevision * rev = [self.document putProperties:props error:&lastError];
     [lastError retain];
     
-    if (!rev) return nil;
+    if (!rev) return [NSNull null];
     
     self.cachedCurrentRevision = [TDSavedRevisionProxy proxyWithDocument:self savedRevision:rev];
     return self.cachedCurrentRevision;
