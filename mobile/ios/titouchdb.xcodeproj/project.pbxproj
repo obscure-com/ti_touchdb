@@ -25,6 +25,10 @@
 		24DD6CF91134B3F500162E58 /* ComObscureTiTouchDBModule.h in Headers */ = {isa = PBXBuildFile; fileRef = 24DD6CF71134B3F500162E58 /* ComObscureTiTouchDBModule.h */; };
 		24DD6CFA1134B3F500162E58 /* ComObscureTiTouchDBModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 24DD6CF81134B3F500162E58 /* ComObscureTiTouchDBModule.m */; };
 		AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
+		DA2A73921B45B42B00F962B5 /* libCBLForestDBStorage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DA2A73891B45B2CA00F962B5 /* libCBLForestDBStorage.a */; };
+		DA2A73931B45B42B00F962B5 /* libCBLSQLiteStorage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DA2A73871B45B2CA00F962B5 /* libCBLSQLiteStorage.a */; };
+		DA2A73941B45B42B00F962B5 /* libCouchbaseLite.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DA77FA4B1932849500D85AEE /* libCouchbaseLite.a */; };
+		DA2A73951B45B42B00F962B5 /* libCouchbaseLiteListener.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DA77FA571932849500D85AEE /* libCouchbaseLiteListener.a */; };
 		DA4919241676776A00ECCB83 /* TDDatabaseManagerProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = DA4919221676776A00ECCB83 /* TDDatabaseManagerProxy.h */; };
 		DA491928167679B700ECCB83 /* TDDatabaseProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = DA491926167679B700ECCB83 /* TDDatabaseProxy.h */; };
 		DA49192C16768CB000ECCB83 /* TDDocumentProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = DA49192A16768CB000ECCB83 /* TDDocumentProxy.h */; };
@@ -51,12 +55,8 @@
 		DAD03A8A197449FA00886829 /* TDAuthenticatorProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = DAD03A88197449FA00886829 /* TDAuthenticatorProxy.h */; };
 		DAD03A8B197449FA00886829 /* TDAuthenticatorProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = DAD03A89197449FA00886829 /* TDAuthenticatorProxy.m */; };
 		DAE72A37152E66C900622013 /* TiProxy+Errors.h in Headers */ = {isa = PBXBuildFile; fileRef = DAE72A35152E66C800622013 /* TiProxy+Errors.h */; };
-		DAEE1D1A1932850500ABEF1D /* libCouchbaseLite.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DA77FA4B1932849500D85AEE /* libCouchbaseLite.a */; };
-		DAEE1D1B1932850500ABEF1D /* libCouchbaseLiteListener.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DA77FA571932849500D85AEE /* libCouchbaseLiteListener.a */; };
 		DAF6E66E1680F84D003217C3 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAF6E66D1680F84D003217C3 /* CFNetwork.framework */; };
 		DAF6E6701680F854003217C3 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAF6E66F1680F854003217C3 /* SystemConfiguration.framework */; };
-		DAF6E6721680F85B003217C3 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DAF6E6711680F85B003217C3 /* libz.dylib */; };
-		DAF6E6741680F862003217C3 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DAF6E6731680F862003217C3 /* libsqlite3.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -66,6 +66,76 @@
 			proxyType = 1;
 			remoteGlobalIDString = D2AAC07D0554694100DB518D;
 			remoteInfo = titouchdb;
+		};
+		DA2A737E1B45B2CA00F962B5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DA77FA351932849400D85AEE /* CouchbaseLite.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 27452BB81AB1180800327776;
+			remoteInfo = "CBL iOS framework";
+		};
+		DA2A73801B45B2CA00F962B5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DA77FA351932849400D85AEE /* CouchbaseLite.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 27452BAD1AB1156F00327776;
+			remoteInfo = "CBL iOS fat library";
+		};
+		DA2A73821B45B2CA00F962B5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DA77FA351932849400D85AEE /* CouchbaseLite.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 2700358B1A44E9270015B9F4;
+			remoteInfo = "CBL iOS Unit Tests";
+		};
+		DA2A73841B45B2CA00F962B5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DA77FA351932849400D85AEE /* CouchbaseLite.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 272AA83F1A48D835004B8D55;
+			remoteInfo = "CBL Mac Unit Tests";
+		};
+		DA2A73861B45B2CA00F962B5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DA77FA351932849400D85AEE /* CouchbaseLite.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 27E66ACF1A7305B10091DA3F;
+			remoteInfo = "CBL SQLite Storage";
+		};
+		DA2A73881B45B2CA00F962B5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DA77FA351932849400D85AEE /* CouchbaseLite.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 27E66B431A7307590091DA3F;
+			remoteInfo = "CBL ForestDB Storage";
+		};
+		DA2A738A1B45B38000F962B5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DA77FA351932849400D85AEE /* CouchbaseLite.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 27B0B7A81492B83B00A817AD;
+			remoteInfo = "CBL iOS library";
+		};
+		DA2A738C1B45B38400F962B5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DA77FA351932849400D85AEE /* CouchbaseLite.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = DA023B2614BCA94C008184BB;
+			remoteInfo = "Listener iOS Library";
+		};
+		DA2A738E1B45B38800F962B5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DA77FA351932849400D85AEE /* CouchbaseLite.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 27E66A571A7305B10091DA3F;
+			remoteInfo = "CBL SQLite Storage";
+		};
+		DA2A73901B45B38C00F962B5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DA77FA351932849400D85AEE /* CouchbaseLite.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 27E66AD01A7307590091DA3F;
+			remoteInfo = "CBL ForestDB Storage";
 		};
 		DA77FA461932849500D85AEE /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -151,20 +221,6 @@
 			remoteGlobalIDString = 792867BF178DE01900248AF0;
 			remoteInfo = CBLJSViewCompiler;
 		};
-		DAEE1D07193284F100ABEF1D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DA77FA351932849400D85AEE /* CouchbaseLite.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 27B0B7A81492B83B00A817AD;
-			remoteInfo = "CBL iOS library";
-		};
-		DAEE1D09193284F100ABEF1D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DA77FA351932849400D85AEE /* CouchbaseLite.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = DA023B2614BCA94C008184BB;
-			remoteInfo = "Listener iOS Library";
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -173,6 +229,8 @@
 		24DD6D1B1134B66800162E58 /* titanium.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = titanium.xcconfig; sourceTree = "<group>"; };
 		AACBBE490F95108600F1A2B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D2AAC07E0554694100DB518D /* libComObscureTitouchdb.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libComObscureTitouchdb.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		DA2A73961B45B43D00F962B5 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
+		DA2A73981B45B44600F962B5 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		DA305FCA15B4B5E700DBB89E /* ViewCompiler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ViewCompiler.h; path = Classes/ViewCompiler.h; sourceTree = "<group>"; };
 		DA305FCB15B4B5E700DBB89E /* ViewCompiler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ViewCompiler.m; path = Classes/ViewCompiler.m; sourceTree = "<group>"; };
 		DA4919221676776A00ECCB83 /* TDDatabaseManagerProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TDDatabaseManagerProxy.h; path = Classes/TDDatabaseManagerProxy.h; sourceTree = "<group>"; };
@@ -213,10 +271,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DAEE1D1A1932850500ABEF1D /* libCouchbaseLite.a in Frameworks */,
-				DAEE1D1B1932850500ABEF1D /* libCouchbaseLiteListener.a in Frameworks */,
-				DAF6E6741680F862003217C3 /* libsqlite3.dylib in Frameworks */,
-				DAF6E6721680F85B003217C3 /* libz.dylib in Frameworks */,
+				DA2A73921B45B42B00F962B5 /* libCBLForestDBStorage.a in Frameworks */,
+				DA2A73931B45B42B00F962B5 /* libCBLSQLiteStorage.a in Frameworks */,
+				DA2A73941B45B42B00F962B5 /* libCouchbaseLite.a in Frameworks */,
+				DA2A73951B45B42B00F962B5 /* libCouchbaseLiteListener.a in Frameworks */,
 				DAF6E6701680F854003217C3 /* SystemConfiguration.framework in Frameworks */,
 				DAF6E66E1680F84D003217C3 /* CFNetwork.framework in Frameworks */,
 				DA53C6E215EE8BC40065CA47 /* Security.framework in Frameworks */,
@@ -250,6 +308,8 @@
 		0867D69AFE84028FC02AAC07 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				DA2A73981B45B44600F962B5 /* libz.tbd */,
+				DA2A73961B45B43D00F962B5 /* libsqlite3.tbd */,
 				DAF6E6731680F862003217C3 /* libsqlite3.dylib */,
 				DAF6E6711680F85B003217C3 /* libz.dylib */,
 				DAF6E66F1680F854003217C3 /* SystemConfiguration.framework */,
@@ -308,8 +368,10 @@
 			isa = PBXGroup;
 			children = (
 				DA77FA471932849500D85AEE /* CouchbaseLite.framework */,
+				DA2A737F1B45B2CA00F962B5 /* CouchbaseLite.framework */,
 				DA77FA491932849500D85AEE /* CouchbaseLite.framework */,
 				DA77FA4B1932849500D85AEE /* libCouchbaseLite.a */,
+				DA2A73811B45B2CA00F962B5 /* libCouchbaseLiteFat.a */,
 				DA77FA4D1932849500D85AEE /* Couchbase Lite Demo.app */,
 				DA77FA4F1932849500D85AEE /* CBL Test.app */,
 				DA77FA511932849500D85AEE /* Couchbase Lite Empty App.app */,
@@ -318,6 +380,10 @@
 				DA77FA571932849500D85AEE /* libCouchbaseLiteListener.a */,
 				DA77FA591932849500D85AEE /* LiteServ */,
 				DA77FA5B1932849500D85AEE /* LiteServ.app */,
+				DA2A73831B45B2CA00F962B5 /* CBL iOS Unit Tests.xctest */,
+				DA2A73851B45B2CA00F962B5 /* CBL Mac Unit Tests.xctest */,
+				DA2A73871B45B2CA00F962B5 /* libCBLSQLiteStorage.a */,
+				DA2A73891B45B2CA00F962B5 /* libCBLForestDBStorage.a */,
 				DA77FA5D1932849500D85AEE /* libCBLJSViewCompiler.a */,
 			);
 			name = Products;
@@ -361,8 +427,10 @@
 			buildRules = (
 			);
 			dependencies = (
-				DAEE1D08193284F100ABEF1D /* PBXTargetDependency */,
-				DAEE1D0A193284F100ABEF1D /* PBXTargetDependency */,
+				DA2A73911B45B38C00F962B5 /* PBXTargetDependency */,
+				DA2A738F1B45B38800F962B5 /* PBXTargetDependency */,
+				DA2A738D1B45B38400F962B5 /* PBXTargetDependency */,
+				DA2A738B1B45B38000F962B5 /* PBXTargetDependency */,
 			);
 			name = titouchdb;
 			productName = titouchdb;
@@ -375,7 +443,7 @@
 		0867D690FE84028FC02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0500;
+				LastUpgradeCheck = 0700;
 			};
 			buildConfigurationList = 1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "titouchdb" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -406,6 +474,48 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		DA2A737F1B45B2CA00F962B5 /* CouchbaseLite.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = CouchbaseLite.framework;
+			remoteRef = DA2A737E1B45B2CA00F962B5 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		DA2A73811B45B2CA00F962B5 /* libCouchbaseLiteFat.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libCouchbaseLiteFat.a;
+			remoteRef = DA2A73801B45B2CA00F962B5 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		DA2A73831B45B2CA00F962B5 /* CBL iOS Unit Tests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "CBL iOS Unit Tests.xctest";
+			remoteRef = DA2A73821B45B2CA00F962B5 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		DA2A73851B45B2CA00F962B5 /* CBL Mac Unit Tests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "CBL Mac Unit Tests.xctest";
+			remoteRef = DA2A73841B45B2CA00F962B5 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		DA2A73871B45B2CA00F962B5 /* libCBLSQLiteStorage.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libCBLSQLiteStorage.a;
+			remoteRef = DA2A73861B45B2CA00F962B5 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		DA2A73891B45B2CA00F962B5 /* libCBLForestDBStorage.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libCBLForestDBStorage.a;
+			remoteRef = DA2A73881B45B2CA00F962B5 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		DA77FA471932849500D85AEE /* CouchbaseLite.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -537,15 +647,25 @@
 			target = D2AAC07D0554694100DB518D /* titouchdb */;
 			targetProxy = 24416B8411C4CA280047AFDD /* PBXContainerItemProxy */;
 		};
-		DAEE1D08193284F100ABEF1D /* PBXTargetDependency */ = {
+		DA2A738B1B45B38000F962B5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "CBL iOS library";
-			targetProxy = DAEE1D07193284F100ABEF1D /* PBXContainerItemProxy */;
+			targetProxy = DA2A738A1B45B38000F962B5 /* PBXContainerItemProxy */;
 		};
-		DAEE1D0A193284F100ABEF1D /* PBXTargetDependency */ = {
+		DA2A738D1B45B38400F962B5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "Listener iOS Library";
-			targetProxy = DAEE1D09193284F100ABEF1D /* PBXContainerItemProxy */;
+			targetProxy = DA2A738C1B45B38400F962B5 /* PBXContainerItemProxy */;
+		};
+		DA2A738F1B45B38800F962B5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "CBL SQLite Storage";
+			targetProxy = DA2A738E1B45B38800F962B5 /* PBXContainerItemProxy */;
+		};
+		DA2A73911B45B38C00F962B5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "CBL ForestDB Storage";
+			targetProxy = DA2A73901B45B38C00F962B5 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -575,6 +695,10 @@
 					"-DDEBUG",
 					"-DTI_POST_1_2",
 				);
+				OTHER_LDFLAGS = (
+					"-lz",
+					"-lsqlite3",
+				);
 			};
 			name = Debug;
 		};
@@ -600,6 +724,10 @@
 				GCC_WARN_UNUSED_VARIABLE = NO;
 				INSTALL_PATH = /usr/local/lib;
 				OTHER_CFLAGS = "-DTI_POST_1_2";
+				OTHER_LDFLAGS = (
+					"-lz",
+					"-lsqlite3",
+				);
 			};
 			name = Release;
 		};
@@ -608,6 +736,7 @@
 			baseConfigurationReference = 24DD6D1B1134B66800162E58 /* titanium.xcconfig */;
 			buildSettings = {
 				DSTROOT = /tmp/ComObscureTiTouchDB.dst;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
