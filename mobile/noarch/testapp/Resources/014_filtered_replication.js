@@ -11,6 +11,8 @@ module.exports = function() {
     var conf, repl, db;
     
     before(function(done) {
+      this.timeout(10000);
+      
       utils.delete_nonsystem_databases(manager);
       db = utils.install_elements_database(manager);
       conf = utils.verify_couchdb_server(done);

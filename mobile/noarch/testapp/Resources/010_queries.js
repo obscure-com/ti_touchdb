@@ -101,6 +101,8 @@ module.exports = function() {
     var db, view;
     
     before(function() {
+      this.timeout(10000);
+
       utils.delete_nonsystem_databases(manager);
       db = utils.install_elements_database(manager);
       view = db.getView('docs_by_atno');
@@ -169,9 +171,9 @@ module.exports = function() {
       q.keys = [11, 8, 1, 17, 19];
       var e = q.run();
       e.count.should.eql(5);
-      e.getRow(0).key.should.eql(1);
+      e.getRow(0).key.should.eql(11);
       e.getRow(1).key.should.eql(8);
-      e.getRow(2).key.should.eql(11);
+      e.getRow(2).key.should.eql(1);
       e.getRow(3).key.should.eql(17);
       e.getRow(4).key.should.eql(19);
     });
@@ -179,6 +181,8 @@ module.exports = function() {
   
   describe('query (ordering)', function() {
     before(function() {
+      this.timeout(10000);
+
       utils.delete_nonsystem_databases(manager);
       db = utils.install_elements_database(manager);
       view = db.getView('docs_by_atno');
@@ -214,6 +218,8 @@ module.exports = function() {
   
   describe('query (grouping)', function() {
     before(function() {
+      this.timeout(10000);
+
       utils.delete_nonsystem_databases(manager);
       db = utils.install_elements_database(manager);
     });

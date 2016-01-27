@@ -12,6 +12,8 @@ module.exports = function() {
     var db;
 
     before(function() {
+      this.timeout(10000);
+      
       utils.delete_nonsystem_databases(manager);
       
       // load up the elements db

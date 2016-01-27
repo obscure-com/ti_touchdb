@@ -15,8 +15,12 @@ module.exports = function() {
 
     it('must exist', function() {
       should.exist(manager);
-      should(manager).have.property('error', null);
     });
+    
+    it('must have an error property', function() {
+      should(manager).have.property('error');
+      should(manager.error).be.null;
+    })
     
     it('must provide the default db directory', function() {
       should(manager).have.property('defaultDirectory');
@@ -58,7 +62,8 @@ module.exports = function() {
       should(manager.getDatabase).be.a.Function;
       var db = manager.getDatabase('test002_1');
       should.exist(db);
-      should(manager).have.property('error', null);
+      should(db.name).eql('test002_1');
+      should(manager.error).be.null;
     });
     
     it('must not return a database with a new name', function() {
@@ -119,7 +124,7 @@ module.exports = function() {
     }
   });
   
-  
+  /*
   describe('database manager (listener)', function() {
     var db;
     
@@ -161,4 +166,5 @@ module.exports = function() {
     });
         
   });
+  */
 };

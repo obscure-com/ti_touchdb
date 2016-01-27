@@ -11,6 +11,8 @@ module.exports = function() {
     var db, view;
     
     before(function() {
+      this.timeout(10000);
+
       utils.delete_nonsystem_databases(manager);
       db = utils.install_elements_database(manager);
       view = db.getView('test');
@@ -117,6 +119,8 @@ module.exports = function() {
     var db, view;
     
     before(function() {
+      this.timeout(10000);
+
       utils.delete_nonsystem_databases(manager);
       db = utils.install_elements_database(manager);
       
@@ -164,6 +168,8 @@ module.exports = function() {
     var db, view;
     
     before(function() {
+      this.timeout(10000);
+
       utils.delete_nonsystem_databases(manager);
       db = utils.install_elements_database(manager);
 

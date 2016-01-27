@@ -201,6 +201,8 @@ module.exports = function() {
     var db, doc_with_atts, doc_no_atts;
     
     before(function() {
+      this.timeout(10000);
+
       utils.delete_nonsystem_databases(manager);
       db = utils.install_elements_database(manager);
       

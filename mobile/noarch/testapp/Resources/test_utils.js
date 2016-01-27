@@ -33,7 +33,7 @@ exports.install_elements_database = function(manager) {
   for (i in docs.docs) {
     var d = docs.docs[i];
     var doc = db.getDocument(d._id);
-    delete d._id;
+    delete d['_id'];
     doc.putProperties(d);
   }
   return db;
