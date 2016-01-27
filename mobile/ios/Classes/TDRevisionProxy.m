@@ -107,14 +107,13 @@
 }
 
 - (id)error {
-    return lastError ? [self errorDict:lastError] : nil;
+    return [self errorDict:lastError];
 }
 
 @end
 
 
 @interface TDSavedRevisionProxy ()
-@property (nonatomic, strong) CBLSavedRevision * revision;
 @end
 
 @implementation TDSavedRevisionProxy
@@ -132,7 +131,7 @@
 }
 
 - (id)propertiesAvailable {
-    return NUMBOOL([self.revision propertiesAvailable]);
+    return NUMBOOL([(CBLSavedRevision *)self.revision propertiesAvailable]);
 }
 
 - (id)createRevision:(id)args {
@@ -142,17 +141,17 @@
     ENSURE_ARG_OR_NIL_AT_INDEX(props, args, 0, NSDictionary)
     
     if (props) {
-        CBLSavedRevision * rev = [self.revision createRevisionWithProperties:props error:&lastError];
+        CBLSavedRevision * rev = [(CBLSavedRevision *)self.revision createRevisionWithProperties:props error:&lastError];
         [lastError retain];
 
         return rev ? [TDSavedRevisionProxy proxyWithDocument:self.doc savedRevision:rev] : nil;
     }
     else {
-        CBLUnsavedRevision * rev = [self.revision createRevision];
+        CBLUnsavedRevision * rev = [(CBLSavedRevision *)self.revision createRevision];
         return [TDUnsavedRevisionProxy proxyWithDocument:self.doc unsavedRevision:rev];
     }
 
-    return nil;
+    return [NSNull null];
 }
 
 - (id)putProperties:(id)args {
@@ -161,7 +160,7 @@
     
     RELEASE_TO_NIL(lastError)
     
-    CBLSavedRevision * rev = [self.revision createRevisionWithProperties:props error:&lastError];
+    CBLSavedRevision * rev = [(CBLSavedRevision *)self.revision createRevisionWithProperties:props error:&lastError];
     [lastError retain];
     
     return rev ? [TDSavedRevisionProxy proxyWithDocument:self.doc savedRevision:rev] : nil;
@@ -170,7 +169,7 @@
 - (id)deleteDocument:(id)args {
     RELEASE_TO_NIL(lastError)
     
-    CBLSavedRevision * rev = [self.revision deleteDocument:&lastError];
+    CBLSavedRevision * rev = [(CBLSavedRevision *)self.revision deleteDocument:&lastError];
     [lastError retain];
     
     return rev ? [TDSavedRevisionProxy proxyWithDocument:self.doc savedRevision:rev] : nil;
@@ -179,7 +178,6 @@
 @end
 
 @interface TDUnsavedRevisionProxy ()
-@property (nonatomic, strong) CBLUnsavedRevision * revision;
 @end
 
 @implementation TDUnsavedRevisionProxy
@@ -198,15 +196,15 @@
 }
 
 - (void)setIsDeletion:(id)arg {
-    self.revision.isDeletion = [arg boolValue];
+    ((CBLUnsavedRevision *)self.revision).isDeletion = [arg boolValue];
 }
 
 - (void)setProperties:(id)arg {
-    self.revision.properties = arg;
+    ((CBLUnsavedRevision *)self.revision).properties = arg;
 }
 
 - (void)setUserProperties:(id)arg {
-    self.revision.userProperties = arg;
+    ((CBLUnsavedRevision *)self.revision).userProperties = arg;
 }
 
 - (void)setPropertyForKey:(id)args {
@@ -216,7 +214,7 @@
     ENSURE_ARG_AT_INDEX(name, args, 0, NSString)
     ENSURE_ARG_OR_NULL_AT_INDEX(value, args, 1, NSObject)
     
-    self.revision[name] = value;
+    ((CBLUnsavedRevision *)self.revision)[name] = value;
 }
 
 - (id)save:(id)args {
@@ -225,7 +223,7 @@
     
     RELEASE_TO_NIL(lastError)
 
-    CBLSavedRevision * rev = [allowConflicts boolValue] ? [self.revision saveAllowingConflict:&lastError] : [self.revision save:&lastError];
+    CBLSavedRevision * rev = [allowConflicts boolValue] ? [(CBLUnsavedRevision *)self.revision saveAllowingConflict:&lastError] : [(CBLUnsavedRevision *)self.revision save:&lastError];
     [lastError retain];
     
     return rev ? [TDSavedRevisionProxy proxyWithDocument:self.doc savedRevision:rev] : nil;
@@ -242,11 +240,11 @@
     RELEASE_TO_NIL(lastError)
 
     if ([content isKindOfClass:[TiBlob class]]) {
-        [self.revision setAttachmentNamed:name withContentType:contentType content:((TiBlob *)content).data];
+        [(CBLUnsavedRevision *)self.revision setAttachmentNamed:name withContentType:contentType content:((TiBlob *)content).data];
     }
     else if ([content isKindOfClass:[NSString class]]) {
         NSURL * contentUrl = [NSURL URLWithString:(NSString *)content];
-        [self.revision setAttachmentNamed:name withContentType:contentType contentURL:contentUrl];
+        [(CBLUnsavedRevision *)self.revision setAttachmentNamed:name withContentType:contentType contentURL:contentUrl];
     }
     else {
         // TODO type error?
@@ -259,7 +257,7 @@
 
     RELEASE_TO_NIL(lastError)
 
-    [self.revision removeAttachmentNamed:name];
+    [(CBLUnsavedRevision *)self.revision removeAttachmentNamed:name];
 }
 
 @end
