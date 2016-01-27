@@ -188,6 +188,11 @@
     if (self = [super init]) {
         self.query = query;
         self.enumerator = e;
+        
+        // This is probably very inefficient, but without it, the
+        // reset method won't work. Better to be inefficient than to
+        // break compatibility.
+        [self.enumerator allObjects];
     }
     return self;
 }
@@ -216,11 +221,11 @@
 
 - (id)getRow:(id)args {
     NSNumber * index;
-    ENSURE_ARG_AT_INDEX(index, args, 0, NSNumber)
+    ENSURE_ARG_AT_INDEX(index, (NSArray *)args, 0, NSNumber)
     
     NSUInteger i = [index unsignedIntegerValue];
     if (i >= self.enumerator.count) {
-        return nil;
+        return [NSNull null];
     }
     
     CBLQueryRow * row = [self.enumerator rowAtIndex:i];
@@ -287,7 +292,7 @@
 
 -(id)keyAtIndex:(id)args {
     NSNumber * index;
-    ENSURE_ARG_AT_INDEX(index, args, 0, NSNumber)
+    ENSURE_ARG_AT_INDEX(index, (NSArray *)args, 0, NSNumber)
     return [self.row keyAtIndex:[index unsignedIntegerValue]];
 }
 
