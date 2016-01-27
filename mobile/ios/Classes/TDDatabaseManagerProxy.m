@@ -34,15 +34,15 @@
     if (self = [super _initWithPageContext:context]) {
         // FMDb will not run unless the manager queue is the same one as returned
         // from the deprecated method dispatch_get_current_queue().
-        // manager_queue = dispatch_queue_create("database_manager_queue", NULL);
-        manager_queue = dispatch_get_current_queue();
-        dispatch_sync(dispatch_get_main_queue(), ^{
+        manager_queue = dispatch_queue_create("database_manager_queue", NULL);
+        dispatch_sync(manager_queue, ^{
             self.databaseManager = [CBLManager sharedInstance];
             self.databaseManager.dispatchQueue = manager_queue;
         });
         self.databaseProxyCache = [NSMutableDictionary dictionary];
         self.lastError = nil;
     }
+
     return self;
 }
 
@@ -88,16 +88,18 @@
 
     TDDatabaseProxy * result = [self.databaseProxyCache objectForKey:name];
     if (!result) {
-        CBLDatabase * db = [self.databaseManager databaseNamed:name error:nil];
-        if (db) {
+        NSError * err;
+        CBLDatabase * db = [self.databaseManager databaseNamed:name error:&err];
+        if (db || !err) {
             result = [TDDatabaseProxy proxyWithManager:self database:db];
             [self.databaseProxyCache setObject:result forKey:name];
         }
         else {
             self.lastError = [NSError errorWithDomain:@"TouchDB" code:kCBLDatabaseCreationError userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"could not create database '%@'", name] forKey:NSLocalizedDescriptionKey]];
-            return nil;
+            return [NSNull null];
         }
     }
+    
     return [self.databaseProxyCache objectForKey:name];
 }
 
@@ -180,7 +182,7 @@
 }
 
 - (id)error {
-    return self.lastError ? [self errorDict:self.lastError] : nil;
+    return [self errorDict:self.lastError];
 }
 
 /** specify whether the CouchbaseLite directory should be backed up or not */
