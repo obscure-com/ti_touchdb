@@ -19,9 +19,9 @@ Download the latest distribution ZIP-file or install using the [gitTio CLI](http
 
 See the Wiki pages for usage instructions and the samples directory for example apps.
 
-## Requirements
+## Build Requirements
 
-* Titanium SDK 3.1.0 or later
+* Titanium SDK 5.1.0.GA or later
 * Xcode 4.5 or later (iOS), runtime requirement is iOS 6+
 * Android SDK r21.1, runtime requirement is android-8
 
@@ -35,6 +35,13 @@ Prebuilt modules can be found in the Releases section of this repo.
 * Couchbase Lite is under the Apache License 2.0. See that project for additional licenses.
 
 ## Development Status - iOS
+
+**1.3**
+
+2016-01-27
+
+* Updated to Couchbase Mobile 1.2.0.
+* Fixed issues that came up as a result of Titanium SDK changes.
 
 **1.0**
 
